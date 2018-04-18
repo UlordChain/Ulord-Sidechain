@@ -19,7 +19,7 @@
 
 package org.ethereum.listener;
 
-import co.rsk.core.Coin;
+import co.usc.core.Coin;
 import org.ethereum.core.Block;
 import org.ethereum.core.Transaction;
 import org.ethereum.core.TransactionReceipt;

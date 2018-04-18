@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.config;
+package co.usc.config;
 
 /**
  * Created by ajlopez on 4/4/2016.

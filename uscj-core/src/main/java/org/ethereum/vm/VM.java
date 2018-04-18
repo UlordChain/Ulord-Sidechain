@@ -19,8 +19,8 @@
 
 package org.ethereum.vm;
 
-import co.rsk.config.VmConfig;
-import co.rsk.core.RskAddress;
+import co.usc.config.VmConfig;
+import co.usc.core.RskAddress;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.MessageCall.MsgType;

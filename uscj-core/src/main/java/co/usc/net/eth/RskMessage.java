@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net.eth;
+package co.usc.net.eth;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.net.messages.Message;
+import co.usc.config.RskSystemProperties;
+import co.usc.net.messages.Message;
 import org.ethereum.net.eth.message.EthMessage;
 import org.ethereum.net.eth.message.EthMessageCodes;
 import org.ethereum.util.RLP;

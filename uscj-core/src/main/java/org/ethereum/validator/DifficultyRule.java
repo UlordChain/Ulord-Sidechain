@@ -19,8 +19,8 @@
 
 package org.ethereum.validator;
 
-import co.rsk.core.BlockDifficulty;
-import co.rsk.core.DifficultyCalculator;
+import co.usc.core.BlockDifficulty;
+import co.usc.core.DifficultyCalculator;
 import org.ethereum.core.BlockHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

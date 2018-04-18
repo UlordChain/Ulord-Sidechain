@@ -19,14 +19,14 @@
 
 package org.ethereum.core;
 
-import co.rsk.core.BlockDifficulty;
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
-import co.rsk.crypto.Keccak256;
-import co.rsk.panic.PanicProcessor;
-import co.rsk.remasc.RemascTransaction;
-import co.rsk.trie.Trie;
-import co.rsk.trie.TrieImpl;
+import co.usc.core.BlockDifficulty;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
+import co.usc.crypto.Keccak256;
+import co.usc.panic.PanicProcessor;
+import co.usc.remasc.RemascTransaction;
+import co.usc.trie.Trie;
+import co.usc.trie.TrieImpl;
 import org.ethereum.crypto.Keccak256Helper;
 import org.ethereum.rpc.TypeConverter;
 import org.ethereum.util.RLP;

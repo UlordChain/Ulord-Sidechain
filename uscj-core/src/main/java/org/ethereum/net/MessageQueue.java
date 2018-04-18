@@ -19,7 +19,7 @@
 
 package org.ethereum.net;
 
-import co.rsk.panic.PanicProcessor;
+import co.usc.panic.PanicProcessor;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import org.ethereum.net.eth.message.EthMessage;
@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Queue;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.ethereum.net.message.StaticMessages.DISCONNECT_MESSAGE;

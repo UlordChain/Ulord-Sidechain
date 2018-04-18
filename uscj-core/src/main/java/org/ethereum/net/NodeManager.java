@@ -19,7 +19,7 @@
 
 package org.ethereum.net;
 
-import co.rsk.net.discovery.PeerExplorer;
+import co.usc.net.discovery.PeerExplorer;
 import org.apache.commons.collections4.CollectionUtils;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.net.rlpx.Node;
@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

@@ -16,15 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.db;
+package co.usc.db;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
-import co.rsk.crypto.Keccak256;
-import co.rsk.trie.Trie;
-import co.rsk.trie.TrieImpl;
-import co.rsk.trie.TrieStore;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
+import co.usc.crypto.Keccak256;
+import co.usc.trie.Trie;
+import co.usc.trie.TrieImpl;
+import co.usc.trie.TrieStore;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;

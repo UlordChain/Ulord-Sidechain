@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/Ulord-Sidechain.iml" filepath="$PROJECT_DIR$/.idea/Ulord-Sidechain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/uscj-core.iml" filepath="$PROJECT_DIR$/.idea/modules/uscj-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/uscj-core_main.iml" filepath="$PROJECT_DIR$/.idea/modules/uscj-core_main.iml" group="uscj-core" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/uscj-core_test.iml" filepath="$PROJECT_DIR$/.idea/modules/uscj-core_test.iml" group="uscj-core" />
+    </modules>
+  </component>
+</project>

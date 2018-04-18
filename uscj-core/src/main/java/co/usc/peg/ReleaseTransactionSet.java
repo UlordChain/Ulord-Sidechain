@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.peg;
+package co.usc.peg;
 
 import co.rsk.bitcoinj.core.BtcTransaction;
 import com.google.common.primitives.UnsignedBytes;
@@ -24,7 +24,7 @@ import com.google.common.primitives.UnsignedBytes;
 /**
  * Representation of a queue of BTC release
  * transactions waiting for confirmations
- * on the rsk network.
+ * on the usc network.
  *
  * @author Ariel Mendelzon
  */

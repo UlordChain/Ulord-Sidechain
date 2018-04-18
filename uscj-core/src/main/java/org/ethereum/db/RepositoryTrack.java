@@ -19,10 +19,10 @@
 
 package org.ethereum.db;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
-import co.rsk.db.ContractDetailsImpl;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
+import co.usc.db.ContractDetailsImpl;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;

@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net.discovery.table;
+package co.usc.net.discovery.table;
 
 /**
  * Created by kest on 5/25/15.

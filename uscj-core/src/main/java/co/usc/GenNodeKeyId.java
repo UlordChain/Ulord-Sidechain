@@ -17,7 +17,7 @@
  */
 
 
-package co.rsk;
+package co.usc;
 
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;

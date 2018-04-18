@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.mine;
+package co.usc.mine;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.RskAddress;
-import co.rsk.net.BlockProcessor;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.RskAddress;
+import co.usc.net.BlockProcessor;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;

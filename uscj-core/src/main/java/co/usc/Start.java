@@ -16,24 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk;
+package co.usc;
 
-import co.rsk.blocks.FileBlockPlayer;
-import co.rsk.blocks.FileBlockRecorder;
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.Rsk;
-import co.rsk.core.RskImpl;
-import co.rsk.mine.MinerClient;
-import co.rsk.mine.MinerServer;
-import co.rsk.mine.TxBuilder;
-import co.rsk.mine.TxBuilderEx;
-import co.rsk.net.BlockProcessResult;
-import co.rsk.net.BlockProcessor;
-import co.rsk.net.MessageHandler;
-import co.rsk.net.Metrics;
-import co.rsk.net.discovery.UDPServer;
-import co.rsk.net.handler.TxHandler;
-import co.rsk.rpc.netty.Web3HttpServer;
+import co.usc.blocks.FileBlockPlayer;
+import co.usc.blocks.FileBlockRecorder;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.Rsk;
+import co.usc.core.RskImpl;
+import co.usc.mine.MinerClient;
+import co.usc.mine.MinerServer;
+import co.usc.mine.TxBuilder;
+import co.usc.mine.TxBuilderEx;
+import co.usc.net.BlockProcessResult;
+import co.usc.net.BlockProcessor;
+import co.usc.net.MessageHandler;
+import co.usc.net.Metrics;
+import co.usc.net.discovery.UDPServer;
+import co.usc.net.handler.TxHandler;
+import co.usc.rpc.netty.Web3HttpServer;
 import org.ethereum.cli.CLIInterface;
 import org.ethereum.config.DefaultConfig;
 import org.ethereum.core.*;

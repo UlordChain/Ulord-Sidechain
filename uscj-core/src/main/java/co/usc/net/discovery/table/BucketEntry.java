@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net.discovery.table;
+package co.usc.net.discovery.table;
 
 import org.ethereum.net.rlpx.Node;
 

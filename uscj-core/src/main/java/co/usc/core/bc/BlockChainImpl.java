@@ -16,16 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.core.bc;
+package co.usc.core.bc;
 
-import co.rsk.blocks.BlockRecorder;
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.BlockDifficulty;
-import co.rsk.net.Metrics;
-import co.rsk.panic.PanicProcessor;
-import co.rsk.trie.Trie;
-import co.rsk.trie.TrieImpl;
-import co.rsk.validators.BlockValidator;
+import co.usc.blocks.BlockRecorder;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.BlockDifficulty;
+import co.usc.net.Metrics;
+import co.usc.panic.PanicProcessor;
+import co.usc.trie.Trie;
+import co.usc.trie.TrieImpl;
+import co.usc.validators.BlockValidator;
 import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.core.*;
 import org.ethereum.crypto.HashUtil;

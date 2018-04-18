@@ -1,4 +1,4 @@
-package co.rsk.scoring;
+package co.usc.scoring;
 
 import java.net.InetAddress;
 import java.util.ArrayList;

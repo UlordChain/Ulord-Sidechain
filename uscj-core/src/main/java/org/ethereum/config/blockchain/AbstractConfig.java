@@ -19,7 +19,7 @@
 
 package org.ethereum.config.blockchain;
 
-import co.rsk.core.BlockDifficulty;
+import co.usc.core.BlockDifficulty;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.Constants;

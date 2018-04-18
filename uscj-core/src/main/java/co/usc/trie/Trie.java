@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.trie;
+package co.usc.trie;
 
-import co.rsk.crypto.Keccak256;
+import co.usc.crypto.Keccak256;
 
 /**
  * Created by ajlopez on 29/03/2017.

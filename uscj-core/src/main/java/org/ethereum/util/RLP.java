@@ -19,13 +19,13 @@
 
 package org.ethereum.util;
 
-import co.rsk.core.BlockDifficulty;
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
-import co.rsk.util.ByteBufferUtil;
-import co.rsk.util.RLPElementType;
-import co.rsk.util.RLPElementView;
-import co.rsk.util.RLPException;
+import co.usc.core.BlockDifficulty;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
+import co.usc.util.ByteBufferUtil;
+import co.usc.util.RLPElementType;
+import co.usc.util.RLPElementView;
+import co.usc.util.RLPException;
 import org.ethereum.db.ByteArrayWrapper;
 import org.spongycastle.util.BigIntegers;
 
@@ -35,6 +35,7 @@ import javax.annotation.Nullable;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 import static org.ethereum.util.ByteUtil.*;
 import static org.spongycastle.util.Arrays.concatenate;

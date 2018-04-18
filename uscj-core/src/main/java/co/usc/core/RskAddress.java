@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.core;
+package co.usc.core;
 
 import com.google.common.primitives.UnsignedBytes;
 import org.ethereum.rpc.TypeConverter;

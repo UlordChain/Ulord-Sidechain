@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.peg.utils;
+package co.usc.peg.utils;
 
 import co.rsk.bitcoinj.core.BtcECKey;
 import co.rsk.bitcoinj.core.BtcTransaction;
-import co.rsk.peg.Federation;
+import co.usc.peg.Federation;
 import org.ethereum.core.Block;
 import org.ethereum.core.Transaction;
 

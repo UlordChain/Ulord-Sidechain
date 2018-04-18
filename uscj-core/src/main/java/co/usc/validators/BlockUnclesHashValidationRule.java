@@ -1,6 +1,6 @@
-package co.rsk.validators;
+package co.usc.validators;
 
-import co.rsk.panic.PanicProcessor;
+import co.usc.panic.PanicProcessor;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.crypto.HashUtil;

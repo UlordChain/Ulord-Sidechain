@@ -17,9 +17,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net;
+package co.usc.net;
 
-import co.rsk.crypto.Keccak256;
+import co.usc.crypto.Keccak256;
 import org.ethereum.core.Block;
 
 import java.util.LinkedHashMap;

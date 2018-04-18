@@ -1,4 +1,4 @@
-package co.rsk.net.sync;
+package co.usc.net.sync;
 
 import com.google.common.annotations.VisibleForTesting;
 

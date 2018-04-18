@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.rpc.modules.eth;
+package co.usc.rpc.modules.eth;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.RskAddress;
-import co.rsk.core.Wallet;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.RskAddress;
+import co.usc.core.Wallet;
 import org.ethereum.core.Account;
 import org.ethereum.core.Transaction;
 import org.ethereum.core.TransactionPool;

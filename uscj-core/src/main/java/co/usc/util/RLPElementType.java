@@ -1,4 +1,4 @@
-package co.rsk.util;
+package co.usc.util;
 
 public enum RLPElementType {
     ITEM,

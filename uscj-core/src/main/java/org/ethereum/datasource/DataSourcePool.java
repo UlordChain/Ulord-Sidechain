@@ -19,7 +19,7 @@
 
 package org.ethereum.datasource;
 
-import co.rsk.config.RskSystemProperties;
+import co.usc.config.RskSystemProperties;
 import org.slf4j.Logger;
 
 import java.util.concurrent.ConcurrentHashMap;

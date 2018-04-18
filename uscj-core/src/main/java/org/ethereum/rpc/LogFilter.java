@@ -18,7 +18,7 @@
 
 package org.ethereum.rpc;
 
-import co.rsk.core.RskAddress;
+import co.usc.core.RskAddress;
 import org.ethereum.core.*;
 import org.ethereum.db.TransactionInfo;
 import org.ethereum.vm.LogInfo;

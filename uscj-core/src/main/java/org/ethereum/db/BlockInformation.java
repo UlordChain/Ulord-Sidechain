@@ -1,6 +1,6 @@
 package org.ethereum.db;
 
-import co.rsk.core.BlockDifficulty;
+import co.usc.core.BlockDifficulty;
 
 /**
  * Created by usuario on 07/06/2017.

@@ -19,8 +19,8 @@
 
 package org.ethereum.core;
 
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.db.DetailsDataStore;
 import org.ethereum.vm.DataWord;

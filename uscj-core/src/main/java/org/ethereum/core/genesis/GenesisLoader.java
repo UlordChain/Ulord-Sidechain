@@ -19,11 +19,11 @@
 
 package org.ethereum.core.genesis;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
-import co.rsk.trie.Trie;
-import co.rsk.trie.TrieImpl;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
+import co.usc.trie.Trie;
+import co.usc.trie.TrieImpl;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.ByteStreams;

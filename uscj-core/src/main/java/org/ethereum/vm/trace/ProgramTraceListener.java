@@ -19,7 +19,7 @@
 
 package org.ethereum.vm.trace;
 
-import co.rsk.config.VmConfig;
+import co.usc.config.VmConfig;
 import org.ethereum.vm.DataWord;
 import org.ethereum.vm.program.listener.ProgramListenerAdaptor;
 

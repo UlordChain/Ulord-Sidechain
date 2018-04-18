@@ -1,4 +1,4 @@
-package co.rsk.net.messages;
+package co.usc.net.messages;
 
 import org.ethereum.util.RLP;
 

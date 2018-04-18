@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.config;
+package co.usc.config;
 
 /**
  * Wraps configuration for Mining, which is usually derived from configuration files.

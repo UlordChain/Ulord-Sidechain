@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.util;
+package co.usc.util;
 
 import java.util.Iterator;
 import java.util.Map;

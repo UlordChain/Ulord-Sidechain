@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.rpc;
+package co.usc.rpc;
 
-import co.rsk.rpc.modules.eth.EthModule;
+import co.usc.rpc.modules.eth.EthModule;
 import org.ethereum.rpc.Web3;
 import org.ethereum.rpc.dto.CompilationResultDTO;
 import org.ethereum.rpc.dto.TransactionReceiptDTO;

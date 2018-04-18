@@ -16,15 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.peg;
+package co.usc.peg;
 
 import co.rsk.bitcoinj.core.*;
-import co.rsk.config.BridgeConstants;
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.RskAddress;
-import co.rsk.panic.PanicProcessor;
-import co.rsk.peg.utils.BridgeEventLogger;
-import co.rsk.peg.utils.BridgeEventLoggerImpl;
+import co.usc.config.BridgeConstants;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.RskAddress;
+import co.usc.panic.PanicProcessor;
+import co.usc.peg.utils.BridgeEventLogger;
+import co.usc.peg.utils.BridgeEventLoggerImpl;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.tuple.Pair;
 import org.ethereum.core.Block;
@@ -68,7 +68,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     // - The bitcoin block height that contains the tx
     // - A merkle tree that shows the tx is included in that block, serialized with the bitcoin wire protocol format.
     public static final CallTransaction.Function REGISTER_BTC_TRANSACTION = CallTransaction.Function.fromSignature("registerBtcTransaction", new String[]{"bytes", "int", "bytes"}, new String[]{});
-    // No parameters, the current rsk tx is used as input.
+    // No parameters, the current usc tx is used as input.
     public static final CallTransaction.Function RELEASE_BTC = CallTransaction.Function.fromSignature("releaseBtc", new String[]{}, new String[]{});
     // Parameters:
     // Federator public key.
@@ -280,7 +280,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         return bridgeParsedData;
     }
 
-    // Parsed rsk transaction data field
+    // Parsed usc transaction data field
     private static class BridgeParsedData {
         CallTransaction.Function function;
         Object[] args;
@@ -456,7 +456,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         }
         byte[] rskTxHash = (byte[]) args[2];
         if (rskTxHash.length!=32) {
-            throw new BridgeIllegalArgumentException("Invalid rsk tx hash " + Hex.toHexString(rskTxHash));
+            throw new BridgeIllegalArgumentException("Invalid usc tx hash " + Hex.toHexString(rskTxHash));
         }
         try {
             bridgeSupport.addSignature(rskExecutionBlock.getNumber(), federatorPublicKey, signatures, rskTxHash);

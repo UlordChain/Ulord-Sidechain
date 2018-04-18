@@ -1,11 +1,12 @@
-package co.rsk.scoring;
+package co.usc.scoring;
 
-import co.rsk.net.NodeID;
+import co.usc.net.NodeID;
 import com.google.common.annotations.VisibleForTesting;
 import org.spongycastle.util.encoders.Hex;
 
 import javax.annotation.concurrent.GuardedBy;
 import java.net.InetAddress;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**

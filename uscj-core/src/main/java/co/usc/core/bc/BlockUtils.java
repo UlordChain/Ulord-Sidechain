@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.core.bc;
+package co.usc.core.bc;
 
-import co.rsk.crypto.Keccak256;
-import co.rsk.net.BlockStore;
+import co.usc.crypto.Keccak256;
+import co.usc.net.BlockStore;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.core.Blockchain;

@@ -19,10 +19,10 @@
 
 package org.ethereum.config;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.DifficultyCalculator;
-import co.rsk.db.RepositoryImpl;
-import co.rsk.trie.TrieStoreImpl;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.DifficultyCalculator;
+import co.usc.db.RepositoryImpl;
+import co.usc.trie.TrieStoreImpl;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
 import org.ethereum.datasource.KeyValueDataSource;
@@ -43,7 +43,7 @@ import static java.util.Arrays.asList;
 
 @Configuration
 @ComponentScan(
-        basePackages = { "org.ethereum", "co.rsk" },
+        basePackages = { "org.ethereum", "co.usc" },
         excludeFilters = @ComponentScan.Filter(NoAutoscan.class))
 public class CommonConfig {
 

@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.util;
+package co.usc.util;
 
-import co.rsk.core.BlockDifficulty;
+import co.usc.core.BlockDifficulty;
 
 import java.math.BigInteger;
 

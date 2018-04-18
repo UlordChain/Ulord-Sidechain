@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.trie;
+package co.usc.trie;
 
-import co.rsk.panic.PanicProcessor;
+import co.usc.panic.PanicProcessor;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.datasource.KeyValueDataSource;
 import org.slf4j.Logger;

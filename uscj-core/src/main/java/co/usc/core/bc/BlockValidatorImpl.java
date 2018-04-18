@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.core.bc;
+package co.usc.core.bc;
 
-import co.rsk.validators.BlockParentDependantValidationRule;
-import co.rsk.validators.BlockValidationRule;
-import co.rsk.validators.BlockValidator;
+import co.usc.validators.BlockParentDependantValidationRule;
+import co.usc.validators.BlockValidationRule;
+import co.usc.validators.BlockValidator;
 import org.ethereum.core.Block;
 import org.ethereum.db.BlockStore;
 import org.springframework.beans.factory.annotation.Autowired;

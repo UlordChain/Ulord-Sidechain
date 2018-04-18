@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net.handler.txvalidator;
+package co.usc.net.handler.txvalidator;
 
-import co.rsk.core.Coin;
-import co.rsk.remasc.RemascTransaction;
+import co.usc.core.Coin;
+import co.usc.remasc.RemascTransaction;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Transaction;
 import org.slf4j.Logger;

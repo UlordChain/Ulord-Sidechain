@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net.discovery;
+package co.usc.net.discovery;
 
-import co.rsk.net.discovery.message.DiscoveryMessageType;
-import co.rsk.net.discovery.message.PeerDiscoveryMessage;
+import co.usc.net.discovery.message.DiscoveryMessageType;
+import co.usc.net.discovery.message.PeerDiscoveryMessage;
 import org.ethereum.net.rlpx.Node;
 
 import java.net.InetSocketAddress;

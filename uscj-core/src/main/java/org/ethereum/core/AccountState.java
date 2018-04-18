@@ -19,7 +19,7 @@
 
 package org.ethereum.core;
 
-import co.rsk.core.Coin;
+import co.usc.core.Coin;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;

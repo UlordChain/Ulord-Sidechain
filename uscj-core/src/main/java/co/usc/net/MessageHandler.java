@@ -16,13 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net;
+package co.usc.net;
 
 /**
  * Created by ajlopez on 5/11/2016.
  */
 
-import co.rsk.net.messages.Message;
+import co.usc.net.messages.Message;
 
 public interface MessageHandler {
     void processMessage(MessageChannel sender, Message message);

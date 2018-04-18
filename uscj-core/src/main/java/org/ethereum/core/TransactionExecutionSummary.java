@@ -19,7 +19,7 @@
 
 package org.ethereum.core;
 
-import co.rsk.core.Coin;
+import co.usc.core.Coin;
 import org.ethereum.vm.DataWord;
 import org.ethereum.vm.LogInfo;
 import org.ethereum.vm.program.InternalTransaction;

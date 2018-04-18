@@ -19,7 +19,7 @@
 
 package org.ethereum.net.eth.message;
 
-import co.rsk.config.RskSystemProperties;
+import co.usc.config.RskSystemProperties;
 import org.ethereum.core.ImmutableTransaction;
 import org.ethereum.core.Transaction;
 import org.ethereum.util.RLP;

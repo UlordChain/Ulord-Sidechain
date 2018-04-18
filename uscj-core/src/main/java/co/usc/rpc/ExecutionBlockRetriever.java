@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.rpc;
+package co.usc.rpc;
 
-import co.rsk.mine.BlockToMineBuilder;
-import co.rsk.mine.MinerServer;
+import co.usc.mine.BlockToMineBuilder;
+import co.usc.mine.MinerServer;
 import org.ethereum.core.Block;
 import org.ethereum.core.Blockchain;
 import org.ethereum.rpc.exception.JsonRpcUnimplementedMethodException;

@@ -16,14 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.rpc.modules.eth;
+package co.usc.rpc.modules.eth;
 
 import co.rsk.bitcoinj.store.BlockStoreException;
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.ReversibleTransactionExecutor;
-import co.rsk.peg.BridgeState;
-import co.rsk.peg.BridgeSupport;
-import co.rsk.rpc.ExecutionBlockRetriever;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.ReversibleTransactionExecutor;
+import co.usc.peg.BridgeState;
+import co.usc.peg.BridgeSupport;
+import co.usc.rpc.ExecutionBlockRetriever;
 import org.ethereum.core.Block;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.Repository;

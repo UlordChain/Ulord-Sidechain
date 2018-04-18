@@ -1,8 +1,8 @@
-package co.rsk.core.bc;
+package co.usc.core.bc;
 
-import co.rsk.core.BlockDifficulty;
-import co.rsk.core.Coin;
-import co.rsk.remasc.Sibling;
+import co.usc.core.BlockDifficulty;
+import co.usc.core.Coin;
+import co.usc.remasc.Sibling;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.util.FastByteComparisons;

@@ -1,4 +1,4 @@
-package co.rsk.util;
+package co.usc.util;
 
 import org.ethereum.util.ByteUtil;
 import org.ethereum.util.RLPElement;

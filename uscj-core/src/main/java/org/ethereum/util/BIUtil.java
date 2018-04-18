@@ -19,7 +19,7 @@
 
 package org.ethereum.util;
 
-import co.rsk.core.Coin;
+import co.usc.core.Coin;
 
 import java.math.BigInteger;
 

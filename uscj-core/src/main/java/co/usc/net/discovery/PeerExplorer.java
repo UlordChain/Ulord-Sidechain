@@ -16,14 +16,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net.discovery;
+package co.usc.net.discovery;
 
-import co.rsk.net.NodeID;
-import co.rsk.net.discovery.message.*;
-import co.rsk.net.discovery.table.NodeDistanceTable;
-import co.rsk.net.discovery.table.OperationResult;
-import co.rsk.net.discovery.table.PeerDiscoveryRequestBuilder;
-import co.rsk.util.IpUtils;
+import co.usc.net.NodeID;
+import co.usc.net.discovery.message.*;
+import co.usc.net.discovery.table.NodeDistanceTable;
+import co.usc.net.discovery.table.OperationResult;
+import co.usc.net.discovery.table.PeerDiscoveryRequestBuilder;
+import co.usc.util.IpUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.ethereum.crypto.ECKey;
@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.security.SecureRandom;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;

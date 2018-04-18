@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net.handler;
+package co.usc.net.handler;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.Coin;
-import co.rsk.net.handler.txvalidator.*;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.Coin;
+import co.usc.net.handler.txvalidator.*;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.Repository;

@@ -16,12 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.config;
+package co.usc.config;
 
 import co.rsk.bitcoinj.core.Coin;
 import co.rsk.bitcoinj.core.NetworkParameters;
-import co.rsk.peg.AddressBasedAuthorizer;
-import co.rsk.peg.Federation;
+import co.usc.peg.AddressBasedAuthorizer;
+import co.usc.peg.Federation;
 
 public class BridgeConstants {
     protected String btcParamsString;

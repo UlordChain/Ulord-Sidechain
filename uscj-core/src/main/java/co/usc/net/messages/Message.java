@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net.messages;
+package co.usc.net.messages;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.util.RLP;

@@ -19,11 +19,11 @@
 
 package org.ethereum.core.genesis;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.BlockDifficulty;
-import co.rsk.core.RskAddress;
-import co.rsk.core.bc.BlockChainImpl;
-import co.rsk.validators.BlockValidator;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.BlockDifficulty;
+import co.usc.core.RskAddress;
+import co.usc.core.bc.BlockChainImpl;
+import co.usc.validators.BlockValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.ethereum.core.*;
 import org.ethereum.db.BlockStore;

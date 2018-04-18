@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.remasc;
+package co.usc.remasc;
 
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPElement;

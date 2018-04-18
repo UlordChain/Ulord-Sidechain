@@ -16,13 +16,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.peg;
+package co.usc.peg;
 
 import co.rsk.bitcoinj.core.BtcTransaction;
 import co.rsk.bitcoinj.core.Sha256Hash;
 import co.rsk.bitcoinj.core.UTXO;
-import co.rsk.config.BridgeConstants;
-import co.rsk.crypto.Keccak256;
+import co.usc.config.BridgeConstants;
+import co.usc.crypto.Keccak256;
 import org.apache.commons.collections4.map.HashedMap;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;

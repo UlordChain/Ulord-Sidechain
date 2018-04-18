@@ -19,9 +19,9 @@
 
 package org.ethereum.db;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.RskAddress;
-import co.rsk.db.ContractDetailsImpl;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.RskAddress;
+import co.usc.db.ContractDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

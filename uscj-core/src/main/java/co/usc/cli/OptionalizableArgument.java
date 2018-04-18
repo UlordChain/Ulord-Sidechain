@@ -1,4 +1,4 @@
-package co.rsk.cli;
+package co.usc.cli;
 
 public interface OptionalizableArgument {
     boolean isOptional();

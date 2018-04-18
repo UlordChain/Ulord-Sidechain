@@ -19,8 +19,8 @@
 
 package org.ethereum.vm.trace;
 
-import co.rsk.config.VmConfig;
-import co.rsk.core.RskAddress;
+import co.usc.config.VmConfig;
+import co.usc.core.RskAddress;
 import org.ethereum.core.Repository;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.db.RepositoryTrack;

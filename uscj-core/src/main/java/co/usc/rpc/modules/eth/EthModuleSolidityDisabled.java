@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.rpc.modules.eth;
+package co.usc.rpc.modules.eth;
 
 import org.ethereum.rpc.dto.CompilationResultDTO;
 import org.slf4j.Logger;

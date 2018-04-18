@@ -19,7 +19,7 @@
 
 package org.ethereum.net.rlpx;
 
-import co.rsk.net.NodeID;
+import co.usc.net.NodeID;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPElement;
 import org.ethereum.util.Utils;

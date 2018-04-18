@@ -19,8 +19,8 @@
 
 package org.ethereum.core.genesis;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.db.ContractDetailsImpl;
+import co.usc.config.RskSystemProperties;
+import co.usc.db.ContractDetailsImpl;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.DataWord;
 import org.spongycastle.util.encoders.Hex;

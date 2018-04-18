@@ -19,9 +19,9 @@
 
 package org.ethereum.db;
 
-import co.rsk.panic.PanicProcessor;
-import co.rsk.trie.Trie;
-import co.rsk.trie.TrieImpl;
+import co.usc.panic.PanicProcessor;
+import co.usc.trie.Trie;
+import co.usc.trie.TrieImpl;
 import org.apache.commons.collections4.MapUtils;
 import org.ethereum.util.RLP;
 import org.ethereum.vm.DataWord;

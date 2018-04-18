@@ -19,8 +19,8 @@
 
 package org.ethereum.datasource;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.panic.PanicProcessor;
+import co.usc.config.RskSystemProperties;
+import co.usc.panic.PanicProcessor;
 import org.iq80.leveldb.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

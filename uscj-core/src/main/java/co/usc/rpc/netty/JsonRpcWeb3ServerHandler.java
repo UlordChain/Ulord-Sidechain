@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.rpc.netty;
+package co.usc.rpc.netty;
 
-import co.rsk.rpc.JsonRpcMethodFilter;
-import co.rsk.rpc.ModuleDescription;
+import co.usc.rpc.JsonRpcMethodFilter;
+import co.usc.rpc.ModuleDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

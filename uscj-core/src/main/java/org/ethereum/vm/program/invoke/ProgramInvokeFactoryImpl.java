@@ -19,8 +19,8 @@
 
 package org.ethereum.vm.program.invoke;
 
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;

@@ -16,15 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.remasc;
+package co.usc.remasc;
 
 import co.rsk.bitcoinj.store.BlockStoreException;
-import co.rsk.config.RemascConfig;
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
-import co.rsk.core.bc.SelectionRule;
-import co.rsk.peg.BridgeSupport;
+import co.usc.config.RemascConfig;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
+import co.usc.core.bc.SelectionRule;
+import co.usc.peg.BridgeSupport;
 import org.apache.commons.collections4.CollectionUtils;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;

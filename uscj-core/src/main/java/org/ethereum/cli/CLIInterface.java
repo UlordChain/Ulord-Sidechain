@@ -19,7 +19,7 @@
 
 package org.ethereum.cli;
 
-import co.rsk.config.RskSystemProperties;
+import co.usc.config.RskSystemProperties;
 import org.ethereum.config.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

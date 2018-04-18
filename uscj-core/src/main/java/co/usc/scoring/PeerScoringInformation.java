@@ -1,4 +1,4 @@
-package co.rsk.scoring;
+package co.usc.scoring;
 
 /**
  * PeerScoringInformation is a simple class to exposte

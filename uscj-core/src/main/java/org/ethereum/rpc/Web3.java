@@ -18,9 +18,9 @@
 
 package org.ethereum.rpc;
 
-import co.rsk.rpc.Web3EthModule;
-import co.rsk.rpc.Web3TxPoolModule;
-import co.rsk.scoring.PeerScoringInformation;
+import co.usc.rpc.Web3EthModule;
+import co.usc.rpc.Web3TxPoolModule;
+import co.usc.scoring.PeerScoringInformation;
 
 import java.util.Arrays;
 import java.util.Map;

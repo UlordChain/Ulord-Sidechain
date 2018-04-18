@@ -1,4 +1,4 @@
-package co.rsk.scoring;
+package co.usc.scoring;
 
 /**
  * InvalidInetAddressBlockException raises when an address block is invalid

@@ -19,9 +19,9 @@
 
 package org.ethereum.core;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.RskAddress;
-import co.rsk.crypto.Keccak256;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.RskAddress;
+import co.usc.crypto.Keccak256;
 import org.ethereum.core.genesis.GenesisLoader;
 import org.ethereum.core.genesis.InitialAddressState;
 import org.ethereum.util.ByteUtil;

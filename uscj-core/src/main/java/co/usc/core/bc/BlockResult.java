@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.core.bc;
+package co.usc.core.bc;
 
-import co.rsk.core.Coin;
-import co.rsk.trie.Trie;
-import co.rsk.trie.TrieImpl;
+import co.usc.core.Coin;
+import co.usc.trie.Trie;
+import co.usc.trie.TrieImpl;
 import org.ethereum.core.Bloom;
 import org.ethereum.core.Transaction;
 import org.ethereum.core.TransactionReceipt;

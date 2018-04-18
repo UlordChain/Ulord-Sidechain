@@ -1,13 +1,13 @@
-package co.rsk.net;
+package co.usc.net;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.DifficultyCalculator;
-import co.rsk.core.bc.BlockChainStatus;
-import co.rsk.net.messages.*;
-import co.rsk.net.sync.*;
-import co.rsk.scoring.EventType;
-import co.rsk.scoring.PeerScoringManager;
-import co.rsk.validators.BlockHeaderValidationRule;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.DifficultyCalculator;
+import co.usc.core.bc.BlockChainStatus;
+import co.usc.net.messages.*;
+import co.usc.net.sync.*;
+import co.usc.scoring.EventType;
+import co.usc.scoring.PeerScoringManager;
+import co.usc.validators.BlockHeaderValidationRule;
 import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;

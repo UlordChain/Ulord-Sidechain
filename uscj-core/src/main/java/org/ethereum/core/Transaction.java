@@ -19,12 +19,12 @@
 
 package org.ethereum.core;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
-import co.rsk.crypto.Keccak256;
-import co.rsk.panic.PanicProcessor;
-import co.rsk.peg.BridgeUtils;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
+import co.usc.crypto.Keccak256;
+import co.usc.panic.PanicProcessor;
+import co.usc.peg.BridgeUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.ethereum.config.Constants;
 import org.ethereum.crypto.ECKey;

@@ -16,24 +16,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.rpc;
+package co.usc.rpc;
 
 import co.rsk.bitcoinj.core.BtcBlock;
 import co.rsk.bitcoinj.core.BtcTransaction;
 import co.rsk.bitcoinj.core.Context;
 import co.rsk.bitcoinj.core.NetworkParameters;
 import co.rsk.bitcoinj.params.RegTestParams;
-import co.rsk.config.RskMiningConstants;
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.NetworkStateExporter;
-import co.rsk.metrics.HashRateCalculator;
-import co.rsk.mine.*;
-import co.rsk.net.BlockProcessor;
-import co.rsk.rpc.exception.JsonRpcSubmitBlockException;
-import co.rsk.rpc.modules.eth.EthModule;
-import co.rsk.rpc.modules.personal.PersonalModule;
-import co.rsk.rpc.modules.txpool.TxPoolModule;
-import co.rsk.scoring.PeerScoringManager;
+import co.usc.config.RskMiningConstants;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.NetworkStateExporter;
+import co.usc.metrics.HashRateCalculator;
+import co.usc.mine.*;
+import co.usc.net.BlockProcessor;
+import co.usc.rpc.exception.JsonRpcSubmitBlockException;
+import co.usc.rpc.modules.eth.EthModule;
+import co.usc.rpc.modules.personal.PersonalModule;
+import co.usc.rpc.modules.txpool.TxPoolModule;
+import co.usc.scoring.PeerScoringManager;
 import org.apache.commons.lang3.ArrayUtils;
 import org.ethereum.core.*;
 import org.ethereum.crypto.Keccak256Helper;

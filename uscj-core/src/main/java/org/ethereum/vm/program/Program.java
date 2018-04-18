@@ -19,12 +19,12 @@
 
 package org.ethereum.vm.program;
 
-import co.rsk.config.VmConfig;
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
-import co.rsk.peg.Bridge;
-import co.rsk.remasc.RemascContract;
-import co.rsk.vm.BitSet;
+import co.usc.config.VmConfig;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
+import co.usc.peg.Bridge;
+import co.usc.remasc.RemascContract;
+import co.usc.vm.BitSet;
 import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.Constants;
@@ -52,6 +52,7 @@ import org.spongycastle.util.encoders.Hex;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
+import java.util.*;
 
 import static java.lang.StrictMath.min;
 import static java.lang.String.format;

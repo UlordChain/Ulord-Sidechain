@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.rpc.modules.personal;
+package co.usc.rpc.modules.personal;
 
-import co.rsk.config.RskSystemProperties;
+import co.usc.config.RskSystemProperties;
 import org.ethereum.rpc.Web3;
 
 public interface PersonalModule {

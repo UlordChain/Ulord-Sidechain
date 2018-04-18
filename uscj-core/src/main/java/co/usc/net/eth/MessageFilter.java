@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net.eth;
+package co.usc.net.eth;
 
 import org.ethereum.net.message.Message;
 

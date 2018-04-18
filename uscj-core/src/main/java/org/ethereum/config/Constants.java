@@ -19,10 +19,10 @@
 
 package org.ethereum.config;
 
-import co.rsk.config.BridgeConstants;
-import co.rsk.config.BridgeTestNetConstants;
-import co.rsk.core.BlockDifficulty;
-import co.rsk.core.RskAddress;
+import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeTestNetConstants;
+import co.usc.core.BlockDifficulty;
+import co.usc.core.RskAddress;
 import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigDecimal;

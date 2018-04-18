@@ -16,10 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.remasc;
+package co.usc.remasc;
 
-import co.rsk.config.RemascConfig;
-import co.rsk.core.Coin;
+import co.usc.config.RemascConfig;
+import co.usc.core.Coin;
 
 import javax.annotation.Nullable;
 import java.math.BigInteger;

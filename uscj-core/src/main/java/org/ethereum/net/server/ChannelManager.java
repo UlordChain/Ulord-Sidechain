@@ -19,9 +19,9 @@
 
 package org.ethereum.net.server;
 
-import co.rsk.net.NodeID;
-import co.rsk.net.Status;
-import co.rsk.net.messages.MessageWithId;
+import co.usc.net.NodeID;
+import co.usc.net.Status;
+import co.usc.net.messages.MessageWithId;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockIdentifier;
 import org.ethereum.core.Transaction;

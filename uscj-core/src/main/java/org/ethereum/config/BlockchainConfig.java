@@ -19,7 +19,7 @@
 
 package org.ethereum.config;
 
-import co.rsk.core.BlockDifficulty;
+import co.usc.core.BlockDifficulty;
 import org.ethereum.core.BlockHeader;
 
 /**

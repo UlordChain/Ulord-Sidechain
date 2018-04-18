@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: co.rsk.bitcoinj:bitcoinj-thin:0.14.4-rsk-3">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/d9526395609384d2b1b1045ad0c22e72546b6e73/bitcoinj-thin-0.14.4-rsk-3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

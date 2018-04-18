@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.crypto;
+package co.usc.crypto;
 
 import co.rsk.bitcoinj.core.Utils;
 import com.google.common.primitives.Ints;

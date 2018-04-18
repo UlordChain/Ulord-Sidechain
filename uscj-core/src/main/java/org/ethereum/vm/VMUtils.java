@@ -19,7 +19,7 @@
 
 package org.ethereum.vm;
 
-import co.rsk.config.RskSystemProperties;
+import co.usc.config.RskSystemProperties;
 import org.ethereum.vm.trace.ProgramTrace;
 import org.ethereum.vm.trace.Serializers;
 

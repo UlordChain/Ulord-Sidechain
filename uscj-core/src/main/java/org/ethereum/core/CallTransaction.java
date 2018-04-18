@@ -19,8 +19,8 @@
 
 package org.ethereum.core;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.RskAddress;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.RskAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;

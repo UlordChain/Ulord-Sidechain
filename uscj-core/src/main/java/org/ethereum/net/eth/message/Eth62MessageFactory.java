@@ -19,8 +19,8 @@
 
 package org.ethereum.net.eth.message;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.net.eth.RskMessage;
+import co.usc.config.RskSystemProperties;
+import co.usc.net.eth.RskMessage;
 import org.ethereum.net.message.Message;
 import org.ethereum.net.message.MessageFactory;
 

@@ -19,12 +19,12 @@ package org.ethereum.vm;
  */
 
 
-import co.rsk.config.RemascConfigFactory;
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.RskAddress;
-import co.rsk.peg.Bridge;
-import co.rsk.peg.SamplePrecompiledContract;
-import co.rsk.remasc.RemascContract;
+import co.usc.config.RemascConfigFactory;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.RskAddress;
+import co.usc.peg.Bridge;
+import co.usc.peg.SamplePrecompiledContract;
+import co.usc.remasc.RemascContract;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;

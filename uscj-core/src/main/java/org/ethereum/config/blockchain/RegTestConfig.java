@@ -19,9 +19,9 @@
 
 package org.ethereum.config.blockchain;
 
-import co.rsk.config.BridgeConstants;
-import co.rsk.config.BridgeRegTestConstants;
-import co.rsk.core.BlockDifficulty;
+import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeRegTestConstants;
+import co.usc.core.BlockDifficulty;
 
 import java.math.BigInteger;
 

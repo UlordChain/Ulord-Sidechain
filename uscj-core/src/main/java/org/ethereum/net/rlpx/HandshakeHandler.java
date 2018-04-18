@@ -19,9 +19,9 @@
 
 package org.ethereum.net.rlpx;
 
-import co.rsk.net.NodeID;
-import co.rsk.scoring.EventType;
-import co.rsk.scoring.PeerScoringManager;
+import co.usc.net.NodeID;
+import co.usc.scoring.EventType;
+import co.usc.scoring.PeerScoringManager;
 import com.google.common.io.ByteStreams;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

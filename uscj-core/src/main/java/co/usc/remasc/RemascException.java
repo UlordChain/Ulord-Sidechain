@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.remasc;
+package co.usc.remasc;
 
 /**
  * Created by mario on 12/12/16.

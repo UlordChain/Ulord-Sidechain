@@ -19,8 +19,8 @@
 
 package org.ethereum.net.server;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.net.NodeID;
+import co.usc.config.RskSystemProperties;
+import co.usc.net.NodeID;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;

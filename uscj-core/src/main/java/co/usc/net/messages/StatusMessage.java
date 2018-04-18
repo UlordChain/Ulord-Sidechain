@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net.messages;
+package co.usc.net.messages;
 
-import co.rsk.net.Status;
+import co.usc.net.Status;
 import org.ethereum.util.RLP;
 
 import java.math.BigInteger;

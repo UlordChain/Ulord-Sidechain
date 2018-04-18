@@ -1,4 +1,4 @@
-package co.rsk.scoring;
+package co.usc.scoring;
 
 /**
  * EventType is an enumeration to represent the events to be recorded

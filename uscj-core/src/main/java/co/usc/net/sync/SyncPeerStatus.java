@@ -1,7 +1,7 @@
-package co.rsk.net.sync;
+package co.usc.net.sync;
 
-import co.rsk.core.BlockDifficulty;
-import co.rsk.net.Status;
+import co.usc.core.BlockDifficulty;
+import co.usc.net.Status;
 
 import java.time.Clock;
 import java.time.Duration;

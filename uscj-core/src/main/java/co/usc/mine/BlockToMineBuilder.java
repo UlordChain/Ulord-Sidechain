@@ -16,17 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.mine;
+package co.usc.mine;
 
-import co.rsk.config.MiningConfig;
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.Coin;
-import co.rsk.core.DifficultyCalculator;
-import co.rsk.core.RskAddress;
-import co.rsk.core.bc.BlockExecutor;
-import co.rsk.core.bc.FamilyUtils;
-import co.rsk.remasc.RemascTransaction;
-import co.rsk.validators.BlockValidationRule;
+import co.usc.config.MiningConfig;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.Coin;
+import co.usc.core.DifficultyCalculator;
+import co.usc.core.RskAddress;
+import co.usc.core.bc.BlockExecutor;
+import co.usc.core.bc.FamilyUtils;
+import co.usc.remasc.RemascTransaction;
+import co.usc.validators.BlockValidationRule;
 import org.apache.commons.collections4.CollectionUtils;
 import org.ethereum.core.*;
 import org.ethereum.crypto.HashUtil;
@@ -40,6 +40,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 import java.time.Clock;
+import java.util.*;
 
 /**
  * This component helps build a new block to mine.

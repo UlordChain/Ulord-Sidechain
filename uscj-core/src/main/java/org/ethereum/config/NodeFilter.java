@@ -19,7 +19,7 @@
 
 package org.ethereum.config;
 
-import co.rsk.net.NodeID;
+import co.usc.net.NodeID;
 import org.ethereum.net.rlpx.Node;
 
 import java.net.InetAddress;

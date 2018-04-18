@@ -19,7 +19,7 @@
 
 package org.ethereum.net.eth.handler;
 
-import co.rsk.net.eth.RskWireProtocol;
+import co.usc.net.eth.RskWireProtocol;
 import org.ethereum.net.eth.EthVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

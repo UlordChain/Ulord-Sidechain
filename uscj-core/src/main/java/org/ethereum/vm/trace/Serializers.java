@@ -19,7 +19,7 @@
 
 package org.ethereum.vm.trace;
 
-import co.rsk.panic.PanicProcessor;
+import co.usc.panic.PanicProcessor;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;

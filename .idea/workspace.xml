@@ -1,0 +1,1604 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e8cbfb10-14d0-4905-b182-2d3cdd5c4d85" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__aopalliance_aopalliance_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__ch_qos_logback_logback_classic_1_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__ch_qos_logback_logback_core_1_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_annotations_2_8_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_core_2_8_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_fasterxml_jackson_core_jackson_databind_2_8_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_briandilley_jsonrpc4j_jsonrpc4j_1_5_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_guava_guava_18_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_googlecode_json_simple_json_simple_1_1_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_h2database_h2_1_4_193.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_madgag_spongycastle_core_1_52_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_madgag_spongycastle_prov_1_52_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_typesafe_config_1_3_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__commons_codec_commons_codec_1_10.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__commons_io_commons_io_2_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__commons_logging_commons_logging_1_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_netty_netty_all_4_0_30_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__junit_junit_4_12.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__net_iharder_base64_2_3_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_commons_commons_collections4_4_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_apache_commons_commons_lang3_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_awaitility_awaitility_3_0_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_ethereum_leveldbjni_all_1_18_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_fusesource_hawtjni_hawtjni_runtime_1_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_fusesource_leveldbjni_leveldbjni_1_8.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hamcrest_hamcrest_core_1_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hamcrest_hamcrest_library_1_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_iq80_leveldb_leveldb_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_iq80_leveldb_leveldb_api_0_9.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_javassist_javassist_3_20_0_GA.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_mapdb_mapdb_2_0_beta13.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_mockito_mockito_core_1_10_19.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_objenesis_objenesis_2_5_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_powermock_powermock_api_mockito_1_6_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_powermock_powermock_api_support_1_6_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_powermock_powermock_core_1_6_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_powermock_powermock_module_junit4_1_6_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_powermock_powermock_module_junit4_common_1_6_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_powermock_powermock_reflect_1_6_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_jcl_over_slf4j_1_7_25.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_log4j_over_slf4j_1_7_25.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_slf4j_api_1_7_25.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_aop_4_2_9_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_beans_4_2_9_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_context_4_2_9_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_core_4_2_9_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_expression_4_2_9_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_jdbc_4_2_9_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_orm_4_2_9_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_test_4_2_9_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_springframework_spring_tx_4_2_9_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/uscj-core.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/uscj-core_main.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules/uscj-core_test.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/libs/rsk-gradle-witness.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/GenNodeKeyId.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/Start.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/blocks/BlockRecorder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/blocks/FileBlockPlayer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/blocks/FileBlockRecorder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/cli/OptionalizableArgument.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeConstants.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/ConfigLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/GasLimitConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/RemascConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/WalletAccount.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/NetworkStateExporter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/ReversibleTransactionExecutor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/RskAddress.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/RskFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/Wallet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/bc/BlockChainImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/bc/BlockChainStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/bc/BlockExecutor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/bc/BlockFork.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/bc/BlockResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/bc/BlockUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/bc/BlockValidatorImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/bc/SelectionRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/bc/TransactionPoolImplNoCleaner.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/crypto/EncryptedData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/crypto/Keccak256.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/db/RepositoryImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/db/RepositoryTrackWithBenchmarking.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/BlockToMineBuilder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/GasLimitCalculator.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerWork.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/SubmitBlockResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/SubmittedBlockInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/TxBuilder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/TxBuilderEx.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/BlockCache.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/BlockProcessor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/MessageChannel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/MessageHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/Metrics.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/NodeBlockProcessor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/NodeID.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/Status.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/SyncProcessor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/PeerDiscoveryRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/PeerExplorer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/message/NeighborsPeerMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/message/PeerDiscoveryMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/message/PeerDiscoveryMessageFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/message/PingPeerMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/table/Bucket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/table/BucketEntry.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/table/DistanceCalculator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/table/KademliaOptions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/table/NodeDistanceComparator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/table/NodeDistanceTable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/eth/MessageFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/eth/MessageRecorder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/eth/RskMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/handler/TxHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/handler/TxValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/handler/txvalidator/TxValidatorGasLimitValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/handler/txvalidator/TxValidatorNotRemascTxValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/handler/txvalidator/TxValidatorStep.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/BlockHashResponseMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/BlockHeadersMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/BlockHeadersResponseMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/BlockMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/BlockRequestMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/BlockResponseMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/BodyRequestMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/BodyResponseMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/GetBlockHeadersMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/Message.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/NewBlockHashMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/SkeletonRequestMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/StatusMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/messages/TransactionsMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/sync/BaseSyncState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/sync/ChunksDownloadHelper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/sync/DecidingSyncState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/sync/PendingMessages.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/sync/SyncConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/sync/SyncPeerStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/panic/PanicProcessor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/ABICallElection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/ABICallSpec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/AddressBasedAuthorizer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/Bridge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeBtcWallet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeIllegalArgumentException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeSerializationUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeStorageProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/PendingFederation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/ReleaseTransactionBuilder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/ReleaseTransactionSet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/RepositoryBlockStore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/RskUTXOProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/SamplePrecompiledContract.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/bitcoin/RskAllowUnconfirmedCoinSelector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/utils/BridgeEventLogger.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/remasc/Remasc.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/remasc/RemascException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/remasc/RemascFederationProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/remasc/RemascState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/remasc/RemascStorageProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/remasc/Sibling.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/remasc/SiblingPaymentCalculator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/CorsConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/ExecutionBlockRetriever.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/ModuleDescription.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/Web3EthModule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/Web3RskImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/exception/JsonRpcSubmitBlockException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/modules/eth/EthModule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/modules/eth/EthModuleSolidityDisabled.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/modules/eth/EthModuleWallet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/modules/eth/EthModuleWalletEnabled.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/modules/personal/PersonalModule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/modules/personal/PersonalModuleWalletDisabled.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/modules/txpool/TxPoolModule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/modules/txpool/TxPoolModuleImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/netty/JsonRpcWeb3ServerHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/scoring/EventType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/scoring/InetAddressTable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/scoring/InetAddressUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/scoring/InvalidInetAddressBlockException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/scoring/PeerScoring.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/scoring/PeerScoringInformation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/scoring/PeerScoringManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/scoring/PunishmentParameters.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/trie/PathEncoder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/trie/ResultAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/trie/Trie.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/trie/TrieImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/trie/TriePutResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/trie/TrieStoreImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/util/DifficultyUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/util/RLPElementType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/util/RLPElementView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/util/RskCustomCache.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/validators/BlockCompositeRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/validators/BlockHeaderValidationRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/validators/BlockParentCompositeRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/validators/BlockParentGasLimitRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/validators/BlockTimeStampValidationRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/validators/BlockTxsFieldsValidationRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/validators/BlockUnclesHashValidationRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/validators/ExtraDataRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/validators/GasLimitRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/ConcatKDFBytesGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/cli/CLIInterface.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/BlockchainConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/BlockchainNetConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/CommonConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/Constants.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/DefaultConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/NoAutoscan.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/NodeFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/SystemProperties.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/blockchain/AbstractConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/blockchain/DevNetConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/blockchain/FallbackMainNetConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/blockchain/GenesisConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/blockchain/MainNetAfterBridgeSyncConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/blockchain/MainNetBeforeBridgeSyncConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/blockchain/RegTestConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/blockchain/TestNetAfterBridgeSyncConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/blockchain/TestNetBeforeBridgeSyncConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/net/AbstractNetConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/net/MainNetConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/net/TestNetConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/Account.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/AccountState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/Block.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/BlockHeader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/BlockIdentifier.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/Blockchain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/Bloom.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/CallTransaction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/Denomination.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/EventDispatchThread.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/Genesis.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/ImmutableTransaction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/ImportResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/Repository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/SealedBlockException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/SealedBlockHeaderException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/Transaction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/TransactionException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/TransactionExecutionSummary.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/TransactionExecutor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/TransactionPool.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/TransactionReceipt.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/TransactionSet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/genesis/AllocatedAccount.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/genesis/BlockChainLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/genesis/Contract.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/genesis/ContractDetailsMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/genesis/GenesisJson.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/genesis/GenesisLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/genesis/GenesisMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/genesis/InitialAddressState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/ECIESCoder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/ECIESPublicKeyEncoder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/ECKey.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/EthereumIESEngine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/HashUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/Keccak256Helper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/MGF1BytesGeneratorExt.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/cryptohash/Digest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/cryptohash/DigestEngine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/cryptohash/Keccak256.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/cryptohash/KeccakCore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/datasource/DataSource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/datasource/DataSourcePool.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/datasource/HashMapDB.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/datasource/KeyValueDataSource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/datasource/LevelDbDataSource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/AbstractBlockstore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/BlockInformation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/BlockStore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/ByteArrayWrapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/ContractDetails.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/ContractDetailsCacheImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/Database.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/DatabaseImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/DetailsDataStore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/IndexedBlockStore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/ReceiptStore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/ReceiptStoreImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/RepositoryTrack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/TransactionInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/facade/Ethereum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/facade/EthereumImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/facade/TransactionPool.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/json/EtherObjectMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/json/Utils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/listener/CompositeEthereumListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/listener/EthereumListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/listener/EthereumListenerAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/listener/GasPriceTracker.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/manager/AdminInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/EthereumChannelInitializerFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/MessageQueue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/MessageRoundtrip.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/NodeHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/NodeManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/NodeStatistics.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/client/Capability.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/client/ConfigCapabilities.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/client/ConfigCapabilitiesImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/client/PeerClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/EthVersion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/handler/Eth.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/handler/EthAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/handler/EthHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/handler/EthHandlerFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/handler/EthHandlerFactoryImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/handler/GetBlockHeadersMessageWrapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/message/BlockBodiesMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/message/BlockHeadersMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/message/Eth62MessageFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/message/EthMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/message/EthMessageCodes.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/message/GetBlockBodiesMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/message/GetBlockHeadersMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/message/NewBlockHashesMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/message/NewBlockMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/message/StatusMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/eth/message/TransactionsMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/message/Message.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/message/MessageFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/message/ReasonCode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/message/StaticMessages.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/p2p/DisconnectMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/p2p/GetPeersMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/p2p/HelloMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/p2p/P2pHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/p2p/P2pMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/p2p/P2pMessageCodes.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/p2p/P2pMessageFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/p2p/Peer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/p2p/PeersMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/p2p/PingMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/p2p/PongMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/AuthInitiateMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/AuthInitiateMessageV4.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/AuthResponseMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/AuthResponseMessageV4.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/EncryptionHandshake.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/FrameCodec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/FrameCodecHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/HandshakeHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/HandshakeMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/MessageCodec.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/MessageCodesResolver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/Node.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/RlpxConnection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/server/Channel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/server/ChannelManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/server/ChannelManagerImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/server/EthereumChannelInitializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/server/PeerServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/server/PeerServerImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/server/PeerStatistics.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/submit/TransactionExecutor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/submit/TransactionTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/submit/WalletTransaction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/AddressesTopicsFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/Filter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/FilterManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/HttpUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/LogFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/LogFilterElement.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/NewBlockFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/PendingTransactionFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/Topic.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/TypeConverter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/Web3.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/Web3Impl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/converters/CallArgumentsToByteArray.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/dto/CompilationInfoDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/dto/CompilationResultDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/dto/ModulesDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/dto/TransactionReceiptDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/dto/TransactionResultDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/exception/DisabledWalletException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/exception/JsonRpcInvalidParamException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/exception/JsonRpcUnimplementedMethodException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/exception/RskErrorResolver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/exception/RskJsonRpcRequestException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/solidity/SolidityType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/solidity/compiler/CompilationResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/solidity/compiler/ContractException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/solidity/compiler/Solc.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/solidity/compiler/SolidityCompiler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/solidity/compiler/SourceArtifact.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/solidity/compiler/Sources.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/sync/SyncPool.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/sync/SyncState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/sync/SyncStatistics.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/BIUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/BuildInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/ByteUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/CompactEncoder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/CopyOnWriteMap.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/DecodeResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/FastByteComparisons.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/FileUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/LRUMap.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/RLP.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/RLPElement.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/RLPItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/RLPList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/TimeUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/Utils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/Value.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/validator/AbstractValidationRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/validator/DependentBlockHeaderRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/validator/DifficultyRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/validator/ParentBlockHeaderValidator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/validator/ParentGasLimitRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/validator/ParentNumberRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/validator/ValidationRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/CallCreate.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/DataWord.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/GasCost.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/LogInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/MessageCall.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/OpCode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/OpCodes.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/PrecompiledContracts.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/VM.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/VMHook.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/VMUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/InternalTransaction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/Memory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/Program.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/ProgramResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/Stack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/Storage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/invoke/ProgramInvoke.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/invoke/ProgramInvokeFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/invoke/ProgramInvokeFactoryImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/invoke/ProgramInvokeImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/listener/CompositeProgramListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/listener/ProgramListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/listener/ProgramListenerAdaptor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/listener/ProgramListenerAware.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/trace/Op.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/trace/OpActions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/trace/ProgramTrace.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/trace/ProgramTraceListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/trace/Serializers.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/build-info.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/config/main.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/config/regtest.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/config/rsk-sample.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/config/testnet.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/genesis/bamboo-testnet.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/genesis/devnet-genesis.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/genesis/frontier.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/genesis/ginger-testnet.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/genesis/rsk-dev.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/genesis/rsk-mainnet.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/genesis/rsk-unittests.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/logback.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/reference.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/remasc.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/rskbitcoincheckpoints/org.bitcoin.production.checkpoints" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/rskbitcoincheckpoints/org.bitcoin.test.checkpoints" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/version.properties" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/uscj-core/.gradle/" />
+    <ignored path="$PROJECT_DIR$/uscj-core/build/" />
+    <ignored path="$PROJECT_DIR$/uscj-core/out/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/uscj-core">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="uscj-core" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="Program.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/Program.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="522">
+              <caret line="54" column="19" selection-start-line="54" selection-start-column="19" selection-end-line="54" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ProgramResult.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/ProgramResult.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="162">
+              <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>jsr</find>
+      <find>rskLllVersion</find>
+      <find>usc</find>
+      <find>co.usc.bitcoinj</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>co.rsk.bitcoinj</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GradleLocalSettings">
+    <option name="myGradleHomes">
+      <map>
+        <entry key="$PROJECT_DIR$/uscj-core" value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4" />
+      </map>
+    </option>
+    <option name="myGradleVersions">
+      <map>
+        <entry key="$PROJECT_DIR$/uscj-core" value="4.4" />
+      </map>
+    </option>
+    <option name="availableProjects">
+      <map>
+        <entry>
+          <key>
+            <ExternalProjectPojo>
+              <option name="name" value="uscj-core" />
+              <option name="path" value="$PROJECT_DIR$/uscj-core" />
+            </ExternalProjectPojo>
+          </key>
+          <value>
+            <list>
+              <ExternalProjectPojo>
+                <option name="name" value="uscj-core" />
+                <option name="path" value="$PROJECT_DIR$/uscj-core" />
+              </ExternalProjectPojo>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="availableTasks">
+      <map>
+        <entry key="$PROJECT_DIR$/uscj-core">
+          <value>
+            <list>
+              <ExternalTaskPojo>
+                <option name="description" value="Displays the sub-projects of root project 'uscj-core'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="projects" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs this project as a JVM application" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="run" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Generates Gradle wrapper files." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="wrapper" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Verifies code coverage metrics based on specified rules for the test task." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="jacocoTestCoverageVerification" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="sourcesJar" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Creates OS specific scripts to run the project as a JVM application." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="startScripts" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles a jar archive containing the main classes." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="jar" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Displays the configuration model of root project 'uscj-core'. [incubating]" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="model" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="buildPropertiesFile" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Processes main resources." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="processResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Displays the tasks runnable from root project 'uscj-core'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="tasks" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles the main distributions" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="assembleDist" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Initializes a new Gradle build." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="init" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="reproducible" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs the unit tests." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="test" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Compiles main Java source." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="compileJava" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="javadocJar" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs all checks." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="check" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Displays all dependencies declared in root project 'uscj-core'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="dependencies" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Processes test resources." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="processTestResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="calculateChecksums" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Bundles the project as a JVM application with libs and OS specific scripts." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="distShadowTar" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Installs the 'archives' artifacts into the local Maven repository." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="install" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project and all projects it depends on." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="buildNeeded" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Bundles the project as a JVM application with libs and OS specific scripts." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="distShadowZip" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Create a combined JAR of project and runtime dependencies" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="shadowJar" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Bundles the project as a distribution." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="distTar" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Bundles the project as a distribution." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="distZip" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Displays the components produced by root project 'uscj-core'. [incubating]" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="components" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project and all projects that depend on it." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="buildDependents" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="generatePom" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles main classes." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="classes" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Displays the dependent components of components in root project 'uscj-core'. [incubating]" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="dependentComponents" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Installs the project as a JVM application along with libs and OS specific scripts." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="installShadowApp" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Displays all buildscript dependencies declared in root project 'uscj-core'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="buildEnvironment" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles test classes." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="testClasses" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Generates Javadoc API documentation for the main source code." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="javadoc" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs this project as a JVM application using the shadow jar" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="runShadow" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Creates OS specific scripts to run the project as a JVM application using the shadow jar" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="startShadowScripts" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Installs the project as a distribution as-is." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="installDist" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Do you know who knows?" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="knows" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Analyzes root project 'uscj-core' and its subprojects with SonarQube." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="sonarqube" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Displays the insight into a specific dependency in root project 'uscj-core'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="dependencyInsight" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Generates code coverage report for the test task." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="jacocoTestReport" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles the outputs of this project." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="assemble" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Deletes the build directory." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="clean" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Compiles test Java source." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="compileTestJava" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Displays a help message." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="help" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="build" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Displays the properties of root project 'uscj-core'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/uscj-core" />
+                <option name="name" value="properties" />
+              </ExternalTaskPojo>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="modificationStamps">
+      <map>
+        <entry key="$PROJECT_DIR$/uscj-core" value="6096141955000" />
+        <entry key="$PROJECT_DIR$/uscj-core/.gradle" value="0" />
+        <entry key="$PROJECT_DIR$/uscj-core/build.gradle" value="1153736447" />
+        <entry key="$PROJECT_DIR$/uscj-core/gradle/wrapper/gradle-wrapper.properties" value="1741342742" />
+        <entry key="$PROJECT_DIR$/uscj-core/settings.gradle" value="3889095856" />
+      </map>
+    </option>
+    <option name="projectBuildClasspath">
+      <map>
+        <entry key="$PROJECT_DIR$/uscj-core">
+          <value>
+            <ExternalProjectBuildClasspathPojo>
+              <option name="modulesBuildClasspath">
+                <map>
+                  <entry key="$PROJECT_DIR$/uscj-core">
+                    <value>
+                      <ExternalModuleBuildClasspathPojo>
+                        <option name="entries">
+                          <list>
+                            <option value="$PROJECT_DIR$/uscj-core/libs/rsk-gradle-witness.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.build.gradle/propdeps-plugin/0.0.7/bdb8785151682656a3396c1abbbf45811363db3f/propdeps-plugin-0.0.7.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.jengelman.gradle.plugins/shadow/1.2.4/eb9018270829350e3b24699dd5083d107f37f41d/shadow-1.2.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.jengelman.gradle.plugins/shadow/1.2.4/f358f86285be684e9c73a8fa3705543dc99f000a/shadow-1.2.4.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.sonarsource.scanner.gradle/sonarqube-gradle-plugin/2.5/e7959fcb419ae0d5d9733e7914fbdb786f986fec/sonarqube-gradle-plugin-2.5-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.sonarsource.scanner.gradle/sonarqube-gradle-plugin/2.5/ca63fc4052696d4f544b0172ae07347aba63badf/sonarqube-gradle-plugin-2.5.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jdom/jdom2/2.0.5/769f3cca4ce92088288be3d0238ef96ef787e82f/jdom2-2.0.5-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jdom/jdom2/2.0.5/2001db51c131e555bafdb77fc52af6a9408c505e/jdom2-2.0.5.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/5.0.3/f0f24f6666c1a15c7e202e91610476bd4ce59368/asm-5.0.3-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/5.0.3/dcc2193db20e19e1feca8b1240dbbc4e190824fa/asm-5.0.3.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/5.0.3/f0f24f6666c1a15c7e202e91610476bd4ce59368/asm-commons-5.0.3-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/5.0.3/a7111830132c7f87d08fe48cb0ca07630f8cb91c/asm-commons-5.0.3.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.4/f2d8698c46d1167ff24b06a840a87d91a02db891/commons-io-2.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.4/b1b6ea3b7e4aa4f492509a4952029cd8e48019ad/commons-io-2.4.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.ant/ant/1.9.4/ffa48418a72bff1cbd24a651861e003318129eb6/ant-1.9.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.ant/ant/1.9.4/6d473e8653d952045f550f4ef225a9591b79094a/ant-1.9.4.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-utils/2.0.6/794dbb2673e674e7ae55948657c119342fe2e448/plexus-utils-2.0.6-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-utils/2.0.6/3a20c424a712a7c02b02af61dcad5f001b29a9fd/plexus-utils-2.0.6.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-backports-compat23/2.4.4/8c7351852ffdd79f8e06b4052f662cc996e3598c/groovy-backports-compat23-2.4.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-backports-compat23/2.4.4/db18ea377b154334e5323451835d329802222fa/groovy-backports-compat23-2.4.4.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.sonarsource.scanner.api/sonar-scanner-api/2.9.0.887/69430444f5bc97cbe124646bd24c581ea3c9b2cf/sonar-scanner-api-2.9.0.887-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.sonarsource.scanner.api/sonar-scanner-api/2.9.0.887/daf561ff8b9d3f83bbd2080c44083147426dc9ae/sonar-scanner-api-2.9.0.887.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/5.0.3/f0f24f6666c1a15c7e202e91610476bd4ce59368/asm-tree-5.0.3-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/5.0.3/287749b48ba7162fb67c93a026d690b29f410bed/asm-tree-5.0.3.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.ant/ant-launcher/1.9.4/b7ae945463dece0e58f3ebbf6d3d4c773277e1b2/ant-launcher-1.9.4-sources.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.ant/ant-launcher/1.9.4/334b62cb4be0432769679e8b94e83f8fd5ed395c/ant-launcher-1.9.4.jar" />
+                          </list>
+                        </option>
+                        <option name="path" value="$PROJECT_DIR$/uscj-core" />
+                      </ExternalModuleBuildClasspathPojo>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="name" value="uscj-core" />
+              <option name="projectBuildClasspath">
+                <list>
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-messaging-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/ant-1.9.9.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-kotlin-dsl-tooling-builders-0.13.1.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-docs-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-cli-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-native-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-installation-beacon-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-kotlin-dsl-0.13.1.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-kotlin-dsl-tooling-models-0.13.1.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-wrapper-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-model-core-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-jvm-services-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-resources-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-core-api-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/ant-launcher-1.9.9.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-process-services-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-base-services-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-logging-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-launcher-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-runtime-api-info-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-model-groovy-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-build-option-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-tooling-api-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-base-services-groovy-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-persistent-cache-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/groovy-all-2.4.12.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-build-cache-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/gradle-core-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-build-cache-http-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-resources-http-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-javascript-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-plugins-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-jacoco-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-language-native-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-ear-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-build-init-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-language-jvm-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-antlr-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-testing-jvm-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-version-control-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-platform-play-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/ivy-2.2.0.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-test-kit-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-tooling-api-builders-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-testing-native-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-ide-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-ide-play-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-diagnostics-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-composite-builds-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-build-comparison-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-resources-sftp-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-maven-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-scala-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-platform-jvm-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-workers-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-testing-base-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-plugin-use-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-osgi-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-reporting-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-platform-base-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-dependency-management-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-ide-native-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-code-quality-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-plugin-development-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-ivy-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-announce-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-signing-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-platform-native-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-resources-gcs-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-language-java-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-language-scala-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-resources-s3-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-language-groovy-4.4.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.4-bin/bgaq7vklkazwgxox0hdadxbvi/gradle-4.4/lib/plugins/gradle-publish-4.4.jar" />
+                  <option value="$PROJECT_DIR$/uscj-core/buildSrc/src/main/java" />
+                  <option value="$PROJECT_DIR$/uscj-core/buildSrc/src/main/groovy" />
+                </list>
+              </option>
+            </ExternalProjectBuildClasspathPojo>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="projectSyncType">
+      <map>
+        <entry key="$PROJECT_DIR$/uscj-core" value="RE_IMPORT" />
+        <entry key="$PROJECT_DIR$/../rskj" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../uscj" value="PREVIEW" />
+      </map>
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/uscj-core/src/main/resources/version.properties" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/ECKey.java" />
+        <option value="$PROJECT_DIR$/uscj-core/build.gradle" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/NodeManager.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/PeerExplorer.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeConstants.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/BlockToMineBuilder.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/SystemProperties.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerUtils.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/Wallet.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/BlockNodeInformation.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/BlockStore.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/BlockSyncService.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/NodeBlockProcessor.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/table/Bucket.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/table/NodeDistanceTable.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/sync/PeersInformation.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/scoring/PeerScoringManager.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/p2p/P2pHandler.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/FrameCodec.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/MessageCodec.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/MessageQueue.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/RLP.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/Program.java" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/ProgramResult.java" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="65" />
+    <option name="y" value="24" />
+    <option name="width" value="928" />
+    <option name="height" value="1056" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
+              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
+              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
+              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
+              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
+              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="org" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
+              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="org" type="462c0819:PsiDirectoryNode" />
+              <item name="ethereum" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
+              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="org" type="462c0819:PsiDirectoryNode" />
+              <item name="ethereum" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
+              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="org" type="462c0819:PsiDirectoryNode" />
+              <item name="ethereum" type="462c0819:PsiDirectoryNode" />
+              <item name="vm" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
+              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="org" type="462c0819:PsiDirectoryNode" />
+              <item name="ethereum" type="462c0819:PsiDirectoryNode" />
+              <item name="vm" type="462c0819:PsiDirectoryNode" />
+              <item name="program" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="jdk.selected.JAVA_MODULE" value="1.8" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/uscj-core/src/main/resources" />
+      <recent name="$PROJECT_DIR$/uscj-core" />
+      <recent name="$PROJECT_DIR$/uscj-core/src/main/java" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="GenNodeKeyId" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="co.usc.GenNodeKeyId" />
+      <module name="uscj-core_main" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="co.usc.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <patterns />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <properties />
+      <listeners />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.GenNodeKeyId" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e8cbfb10-14d0-4905-b182-2d3cdd5c4d85" name="Default" comment="" />
+      <created>1524032595626</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1524032595626</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="992" y="24" width="928" height="1056" extended-state="4" />
+    <editor active="true" />
+    <layout>
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.33932346" />
+      <window_info anchor="right" id="Palette&#9;" order="3" />
+      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="right" id="Maven Projects" order="3" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info id="Designer" order="2" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3900862" />
+      <window_info anchor="bottom" id="Build" order="7" weight="0.3295688" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3295688" />
+      <window_info anchor="right" id="Gradle" order="3" weight="0.39762932" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info id="UI Designer" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+    </layout>
+    <layout-to-restore>
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Gradle" order="4" weight="0.39762932" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3900862" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info id="Designer" order="2" />
+      <window_info id="UI Designer" order="3" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3295688" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="right" id="Palette&#9;" order="5" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Build" order="10" weight="0.3295688" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Messages" order="11" visible="true" weight="0.33932346" />
+      <window_info anchor="right" id="Maven Projects" order="6" />
+      <window_info id="Favorites" order="4" side_tool="true" />
+    </layout-to-restore>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/ECKey.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1260">
+          <caret line="117" column="39" selection-start-line="117" selection-start-column="39" selection-end-line="117" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/SystemProperties.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4590">
+          <caret line="309" column="13" selection-start-line="309" selection-start-column="13" selection-end-line="309" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/GenNodeKeyId.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="38" selection-start-line="38" selection-end-line="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/NodeManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="57" column="50" selection-start-line="57" selection-start-column="50" selection-end-line="57" selection-end-column="50" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/ByteUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="24" column="32" selection-start-line="24" selection-start-column="7" selection-end-line="24" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1476">
+          <caret line="87" column="24" lean-forward="true" selection-start-line="87" selection-start-column="24" selection-end-line="87" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6588">
+          <caret line="366" column="41" selection-start-line="366" selection-start-column="41" selection-end-line="366" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/resources/version.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/DoPrune.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="50" column="22" lean-forward="true" selection-start-line="50" selection-start-column="22" selection-end-line="50" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/GenNodeKeyId.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="38" selection-start-line="38" selection-end-line="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/crypto/ECKey.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1260">
+          <caret line="117" column="39" selection-start-line="117" selection-start-column="39" selection-end-line="117" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/ByteUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="24" column="32" selection-start-line="24" selection-start-column="7" selection-end-line="24" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/resources/config/main.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="19" column="28" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1424">
+          <caret line="126" column="49" selection-start-line="126" selection-start-column="49" selection-end-line="126" selection-end-column="49" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/NodeManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="36" column="6" lean-forward="true" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeDevNetConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="466">
+          <caret line="42" column="19" selection-start-line="42" selection-start-column="19" selection-end-line="42" selection-end-column="19" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/SystemProperties.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="48" column="19" lean-forward="true" selection-start-line="48" selection-start-column="19" selection-end-line="48" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/BlockToMineBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="34" column="24" lean-forward="true" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="144" column="29" selection-start-line="144" selection-start-column="29" selection-end-line="144" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/Wallet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="31" column="17" selection-start-line="31" selection-start-column="17" selection-end-line="31" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/BlockStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="25" column="19" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/BlockNodeInformation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3188#3432#0" expanded="true" />
+            <element signature="e#3431#3432#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/NodeBlockProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="327">
+          <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/PeerExplorer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="280" column="5" lean-forward="true" selection-start-line="280" selection-start-column="5" selection-end-line="280" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/table/Bucket.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="22" column="19" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/table/NodeDistanceTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="23" column="19" selection-start-line="23" selection-start-column="19" selection-end-line="23" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/sync/PeersInformation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/BlockSyncService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="35" column="25" lean-forward="true" selection-start-line="35" selection-start-column="25" selection-end-line="35" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/modules/eth/EthModule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="512">
+          <caret line="88" column="7" lean-forward="true" selection-start-line="88" selection-start-column="7" selection-end-line="88" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/scoring/PeerScoringManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="19" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/p2p/P2pHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="38" column="30" selection-start-line="38" selection-start-column="30" selection-end-line="38" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/FrameCodec.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="32" column="17" selection-start-line="32" selection-start-column="17" selection-end-line="32" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/MessageCodec.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="413">
+          <caret line="40" column="19" selection-start-line="40" selection-start-column="19" selection-end-line="40" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/MessageQueue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="34" column="30" selection-start-line="34" selection-start-column="30" selection-end-line="34" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/util/RLP.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="37" column="19" selection-start-line="37" selection-start-column="19" selection-end-line="37" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/Program.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="522">
+          <caret line="54" column="19" selection-start-line="54" selection-start-column="19" selection-end-line="54" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/vm/program/ProgramResult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

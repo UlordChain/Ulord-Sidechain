@@ -19,7 +19,7 @@
 
 package org.ethereum.net.p2p;
 
-import co.rsk.config.RskSystemProperties;
+import co.usc.config.RskSystemProperties;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.ethereum.core.Transaction;
@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 import static org.ethereum.net.eth.EthVersion.fromCode;
 import static org.ethereum.net.message.StaticMessages.PING_MESSAGE;

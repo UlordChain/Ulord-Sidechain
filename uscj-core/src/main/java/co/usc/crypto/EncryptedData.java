@@ -32,7 +32,7 @@
  * limitations under the License.
  */
 
-package co.rsk.crypto;
+package co.usc.crypto;
 
 import com.google.common.base.Objects;
 

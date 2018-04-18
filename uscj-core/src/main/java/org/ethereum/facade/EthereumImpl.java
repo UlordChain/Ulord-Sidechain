@@ -19,8 +19,8 @@
 
 package org.ethereum.facade;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.Coin;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.Coin;
 import org.ethereum.core.*;
 import org.ethereum.core.TransactionPool;
 import org.ethereum.listener.CompositeEthereumListener;

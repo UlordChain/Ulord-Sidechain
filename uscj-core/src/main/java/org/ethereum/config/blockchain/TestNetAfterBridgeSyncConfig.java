@@ -19,9 +19,9 @@
 
 package org.ethereum.config.blockchain;
 
-import co.rsk.config.BridgeConstants;
-import co.rsk.config.BridgeTestNetConstants;
-import co.rsk.core.BlockDifficulty;
+import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeTestNetConstants;
+import co.usc.core.BlockDifficulty;
 import org.ethereum.config.Constants;
 import org.ethereum.core.BlockHeader;
 

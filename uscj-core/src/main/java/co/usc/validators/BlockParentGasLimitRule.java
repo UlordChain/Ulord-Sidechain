@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.validators;
+package co.usc.validators;
 
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;

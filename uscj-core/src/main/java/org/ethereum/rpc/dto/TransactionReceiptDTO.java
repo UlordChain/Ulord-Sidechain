@@ -18,7 +18,7 @@
 
 package org.ethereum.rpc.dto;
 
-import co.rsk.core.RskAddress;
+import co.usc.core.RskAddress;
 import org.ethereum.core.Block;
 import org.ethereum.core.TransactionReceipt;
 import org.ethereum.db.TransactionInfo;

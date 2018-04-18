@@ -19,12 +19,12 @@
 
 package org.ethereum.net.server;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.net.Metrics;
-import co.rsk.net.NodeID;
-import co.rsk.net.Status;
-import co.rsk.net.eth.RskMessage;
-import co.rsk.net.messages.*;
+import co.usc.config.RskSystemProperties;
+import co.usc.net.Metrics;
+import co.usc.net.NodeID;
+import co.usc.net.Status;
+import co.usc.net.eth.RskMessage;
+import co.usc.net.messages.*;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.LRUMap;

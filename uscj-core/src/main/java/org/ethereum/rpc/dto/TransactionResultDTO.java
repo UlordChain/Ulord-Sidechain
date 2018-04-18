@@ -18,9 +18,9 @@
 
 package org.ethereum.rpc.dto;
 
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
-import co.rsk.remasc.RemascTransaction;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
+import co.usc.remasc.RemascTransaction;
 import org.ethereum.core.Block;
 import org.ethereum.core.Transaction;
 import org.ethereum.rpc.TypeConverter;

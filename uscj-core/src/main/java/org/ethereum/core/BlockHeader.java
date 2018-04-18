@@ -18,10 +18,10 @@
  */
 package org.ethereum.core;
 
-import co.rsk.core.BlockDifficulty;
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
-import co.rsk.crypto.Keccak256;
+import co.usc.core.BlockDifficulty;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
+import co.usc.crypto.Keccak256;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import org.ethereum.crypto.HashUtil;

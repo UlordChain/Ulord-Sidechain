@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net.messages;
+package co.usc.net.messages;
 
 import org.ethereum.core.BlockHeader;
 import org.ethereum.net.eth.message.EthMessageCodes;

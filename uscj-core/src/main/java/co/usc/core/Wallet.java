@@ -16,11 +16,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.core;
+package co.usc.core;
 
 import co.rsk.bitcoinj.core.Sha256Hash;
-import co.rsk.crypto.EncryptedData;
-import co.rsk.crypto.KeyCrypterAes;
+import co.usc.crypto.EncryptedData;
+import co.usc.crypto.KeyCrypterAes;
 import org.ethereum.core.Account;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.Keccak256Helper;
@@ -29,7 +29,9 @@ import org.ethereum.rpc.TypeConverter;
 import org.spongycastle.crypto.params.KeyParameter;
 
 import javax.annotation.concurrent.GuardedBy;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class Wallet {
     @GuardedBy("accessLock")

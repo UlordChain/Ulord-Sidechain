@@ -23,6 +23,8 @@ import org.ethereum.vm.CallCreate;
 import org.ethereum.vm.DataWord;
 import org.ethereum.vm.LogInfo;
 
+import java.util.*;
+
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 import static org.apache.commons.collections4.CollectionUtils.size;
 import static org.ethereum.util.ByteUtil.EMPTY_BYTE_ARRAY;

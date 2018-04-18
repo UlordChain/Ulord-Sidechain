@@ -66,4 +66,4 @@ Therefore:
 
 - We follow the Eth implementation, but setting the minimum limit to 1.000.000, so that complex contracts can be executed from the beginning
 - Allowed gas limit can never go above a target
-- Implementation is written in the GasLimitCalculator class, under the co.rsk.mine package.
+- Implementation is written in the GasLimitCalculator class, under the co.usc.mine package.

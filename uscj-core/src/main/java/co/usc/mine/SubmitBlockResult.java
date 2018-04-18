@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.mine;
+package co.usc.mine;
 
 /**
  * Wraps the result of a MinerServer.SubmitBitcoinBlock() method call.

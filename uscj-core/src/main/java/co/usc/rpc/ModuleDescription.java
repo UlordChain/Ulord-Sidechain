@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.rpc;
+package co.usc.rpc;
 
 import java.util.ArrayList;
 import java.util.List;

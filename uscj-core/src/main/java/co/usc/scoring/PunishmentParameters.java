@@ -1,4 +1,4 @@
-package co.rsk.scoring;
+package co.usc.scoring;
 
 /**
  * PunishmentParameters has the punishment parameters

@@ -16,12 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.peg;
+package co.usc.peg;
 
 import co.rsk.bitcoinj.core.*;
-import co.rsk.config.BridgeConstants;
-import co.rsk.core.RskAddress;
-import co.rsk.crypto.Keccak256;
+import co.usc.config.BridgeConstants;
+import co.usc.core.RskAddress;
+import co.usc.crypto.Keccak256;
 import org.ethereum.core.Repository;
 import org.ethereum.rpc.TypeConverter;
 import org.ethereum.vm.DataWord;
@@ -34,7 +34,7 @@ import java.util.SortedMap;
 
 /**
  * Provides an object oriented facade of the bridge contract memory.
- * @see co.rsk.remasc.RemascStorageProvider
+ * @see co.usc.remasc.RemascStorageProvider
  * @author ajlopez
  * @author Oscar Guindzberg
  */
@@ -65,7 +65,7 @@ public class BridgeStorageProvider {
     // then they are waiting for federators' signatures (rskTxsWaitingForSignatures),
     // then they are logged into the block that has them as completely signed for btc release
     // and are removed from rskTxsWaitingForSignatures.
-    // key = rsk tx hash, value = btc tx
+    // key = usc tx hash, value = btc tx
     private ReleaseRequestQueue releaseRequestQueue;
     private ReleaseTransactionSet releaseTransactionSet;
     private SortedMap<Keccak256, BtcTransaction> rskTxsWaitingForSignatures;

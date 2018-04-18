@@ -18,8 +18,8 @@
 
 package org.ethereum.core;
 
-import co.rsk.core.RskAddress;
-import co.rsk.crypto.Keccak256;
+import co.usc.core.RskAddress;
+import co.usc.crypto.Keccak256;
 
 import java.util.ArrayList;
 import java.util.HashMap;

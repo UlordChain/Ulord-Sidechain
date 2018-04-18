@@ -19,9 +19,9 @@
 
 package org.ethereum.core;
 
-import co.rsk.blocks.BlockRecorder;
-import co.rsk.core.BlockDifficulty;
-import co.rsk.core.bc.BlockChainStatus;
+import co.usc.blocks.BlockRecorder;
+import co.usc.core.BlockDifficulty;
+import co.usc.core.bc.BlockChainStatus;
 import org.ethereum.db.BlockInformation;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.TransactionInfo;

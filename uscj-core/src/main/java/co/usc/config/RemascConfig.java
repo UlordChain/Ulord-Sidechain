@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.config;
+package co.usc.config;
 
-import co.rsk.core.RskAddress;
+import co.usc.core.RskAddress;
 
 /**
  * Created by mario on 12/12/16.

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.panic;
+package co.usc.panic;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

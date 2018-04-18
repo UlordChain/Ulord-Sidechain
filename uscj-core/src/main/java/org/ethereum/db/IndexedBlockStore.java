@@ -19,9 +19,9 @@
 
 package org.ethereum.db;
 
-import co.rsk.core.BlockDifficulty;
-import co.rsk.crypto.Keccak256;
-import co.rsk.net.BlockCache;
+import co.usc.core.BlockDifficulty;
+import co.usc.crypto.Keccak256;
+import co.usc.net.BlockCache;
 import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
@@ -35,7 +35,7 @@ import org.spongycastle.pqc.math.linearalgebra.ByteUtils;
 
 import java.math.BigInteger;
 
-import static co.rsk.core.BlockDifficulty.ZERO;
+import static co.usc.core.BlockDifficulty.ZERO;
 import static org.ethereum.crypto.HashUtil.shortHash;
 import static org.spongycastle.util.Arrays.areEqual;
 

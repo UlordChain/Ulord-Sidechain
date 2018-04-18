@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package co.rsk.config;
+package co.usc.config;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -32,14 +32,14 @@ public class ConfigLoader {
     private static final String NO = "no";
 
     public Config getConfigFromFiles() {
-        File installerFile = new File("/etc/rsk/node.conf");
+        File installerFile = new File("/etc/usc/node.conf");
         Config installerConfig = installerFile.exists() ? ConfigFactory.parseFile(installerFile) : ConfigFactory.empty();
         logger.info(
-                "Config ( {} ): default properties from installer '/etc/rsk/node.conf'",
+                "Config ( {} ): default properties from installer '/etc/usc/node.conf'",
                 installerConfig.entrySet().isEmpty() ? NO : YES
         );
 
-        String file = System.getProperty("rsk.conf.file");
+        String file = System.getProperty("usc.conf.file");
         Config cmdLineConfigFile = file != null ? ConfigFactory.parseFile(new File(file)) : ConfigFactory.empty();
         logger.info(
                 "Config ( {} ): user properties from -Drsk.conf.file file '{}'",

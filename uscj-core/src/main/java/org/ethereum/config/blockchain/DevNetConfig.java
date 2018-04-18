@@ -19,8 +19,8 @@
 
 package org.ethereum.config.blockchain;
 
-import co.rsk.config.BridgeConstants;
-import co.rsk.config.BridgeDevNetConstants;
+import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeDevNetConstants;
 
 /**
  * Created by Oscar Guindzberg on 25.10.2016.

@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.trie;
+package co.usc.trie;
 
 /**
  * Created by martin.medina on 4/24/17.

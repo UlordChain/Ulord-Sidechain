@@ -16,32 +16,32 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.core;
+package co.usc.core;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.core.bc.BlockChainImpl;
-import co.rsk.core.bc.TransactionPoolImpl;
-import co.rsk.metrics.HashRateCalculator;
-import co.rsk.mine.MinerClient;
-import co.rsk.mine.MinerServer;
-import co.rsk.net.*;
-import co.rsk.net.eth.RskWireProtocol;
-import co.rsk.net.handler.TxHandler;
-import co.rsk.net.handler.TxHandlerImpl;
-import co.rsk.net.sync.SyncConfiguration;
-import co.rsk.rpc.CorsConfiguration;
-import co.rsk.rpc.Web3RskImpl;
-import co.rsk.rpc.modules.eth.*;
-import co.rsk.rpc.modules.personal.PersonalModule;
-import co.rsk.rpc.modules.personal.PersonalModuleWalletDisabled;
-import co.rsk.rpc.modules.personal.PersonalModuleWalletEnabled;
-import co.rsk.rpc.modules.txpool.TxPoolModule;
-import co.rsk.rpc.netty.JsonRpcWeb3FilterHandler;
-import co.rsk.rpc.netty.JsonRpcWeb3ServerHandler;
-import co.rsk.rpc.netty.Web3HttpServer;
-import co.rsk.scoring.PeerScoringManager;
-import co.rsk.scoring.PunishmentParameters;
-import co.rsk.validators.ProofOfWorkRule;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.bc.BlockChainImpl;
+import co.usc.core.bc.TransactionPoolImpl;
+import co.usc.metrics.HashRateCalculator;
+import co.usc.mine.MinerClient;
+import co.usc.mine.MinerServer;
+import co.usc.net.*;
+import co.usc.net.eth.RskWireProtocol;
+import co.usc.net.handler.TxHandler;
+import co.usc.net.handler.TxHandlerImpl;
+import co.usc.net.sync.SyncConfiguration;
+import co.usc.rpc.CorsConfiguration;
+import co.usc.rpc.Web3RskImpl;
+import co.usc.rpc.modules.eth.*;
+import co.usc.rpc.modules.personal.PersonalModule;
+import co.usc.rpc.modules.personal.PersonalModuleWalletDisabled;
+import co.usc.rpc.modules.personal.PersonalModuleWalletEnabled;
+import co.usc.rpc.modules.txpool.TxPoolModule;
+import co.usc.rpc.netty.JsonRpcWeb3FilterHandler;
+import co.usc.rpc.netty.JsonRpcWeb3ServerHandler;
+import co.usc.rpc.netty.Web3HttpServer;
+import co.usc.scoring.PeerScoringManager;
+import co.usc.scoring.PunishmentParameters;
+import co.usc.validators.ProofOfWorkRule;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.Repository;

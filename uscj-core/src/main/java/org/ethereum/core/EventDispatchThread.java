@@ -19,7 +19,7 @@
 
 package org.ethereum.core;
 
-import co.rsk.panic.PanicProcessor;
+import co.usc.panic.PanicProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

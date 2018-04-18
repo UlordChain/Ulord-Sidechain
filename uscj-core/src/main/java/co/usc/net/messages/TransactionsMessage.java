@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net.messages;
+package co.usc.net.messages;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.ethereum.core.Transaction;

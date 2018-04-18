@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.blocks;
+package co.usc.blocks;
 
 import org.ethereum.core.Block;
 

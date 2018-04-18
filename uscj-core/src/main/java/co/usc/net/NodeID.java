@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.net;
+package co.usc.net;
 
 import org.spongycastle.util.encoders.Hex;
 

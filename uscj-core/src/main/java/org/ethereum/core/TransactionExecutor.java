@@ -19,11 +19,11 @@
 
 package org.ethereum.core;
 
-import co.rsk.config.RskSystemProperties;
-import co.rsk.config.VmConfig;
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
-import co.rsk.panic.PanicProcessor;
+import co.usc.config.RskSystemProperties;
+import co.usc.config.VmConfig;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
+import co.usc.panic.PanicProcessor;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.Constants;
 import org.ethereum.db.BlockStore;

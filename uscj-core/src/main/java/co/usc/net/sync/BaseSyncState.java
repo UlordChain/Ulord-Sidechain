@@ -1,8 +1,8 @@
-package co.rsk.net.sync;
+package co.usc.net.sync;
 
-import co.rsk.net.MessageChannel;
-import co.rsk.net.messages.BodyResponseMessage;
-import co.rsk.scoring.EventType;
+import co.usc.net.MessageChannel;
+import co.usc.net.messages.BodyResponseMessage;
+import co.usc.scoring.EventType;
 import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.core.BlockIdentifier;

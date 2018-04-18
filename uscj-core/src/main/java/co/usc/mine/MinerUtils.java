@@ -16,16 +16,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.rsk.mine;
+package co.usc.mine;
 
 import co.rsk.bitcoinj.core.BtcTransaction;
 import co.rsk.bitcoinj.core.NetworkParameters;
-import co.rsk.config.RskMiningConstants;
-import co.rsk.core.Coin;
-import co.rsk.core.RskAddress;
-import co.rsk.core.bc.TransactionPoolImpl;
-import co.rsk.crypto.Keccak256;
-import co.rsk.remasc.RemascTransaction;
+import co.usc.config.RskMiningConstants;
+import co.usc.core.Coin;
+import co.usc.core.RskAddress;
+import co.usc.core.bc.TransactionPoolImpl;
+import co.usc.crypto.Keccak256;
+import co.usc.remasc.RemascTransaction;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
 import org.ethereum.core.TransactionPool;
@@ -38,6 +38,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.*;
 
 /**
  * Created by oscar on 26/09/2016.
