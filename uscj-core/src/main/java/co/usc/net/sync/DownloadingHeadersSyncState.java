@@ -7,6 +7,8 @@ import org.ethereum.core.BlockHeader;
 import org.ethereum.core.BlockIdentifier;
 import org.ethereum.util.ByteUtil;
 
+import java.util.*;
+
 public class DownloadingHeadersSyncState extends BaseSyncState {
 
     private final Map<NodeID, List<BlockIdentifier>> skeletons;

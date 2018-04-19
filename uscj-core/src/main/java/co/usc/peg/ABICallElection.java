@@ -20,6 +20,8 @@ package co.usc.peg;
 
 import co.usc.core.RskAddress;
 
+import java.util.*;
+
 /**
  * Representation of a given state of the election
  * of an ABI function call by a series of known

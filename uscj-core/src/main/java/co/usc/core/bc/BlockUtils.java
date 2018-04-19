@@ -25,6 +25,7 @@ import org.ethereum.core.BlockHeader;
 import org.ethereum.core.Blockchain;
 import org.ethereum.db.BlockInformation;
 
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**

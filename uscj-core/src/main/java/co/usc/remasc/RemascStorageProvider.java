@@ -28,6 +28,7 @@ import org.spongycastle.util.BigIntegers;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * Responsible for persisting the remasc state into the contract state

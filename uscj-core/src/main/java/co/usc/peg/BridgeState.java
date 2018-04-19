@@ -29,6 +29,7 @@ import org.ethereum.util.RLPList;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.*;
 
 /**
  * DTO to send the contract state.

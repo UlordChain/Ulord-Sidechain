@@ -22,6 +22,8 @@ import co.rsk.bitcoinj.core.Address;
 import co.rsk.bitcoinj.core.Coin;
 import com.google.common.primitives.UnsignedBytes;
 
+import java.util.*;
+
 /**
  * Represents a lock whitelist
  * for btc lock transactions.

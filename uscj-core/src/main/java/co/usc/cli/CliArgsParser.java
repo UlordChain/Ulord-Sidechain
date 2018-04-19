@@ -1,5 +1,6 @@
 package co.usc.cli;
 
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CliArgsParser<O extends Enum<O> & OptionalizableArgument, F extends Enum<F>> {

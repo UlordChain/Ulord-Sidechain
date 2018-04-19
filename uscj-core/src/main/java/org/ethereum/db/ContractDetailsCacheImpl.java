@@ -27,6 +27,8 @@ import org.ethereum.util.RLP;
 import org.ethereum.vm.DataWord;
 import org.spongycastle.util.encoders.Hex;
 
+import java.util.*;
+
 import static java.util.Collections.unmodifiableMap;
 import static org.ethereum.util.ByteUtil.EMPTY_BYTE_ARRAY;
 

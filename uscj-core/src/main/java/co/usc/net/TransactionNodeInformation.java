@@ -21,6 +21,7 @@ package co.usc.net;
 import co.usc.crypto.Keccak256;
 
 import javax.annotation.Nonnull;
+import java.util.*;
 
 /**
  * TransactionNodeInformation has information about which transactions are known by which nodes,

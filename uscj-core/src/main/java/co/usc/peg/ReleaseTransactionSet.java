@@ -21,6 +21,8 @@ package co.usc.peg;
 import co.rsk.bitcoinj.core.BtcTransaction;
 import com.google.common.primitives.UnsignedBytes;
 
+import java.util.*;
+
 /**
  * Representation of a queue of BTC release
  * transactions waiting for confirmations

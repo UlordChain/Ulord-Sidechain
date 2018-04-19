@@ -26,6 +26,8 @@ import org.ethereum.datasource.KeyValueDataSource;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
 
+import java.util.*;
+
 /**
  * Created by Ruben on 6/1/2016.
  * Class used to store transaction receipts

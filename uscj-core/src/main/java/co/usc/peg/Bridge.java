@@ -48,6 +48,7 @@ import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.*;
 
 /**
  * Precompiled contract that manages the 2 way peg between bitcoin and RSK.

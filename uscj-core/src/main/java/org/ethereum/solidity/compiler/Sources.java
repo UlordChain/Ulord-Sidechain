@@ -23,6 +23,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.ethereum.solidity.compiler.ContractException.assembleError;
+
 public class Sources {
 
     private final Map<String, SourceArtifact> artifacts = new HashMap<>();
