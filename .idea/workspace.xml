@@ -2,94 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e8cbfb10-14d0-4905-b182-2d3cdd5c4d85" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_UlordChain_ulordj_thin__SNAPSHOT.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/uscj-core_main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/uscj-core_main.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/uscj-core_test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/uscj-core_test.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/.gradle/4.4/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/.gradle/4.4/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/.gradle/4.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/.gradle/4.4/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/config/BridgeConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/config/BridgeConstants.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/config/BridgeDevNetConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/config/BridgeDevNetConstants.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/config/BridgeMainNetConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/config/BridgeMainNetConstants.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/config/BridgeRegTestConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/config/BridgeRegTestConstants.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/config/BridgeTestNetConstants.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/config/BridgeTestNetConstants.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/core/Coin.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/core/Coin.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/core/Wallet.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/core/Wallet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/crypto/Keccak256.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/crypto/Keccak256.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/mine/MinerClientImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/mine/MinerClientImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/mine/MinerServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/mine/MinerServer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/mine/MinerServerImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/mine/MinerServerImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/mine/MinerUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/mine/MinerUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/Bridge.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/Bridge.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/BridgeBtcWallet.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/BridgeBtcWallet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/BridgeSerializationUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/BridgeSerializationUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/BridgeState.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/BridgeState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/BridgeStorageProvider.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/BridgeStorageProvider.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/BridgeSupport.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/BridgeSupport.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/BridgeUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/BridgeUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/Federation.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/Federation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/LockWhitelist.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/LockWhitelist.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/PendingFederation.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/PendingFederation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseRequestQueue$Entry.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseRequestQueue$Entry.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseRequestQueue.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseRequestQueue.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseTransactionBuilder$BuildResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseTransactionBuilder$BuildResult.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseTransactionBuilder$SendRequestConfigurator.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseTransactionBuilder$SendRequestConfigurator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseTransactionBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseTransactionBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseTransactionSet$Entry$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseTransactionSet$Entry$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseTransactionSet$Entry.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseTransactionSet$Entry.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseTransactionSet.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/ReleaseTransactionSet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/RepositoryBlockStore.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/RepositoryBlockStore.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/RskUTXOProvider.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/RskUTXOProvider.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/StateForFederator.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/StateForFederator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/bitcoin/RskAllowUnconfirmedCoinSelector$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/bitcoin/RskAllowUnconfirmedCoinSelector$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/bitcoin/RskAllowUnconfirmedCoinSelector.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/bitcoin/RskAllowUnconfirmedCoinSelector.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/utils/BridgeEventLogger.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/utils/BridgeEventLogger.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/utils/BridgeEventLoggerImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/peg/utils/BridgeEventLoggerImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/remasc/Remasc.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/remasc/Remasc.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/remasc/RemascFederationProvider.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/remasc/RemascFederationProvider.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/rpc/Web3RskImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/rpc/Web3RskImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/rpc/modules/eth/EthModule.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/rpc/modules/eth/EthModule.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/validators/ProofOfWorkRule.class" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/classes/co/usc/validators/ProofOfWorkRule.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/resources/build-info.properties" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/resources/build-info.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeDevNetConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeDevNetConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeMainNetConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeMainNetConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeRegTestConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeRegTestConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeTestNetConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeTestNetConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/Coin.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/Coin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/Wallet.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/Wallet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/crypto/Keccak256.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/crypto/Keccak256.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerClientImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerClientImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerServerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerServerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/Bridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/Bridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeBtcWallet.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeBtcWallet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeSerializationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeSerializationUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeState.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeStorageProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeStorageProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeSupport.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeSupport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/Federation.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/Federation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/LockWhitelist.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/LockWhitelist.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/PendingFederation.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/PendingFederation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/ReleaseRequestQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/ReleaseRequestQueue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/ReleaseTransactionBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/ReleaseTransactionBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/ReleaseTransactionSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/ReleaseTransactionSet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/RepositoryBlockStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/RepositoryBlockStore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/RskUTXOProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/RskUTXOProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/StateForFederator.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/StateForFederator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/bitcoin/RskAllowUnconfirmedCoinSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/bitcoin/RskAllowUnconfirmedCoinSelector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/utils/BridgeEventLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/utils/BridgeEventLogger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/utils/BridgeEventLoggerImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/utils/BridgeEventLoggerImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/remasc/Remasc.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/remasc/Remasc.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/remasc/RemascFederationProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/remasc/RemascFederationProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/Web3RskImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/Web3RskImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/modules/eth/EthModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/modules/eth/EthModule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/validators/ProofOfWorkRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/validators/ProofOfWorkRule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/resources/build-info.properties" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/build-info.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/resources/genesis/ulord-testnet.json" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/genesis/ulord-testnet.json" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/uscj-core/.gradle/" />
     <ignored path="$PROJECT_DIR$/uscj-core/build/" />
@@ -125,20 +39,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="ulord-testnet.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/resources/genesis/ulord-testnet.json">
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54">
-              <caret line="3" column="42" selection-start-line="3" selection-start-column="42" selection-end-line="3" selection-end-column="42" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ulord-sample.conf" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/uscj-core/ulord-sample.conf">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="20" column="19" lean-forward="true" selection-start-line="20" selection-start-column="19" selection-end-line="20" selection-end-column="19" />
+            <state relative-caret-position="90">
+              <caret line="5" column="5" selection-start-line="5" selection-start-column="5" selection-end-line="5" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -631,7 +536,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/ReleaseTransactionSet.java" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/NodeMessageHandler.java" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/modules/txpool/TxPoolModuleImpl.java" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/netty/JsonRpcWeb3FilterHandler.java" />
@@ -682,6 +586,7 @@
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerClientImpl.java" />
         <option value="$PROJECT_DIR$/uscj-core/build.gradle" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/resources/genesis/ulord-testnet.json" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -709,40 +614,6 @@
               <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
               <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
             </path>
-            <path>
-              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
-              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
-              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
-              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
-              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="genesis" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -758,6 +629,9 @@
     <property name="GenerateAntBuildDialog.outputFileNameProperty" value="ulord-sidechain" />
     <property name="jdk.selected.JAVA_MODULE" value="1.8" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../ulordj-thin/pom.xml" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -913,13 +787,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/co/rsk/bitcoinj/params/RegTestParams.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-87">
-          <caret line="27" column="38" lean-forward="true" selection-start-line="27" selection-start-column="38" selection-end-line="27" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/trie/Trie.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
@@ -1308,13 +1175,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/resources/genesis/ulord-testnet.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="3" column="42" selection-start-line="3" selection-start-column="42" selection-end-line="3" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/uscj-core/ulord-sample.conf">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
@@ -1322,12 +1182,98 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/resources/genesis/ulord-testnet.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="42" selection-start-line="3" selection-start-column="42" selection-end-line="3" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="5" selection-start-line="5" selection-start-column="5" selection-end-line="5" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
   </component>
   <component name="masterDetails">
     <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>Ulord-Sidechain</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
       <state key="ProjectJDKs.UI">
         <settings>
           <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Gradle: aopalliance:aopalliance:1.0</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
