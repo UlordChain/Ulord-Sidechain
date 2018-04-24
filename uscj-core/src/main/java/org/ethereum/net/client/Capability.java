@@ -25,7 +25,7 @@ package org.ethereum.net.client;
 public class Capability implements Comparable<Capability> {
 
     public static final String P2P = "p2p";
-    public static final String RSK = "usc";
+    public static final String RSK = "rsk";
 
     private String name;
     private byte version;

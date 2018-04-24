@@ -19,7 +19,7 @@
 package co.usc.metrics;
 
 import co.usc.crypto.Keccak256;
-import co.usc.util.UscCustomCache;
+import co.usc.util.RskCustomCache;
 import org.ethereum.core.Block;
 import org.ethereum.db.BlockStore;
 
@@ -32,9 +32,9 @@ import java.util.function.Predicate;
 public abstract class HashRateCalculator {
 
     private final BlockStore blockStore;
-    private final UscCustomCache<Keccak256, BlockHeaderElement> headerCache;
+    private final RskCustomCache<Keccak256, BlockHeaderElement> headerCache;
 
-    public HashRateCalculator(BlockStore blockStore, UscCustomCache<Keccak256, BlockHeaderElement> headerCache) {
+    public HashRateCalculator(BlockStore blockStore, RskCustomCache<Keccak256, BlockHeaderElement> headerCache) {
         this.blockStore = blockStore;
         this.headerCache = headerCache;
     }

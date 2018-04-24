@@ -19,6 +19,7 @@
 package co.usc.net;
 
 import co.usc.net.messages.Message;
+import co.usc.net.messages.Message;
 
 import java.net.InetAddress;
 

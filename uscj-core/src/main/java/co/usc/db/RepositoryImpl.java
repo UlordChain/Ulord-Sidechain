@@ -18,9 +18,9 @@
 
 package co.usc.db;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.trie.Trie;
 import co.usc.trie.TrieImpl;
@@ -56,25 +56,25 @@ public class RepositoryImpl implements Repository {
 
     private static final Logger logger = LoggerFactory.getLogger("repository");
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
     private TrieStore store;
     private Trie trie;
     private DetailsDataStore detailsDataStore;
     private boolean closed;
 
-    public RepositoryImpl(UscSystemProperties config) {
+    public RepositoryImpl(RskSystemProperties config) {
         this(config, null);
     }
 
-    public RepositoryImpl(UscSystemProperties config, TrieStore store) {
+    public RepositoryImpl(RskSystemProperties config, TrieStore store) {
         this(config, store, new HashMapDB());
     }
 
-    public RepositoryImpl(UscSystemProperties config, TrieStore store, KeyValueDataSource detailsDS) {
+    public RepositoryImpl(RskSystemProperties config, TrieStore store, KeyValueDataSource detailsDS) {
         this(config, store, new DetailsDataStore(config, new DatabaseImpl(detailsDS)));
     }
 
-    private RepositoryImpl(UscSystemProperties config, TrieStore store, DetailsDataStore detailsDataStore) {
+    private RepositoryImpl(RskSystemProperties config, TrieStore store, DetailsDataStore detailsDataStore) {
         this.config = config;
         this.store = store;
         this.trie = new TrieImpl(store, true);
@@ -82,7 +82,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized AccountState createAccount(UscAddress addr) {
+    public synchronized AccountState createAccount(RskAddress addr) {
         AccountState accountState = new AccountState();
         updateAccountState(addr, accountState);
         updateContractDetails(addr, new ContractDetailsImpl(config));
@@ -90,12 +90,12 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized boolean isExist(UscAddress addr) {
+    public synchronized boolean isExist(RskAddress addr) {
         return getAccountState(addr) != null;
     }
 
     @Override
-    public synchronized AccountState getAccountState(UscAddress addr) {
+    public synchronized AccountState getAccountState(RskAddress addr) {
         AccountState result = null;
         byte[] accountData = null;
 
@@ -109,12 +109,12 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized void delete(UscAddress addr) {
+    public synchronized void delete(RskAddress addr) {
         this.trie = this.trie.delete(addr.getBytes());
     }
 
     @Override
-    public synchronized void hibernate(UscAddress addr) {
+    public synchronized void hibernate(RskAddress addr) {
         AccountState account = getAccountStateOrCreateNew(addr);
 
         account.hibernate();
@@ -122,7 +122,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized BigInteger increaseNonce(UscAddress addr) {
+    public synchronized BigInteger increaseNonce(RskAddress addr) {
         AccountState account = getAccountStateOrCreateNew(addr);
 
         account.incrementNonce();
@@ -132,13 +132,13 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized BigInteger getNonce(UscAddress addr) {
+    public synchronized BigInteger getNonce(RskAddress addr) {
         AccountState account = getAccountStateOrCreateNew(addr);
         return account.getNonce();
     }
 
     @Override
-    public synchronized ContractDetails getContractDetails(UscAddress addr) {
+    public synchronized ContractDetails getContractDetails(RskAddress addr) {
         // That part is important cause if we have
         // to sync details storage according the trie root
         // saved in the account
@@ -157,7 +157,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized void saveCode(UscAddress addr, byte[] code) {
+    public synchronized void saveCode(RskAddress addr, byte[] code) {
         AccountState accountState = getAccountState(addr);
         ContractDetails details = getContractDetails(addr);
 
@@ -174,12 +174,12 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized byte[] getCode(UscAddress addr) {
+    public synchronized byte[] getCode(RskAddress addr) {
         if (!isExist(addr)) {
             return EMPTY_BYTE_ARRAY;
         }
 
-        AccountState account = getAccountState(addr);
+        AccountState  account = getAccountState(addr);
 
         if (account.isHibernated()) {
             return EMPTY_BYTE_ARRAY;
@@ -196,7 +196,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized void addStorageRow(UscAddress addr, DataWord key, DataWord value) {
+    public synchronized void addStorageRow(RskAddress addr, DataWord key, DataWord value) {
         ContractDetails details = getContractDetails(addr);
         if (details == null) {
             createAccount(addr);
@@ -209,7 +209,7 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized void addStorageBytes(UscAddress addr, DataWord key, byte[] value) {
+    public synchronized void addStorageBytes(RskAddress addr, DataWord key, byte[] value) {
         ContractDetails details = getContractDetails(addr);
 
         if (details == null) {
@@ -223,25 +223,25 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized DataWord getStorageValue(UscAddress addr, DataWord key) {
+    public synchronized DataWord getStorageValue(RskAddress addr, DataWord key) {
         ContractDetails details = getContractDetails(addr);
         return (details == null) ? null : details.get(key);
     }
 
     @Override
-    public synchronized byte[] getStorageBytes(UscAddress addr, DataWord key) {
+    public synchronized byte[] getStorageBytes(RskAddress addr, DataWord key) {
         ContractDetails details = getContractDetails(addr);
         return (details == null) ? null : details.getBytes(key);
     }
 
     @Override
-    public synchronized Coin getBalance(UscAddress addr) {
+    public synchronized Coin getBalance(RskAddress addr) {
         AccountState account = getAccountState(addr);
         return (account == null) ? new AccountState().getBalance() : account.getBalance();
     }
 
     @Override
-    public synchronized Coin addBalance(UscAddress addr, Coin value) {
+    public synchronized Coin addBalance(RskAddress addr, Coin value) {
         AccountState account = getAccountStateOrCreateNew(addr);
 
         Coin result = account.addToBalance(value);
@@ -251,10 +251,10 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized Set<UscAddress> getAccountsKeys() {
-        Set<UscAddress> result = new HashSet<>();
+    public synchronized Set<RskAddress> getAccountsKeys() {
+        Set<RskAddress> result = new HashSet<>();
 
-        for (UscAddress addr : detailsDataStore.keys()) {
+        for (RskAddress addr : detailsDataStore.keys()) {
             if (this.isExist(addr)) {
                 result.add(addr);
             }
@@ -320,12 +320,12 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized void updateBatch(Map<UscAddress, AccountState> stateCache,
-                                         Map<UscAddress, ContractDetails> detailsCache) {
+    public synchronized void updateBatch(Map<RskAddress, AccountState> stateCache,
+                                         Map<RskAddress, ContractDetails> detailsCache) {
         logger.debug("updatingBatch: detailsCache.size: {}", detailsCache.size());
 
-        for (Map.Entry<UscAddress, AccountState> entry : stateCache.entrySet()) {
-            UscAddress addr = entry.getKey();
+        for (Map.Entry<RskAddress, AccountState> entry : stateCache.entrySet()) {
+            RskAddress addr = entry.getKey();
             AccountState accountState = entry.getValue();
 
             ContractDetails contractDetails = detailsCache.get(addr);
@@ -379,9 +379,9 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized void loadAccount(UscAddress addr,
-                                         Map<UscAddress, AccountState> cacheAccounts,
-                                         Map<UscAddress, ContractDetails> cacheDetails) {
+    public synchronized void loadAccount(RskAddress addr,
+                                         Map<RskAddress, AccountState> cacheAccounts,
+                                         Map<RskAddress, ContractDetails> cacheDetails) {
         AccountState account = getAccountState(addr);
         ContractDetails details = getContractDetails(addr);
 
@@ -405,17 +405,17 @@ public class RepositoryImpl implements Repository {
     }
 
     @Override
-    public synchronized void updateContractDetails(UscAddress addr, final ContractDetails contractDetails) {
+    public synchronized void updateContractDetails(RskAddress addr, final ContractDetails contractDetails) {
         detailsDataStore.update(addr, contractDetails);
     }
 
     @Override
-    public synchronized void updateAccountState(UscAddress addr, final AccountState accountState) {
+    public synchronized void updateAccountState(RskAddress addr, final AccountState accountState) {
         this.trie = this.trie.put(addr.getBytes(), accountState.getEncoded());
     }
 
     @Nonnull
-    private synchronized AccountState getAccountStateOrCreateNew(UscAddress addr) {
+    private synchronized AccountState getAccountStateOrCreateNew(RskAddress addr) {
         AccountState account = getAccountState(addr);
         return (account == null) ? createAccount(addr) : account;
     }

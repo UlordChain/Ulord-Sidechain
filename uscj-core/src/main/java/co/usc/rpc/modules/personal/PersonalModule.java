@@ -18,7 +18,8 @@
 
 package co.usc.rpc.modules.personal;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
+import co.usc.config.RskSystemProperties;
 import org.ethereum.rpc.Web3;
 
 public interface PersonalModule {
@@ -26,7 +27,7 @@ public interface PersonalModule {
 
     String importRawKey(String key, String passphrase);
 
-    void init(UscSystemProperties properties);
+    void init(RskSystemProperties properties);
 
     String[] listAccounts();
 

@@ -21,6 +21,8 @@ package co.usc.net;
 import co.usc.crypto.Keccak256;
 import co.usc.net.messages.*;
 import co.usc.net.sync.SyncConfiguration;
+import co.usc.net.messages.*;
+import co.usc.net.sync.SyncConfiguration;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.core.BlockIdentifier;

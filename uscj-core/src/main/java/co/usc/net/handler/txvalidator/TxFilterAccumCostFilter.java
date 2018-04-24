@@ -18,7 +18,7 @@
 
 package co.usc.net.handler.txvalidator;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.Coin;
 import co.usc.net.handler.TxsPerAccount;
 import org.ethereum.core.AccountState;
@@ -36,9 +36,9 @@ import java.util.List;
  */
 public class TxFilterAccumCostFilter implements TxFilter {
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
 
-    public TxFilterAccumCostFilter(UscSystemProperties config) {
+    public TxFilterAccumCostFilter(RskSystemProperties config) {
         this.config = config;
     }
 

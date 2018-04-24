@@ -19,8 +19,8 @@
 
 package org.ethereum.sync;
 
-import co.usc.core.BlockDifficulty;
 import co.usc.net.NodeID;
+import co.usc.core.BlockDifficulty;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Blockchain;
 import org.ethereum.listener.EthereumListener;

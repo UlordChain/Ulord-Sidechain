@@ -73,10 +73,10 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
     }
 
     public static BlockDifficulty calcDifficultyFortConstants(Constants constants,
-                                                              long curBlockTS,
-                                                              long parentBlockTS,
-                                                              BlockDifficulty pd ,
-                                                              int uncleCount) {
+                                                         long curBlockTS,
+                                                         long parentBlockTS,
+                                                         BlockDifficulty pd ,
+                                                         int uncleCount) {
         int duration =constants.getDurationLimit();
         BigInteger difDivisor = constants.getDifficultyBoundDivisor();
         BlockDifficulty minDif = constants.getMinimumDifficulty();

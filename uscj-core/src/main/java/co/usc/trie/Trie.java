@@ -19,6 +19,7 @@
 package co.usc.trie;
 
 import co.usc.crypto.Keccak256;
+import co.usc.crypto.Keccak256;
 
 /**
  * Created by ajlopez on 29/03/2017.

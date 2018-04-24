@@ -75,7 +75,7 @@ public final class InetAddressUtils {
      * @param   text    the address with mask
      *
      * @return  the text converted to an InetAddressBlock
-     * @throws InvalidInetAddressException if the text is invalid
+     * @throws  InvalidInetAddressException if the text is invalid
      */
     public static InetAddressBlock parse(String text) throws InvalidInetAddressException {
         //TODO(mmarquez): should we validate address format ??

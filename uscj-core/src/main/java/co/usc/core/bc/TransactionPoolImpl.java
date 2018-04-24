@@ -18,8 +18,13 @@
 
 package co.usc.core.bc;
 
-import co.usc.config.UscSystemProperties;
-import co.usc.core.UscAddress;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.RskAddress;
+import co.usc.crypto.Keccak256;
+import co.usc.net.handler.TxPendingValidator;
+import co.usc.trie.Trie;
+import co.usc.trie.TrieImpl;
+import co.usc.config.RskSystemProperties;
 import co.usc.crypto.Keccak256;
 import co.usc.net.handler.TxPendingValidator;
 import co.usc.trie.Trie;
@@ -58,7 +63,7 @@ public class TransactionPoolImpl implements TransactionPool {
     private final Map<Keccak256, Long> transactionBlocks = new HashMap<>();
     private final Map<Keccak256, Long> transactionTimes = new HashMap<>();
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
     private final BlockStore blockStore;
     private final Repository repository;
     private final ReceiptStore receiptStore;
@@ -80,7 +85,7 @@ public class TransactionPoolImpl implements TransactionPool {
                                EthereumListener listener,
                                ProgramInvokeFactory programInvokeFactory,
                                Repository repository,
-                               UscSystemProperties config) {
+                               RskSystemProperties config) {
         this(config,
                 repository,
                 blockStore,
@@ -91,7 +96,7 @@ public class TransactionPoolImpl implements TransactionPool {
                 config.txOutdatedTimeout());
     }
 
-    public TransactionPoolImpl(UscSystemProperties config,
+    public TransactionPoolImpl(RskSystemProperties config,
                                Repository repository,
                                BlockStore blockStore,
                                ReceiptStore receiptStore,
@@ -252,7 +257,7 @@ public class TransactionPoolImpl implements TransactionPool {
         return true;
     }
 
-    private BigInteger getNextNonceByAccount(UscAddress account) {
+    private BigInteger getNextNonceByAccount(RskAddress account) {
         BigInteger nextNonce = this.repository.getNonce(account);
 
         for (Transaction tx : this.pendingTransactions.getTransactionsWithSender(account)) {
@@ -434,7 +439,7 @@ public class TransactionPoolImpl implements TransactionPool {
         // creating fake lightweight calculated block with no hashes calculations
         return new Block(best.getHash().getBytes(),
                             emptyUncleHashList, // uncleHash
-                            UscAddress.nullAddress().getBytes(), //coinbase
+                            RskAddress.nullAddress().getBytes(), //coinbase
                             new byte[32], // log bloom - from tx receipts
                             best.getDifficulty().getBytes(), // difficulty
                             best.getNumber() + 1, //number

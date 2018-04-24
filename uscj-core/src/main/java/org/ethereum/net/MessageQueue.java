@@ -19,9 +19,9 @@
 
 package org.ethereum.net;
 
-import co.usc.panic.PanicProcessor;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
+import co.usc.panic.PanicProcessor;
 import org.ethereum.net.eth.message.EthMessage;
 import org.ethereum.net.message.Message;
 import org.ethereum.net.message.ReasonCode;

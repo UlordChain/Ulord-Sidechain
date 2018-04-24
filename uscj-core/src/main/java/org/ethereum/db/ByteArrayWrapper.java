@@ -21,6 +21,7 @@ package org.ethereum.db;
 
 import org.ethereum.util.ByteUtil;
 import org.ethereum.util.FastByteComparisons;
+
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.Serializable;

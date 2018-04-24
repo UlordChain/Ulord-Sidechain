@@ -20,7 +20,7 @@
 package org.ethereum.vm.trace;
 
 import co.usc.config.VmConfig;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import org.ethereum.core.Repository;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.db.RepositoryTrack;
@@ -92,7 +92,7 @@ public class ProgramTrace {
             repository = ((RepositoryTrack) repository).getOriginRepository();
         }
 
-        UscAddress addr = new UscAddress(programInvoke.getOwnerAddress());
+        RskAddress addr = new RskAddress(programInvoke.getOwnerAddress());
         return repository.getContractDetails(addr);
     }
 

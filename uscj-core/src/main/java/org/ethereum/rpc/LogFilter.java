@@ -18,7 +18,7 @@
 
 package org.ethereum.rpc;
 
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import org.ethereum.core.*;
 import org.ethereum.db.TransactionInfo;
 import org.ethereum.vm.LogInfo;
@@ -103,13 +103,13 @@ public class LogFilter extends Filter {
     }
 
     public static LogFilter fromFilterRequest(Web3.FilterRequest fr, Blockchain blockchain) throws Exception {
-        UscAddress[] addresses;
+        RskAddress[] addresses;
 
         // TODO get array of topics, with topics, and array of topics inside (the OR operation over topics)
         Topic[] topics = null;
 
         if (fr.address instanceof String) {
-            addresses = new UscAddress[] { new UscAddress(stringHexToByteArray((String) fr.address)) };
+            addresses = new RskAddress[] { new RskAddress(stringHexToByteArray((String) fr.address)) };
         } else if (fr.address instanceof Collection<?>) {
             Collection<?> iterable = (Collection<?>)fr.address;
 
@@ -117,11 +117,11 @@ public class LogFilter extends Filter {
                     .filter(String.class::isInstance)
                     .map(String.class::cast)
                     .map(TypeConverter::stringHexToByteArray)
-                    .map(UscAddress::new)
-                    .toArray(UscAddress[]::new);
+                    .map(RskAddress::new)
+                    .toArray(RskAddress[]::new);
         }
         else {
-            addresses = new UscAddress[0];
+            addresses = new RskAddress[0];
         }
 
         if (fr.topics != null) {

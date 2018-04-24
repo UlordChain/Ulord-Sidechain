@@ -1,7 +1,6 @@
 <component name="libraryTable">
   <library name="Gradle: org.ethereum:leveldbjni-all:1.18.3">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/uscj-core/Could not find org.ethereum:leveldbjni-all:1.18.3." />
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.ethereum/leveldbjni-all/1.18.3/189e46b64f39a5f4f6de2cbdf20f42061b10d961/leveldbjni-all-1.18.3.jar!/" />
     </CLASSES>
     <JAVADOC />

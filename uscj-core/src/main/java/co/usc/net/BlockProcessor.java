@@ -19,6 +19,7 @@
 package co.usc.net;
 
 import co.usc.net.messages.NewBlockHashesMessage;
+import co.usc.net.messages.NewBlockHashesMessage;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.core.Blockchain;

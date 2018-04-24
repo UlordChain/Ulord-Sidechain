@@ -1,10 +1,12 @@
 package co.usc.net.sync;
 
+import co.usc.net.NodeID;
 import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.core.BlockIdentifier;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class ChunksDownloadHelper {

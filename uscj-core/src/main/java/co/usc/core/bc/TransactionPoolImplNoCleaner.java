@@ -18,7 +18,8 @@
 
 package co.usc.core.bc;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
+import co.usc.config.RskSystemProperties;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
 import org.ethereum.db.BlockStore;
@@ -27,7 +28,7 @@ import org.ethereum.listener.EthereumListener;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactory;
 
 public class TransactionPoolImplNoCleaner extends TransactionPoolImpl {
-    public TransactionPoolImplNoCleaner(UscSystemProperties config,
+    public TransactionPoolImplNoCleaner(RskSystemProperties config,
                                         Repository repository,
                                         BlockStore blockStore,
                                         ReceiptStore receiptStore,

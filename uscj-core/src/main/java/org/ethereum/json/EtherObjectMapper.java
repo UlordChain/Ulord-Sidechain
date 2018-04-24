@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 /**
- * An extended {@link ObjectMapper ObjectMapper} class to
+ * An extended {@link com.fasterxml.jackson.databind.ObjectMapper ObjectMapper} class to
  * customize ethereum state dumps.
  *
  * @author Alon Muroch
@@ -58,7 +58,7 @@ public class EtherObjectMapper extends ObjectMapper {
     }
 
     /**
-     * An extended {@link DefaultPrettyPrinter} class to customize
+     * An extended {@link com.fasterxml.jackson.core.util.DefaultPrettyPrinter} class to customize
      * an ethereum {@link com.fasterxml.jackson.core.PrettyPrinter Pretty Printer} Generator
      *
      * @author Alon Muroch

@@ -2,6 +2,7 @@ package co.usc.net;
 
 import co.usc.net.sync.*;
 import co.usc.scoring.EventType;
+import co.usc.net.sync.*;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.util.ByteUtil;
 

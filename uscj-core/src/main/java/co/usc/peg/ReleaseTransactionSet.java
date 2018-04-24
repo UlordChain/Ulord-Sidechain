@@ -26,7 +26,7 @@ import java.util.*;
 /**
  * Representation of a queue of BTC release
  * transactions waiting for confirmations
- * on the usc network.
+ * on the rsk network.
  *
  * @author Ariel Mendelzon
  */

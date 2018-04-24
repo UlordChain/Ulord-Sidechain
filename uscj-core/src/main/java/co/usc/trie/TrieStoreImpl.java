@@ -19,6 +19,7 @@
 package co.usc.trie;
 
 import co.usc.panic.PanicProcessor;
+import co.usc.panic.PanicProcessor;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.datasource.KeyValueDataSource;
 import org.slf4j.Logger;

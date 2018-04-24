@@ -18,8 +18,8 @@
 
 package co.usc.validators;
 
-import co.usc.core.UscAddress;
 import co.usc.panic.PanicProcessor;
+import co.usc.core.RskAddress;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
@@ -65,7 +65,7 @@ public class BlockTxsValidationRule implements BlockParentDependantValidationRul
 
         Repository parentRepo = repository.getSnapshotTo(parent.getStateRoot());
 
-        Map<UscAddress, BigInteger> curNonce = new HashMap<>();
+        Map<RskAddress, BigInteger> curNonce = new HashMap<>();
 
         for (Transaction tx : txs) {
             try {
@@ -75,7 +75,7 @@ public class BlockTxsValidationRule implements BlockParentDependantValidationRul
                 return false;
             }
 
-            UscAddress sender = tx.getSender();
+            RskAddress sender = tx.getSender();
             BigInteger expectedNonce = curNonce.get(sender);
             if (expectedNonce == null) {
                 expectedNonce = parentRepo.getNonce(sender);

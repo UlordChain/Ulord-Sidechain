@@ -18,7 +18,7 @@
 
 package co.usc.net.eth;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.bc.BlockChainStatus;
 import co.usc.net.*;
@@ -28,11 +28,12 @@ import co.usc.net.messages.Message;
 import co.usc.net.messages.StatusMessage;
 import co.usc.scoring.EventType;
 import co.usc.scoring.PeerScoringManager;
+import co.usc.net.messages.BlockMessage;
+import co.usc.net.messages.GetBlockMessage;
+import co.usc.net.messages.Message;
+import co.usc.net.messages.StatusMessage;
 import io.netty.channel.ChannelHandlerContext;
-import org.ethereum.core.Block;
-import org.ethereum.core.Blockchain;
-import org.ethereum.core.Genesis;
-import org.ethereum.core.Transaction;
+import org.ethereum.core.*;
 import org.ethereum.core.genesis.GenesisLoader;
 import org.ethereum.listener.CompositeEthereumListener;
 import org.ethereum.net.eth.EthVersion;
@@ -74,13 +75,13 @@ public class RskWireProtocol extends EthHandler {
     protected SyncState syncState = SyncState.IDLE;
     protected boolean syncDone = false;
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
     private final MessageChannel messageSender;
     private final MessageHandler messageHandler;
     private final Blockchain blockchain;
     private final MessageRecorder messageRecorder;
 
-    public RskWireProtocol(UscSystemProperties config, PeerScoringManager peerScoringManager, MessageHandler messageHandler, Blockchain blockchain, CompositeEthereumListener ethereumListener) {
+    public RskWireProtocol(RskSystemProperties config, PeerScoringManager peerScoringManager, MessageHandler messageHandler, Blockchain blockchain, CompositeEthereumListener ethereumListener) {
         super(blockchain, config, ethereumListener, V62);
         this.peerScoringManager = peerScoringManager;
         this.messageHandler = messageHandler;

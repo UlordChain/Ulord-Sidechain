@@ -21,10 +21,7 @@ package org.ethereum.net.rlpx;
 
 import com.google.common.collect.Lists;
 import org.ethereum.net.client.Capability;
-import org.ethereum.util.ByteUtil;
-import org.ethereum.util.RLP;
-import org.ethereum.util.RLPElement;
-import org.ethereum.util.RLPList;
+import org.ethereum.util.*;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

@@ -8,7 +8,7 @@ import java.math.BigInteger;
 /**
  * Created by SerAdmin on 1/4/2018.
  */
-public class FallbackMainNetConfig extends GenesisConfig {
+public class FallbackMainNetConfig extends GenesisConfig  {
 
     public static class FallbackMainNetConstants extends MainNetAfterBridgeSyncConfig.MainNetConstants {
         private static final BigInteger DIFFICULTY_BOUND_DIVISOR = BigInteger.valueOf(50);

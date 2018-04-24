@@ -18,13 +18,16 @@
 
 package co.usc.net.handler;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.Coin;
+import co.usc.core.RskAddress;
+import co.usc.net.handler.txvalidator.*;
 import co.usc.net.handler.txvalidator.*;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
+import org.ethereum.rpc.TypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.util.BigIntegers;
@@ -32,6 +35,7 @@ import org.spongycastle.util.BigIntegers;
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Used to validate transactions before relaying. This class is highly
@@ -42,14 +46,14 @@ class TxValidator {
 
     private static final Logger logger = LoggerFactory.getLogger("txvalidator");
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
     private final Repository repository;
     private final Blockchain blockchain;
 
     private final List<TxValidatorStep> validatorSteps = new LinkedList<>();
     private final List<TxFilter> txFilters = new LinkedList<>();
 
-    public TxValidator(UscSystemProperties config, Repository repository, Blockchain blockchain) {
+    public TxValidator(RskSystemProperties config, Repository repository, Blockchain blockchain) {
         this.config = config;
         this.repository = repository;
         this.blockchain = blockchain;

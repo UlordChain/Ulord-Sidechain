@@ -19,8 +19,8 @@
 
 package org.ethereum.core;
 
-import co.usc.config.UscSystemProperties;
-import co.usc.core.UscAddress;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.RskAddress;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -39,6 +39,7 @@ import java.util.Arrays;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.ArrayUtils.subarray;
 import static org.apache.commons.lang3.StringUtils.stripEnd;
+import static org.ethereum.crypto.HashUtil.keccak256;
 import static org.ethereum.util.ByteUtil.longToBytesNoLeadZeroes;
 
 /**
@@ -53,13 +54,13 @@ public class CallTransaction {
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .enable(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL);
 
-    public static Transaction createRawTransaction(UscSystemProperties config, long nonce, long gasPrice, long gasLimit, UscAddress toAddress,
+    public static Transaction createRawTransaction(RskSystemProperties config, long nonce, long gasPrice, long gasLimit, RskAddress toAddress,
                                                    long value, byte[] data) {
         return new Transaction(
                 longToBytesNoLeadZeroes(nonce),
                 longToBytesNoLeadZeroes(gasPrice),
                 longToBytesNoLeadZeroes(gasLimit),
-                toAddress.equals(UscAddress.nullAddress()) ? null : toAddress.getBytes(),
+                toAddress.equals(RskAddress.nullAddress()) ? null : toAddress.getBytes(),
                 longToBytesNoLeadZeroes(value),
                 data,
                 config.getBlockchainConfig().getCommonConstants().getChainId());
@@ -67,7 +68,7 @@ public class CallTransaction {
 
 
 
-    public static Transaction createCallTransaction(UscSystemProperties config, long nonce, long gasPrice, long gasLimit, UscAddress toAddress,
+    public static Transaction createCallTransaction(RskSystemProperties config, long nonce, long gasPrice, long gasLimit, RskAddress toAddress,
                                                     long value, Function callFunc, Object... funcArgs) {
 
         byte[] callData = callFunc.encode(funcArgs);

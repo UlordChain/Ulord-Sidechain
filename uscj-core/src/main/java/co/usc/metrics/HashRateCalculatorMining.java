@@ -18,9 +18,9 @@
 
 package co.usc.metrics;
 
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import co.usc.crypto.Keccak256;
-import co.usc.util.UscCustomCache;
+import co.usc.util.RskCustomCache;
 import org.ethereum.db.BlockStore;
 
 import java.math.BigInteger;
@@ -28,9 +28,9 @@ import java.time.Duration;
 
 public class HashRateCalculatorMining extends HashRateCalculator {
 
-    private final UscAddress coinbaseAddress;
+    private final RskAddress coinbaseAddress;
 
-    public HashRateCalculatorMining(BlockStore blockStore, UscCustomCache<Keccak256, BlockHeaderElement> headerCache, UscAddress coinbaseAddress) {
+    public HashRateCalculatorMining(BlockStore blockStore, RskCustomCache<Keccak256, BlockHeaderElement> headerCache, RskAddress coinbaseAddress) {
         super(blockStore, headerCache);
         this.coinbaseAddress = coinbaseAddress;
     }

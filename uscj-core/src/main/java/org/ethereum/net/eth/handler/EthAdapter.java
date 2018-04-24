@@ -27,8 +27,7 @@ import org.ethereum.sync.SyncStatistics;
 
 import java.util.List;
 
-import static org.ethereum.net.eth.EthVersion.UPPER;
-import static org.ethereum.net.eth.EthVersion.fromCode;
+import static org.ethereum.net.eth.EthVersion.*;
 
 /**
  * It's quite annoying to always check {@code if (eth != null)} before accessing it. <br>

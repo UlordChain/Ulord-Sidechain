@@ -19,9 +19,9 @@
 
 package org.ethereum.core.genesis;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import co.usc.trie.Trie;
 import co.usc.trie.TrieImpl;
 import com.fasterxml.jackson.databind.JavaType;
@@ -43,12 +43,12 @@ import java.util.Map;
 public class GenesisLoader {
     private static final Logger logger = LoggerFactory.getLogger("genesisloader");
 
-    public static Genesis loadGenesis(UscSystemProperties config, String genesisFile, BigInteger initialNonce, boolean isRsk)  {
+    public static Genesis loadGenesis(RskSystemProperties config, String genesisFile, BigInteger initialNonce, boolean isRsk)  {
         InputStream is = GenesisLoader.class.getResourceAsStream("/genesis/" + genesisFile);
         return loadGenesis(config, initialNonce, is, isRsk);
     }
 
-    public static Genesis loadGenesis(UscSystemProperties config, BigInteger initialNonce, InputStream genesisJsonIS, boolean isRsk)  {
+    public static Genesis loadGenesis(RskSystemProperties config, BigInteger initialNonce, InputStream genesisJsonIS, boolean isRsk)  {
         try {
 
             String json = new String(ByteStreams.toByteArray(genesisJsonIS));
@@ -60,7 +60,7 @@ public class GenesisLoader {
 
             Genesis genesis = new GenesisMapper().mapFromJson(genesisJson, isRsk);
 
-            Map<UscAddress, InitialAddressState> premine = generatePreMine(config, initialNonce, genesisJson.getAlloc());
+            Map<RskAddress, InitialAddressState> premine = generatePreMine(config, initialNonce, genesisJson.getAlloc());
             genesis.setPremine(premine);
 
             byte[] rootHash = generateRootHash(premine);
@@ -77,8 +77,8 @@ public class GenesisLoader {
         }
     }
 
-    private static Map<UscAddress, InitialAddressState> generatePreMine(UscSystemProperties config, BigInteger initialNonce, Map<String, AllocatedAccount> alloc){
-        Map<UscAddress, InitialAddressState> premine = new HashMap<>();
+    private static Map<RskAddress, InitialAddressState> generatePreMine(RskSystemProperties config, BigInteger initialNonce, Map<String, AllocatedAccount> alloc){
+        Map<RskAddress, InitialAddressState> premine = new HashMap<>();
         ContractDetailsMapper detailsMapper = new ContractDetailsMapper(config);
 
         for (Map.Entry<String, AllocatedAccount> accountEntry : alloc.entrySet()) {
@@ -106,17 +106,17 @@ public class GenesisLoader {
                     acctState.setStateRoot(contractDetails.getStorageHash());
                 }
 
-                premine.put(new UscAddress(accountEntry.getKey()), new InitialAddressState(acctState, contractDetails));
+                premine.put(new RskAddress(accountEntry.getKey()), new InitialAddressState(acctState, contractDetails));
             }
         }
 
         return premine;
     }
 
-    private static byte[] generateRootHash(Map<UscAddress, InitialAddressState> premine){
+    private static byte[] generateRootHash(Map<RskAddress, InitialAddressState> premine){
         Trie state = new TrieImpl(null, true);
 
-        for (UscAddress addr : premine.keySet()) {
+        for (RskAddress addr : premine.keySet()) {
             state = state.put(addr.getBytes(), premine.get(addr).getAccountState().getEncoded());
         }
 

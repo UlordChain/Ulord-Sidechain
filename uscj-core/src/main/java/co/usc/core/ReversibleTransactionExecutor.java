@@ -19,7 +19,8 @@
 
 package co.usc.core;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
+import co.usc.config.RskSystemProperties;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
@@ -38,7 +39,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReversibleTransactionExecutor {
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
     private final Repository track;
     private final BlockStore blockStore;
     private final ReceiptStore receiptStore;
@@ -46,7 +47,7 @@ public class ReversibleTransactionExecutor {
 
     @Autowired
     public ReversibleTransactionExecutor(
-            UscSystemProperties config,
+            RskSystemProperties config,
             Repository track,
             BlockStore blockStore,
             ReceiptStore receiptStore,
@@ -60,7 +61,7 @@ public class ReversibleTransactionExecutor {
 
     public ProgramResult executeTransaction(
             Block executionBlock,
-            UscAddress coinbase,
+            RskAddress coinbase,
             byte[] gasPrice,
             byte[] gasLimit,
             byte[] toAddress,
@@ -69,7 +70,7 @@ public class ReversibleTransactionExecutor {
             byte[] fromAddress) {
         Repository repository = track.getSnapshotTo(executionBlock.getStateRoot()).startTracking();
 
-        byte[] nonce = repository.getNonce(new UscAddress(fromAddress)).toByteArray();
+        byte[] nonce = repository.getNonce(new RskAddress(fromAddress)).toByteArray();
         UnsignedTransaction tx = new UnsignedTransaction(
                 nonce,
                 gasPrice,
@@ -110,7 +111,7 @@ public class ReversibleTransactionExecutor {
                 byte[] data,
                 byte[] fromAddress) {
             super(nonce, gasPrice, gasLimit, receiveAddress, value, data);
-            this.sender = new UscAddress(fromAddress);
+            this.sender = new RskAddress(fromAddress);
         }
 
         @Override

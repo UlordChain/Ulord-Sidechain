@@ -20,6 +20,8 @@ package org.ethereum.rpc;
 
 import org.ethereum.core.Transaction;
 
+import static org.ethereum.rpc.TypeConverter.toJsonHex;
+
 /**
  * Created by ajlopez on 17/01/2018.
  */

@@ -18,7 +18,7 @@
 
 package org.ethereum.core;
 
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import co.usc.crypto.Keccak256;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class TransactionSet {
     private final Map<Keccak256, Transaction> transactionsByHash = new HashMap<>();
-    private final Map<UscAddress, List<Transaction>> transactionsByAddress = new HashMap<>();
+    private final Map<RskAddress, List<Transaction>> transactionsByAddress = new HashMap<>();
 
     public void addTransaction(Transaction transaction) {
         Keccak256 txhash = transaction.getHash();
@@ -42,7 +42,7 @@ public class TransactionSet {
 
         this.transactionsByHash.put(txhash, transaction);
 
-        UscAddress senderAddress = transaction.getSender();
+        RskAddress senderAddress = transaction.getSender();
 
         List<Transaction> txs = this.transactionsByAddress.get(senderAddress);
 
@@ -67,7 +67,7 @@ public class TransactionSet {
 
         this.transactionsByHash.remove(hash);
 
-        UscAddress senderAddress = transaction.getSender();
+        RskAddress senderAddress = transaction.getSender();
         List<Transaction> txs = this.transactionsByAddress.get(senderAddress);
 
         if (txs != null) {
@@ -85,7 +85,7 @@ public class TransactionSet {
         return ret;
     }
 
-    public List<Transaction> getTransactionsWithSender(UscAddress senderAddress) {
+    public List<Transaction> getTransactionsWithSender(RskAddress senderAddress) {
         List<Transaction> list = this.transactionsByAddress.get(senderAddress);
 
         if (list == null) {

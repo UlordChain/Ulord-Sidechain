@@ -18,13 +18,10 @@
 
 package co.usc.db;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
-import co.usc.trie.Trie;
-import co.usc.trie.TrieImpl;
-import co.usc.trie.TrieSerializationException;
-import co.usc.trie.TrieStoreImpl;
+import co.usc.trie.*;
 import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.datasource.DataSourcePool;
 import org.ethereum.datasource.HashMapDB;
@@ -45,7 +42,9 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 import static org.ethereum.datasource.DataSourcePool.levelDbByName;
-import static org.ethereum.util.ByteUtil.*;
+import static org.ethereum.util.ByteUtil.EMPTY_BYTE_ARRAY;
+import static org.ethereum.util.ByteUtil.toHexString;
+import static org.ethereum.util.ByteUtil.wrap;
 
 /**
  * Created by ajlopez on 05/04/2017.
@@ -54,7 +53,7 @@ public class ContractDetailsImpl implements ContractDetails {
     private static final PanicProcessor panicProcessor = new PanicProcessor();
     private static final Logger logger = LoggerFactory.getLogger("contractdetails");
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
 
     private Trie trie;
     private byte[] code;
@@ -66,16 +65,16 @@ public class ContractDetailsImpl implements ContractDetails {
     private boolean closed;
     private Set<ByteArrayWrapper> keys = new HashSet<>();
 
-    public ContractDetailsImpl(UscSystemProperties config, byte[] encoded) {
+    public ContractDetailsImpl(RskSystemProperties config, byte[] encoded) {
         this.config = config;
         decode(encoded);
     }
 
-    public ContractDetailsImpl(UscSystemProperties config) {
+    public ContractDetailsImpl(RskSystemProperties config) {
         this(config, null, new TrieImpl(new TrieStoreImpl(new HashMapDB()), true), null);
     }
 
-    public ContractDetailsImpl(UscSystemProperties config, byte[] address, Trie trie, byte[] code) {
+    public ContractDetailsImpl(RskSystemProperties config, byte[] address, Trie trie, byte[] code) {
         this.config = config;
         this.address = ByteUtils.clone(address);
         this.trie = trie;

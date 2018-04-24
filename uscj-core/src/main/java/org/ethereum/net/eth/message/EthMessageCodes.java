@@ -24,7 +24,7 @@ import org.ethereum.net.eth.EthVersion;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.ethereum.net.eth.EthVersion.V62;
+import static org.ethereum.net.eth.EthVersion.*;
 
 /**
  * A list of commands for the Ethereum network protocol.

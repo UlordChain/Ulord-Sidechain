@@ -18,14 +18,18 @@
 
 package co.usc.rpc.modules.personal;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.config.WalletAccount;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
+import co.usc.core.Wallet;
+import co.usc.config.RskSystemProperties;
+import co.usc.config.WalletAccount;
+import co.usc.core.RskAddress;
 import co.usc.core.Wallet;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.core.Account;
-import org.ethereum.core.Transaction;
 import org.ethereum.core.TransactionPool;
+import org.ethereum.core.Transaction;
 import org.ethereum.facade.Ethereum;
 import org.ethereum.rpc.TypeConverter;
 import org.ethereum.rpc.Web3;
@@ -45,9 +49,9 @@ public class PersonalModuleWalletEnabled implements PersonalModule {
     private final Ethereum eth;
     private final Wallet wallet;
     private final TransactionPool transactionPool;
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
 
-    public PersonalModuleWalletEnabled(UscSystemProperties config, Ethereum eth, Wallet wallet, TransactionPool transactionPool) {
+    public PersonalModuleWalletEnabled(RskSystemProperties config, Ethereum eth, Wallet wallet, TransactionPool transactionPool) {
         this.config = config;
         this.eth = eth;
         this.wallet = wallet;
@@ -55,7 +59,7 @@ public class PersonalModuleWalletEnabled implements PersonalModule {
     }
 
     @Override
-    public void init(UscSystemProperties properties) {
+    public void init(RskSystemProperties properties) {
         // dev node has 10 accouts with balance (in usc-dev.json
         // with seed cow, cow1..cow9
         if (properties.getBlockchainConfig() instanceof RegTestConfig) {
@@ -148,19 +152,19 @@ public class PersonalModuleWalletEnabled implements PersonalModule {
             }
         }
 
-        return this.wallet.unlockAccount(new UscAddress(address), passphrase, dur);
+        return this.wallet.unlockAccount(new RskAddress(address), passphrase, dur);
     }
 
     @Override
     public boolean lockAccount(String address) {
-        return this.wallet.lockAccount(new UscAddress(address));
+        return this.wallet.lockAccount(new RskAddress(address));
     }
 
     @Override
     public String dumpRawKey(String address) throws Exception {
         String s = null;
         try {
-            Account account = wallet.getAccount(new UscAddress(convertFromJsonHexToHex(address)));
+            Account account = wallet.getAccount(new RskAddress(convertFromJsonHexToHex(address)));
             if (account == null) {
                 throw new Exception("Address private key is locked or could not be found in this node");
             }
@@ -172,7 +176,7 @@ public class PersonalModuleWalletEnabled implements PersonalModule {
     }
 
     private Account getAccount(String from, String passphrase) {
-        return wallet.getAccount(new UscAddress(from), passphrase);
+        return wallet.getAccount(new RskAddress(from), passphrase);
     }
 
     private String sendTransaction(Web3.CallArguments args, Account account) throws Exception {

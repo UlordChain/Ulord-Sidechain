@@ -18,9 +18,9 @@
 
 package org.ethereum.rpc;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import co.usc.core.SnapshotManager;
 import co.usc.crypto.Keccak256;
 import co.usc.metrics.HashRateCalculator;
@@ -101,7 +101,7 @@ public class Web3Impl implements Web3 {
     private final ConfigCapabilities configCapabilities;
     private final BlockStore blockStore;
     private final TransactionPool transactionPool;
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
 
     private final PersonalModule personalModule;
     private final EthModule ethModule;
@@ -114,7 +114,7 @@ public class Web3Impl implements Web3 {
                        TransactionPool transactionPool,
                        BlockStore blockStore,
                        ReceiptStore receiptStore,
-                       UscSystemProperties config,
+                       RskSystemProperties config,
                        MinerClient minerClient,
                        MinerServer minerServer,
                        PersonalModule personalModule,
@@ -418,7 +418,7 @@ public class Web3Impl implements Web3 {
             throw new NullPointerException();
         }
 
-        UscAddress addr = new UscAddress(address);
+        RskAddress addr = new RskAddress(address);
         BigInteger balance = repository.getBalance(addr).asBigInteger();
 
         return toJsonHex(balance);
@@ -426,7 +426,7 @@ public class Web3Impl implements Web3 {
 
     @Override
     public String eth_getBalance(String address) throws Exception {
-        UscAddress addr = new UscAddress(address);
+        RskAddress addr = new RskAddress(address);
         BigInteger balance = this.repository.getBalance(addr).asBigInteger();
 
         return toJsonHex(balance);
@@ -437,7 +437,7 @@ public class Web3Impl implements Web3 {
         String s = null;
 
         try {
-            UscAddress addr = new UscAddress(address);
+            RskAddress addr = new RskAddress(address);
             Repository repository = getRepoByJsonBlockId(blockId);
 
             if(repository == null) {
@@ -462,7 +462,7 @@ public class Web3Impl implements Web3 {
     public String eth_getTransactionCount(String address, String blockId) throws Exception {
         String s = null;
         try {
-            UscAddress addr = new UscAddress(address);
+            RskAddress addr = new RskAddress(address);
 
             Repository repository = getRepoByJsonBlockId(blockId);
 
@@ -573,7 +573,7 @@ public class Web3Impl implements Web3 {
                 return null;
             }
 
-            UscAddress addr = new UscAddress(address);
+            RskAddress addr = new RskAddress(address);
 
             Repository repository = getRepoByJsonBlockId(blockId);
 
@@ -696,7 +696,7 @@ public class Web3Impl implements Web3 {
     }
 
     @Override
-    public Web3.BlockResult eth_getBlockByHash(String blockHash, Boolean fullTransactionObjects) throws Exception {
+    public BlockResult eth_getBlockByHash(String blockHash, Boolean fullTransactionObjects) throws Exception {
         BlockResult s = null;
         try {
             Block b = getBlockByJSonHash(blockHash);
@@ -710,7 +710,7 @@ public class Web3Impl implements Web3 {
     }
 
     @Override
-    public Web3.BlockResult eth_getBlockByNumber(String bnOrId, Boolean fullTransactionObjects) throws Exception {
+    public BlockResult eth_getBlockByNumber(String bnOrId, Boolean fullTransactionObjects) throws Exception {
         BlockResult s = null;
         try {
             Block b = getByJsonBlockId(bnOrId);
@@ -833,7 +833,7 @@ public class Web3Impl implements Web3 {
     }
 
     @Override
-    public Web3.BlockResult eth_getUncleByBlockHashAndIndex(String blockHash, String uncleIdx) throws Exception {
+    public BlockResult eth_getUncleByBlockHashAndIndex(String blockHash, String uncleIdx) throws Exception {
         BlockResult s = null;
         try {
             Block block = blockchain.getBlockByHash(stringHexToByteArray(blockHash));
@@ -864,7 +864,7 @@ public class Web3Impl implements Web3 {
     }
 
     @Override
-    public Web3.BlockResult eth_getUncleByBlockNumberAndIndex(String blockId, String uncleIdx) throws Exception {
+    public BlockResult eth_getUncleByBlockNumberAndIndex(String blockId, String uncleIdx) throws Exception {
         BlockResult s = null;
         try {
             Block block = getByJsonBlockId(blockId);

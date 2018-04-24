@@ -18,8 +18,10 @@
 
 package co.usc.core.bc;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.Coin;
+import co.usc.panic.PanicProcessor;
+import co.usc.config.RskSystemProperties;
 import co.usc.panic.PanicProcessor;
 import org.ethereum.core.*;
 import org.ethereum.db.BlockStore;
@@ -47,7 +49,7 @@ public class BlockExecutor {
     private static final Logger logger = LoggerFactory.getLogger("blockexecutor");
     private static final PanicProcessor panicProcessor = new PanicProcessor();
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
     private final Repository repository;
     private final ReceiptStore receiptStore;
     private final BlockStore blockStore;
@@ -56,7 +58,7 @@ public class BlockExecutor {
     private final ProgramInvokeFactory programInvokeFactory = new ProgramInvokeFactoryImpl();
 
     public BlockExecutor(
-        UscSystemProperties config,
+        RskSystemProperties config,
         Repository repository,
         ReceiptStore receiptStore,
         BlockStore blockStore,

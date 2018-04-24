@@ -18,7 +18,8 @@
 
 package co.usc.net.eth;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
+import co.usc.net.messages.Message;
 import co.usc.net.messages.Message;
 import org.ethereum.net.eth.message.EthMessage;
 import org.ethereum.net.eth.message.EthMessageCodes;
@@ -29,15 +30,15 @@ import org.ethereum.util.RLPList;
  * Created by ajlopez on 5/14/2016.
  */
 public class RskMessage extends EthMessage {
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
     private Message message;
 
-    public RskMessage(UscSystemProperties config, byte[] encoded) {
+    public RskMessage(RskSystemProperties config, byte[] encoded) {
         super(encoded);
         this.config = config;
     }
 
-    public RskMessage(UscSystemProperties config, Message message) {
+    public RskMessage(RskSystemProperties config, Message message) {
         this.config = config;
         this.message = message;
         this.parsed = true;

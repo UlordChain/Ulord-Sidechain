@@ -18,20 +18,21 @@
 
 package co.usc.peg;
 
-import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.crypto.TransactionSignature;
 import co.usc.ulordj.script.Script;
 import co.usc.ulordj.script.ScriptBuilder;
 import co.usc.ulordj.script.ScriptChunk;
 import co.usc.ulordj.store.BlockStoreException;
-import co.usc.ulordj.store.BtcBlockStore;
+import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.wallet.SendRequest;
 import co.usc.ulordj.wallet.Wallet;
 import co.usc.config.BridgeConstants;
-import co.usc.core.UscAddress;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.RskAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
+import co.usc.peg.utils.BridgeEventLogger;
 import co.usc.peg.utils.BridgeEventLogger;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.tuple.Pair;
@@ -53,7 +54,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Helper class to move funds from btc to usc and usc to btc
+ * Helper class to move funds from btc to rsk and rsk to btc
  * @author Oscar Guindzberg
  */
 public class BridgeSupport {
@@ -76,23 +77,23 @@ public class BridgeSupport {
 
     private final BridgeConstants bridgeConstants;
     private final Context btcContext;
-    private final BtcBlockStore BtcBlockStore;
+    private final UldBlockStore UldBlockStore;
     private final UldBlockChain UldBlockChain;
     private final BridgeStorageProvider provider;
     private final Repository rskRepository;
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
 
     private final BridgeEventLogger eventLogger;
     private org.ethereum.core.Block rskExecutionBlock;
     private StoredBlock initialBtcStoredBlock;
 
     // Used by bridge
-    public BridgeSupport(UscSystemProperties config, Repository repository, BridgeEventLogger eventLogger, UscAddress contractAddress, Block rskExecutionBlock) throws IOException, BlockStoreException {
+    public BridgeSupport(RskSystemProperties config, Repository repository, BridgeEventLogger eventLogger, RskAddress contractAddress, Block rskExecutionBlock) throws IOException, BlockStoreException {
         this(config, repository, eventLogger, new BridgeStorageProvider(repository, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants()), rskExecutionBlock);
     }
 
     // Used by unit tests
-    public BridgeSupport(UscSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeStorageProvider provider, Block rskExecutionBlock) throws IOException, BlockStoreException {
+    public BridgeSupport(RskSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeStorageProvider provider, Block rskExecutionBlock) throws IOException, BlockStoreException {
         this.rskRepository = repository;
         this.provider = provider;
         this.rskExecutionBlock = rskExecutionBlock;
@@ -103,27 +104,27 @@ public class BridgeSupport {
         NetworkParameters btcParams = this.bridgeConstants.getBtcParams();
         this.btcContext = new Context(btcParams);
 
-        this.BtcBlockStore = new RepositoryBlockStore(config, repository, PrecompiledContracts.BRIDGE_ADDR);
-        if (BtcBlockStore.getChainHead().getHeader().getHash().equals(btcParams.getGenesisBlock().getHash())) {
+        this.UldBlockStore = new RepositoryBlockStore(config, repository, PrecompiledContracts.BRIDGE_ADDR);
+        if (UldBlockStore.getChainHead().getHeader().getHash().equals(btcParams.getGenesisBlock().getHash())) {
             // We are building the blockstore for the first time, so we have not set the checkpoints yet.
             long time = getActiveFederation().getCreationTime().toEpochMilli();
             InputStream checkpoints = this.getCheckPoints();
             if (time > 0 && checkpoints != null) {
-                CheckpointManager.checkpoint(btcParams, checkpoints, BtcBlockStore, time);
+                CheckpointManager.checkpoint(btcParams, checkpoints, UldBlockStore, time);
             }
         }
-        this.UldBlockChain = new UldBlockChain(btcContext, BtcBlockStore);
+        this.UldBlockChain = new UldBlockChain(btcContext, UldBlockStore);
         this.initialBtcStoredBlock = this.getLowestBlock();
     }
 
 
     // Used by unit tests
-    public BridgeSupport(UscSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeConstants bridgeConstants, BridgeStorageProvider provider, BtcBlockStore BtcBlockStore, UldBlockChain UldBlockChain) {
+    public BridgeSupport(RskSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeConstants bridgeConstants, BridgeStorageProvider provider, UldBlockStore UldBlockStore, UldBlockChain UldBlockChain) {
         this.provider = provider;
         this.config = config;
         this.bridgeConstants = bridgeConstants;
         this.btcContext = new Context(this.bridgeConstants.getBtcParams());
-        this.BtcBlockStore = BtcBlockStore;
+        this.UldBlockStore = UldBlockStore;
         this.UldBlockChain = UldBlockChain;
         this.rskRepository = repository;
         this.eventLogger = eventLogger;
@@ -262,7 +263,7 @@ public class BridgeSupport {
         }
 
         // Check the the merkle root equals merkle root of btc block at specified height in the btc best chain
-        UldBlock blockHeader = BridgeUtils.getStoredBlockAtHeight(BtcBlockStore, height).getHeader();
+        UldBlock blockHeader = BridgeUtils.getStoredBlockAtHeight(UldBlockStore, height).getHeader();
         if (!blockHeader.getMerkleRoot().equals(merkleRoot)) {
             logger.warn("Supplied merkle root " + merkleRoot + "does not match block's merkle root " + blockHeader.getMerkleRoot());
             panicProcessor.panic("btclock", "Supplied merkle root " + merkleRoot + "does not match block's merkle root " + blockHeader.getMerkleRoot());
@@ -346,7 +347,7 @@ public class BridgeSupport {
                 }
             } else {
                 org.ethereum.crypto.ECKey key = org.ethereum.crypto.ECKey.fromPublicOnly(data);
-                UscAddress sender = new UscAddress(key.getAddress());
+                RskAddress sender = new RskAddress(key.getAddress());
 
                 rskRepository.transfer(
                         PrecompiledContracts.BRIDGE_ADDR,
@@ -413,9 +414,9 @@ public class BridgeSupport {
     /**
      * Initiates the process of sending coins back to BTC.
      * This is the default contract method.
-     * The funds will be sent to the bitcoin address controlled by the private key that signed the usc tx.
+     * The funds will be sent to the bitcoin address controlled by the private key that signed the rsk tx.
      * The amount sent to the bridge in this tx will be the amount sent in the btc network minus fees.
-     * @param rskTx The usc tx being executed.
+     * @param rskTx The rsk tx being executed.
      * @throws IOException
      */
     public void releaseBtc(Transaction rskTx) throws IOException {
@@ -688,7 +689,7 @@ public class BridgeSupport {
 
         // TODO: (Ariel Mendelzon - 07/12/2017)
         // TODO: at the moment, there can only be one btc transaction
-        // TODO: per usc transaction in the txsWaitingForSignatures
+        // TODO: per rsk transaction in the txsWaitingForSignatures
         // TODO: map, and the rest of the processing logic is
         // TODO: dependant upon this. That is the reason we
         // TODO: add only one btc transaction at a time
@@ -727,7 +728,7 @@ public class BridgeSupport {
         Coin spentByFederation = sumInputs.subtract(change);
         if (spentByFederation.isLessThan(sentByUser)) {
             Coin coinsToBurn = sentByUser.subtract(spentByFederation);
-            UscAddress burnAddress = config.getBlockchainConfig().getCommonConstants().getBurnAddress();
+            RskAddress burnAddress = config.getBlockchainConfig().getCommonConstants().getBurnAddress();
             rskRepository.transfer(PrecompiledContracts.BRIDGE_ADDR, burnAddress, co.usc.core.Coin.fromBitcoin(coinsToBurn));
         }
     }
@@ -740,7 +741,7 @@ public class BridgeSupport {
      * @param executionBlockNumber The block number of the block that is currently being procesed
      * @param federatorPublicKey   Federator who is signing
      * @param signatures           1 signature per btc tx input
-     * @param rskTxHash            The id of the usc tx
+     * @param rskTxHash            The id of the rsk tx
      */
     public void addSignature(long executionBlockNumber, UldECKey federatorPublicKey, List<byte[]> signatures, byte[] rskTxHash) throws Exception {
         Context.propagate(btcContext);
@@ -908,7 +909,7 @@ public class BridgeSupport {
      * @return a BridgeState serialized in RLP
      */
     public byte[] getStateForDebugging() throws IOException {
-        BridgeState stateForDebugging = new BridgeState(getUldBlockchainBestChainHeight(), provider);
+        BridgeState stateForDebugging = new BridgeState(getUldBlockChainBestChainHeight(), provider);
 
         return stateForDebugging.getEncoded();
     }
@@ -916,7 +917,7 @@ public class BridgeSupport {
     /**
      * Returns the bitcoin blockchain best chain height know by the bridge contract
      */
-    public int getUldBlockchainBestChainHeight() throws IOException {
+    public int getUldBlockChainBestChainHeight() throws IOException {
         return UldBlockChain.getChainHead().getHeight();
     }
 
@@ -924,7 +925,7 @@ public class BridgeSupport {
      * Returns an array of block hashes known by the bridge contract. Federators can use this to find what is the latest block in the mainchain the bridge has.
      * @return a List of bitcoin block hashes
      */
-    public List<Sha256Hash> getUldBlockchainBlockLocator() throws IOException {
+    public List<Sha256Hash> getUldBlockChainBlockLocator() throws IOException {
         final int maxHashesToInform = 100;
         List<Sha256Hash> blockLocator = new ArrayList<>();
         StoredBlock cursor = UldBlockChain.getChainHead();
@@ -947,7 +948,7 @@ public class BridgeSupport {
                 }
             } catch (Exception e) {
                 logger.error("Failed to walk the block chain whilst constructing a locator");
-                panicProcessor.panic("UldBlockchain", "Failed to walk the block chain whilst constructing a locator");
+                panicProcessor.panic("UldBlockChain", "Failed to walk the block chain whilst constructing a locator");
                 throw new RuntimeException(e);
             }
             if (!stop) {
@@ -965,7 +966,7 @@ public class BridgeSupport {
         boolean stop = false;
         StoredBlock current = cursor;
         while (!stop) {
-            current = current.getPrev(this.BtcBlockStore);
+            current = current.getPrev(this.UldBlockStore);
             stop = current.getHeight() == height;
         }
         return current;
@@ -1777,8 +1778,8 @@ public class BridgeSupport {
     }
 
     @VisibleForTesting
-    BtcBlockStore getBtcBlockStore() {
-        return BtcBlockStore;
+    UldBlockStore getUldBlockStore() {
+        return UldBlockStore;
     }
 
     private Pair<UldTransaction, List<UTXO>> createMigrationTransaction(Wallet originWallet, Address destinationAddress) {

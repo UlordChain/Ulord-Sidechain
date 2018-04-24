@@ -19,6 +19,7 @@
 package co.usc.core;
 
 import co.usc.panic.PanicProcessor;
+import co.usc.panic.PanicProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -60,8 +61,8 @@ public class NetworkStateExporter {
         try(FileWriter fw = new FileWriter(dumpFile.getAbsoluteFile()); BufferedWriter bw = new BufferedWriter(fw)) {
             JsonNodeFactory jsonFactory = new JsonNodeFactory(false);
             ObjectNode mainNode = jsonFactory.objectNode();
-            for (UscAddress addr : frozenRepository.getAccountsKeys()) {
-                if(!addr.equals(UscAddress.nullAddress())) {
+            for (RskAddress addr : frozenRepository.getAccountsKeys()) {
+                if(!addr.equals(RskAddress.nullAddress())) {
                     mainNode.set(addr.toString(), createAccountNode(mainNode, addr, frozenRepository));
                 }
             }
@@ -88,7 +89,7 @@ public class NetworkStateExporter {
         return contractNode;
     }
 
-    private ObjectNode createAccountNode(ObjectNode mainNode, UscAddress addr, Repository frozenRepository) {
+    private ObjectNode createAccountNode(ObjectNode mainNode, RskAddress addr, Repository frozenRepository) {
         ObjectNode accountNode = mainNode.objectNode();
         AccountState accountState = frozenRepository.getAccountState(addr);
         Coin balance = accountState.getBalance();

@@ -19,6 +19,7 @@
 package co.usc.net.discovery;
 
 import co.usc.net.discovery.message.PingPeerMessage;
+import co.usc.net.discovery.message.PingPeerMessage;
 import org.ethereum.net.rlpx.Node;
 
 import java.util.Map;

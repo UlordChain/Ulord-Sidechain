@@ -32,7 +32,7 @@ public class JsonRpcMethodFilter implements RequestInterceptor {
     /**
      * This checks the JSON RPC invoked method against the received list of modules
      *
-     * @see co.usc.rpc.ModuleDescription#methodIsEnable
+     * @see ModuleDescription#methodIsEnable
      *
      * @param modules list of configured modules
      */

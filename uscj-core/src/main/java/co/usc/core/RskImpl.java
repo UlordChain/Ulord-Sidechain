@@ -18,7 +18,9 @@
 
 package co.usc.core;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
+import co.usc.net.NodeBlockProcessor;
+import co.usc.config.RskSystemProperties;
 import co.usc.net.NodeBlockProcessor;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.TransactionPool;
@@ -40,7 +42,7 @@ public class RskImpl extends EthereumImpl implements Rsk {
             ChannelManager channelManager,
             PeerServer peerServer,
             TransactionPool transactionPool,
-            UscSystemProperties config,
+            RskSystemProperties config,
             CompositeEthereumListener compositeEthereumListener,
             NodeBlockProcessor nodeBlockProcessor,
             ReversibleTransactionExecutor reversibleTransactionExecutor,

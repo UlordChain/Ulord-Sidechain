@@ -21,10 +21,11 @@ package co.usc.peg;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.script.Script;
 import co.usc.ulordj.store.BlockStoreException;
-import co.usc.ulordj.store.BtcBlockStore;
+import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.wallet.Wallet;
 import co.usc.config.BridgeConstants;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
+import co.usc.peg.bitcoin.RskAllowUnconfirmedCoinSelector;
 import co.usc.peg.bitcoin.RskAllowUnconfirmedCoinSelector;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.SystemProperties;
@@ -43,7 +44,7 @@ public class BridgeUtils {
 
     private static final Logger logger = LoggerFactory.getLogger("BridgeUtils");
 
-    public static StoredBlock getStoredBlockAtHeight(BtcBlockStore blockStore, int height) throws BlockStoreException {
+    public static StoredBlock getStoredBlockAtHeight(UldBlockStore blockStore, int height) throws BlockStoreException {
         StoredBlock storedBlock = blockStore.getChainHead();
         int headHeight = storedBlock.getHeight();
         if (height > headHeight) {
@@ -160,8 +161,8 @@ public class BridgeUtils {
 
     public static boolean isFreeBridgeTx(SystemProperties config, Transaction rskTx, long blockNumber) {
         BlockchainNetConfig blockchainConfig = config.getBlockchainConfig();
-        UscAddress receiveAddress = rskTx.getReceiveAddress();
-        if (receiveAddress.equals(UscAddress.nullAddress())) {
+        RskAddress receiveAddress = rskTx.getReceiveAddress();
+        if (receiveAddress.equals(RskAddress.nullAddress())) {
             return false;
         }
 

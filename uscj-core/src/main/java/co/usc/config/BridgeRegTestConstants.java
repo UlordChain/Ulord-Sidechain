@@ -23,6 +23,8 @@ import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.peg.AddressBasedAuthorizer;
 import co.usc.peg.Federation;
+import co.usc.peg.AddressBasedAuthorizer;
+import co.usc.peg.Federation;
 import com.google.common.collect.Lists;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;

@@ -19,8 +19,15 @@
 package co.usc.core.bc;
 
 import co.usc.blocks.BlockRecorder;
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.BlockDifficulty;
+import co.usc.net.Metrics;
+import co.usc.panic.PanicProcessor;
+import co.usc.trie.Trie;
+import co.usc.trie.TrieImpl;
+import co.usc.validators.BlockValidator;
+import co.usc.blocks.BlockRecorder;
+import co.usc.config.RskSystemProperties;
 import co.usc.net.Metrics;
 import co.usc.panic.PanicProcessor;
 import co.usc.trie.Trie;
@@ -80,7 +87,7 @@ public class BlockChainImpl implements Blockchain {
     private static final PanicProcessor panicProcessor = new PanicProcessor();
 
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
     private final Repository repository;
     private final BlockStore blockStore;
     private final ReceiptStore receiptStore;
@@ -96,7 +103,7 @@ public class BlockChainImpl implements Blockchain {
     private BlockRecorder blockRecorder;
     private boolean noValidation;
 
-    public BlockChainImpl(UscSystemProperties config,
+    public BlockChainImpl(RskSystemProperties config,
                           Repository repository,
                           BlockStore blockStore,
                           ReceiptStore receiptStore,
@@ -535,7 +542,7 @@ public class BlockChainImpl implements Blockchain {
         return blockValidator.isValid(block);
     }
 
-    // Rolling counter that helps doing flush every UscSystemProperties.CONFIG.flushNumberOfBlocks() flush attempts
+    // Rolling counter that helps doing flush every RskSystemProperties.CONFIG.flushNumberOfBlocks() flush attempts
     // We did this because flush is slow, and doing flush for every block degrades the node performance.
     private int nFlush = 0;
 

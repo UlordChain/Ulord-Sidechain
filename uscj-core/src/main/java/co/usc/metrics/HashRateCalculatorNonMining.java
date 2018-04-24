@@ -19,7 +19,7 @@
 package co.usc.metrics;
 
 import co.usc.crypto.Keccak256;
-import co.usc.util.UscCustomCache;
+import co.usc.util.RskCustomCache;
 import org.ethereum.db.BlockStore;
 
 import java.math.BigInteger;
@@ -27,7 +27,7 @@ import java.time.Duration;
 
 public class HashRateCalculatorNonMining extends HashRateCalculator {
 
-    public HashRateCalculatorNonMining(BlockStore blockStore, UscCustomCache<Keccak256, BlockHeaderElement> headerCache) {
+    public HashRateCalculatorNonMining(BlockStore blockStore, RskCustomCache<Keccak256, BlockHeaderElement> headerCache) {
         super(blockStore, headerCache);
     }
 

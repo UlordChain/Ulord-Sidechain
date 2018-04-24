@@ -1,6 +1,6 @@
 package co.usc.net;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.DifficultyCalculator;
 import co.usc.core.bc.BlockChainStatus;
 import co.usc.net.messages.*;
@@ -8,6 +8,8 @@ import co.usc.net.sync.*;
 import co.usc.scoring.EventType;
 import co.usc.scoring.PeerScoringManager;
 import co.usc.validators.BlockHeaderValidationRule;
+import co.usc.net.messages.*;
+import co.usc.net.sync.*;
 import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
@@ -35,7 +37,7 @@ public class SyncProcessor implements SyncEventsHandler {
     public static final int TIME_LIMIT_FAILURE_RECORD = 600;
     private static final Logger logger = LoggerFactory.getLogger("syncprocessor");
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
     private final Blockchain blockchain;
     private final BlockSyncService blockSyncService;
     private final PeerScoringManager peerScoringManager;
@@ -49,7 +51,7 @@ public class SyncProcessor implements SyncEventsHandler {
     private SyncState syncState;
     private NodeID selectedPeerId;
 
-    public SyncProcessor(UscSystemProperties config,
+    public SyncProcessor(RskSystemProperties config,
                          Blockchain blockchain,
                          BlockSyncService blockSyncService,
                          PeerScoringManager peerScoringManager,

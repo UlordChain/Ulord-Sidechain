@@ -18,7 +18,7 @@
 
 package co.usc.config;
 
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 
 /**
  * Created by mario on 12/12/16.
@@ -33,10 +33,10 @@ public class RemascConfig {
     // RSK labs address.
     // Note that his has to be a basic type (such as String) because RemascConfig
     // is deserialized automatically from JSON.
-    private String uscLabsAddress;
+    private String rskLabsAddress;
 
-    // RSK labs cut. Available reward / uscLabsDivisor is what RSK gets.
-    private long uscLabsDivisor = 5;
+    // RSK labs cut. Available reward / rskLabsDivisor is what RSK gets.
+    private long rskLabsDivisor = 5;
 
     // Federation cut. Available reward / rskFederationDivisor is what Federation gets.
     private long federationDivisor = 100;
@@ -65,12 +65,12 @@ public class RemascConfig {
         return syntheticSpan;
     }
 
-    public UscAddress getUscLabsAddress() {
-        return new UscAddress(this.uscLabsAddress);
+    public RskAddress getRskLabsAddress() {
+        return new RskAddress(this.rskLabsAddress);
     }
 
-    public long getUscLabsDivisor() {
-        return uscLabsDivisor;
+    public long getRskLabsDivisor() {
+        return rskLabsDivisor;
     }
 
     public long getFederationDivisor() {

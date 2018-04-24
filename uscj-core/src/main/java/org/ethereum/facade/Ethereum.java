@@ -57,10 +57,10 @@ public interface Ethereum {
      * @return newly created transaction
      */
     Transaction createTransaction(BigInteger nonce,
-                                  BigInteger gasPrice,
-                                  BigInteger gas,
-                                  byte[] receiveAddress,
-                                  BigInteger value, byte[] data);
+                                 BigInteger gasPrice,
+                                 BigInteger gas,
+                                 byte[] receiveAddress,
+                                 BigInteger value, byte[] data);
 
 
     /**

@@ -23,6 +23,7 @@ package co.usc.net;
  */
 
 import co.usc.net.messages.Message;
+import co.usc.net.messages.Message;
 
 public interface MessageHandler {
     void processMessage(MessageChannel sender, Message message);

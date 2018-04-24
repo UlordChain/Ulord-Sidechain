@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by mario on 23/01/17.
  */
-public class BlockTimeStampValidationRule implements BlockParentDependantValidationRule, BlockValidationRule {
+public class BlockTimeStampValidationRule implements BlockParentDependantValidationRule, BlockValidationRule{
 
     private static final Logger logger = LoggerFactory.getLogger("blockvalidator");
     private static final PanicProcessor panicProcessor = new PanicProcessor();

@@ -502,7 +502,7 @@ public class DataWord implements Comparable<DataWord> {
         return equalValue((DataWord) o);
     }
 
-    public boolean equalValue(DataWord o) {
+    public boolean equalValue(DataWord  o) {
         return java.util.Arrays.equals(data, o.data);
 
     }

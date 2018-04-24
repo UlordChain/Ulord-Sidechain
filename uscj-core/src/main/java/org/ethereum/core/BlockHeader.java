@@ -18,9 +18,9 @@
  */
 package org.ethereum.core;
 
-import co.usc.core.BlockDifficulty;
 import co.usc.core.Coin;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
+import co.usc.core.BlockDifficulty;
 import co.usc.crypto.Keccak256;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
@@ -50,7 +50,7 @@ public class BlockHeader {
     private byte[] unclesHash;
     /* The 160-bit address to which all fees collected from the
      * successful mining of this block be transferred; formally */
-    private UscAddress coinbase;
+    private RskAddress coinbase;
     /* The SHA3 256-bit hash of the root node of the state trie,
      * after all transactions are executed and finalisations applied */
     private byte[] stateRoot;
@@ -191,7 +191,7 @@ public class BlockHeader {
                        int uncleCount) {
         this.parentHash = parentHash;
         this.unclesHash = unclesHash;
-        this.coinbase = new UscAddress(coinbase);
+        this.coinbase = new RskAddress(coinbase);
         this.logsBloom = logsBloom;
         this.difficultyRaw = difficulty;
         this.difficulty = new BlockDifficulty(difficultyRaw);
@@ -249,7 +249,7 @@ public class BlockHeader {
         this.unclesHash = unclesHash;
     }
 
-    public UscAddress getCoinbase() {
+    public RskAddress getCoinbase() {
         return this.coinbase;
     }
 

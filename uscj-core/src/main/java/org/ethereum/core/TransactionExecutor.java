@@ -19,10 +19,10 @@
 
 package org.ethereum.core;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.config.VmConfig;
 import co.usc.core.Coin;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import co.usc.panic.PanicProcessor;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.Constants;
@@ -61,7 +61,7 @@ public class TransactionExecutor {
     private static final Logger logger = LoggerFactory.getLogger("execute");
     private static final PanicProcessor panicProcessor = new PanicProcessor();
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
     private final Transaction tx;
     private final int txindex;
     private final Repository track;
@@ -76,7 +76,7 @@ public class TransactionExecutor {
     private boolean readyToExecute = false;
 
     private final ProgramInvokeFactory programInvokeFactory;
-    private final UscAddress coinbase;
+    private final RskAddress coinbase;
 
     private TransactionReceipt receipt;
     private ProgramResult result = new ProgramResult();
@@ -95,12 +95,12 @@ public class TransactionExecutor {
 
     boolean localCall = false;
 
-    public TransactionExecutor(UscSystemProperties config, Transaction tx, int txindex, UscAddress coinbase, Repository track, BlockStore blockStore, ReceiptStore receiptStore,
+    public TransactionExecutor(RskSystemProperties config, Transaction tx, int txindex, RskAddress coinbase, Repository track, BlockStore blockStore, ReceiptStore receiptStore,
                                ProgramInvokeFactory programInvokeFactory, Block executionBlock) {
         this(config, tx, txindex, coinbase, track, blockStore, receiptStore, programInvokeFactory, executionBlock, new EthereumListenerAdapter(), 0);
     }
 
-    public TransactionExecutor(UscSystemProperties config, Transaction tx, int txindex, UscAddress coinbase, Repository track, BlockStore blockStore, ReceiptStore receiptStore,
+    public TransactionExecutor(RskSystemProperties config, Transaction tx, int txindex, RskAddress coinbase, Repository track, BlockStore blockStore, ReceiptStore receiptStore,
                                ProgramInvokeFactory programInvokeFactory, Block executionBlock,
                                EthereumListener listener, long gasUsedInTheBlock) {
         this.config = config;
@@ -245,7 +245,7 @@ public class TransactionExecutor {
 
         logger.trace("Call transaction {} {}", toBI(tx.getNonce()), tx.getHash());
 
-        UscAddress targetAddress = tx.getReceiveAddress();
+        RskAddress targetAddress = tx.getReceiveAddress();
 
         // DataWord(targetAddress)) can fail with exception:
         // java.lang.RuntimeException: Data word can't exceed 32 bytes:
@@ -301,7 +301,7 @@ public class TransactionExecutor {
     }
 
     private void create() {
-        UscAddress newContractAddress = tx.getContractAddress();
+        RskAddress newContractAddress = tx.getContractAddress();
         if (isEmpty(tx.getData())) {
             mEndGas = toBI(tx.getGasLimit()).subtract(BigInteger.valueOf(basicTxCost));
             cacheTrack.createAccount(newContractAddress);
@@ -450,7 +450,7 @@ public class TransactionExecutor {
             // Accumulate refunds for suicides
             result.addFutureRefund((long)result.getDeleteAccounts().size() * GasCost.SUICIDE_REFUND);
             long gasRefund = Math.min(result.getFutureRefund(), result.getGasUsed() / 2);
-            UscAddress addr = tx.isContractCreation() ? tx.getContractAddress() : tx.getReceiveAddress();
+            RskAddress addr = tx.isContractCreation() ? tx.getContractAddress() : tx.getReceiveAddress();
             mEndGas = mEndGas.add(BigInteger.valueOf(gasRefund));
 
             summaryBuilder
@@ -495,9 +495,9 @@ public class TransactionExecutor {
             logger.trace("Processing result");
             logs = notRejectedLogInfos;
 
-            result.getCodeChanges().forEach((key, value) -> track.saveCode(new UscAddress(key), value));
+            result.getCodeChanges().forEach((key, value) -> track.saveCode(new RskAddress(key), value));
             // Traverse list of suicides
-            result.getDeleteAccounts().forEach(address -> track.delete(new UscAddress(address)));
+            result.getDeleteAccounts().forEach(address -> track.delete(new RskAddress(address)));
         }
 
         if (listener != null) {

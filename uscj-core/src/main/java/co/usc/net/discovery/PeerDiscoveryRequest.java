@@ -20,6 +20,8 @@ package co.usc.net.discovery;
 
 import co.usc.net.discovery.message.DiscoveryMessageType;
 import co.usc.net.discovery.message.PeerDiscoveryMessage;
+import co.usc.net.discovery.message.DiscoveryMessageType;
+import co.usc.net.discovery.message.PeerDiscoveryMessage;
 import org.ethereum.net.rlpx.Node;
 
 import java.net.InetSocketAddress;

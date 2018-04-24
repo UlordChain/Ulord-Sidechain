@@ -19,7 +19,7 @@
 
 package org.ethereum.vm;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import org.ethereum.vm.trace.ProgramTrace;
 import org.ethereum.vm.trace.Serializers;
 
@@ -53,7 +53,7 @@ public final class VMUtils {
         }
     }
 
-    public static void saveProgramTraceFile(UscSystemProperties config, String txHash, ProgramTrace trace) throws IOException {
+    public static void saveProgramTraceFile(RskSystemProperties config, String txHash, ProgramTrace trace) throws IOException {
         Path tracePath = Paths.get(config.databaseDir(), config.vmTraceDir());
         File traceDir = tracePath.toFile();
         if (!traceDir.exists()) {

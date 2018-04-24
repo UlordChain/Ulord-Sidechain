@@ -18,8 +18,10 @@
 
 package co.usc.mine;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.Rsk;
+import co.usc.panic.PanicProcessor;
+import co.usc.config.RskSystemProperties;
 import co.usc.panic.PanicProcessor;
 import org.ethereum.config.blockchain.DevNetConfig;
 import org.ethereum.config.blockchain.RegTestConfig;
@@ -43,7 +45,7 @@ import java.util.TimerTask;
 
 @Component("MinerClient")
 public class MinerClientImpl implements MinerClient {
-    private BigInteger nextNonceToUse = BigInteger.valueOf(0);
+    private BigInteger nextNonceToUse = BigInteger.ZERO;
 
     private static final Logger logger = LoggerFactory.getLogger("minerClient");
     private static final PanicProcessor panicProcessor = new PanicProcessor();
@@ -52,7 +54,7 @@ public class MinerClientImpl implements MinerClient {
 
     private final Rsk rsk;
     private final MinerServer minerServer;
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
 
     private volatile boolean stop = false;
 
@@ -64,7 +66,7 @@ public class MinerClientImpl implements MinerClient {
     private Timer aTimer;
 
     @Autowired
-    public MinerClientImpl(Rsk rsk, MinerServer minerServer, UscSystemProperties config) {
+    public MinerClientImpl(Rsk rsk, MinerServer minerServer, RskSystemProperties config) {
         this.rsk = rsk;
         this.minerServer = minerServer;
         this.config = config;
@@ -216,7 +218,7 @@ public class MinerClientImpl implements MinerClient {
             }
             // No, so increment the nonce and try again.
             bitcoinMergedMiningBlock.setNonce(nextNonceToUse.add(BigInteger.ONE));
-            if (bitcoinMergedMiningBlock.getNonce().mod(BigInteger.valueOf(100000)) == BigInteger.valueOf(0)) {
+            if (bitcoinMergedMiningBlock.getNonce().mod(BigInteger.valueOf(100000)) == BigInteger.ZERO) {
                 logger.debug("Solving block. Nonce: " + bitcoinMergedMiningBlock.getNonce());
             }
         }

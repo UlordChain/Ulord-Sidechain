@@ -21,6 +21,8 @@ package co.usc.net.discovery;
 
 import co.usc.net.discovery.message.MessageDecoder;
 import co.usc.net.discovery.message.PeerDiscoveryMessage;
+import co.usc.net.discovery.message.MessageDecoder;
+import co.usc.net.discovery.message.PeerDiscoveryMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.socket.DatagramPacket;

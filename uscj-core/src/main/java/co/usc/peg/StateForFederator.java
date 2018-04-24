@@ -18,9 +18,9 @@
 
 package co.usc.peg;
 
-import co.usc.ulordj.core.UldTransaction;
-import co.usc.ulordj.core.NetworkParameters;
 import co.usc.crypto.Keccak256;
+import co.usc.ulordj.core.NetworkParameters;
+import co.usc.ulordj.core.UldTransaction;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
 

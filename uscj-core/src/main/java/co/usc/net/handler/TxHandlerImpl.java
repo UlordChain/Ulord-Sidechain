@@ -18,13 +18,22 @@
 
 package co.usc.net.handler;
 
-import co.usc.config.UscSystemProperties;
-import org.ethereum.core.Blockchain;
-import org.ethereum.core.Repository;
-import org.ethereum.core.Transaction;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.RskAddress;
+import com.google.common.annotations.VisibleForTesting;
+import org.ethereum.core.*;
 import org.ethereum.listener.CompositeEthereumListener;
+import org.ethereum.listener.EthereumListenerAdapter;
 
+import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * TxHandler validates the incoming transactions
@@ -33,11 +42,11 @@ import java.util.List;
  * list of transactions: pendig (in sequence), queued (out of sequence)
  */
 public class TxHandlerImpl implements TxHandler {
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
     private Repository repository;
     private Blockchain blockchain;
 
-    public TxHandlerImpl(UscSystemProperties config, CompositeEthereumListener compositeEthereumListener, Repository repository, Blockchain blockchain) {
+    public TxHandlerImpl(RskSystemProperties config, CompositeEthereumListener compositeEthereumListener, Repository repository, Blockchain blockchain) {
         this.config = config;
         this.blockchain = blockchain;
         this.repository = repository;

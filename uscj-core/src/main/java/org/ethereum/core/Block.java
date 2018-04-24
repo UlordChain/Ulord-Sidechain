@@ -21,7 +21,7 @@ package org.ethereum.core;
 
 import co.usc.core.BlockDifficulty;
 import co.usc.core.Coin;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
 import co.usc.remasc.RemascTransaction;
@@ -273,7 +273,7 @@ public class Block {
         return this.header.getUnclesHash();
     }
 
-    public UscAddress getCoinbase() {
+    public RskAddress getCoinbase() {
         if (!parsed) {
             parseRLP();
         }

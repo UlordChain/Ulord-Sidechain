@@ -19,12 +19,16 @@
 package co.usc.mine;
 
 import co.usc.config.MiningConfig;
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.DifficultyCalculator;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import co.usc.core.bc.BlockExecutor;
 import co.usc.core.bc.FamilyUtils;
+import co.usc.remasc.RemascTransaction;
+import co.usc.validators.BlockValidationRule;
+import co.usc.config.MiningConfig;
+import co.usc.config.RskSystemProperties;
 import co.usc.remasc.RemascTransaction;
 import co.usc.validators.BlockValidationRule;
 import org.apache.commons.collections4.CollectionUtils;
@@ -78,7 +82,7 @@ public class BlockToMineBuilder {
             DifficultyCalculator difficultyCalculator,
             GasLimitCalculator gasLimitCalculator,
             @Qualifier("minerServerBlockValidation") BlockValidationRule validationRules,
-            UscSystemProperties config,
+            RskSystemProperties config,
             ReceiptStore receiptStore) {
         this.miningConfig = Objects.requireNonNull(miningConfig);
         this.repository = Objects.requireNonNull(repository);
@@ -140,7 +144,7 @@ public class BlockToMineBuilder {
         Transaction remascTx = new RemascTransaction(parent.getNumber() + 1);
         txs.add(remascTx);
 
-        Map<UscAddress, BigInteger> accountNonces = new HashMap<>();
+        Map<RskAddress, BigInteger> accountNonces = new HashMap<>();
 
         Repository originalRepo = repository.getSnapshotTo(parent.getStateRoot());
 

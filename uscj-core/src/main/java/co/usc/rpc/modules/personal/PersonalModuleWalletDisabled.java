@@ -18,13 +18,14 @@
 
 package co.usc.rpc.modules.personal;
 
-import co.usc.config.UscSystemProperties;
-import org.ethereum.rpc.Web3;
+import co.usc.config.RskSystemProperties;
+import co.usc.config.RskSystemProperties;
 import org.ethereum.rpc.exception.DisabledWalletException;
+import org.ethereum.rpc.Web3;
 
 public class PersonalModuleWalletDisabled implements PersonalModule {
     @Override
-    public void init(UscSystemProperties properties) {
+    public void init(RskSystemProperties properties) {
         // Init steps are only needed when using a wallet.
         // This method is called from Web3Impl even if the wallet is disabled,
         // so we don't throw here.

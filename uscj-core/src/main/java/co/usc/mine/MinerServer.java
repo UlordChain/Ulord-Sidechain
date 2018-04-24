@@ -20,7 +20,7 @@ package co.usc.mine;
 
 import co.usc.ulordj.core.UldBlock;
 import co.usc.ulordj.core.UldTransaction;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import org.ethereum.core.Block;
 
 import javax.annotation.Nonnull;
@@ -61,7 +61,7 @@ public interface MinerServer {
 
     boolean isFallbackMining();
 
-    UscAddress getCoinbaseAddress();
+    RskAddress getCoinbaseAddress();
 
     MinerWork getWork();
 

@@ -22,6 +22,8 @@ import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.peg.AddressBasedAuthorizer;
 import co.usc.peg.Federation;
+import co.usc.peg.AddressBasedAuthorizer;
+import co.usc.peg.Federation;
 
 public class BridgeConstants {
     protected String btcParamsString;

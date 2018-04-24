@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.ethereum.net.eth.EthVersion.fromCode;
+import static org.ethereum.net.eth.EthVersion.*;
 
 /**
  * @author Mikhail Kalinin

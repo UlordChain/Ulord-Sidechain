@@ -18,9 +18,9 @@
 
 package co.usc.net.handler.txvalidator;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import org.ethereum.core.*;
 
 import java.math.BigInteger;
@@ -31,9 +31,9 @@ import java.math.BigInteger;
  */
 public class TxValidatorIntrinsicGasLimitValidator implements TxValidatorStep {
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
 
-    public TxValidatorIntrinsicGasLimitValidator(UscSystemProperties config) {
+    public TxValidatorIntrinsicGasLimitValidator(RskSystemProperties config) {
         this.config = config;
     }
 
@@ -41,7 +41,7 @@ public class TxValidatorIntrinsicGasLimitValidator implements TxValidatorStep {
     public boolean validate(Transaction tx, AccountState state, BigInteger gasLimit, Coin minimumGasPrice, long bestBlockNumber, boolean isFreeTx) {
         BlockHeader blockHeader = new BlockHeader(new byte[]{},
                 new byte[]{},
-                UscAddress.nullAddress().getBytes(),
+                RskAddress.nullAddress().getBytes(),
                 new Bloom().getData(),
                 new byte[]{},
                 bestBlockNumber,

@@ -19,8 +19,8 @@
 package co.usc.remasc;
 
 import co.usc.config.RemascConfig;
-import co.usc.config.UscSystemProperties;
-import co.usc.core.UscAddress;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.RskAddress;
 import co.usc.panic.PanicProcessor;
 import org.ethereum.core.Block;
 import org.ethereum.core.CallTransaction;
@@ -62,13 +62,13 @@ public class RemascContract extends PrecompiledContracts.PrecompiledContract {
     static final DataWord MINING_FEE_TOPIC = new DataWord(TypeConverter.stringToByteArray("mining_fee_topic"));
     public static final String REMASC_CONFIG = "remasc.json";
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
     private final RemascConfig remascConfig;
 
     private final Map<ByteArrayWrapper, CallTransaction.Function> functions;
     private Remasc remasc;
 
-    public RemascContract(UscSystemProperties config, RemascConfig remascConfig, UscAddress contractAddress) {
+    public RemascContract(RskSystemProperties config, RemascConfig remascConfig, RskAddress contractAddress) {
         this.config = config;
         this.remascConfig = remascConfig;
         this.contractAddress = contractAddress;

@@ -18,17 +18,18 @@
 
 package co.usc.core;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
+import co.usc.config.RskSystemProperties;
 import org.ethereum.core.BlockHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DifficultyCalculator {
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
 
     @Autowired
-    public DifficultyCalculator(UscSystemProperties config) {
+    public DifficultyCalculator(RskSystemProperties config) {
         this.config = config;
     }
 

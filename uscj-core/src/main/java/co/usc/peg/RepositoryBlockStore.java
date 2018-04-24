@@ -20,8 +20,8 @@ package co.usc.peg;
 
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.store.BlockStoreException;
-import co.usc.ulordj.store.BtcBlockStore;
-import co.usc.core.UscAddress;
+import co.usc.ulordj.store.UldBlockStore;
+import co.usc.core.RskAddress;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Repository;
 import org.ethereum.vm.DataWord;
@@ -33,16 +33,16 @@ import java.nio.charset.StandardCharsets;
  * Implementation of a bitcoinj blockstore that persists to RSK's Repository
  * @author Oscar Guindzberg
  */
-public class RepositoryBlockStore implements BtcBlockStore{
+public class RepositoryBlockStore implements UldBlockStore{
 
     public static final String BLOCK_STORE_CHAIN_HEAD_KEY = "blockStoreChainHead";
 
     private final Repository repository;
-    private final UscAddress contractAddress;
+    private final RskAddress contractAddress;
 
     private final NetworkParameters params;
 
-    public RepositoryBlockStore(SystemProperties config, Repository repository, UscAddress contractAddress) {
+    public RepositoryBlockStore(SystemProperties config, Repository repository, RskAddress contractAddress) {
         this.repository = repository;
         this.contractAddress = contractAddress;
 

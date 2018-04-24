@@ -95,7 +95,7 @@ public class KeyCrypterAes implements KeyCrypter {
      * @param dataToDecrypt    The data to decrypt
      * @param key              The AES key to use for decryption
      * @return                 The decrypted bytes
-     * @throws KeyCrypterException if bytes could not be decrypted
+     * @throws                 KeyCrypterException if bytes could not be decrypted
      */
     @Override
     public byte[] decrypt(EncryptedData dataToDecrypt, KeyParameter key) {

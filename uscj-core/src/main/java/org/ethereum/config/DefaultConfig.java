@@ -22,7 +22,7 @@ package org.ethereum.config;
 import co.usc.config.ConfigLoader;
 import co.usc.config.GasLimitConfig;
 import co.usc.config.MiningConfig;
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.DifficultyCalculator;
 import co.usc.core.NetworkStateExporter;
 import co.usc.crypto.Keccak256;
@@ -34,17 +34,14 @@ import co.usc.net.discovery.PeerExplorer;
 import co.usc.net.discovery.UDPServer;
 import co.usc.net.discovery.table.KademliaOptions;
 import co.usc.net.discovery.table.NodeDistanceTable;
-import co.usc.util.UscCustomCache;
+import co.usc.util.RskCustomCache;
 import co.usc.validators.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.ethereum.core.Repository;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.datasource.KeyValueDataSource;
 import org.ethereum.datasource.LevelDbDataSource;
-import org.ethereum.db.BlockStore;
-import org.ethereum.db.IndexedBlockStore;
-import org.ethereum.db.ReceiptStore;
-import org.ethereum.db.ReceiptStoreImpl;
+import org.ethereum.db.*;
 import org.ethereum.net.rlpx.Node;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
@@ -72,7 +69,7 @@ public class DefaultConfig {
     private static Logger logger = LoggerFactory.getLogger("general");
 
     @Bean
-    public BlockStore blockStore(UscSystemProperties config) {
+    public BlockStore blockStore(RskSystemProperties config) {
         String database = config.databaseDir();
 
         File blockIndexDirectory = new File(database + "/blocks/");
@@ -103,16 +100,16 @@ public class DefaultConfig {
     }
 
     @Bean
-    public ReceiptStore receiptStore(UscSystemProperties config) {
+    public ReceiptStore receiptStore(RskSystemProperties config) {
         KeyValueDataSource ds = new LevelDbDataSource(config, "receipts");
         ds.init();
         return new ReceiptStoreImpl(ds);
     }
 
     @Bean
-    public HashRateCalculator hashRateCalculator(UscSystemProperties uscSystemProperties, BlockStore blockStore, MiningConfig miningConfig) {
-        UscCustomCache<Keccak256, BlockHeaderElement> cache = new UscCustomCache<>(60000L);
-        if (!uscSystemProperties.isMinerServerEnabled()) {
+    public HashRateCalculator hashRateCalculator(RskSystemProperties rskSystemProperties, BlockStore blockStore, MiningConfig miningConfig) {
+        RskCustomCache<Keccak256, BlockHeaderElement> cache = new RskCustomCache<>(60000L);
+        if (!rskSystemProperties.isMinerServerEnabled()) {
             return new HashRateCalculatorNonMining(blockStore, cache);
         }
 
@@ -120,31 +117,31 @@ public class DefaultConfig {
     }
 
     @Bean
-    public MiningConfig miningConfig(UscSystemProperties uscSystemProperties) {
+    public MiningConfig miningConfig(RskSystemProperties rskSystemProperties) {
         return new MiningConfig(
-                uscSystemProperties.coinbaseAddress(),
-                uscSystemProperties.minerMinFeesNotifyInDollars(),
-                uscSystemProperties.minerGasUnitInDollars(),
-                uscSystemProperties.minerMinGasPrice(),
-                uscSystemProperties.getBlockchainConfig().getCommonConstants().getUncleListLimit(),
-                uscSystemProperties.getBlockchainConfig().getCommonConstants().getUncleGenerationLimit(),
+                rskSystemProperties.coinbaseAddress(),
+                rskSystemProperties.minerMinFeesNotifyInDollars(),
+                rskSystemProperties.minerGasUnitInDollars(),
+                rskSystemProperties.minerMinGasPrice(),
+                rskSystemProperties.getBlockchainConfig().getCommonConstants().getUncleListLimit(),
+                rskSystemProperties.getBlockchainConfig().getCommonConstants().getUncleGenerationLimit(),
                 new GasLimitConfig(
-                        uscSystemProperties.getBlockchainConfig().getCommonConstants().getMinGasLimit(),
-                        uscSystemProperties.getTargetGasLimit(),
-                        uscSystemProperties.getForceTargetGasLimit()
+                        rskSystemProperties.getBlockchainConfig().getCommonConstants().getMinGasLimit(),
+                        rskSystemProperties.getTargetGasLimit(),
+                        rskSystemProperties.getForceTargetGasLimit()
                 )
         );
     }
 
     @Bean
-    public UscSystemProperties rskSystemProperties() {
-        return new UscSystemProperties(new ConfigLoader());
+    public RskSystemProperties rskSystemProperties() {
+        return new RskSystemProperties(new ConfigLoader());
     }
 
     @Bean
     public BlockParentDependantValidationRule blockParentDependantValidationRule(
             Repository repository,
-            UscSystemProperties config,
+            RskSystemProperties config,
             DifficultyCalculator difficultyCalculator) {
         BlockTxsValidationRule blockTxsValidationRule = new BlockTxsValidationRule(repository);
         BlockTxsFieldsValidationRule blockTxsFieldsValidationRule = new BlockTxsFieldsValidationRule();
@@ -160,7 +157,7 @@ public class DefaultConfig {
     @Bean(name = "blockValidationRule")
     public BlockValidationRule blockValidationRule(
             BlockStore blockStore,
-            UscSystemProperties config,
+            RskSystemProperties config,
             DifficultyCalculator difficultyCalculator,
             ProofOfWorkRule proofOfWorkRule) {
         Constants commonConstants = config.getBlockchainConfig().getCommonConstants();
@@ -191,7 +188,7 @@ public class DefaultConfig {
     @Bean(name = "minerServerBlockValidation")
     public BlockValidationRule minerServerBlockValidationRule(
             BlockStore blockStore,
-            UscSystemProperties config,
+            RskSystemProperties config,
             DifficultyCalculator difficultyCalculator,
             ProofOfWorkRule proofOfWorkRule) {
         Constants commonConstants = config.getBlockchainConfig().getCommonConstants();
@@ -209,7 +206,7 @@ public class DefaultConfig {
     }
 
     @Bean
-    public PeerExplorer peerExplorer(UscSystemProperties rskConfig) {
+    public PeerExplorer peerExplorer(RskSystemProperties rskConfig) {
         ECKey key = rskConfig.getMyKey();
         Node localNode = new Node(key.getNodeId(), rskConfig.getPublicIp(), rskConfig.getPeerPort());
         NodeDistanceTable distanceTable = new NodeDistanceTable(KademliaOptions.BINS, KademliaOptions.BUCKET_SIZE, localNode);
@@ -227,7 +224,7 @@ public class DefaultConfig {
     }
 
     @Bean
-    public UDPServer udpServer(PeerExplorer peerExplorer, UscSystemProperties rskConfig) {
+    public UDPServer udpServer(PeerExplorer peerExplorer, RskSystemProperties rskConfig) {
         return new UDPServer(rskConfig.getBindAddress().getHostAddress(), rskConfig.getPeerPort(), peerExplorer);
     }
 }

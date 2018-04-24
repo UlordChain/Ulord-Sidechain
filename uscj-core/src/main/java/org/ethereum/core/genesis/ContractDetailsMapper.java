@@ -19,7 +19,7 @@
 
 package org.ethereum.core.genesis;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.db.ContractDetailsImpl;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.DataWord;
@@ -30,9 +30,9 @@ import org.spongycastle.util.encoders.Hex;
  */
 public class ContractDetailsMapper {
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
 
-    public ContractDetailsMapper(UscSystemProperties config) {
+    public ContractDetailsMapper(RskSystemProperties config) {
         this.config = config;
     }
 

@@ -20,7 +20,7 @@
 package org.ethereum.core;
 
 import co.usc.core.Coin;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.db.DetailsDataStore;
 import org.ethereum.vm.DataWord;
@@ -41,7 +41,7 @@ public interface Repository {
      * @param addr of the contract
      * @return newly created account state
      */
-    AccountState createAccount(UscAddress addr);
+    AccountState createAccount(RskAddress addr);
 
 
     /**
@@ -49,7 +49,7 @@ public interface Repository {
      * @return - true if account exist,
      *           false otherwise
      */
-    boolean isExist(UscAddress addr);
+    boolean isExist(RskAddress addr);
 
     /**
      * Retrieve an account
@@ -57,21 +57,21 @@ public interface Repository {
      * @param addr of the account
      * @return account state as stored in the database
      */
-    AccountState getAccountState(UscAddress addr);
+    AccountState getAccountState(RskAddress addr);
 
     /**
      * Deletes the account
      *
      * @param addr of the account
      */
-    void delete(UscAddress addr);
+    void delete(RskAddress addr);
 
     /**
      * Hibernates the account
      *
      * @param addr of the account
      */
-    void hibernate(UscAddress addr);
+    void hibernate(RskAddress addr);
 
         /**
      * Increase the account nonce of the given account by one
@@ -79,7 +79,7 @@ public interface Repository {
      * @param addr of the account
      * @return new value of the nonce
      */
-    BigInteger increaseNonce(UscAddress addr);
+    BigInteger increaseNonce(RskAddress addr);
 
     /**
      * Get current nonce of a given account
@@ -87,7 +87,7 @@ public interface Repository {
      * @param addr of the account
      * @return value of the nonce
      */
-    BigInteger getNonce(UscAddress addr);
+    BigInteger getNonce(RskAddress addr);
 
     /**
      * Retrieve contract details for a given account from the database
@@ -95,7 +95,7 @@ public interface Repository {
      * @param addr of the account
      * @return new contract details
      */
-    ContractDetails getContractDetails(UscAddress addr);
+    ContractDetails getContractDetails(RskAddress addr);
 
     /**
      * Store code associated with an account
@@ -103,7 +103,7 @@ public interface Repository {
      * @param addr for the account
      * @param code that will be associated with this account
      */
-    void saveCode(UscAddress addr, byte[] code);
+    void saveCode(RskAddress addr, byte[] code);
 
     /**
      * Retrieve the code associated with an account
@@ -111,7 +111,7 @@ public interface Repository {
      * @param addr of the account
      * @return code in byte-array format
      */
-    byte[] getCode(UscAddress addr);
+    byte[] getCode(RskAddress addr);
 
     /**
      * Put a value in storage of an account at a given key
@@ -120,9 +120,9 @@ public interface Repository {
      * @param key of the data to store
      * @param value is the data to store
      */
-    void addStorageRow(UscAddress addr, DataWord key, DataWord value);
+    void addStorageRow(RskAddress addr, DataWord key, DataWord value);
 
-    void addStorageBytes(UscAddress addr, DataWord key, byte[] value);
+    void addStorageBytes(RskAddress addr, DataWord key, byte[] value);
 
     /**
      * Retrieve storage value from an account for a given key
@@ -131,9 +131,9 @@ public interface Repository {
      * @param key associated with this value
      * @return data in the form of a <code>DataWord</code>
      */
-    DataWord getStorageValue(UscAddress addr, DataWord key);
+    DataWord getStorageValue(RskAddress addr, DataWord key);
 
-    byte[] getStorageBytes(UscAddress addr, DataWord key);
+    byte[] getStorageBytes(RskAddress addr, DataWord key);
 
     /**
      * Retrieve balance of an account
@@ -141,7 +141,7 @@ public interface Repository {
      * @param addr of the account
      * @return balance of the account as a <code>BigInteger</code> value
      */
-    Coin getBalance(UscAddress addr);
+    Coin getBalance(RskAddress addr);
 
     /**
      * Add value to the balance of an account
@@ -150,12 +150,12 @@ public interface Repository {
      * @param value to be added
      * @return new balance of the account
      */
-    Coin addBalance(UscAddress addr, Coin value);
+    Coin addBalance(RskAddress addr, Coin value);
 
     /**
      * @return Returns set of all the account addresses
      */
-    Set<UscAddress> getAccountsKeys();
+    Set<RskAddress> getAccountsKeys();
 
     /**
      * Dump the full state of the current repository into a file with JSON format
@@ -217,25 +217,25 @@ public interface Repository {
      */
     void reset();
 
-    void updateBatch(Map<UscAddress, AccountState> accountStates,
-                     Map<UscAddress, ContractDetails> contractDetailes);
+    void updateBatch(Map<RskAddress, AccountState> accountStates,
+                     Map<RskAddress, ContractDetails> contractDetailes);
 
 
     byte[] getRoot();
 
-    void loadAccount(UscAddress addr,
-                     Map<UscAddress, AccountState> cacheAccounts,
-                     Map<UscAddress, ContractDetails> cacheDetails);
+    void loadAccount(RskAddress addr,
+                     Map<RskAddress, AccountState> cacheAccounts,
+                     Map<RskAddress, ContractDetails> cacheDetails);
 
     Repository getSnapshotTo(byte[] root);
 
     DetailsDataStore getDetailsDataStore();
 
-    void updateContractDetails(UscAddress addr, final ContractDetails contractDetails);
+    void updateContractDetails(RskAddress addr, final ContractDetails contractDetails);
 
-    void updateAccountState(UscAddress addr, AccountState accountState);
+    void updateAccountState(RskAddress addr, AccountState accountState);
 
-    default void transfer(UscAddress fromAddr, UscAddress toAddr, Coin value) {
+    default void transfer(RskAddress fromAddr, RskAddress toAddr, Coin value) {
         addBalance(fromAddr, value.negate());
         addBalance(toAddr, value);
     }

@@ -19,7 +19,7 @@
 package co.usc.remasc;
 
 import co.usc.core.Coin;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPElement;
@@ -39,18 +39,18 @@ public class Sibling {
     // Hash of the sibling block
     private final byte[] hash;
     // Coinbase address of the sibling block
-    private final UscAddress coinbase;
+    private final RskAddress coinbase;
     // Fees paid by the sibling block
     private final Coin paidFees;
     // Coinbase address of the block that included the sibling block as uncle
-    private final UscAddress includedBlockCoinbase;
+    private final RskAddress includedBlockCoinbase;
     // Height of the block that included the sibling block as uncle
     private final long includedHeight;
     // Number of uncles
     private final int uncleCount;
 
 
-    public Sibling(BlockHeader blockHeader, UscAddress includedBlockCoinbase, long includedHeight){
+    public Sibling(BlockHeader blockHeader, RskAddress includedBlockCoinbase, long includedHeight){
         this(blockHeader.getHash().getBytes(),
                 blockHeader.getCoinbase(),
                 includedBlockCoinbase,
@@ -59,7 +59,7 @@ public class Sibling {
                 blockHeader.getUncleCount());
     }
 
-    private Sibling(byte[] hash, UscAddress coinbase, UscAddress includedBlockCoinbase, Coin paidFees, long includedHeight, int uncleCount) {
+    private Sibling(byte[] hash, RskAddress coinbase, RskAddress includedBlockCoinbase, Coin paidFees, long includedHeight, int uncleCount) {
         this.hash = hash;
         this.coinbase = coinbase;
         this.paidFees = paidFees;
@@ -72,7 +72,7 @@ public class Sibling {
         return hash;
     }
 
-    public UscAddress getCoinbase() {
+    public RskAddress getCoinbase() {
         return coinbase;
     }
 
@@ -80,7 +80,7 @@ public class Sibling {
         return paidFees;
     }
 
-    public UscAddress getIncludedBlockCoinbase() {
+    public RskAddress getIncludedBlockCoinbase() {
         return includedBlockCoinbase;
     }
 
@@ -107,8 +107,8 @@ public class Sibling {
         RLPList sibling = (RLPList) params.get(0);
 
         byte[] hash = sibling.get(0).getRLPData();
-        UscAddress coinbase = RLP.parseRskAddress(sibling.get(1).getRLPData());
-        UscAddress includedBlockCoinbase = RLP.parseRskAddress(sibling.get(2).getRLPData());
+        RskAddress coinbase = RLP.parseRskAddress(sibling.get(1).getRLPData());
+        RskAddress includedBlockCoinbase = RLP.parseRskAddress(sibling.get(2).getRLPData());
 
         Coin paidFees = RLP.parseCoin(sibling.get(3).getRLPData());
         byte[] bytesIncludedHeight = sibling.get(4).getRLPData();

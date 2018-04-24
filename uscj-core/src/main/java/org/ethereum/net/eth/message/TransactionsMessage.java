@@ -19,7 +19,7 @@
 
 package org.ethereum.net.eth.message;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import org.ethereum.core.ImmutableTransaction;
 import org.ethereum.core.Transaction;
 import org.ethereum.util.RLP;
@@ -36,19 +36,19 @@ import java.util.List;
 public class TransactionsMessage extends EthMessage {
 
     private List<Transaction> transactions;
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
 
-    public TransactionsMessage(UscSystemProperties config, byte[] encoded) {
+    public TransactionsMessage(RskSystemProperties config, byte[] encoded) {
         super(encoded);
         this.config = config;
     }
 
-    public TransactionsMessage(UscSystemProperties config, Transaction transaction) {
+    public TransactionsMessage(RskSystemProperties config, Transaction transaction) {
         this(config, new ArrayList<>());
         transactions.add(transaction);
     }
 
-    public TransactionsMessage(UscSystemProperties config, List<Transaction> transactionList) {
+    public TransactionsMessage(RskSystemProperties config, List<Transaction> transactionList) {
         this.config = config;
         this.transactions = transactionList;
         parsed = true;

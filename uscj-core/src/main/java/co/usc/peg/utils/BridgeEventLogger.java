@@ -23,6 +23,9 @@ import co.usc.ulordj.core.UldTransaction;
 import co.usc.peg.Federation;
 import org.ethereum.core.Block;
 import org.ethereum.core.Transaction;
+import org.ethereum.vm.LogInfo;
+
+import java.util.List;
 
 /**
  * Responsible for logging events triggered by BridgeContract.

@@ -19,7 +19,7 @@
 package co.usc.peg;
 
 import co.usc.core.Coin;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import org.ethereum.core.Block;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.core.Repository;
@@ -51,7 +51,7 @@ public class SamplePrecompiledContract extends PrecompiledContracts.PrecompiledC
     private static final String INCREMENTRESULT_SIG = "541d9c93";
     private static final String GETRESULT_SIG = "9a7d9af1";
 
-    public SamplePrecompiledContract(UscAddress contractAddress) {
+    public SamplePrecompiledContract(RskAddress contractAddress) {
         this.contractAddress = contractAddress;
     }
 
@@ -103,7 +103,7 @@ public class SamplePrecompiledContract extends PrecompiledContracts.PrecompiledC
 
     public int Method1(Object... args)
     {
-        UscAddress addr = new UscAddress("cd2a3d9f938e13cd947ec05abc7fe734df8dd826");
+        RskAddress addr = new RskAddress("cd2a3d9f938e13cd947ec05abc7fe734df8dd826");
 
         Coin balance = Coin.valueOf(50000);
         repository.addBalance(addr, balance);
@@ -121,7 +121,7 @@ public class SamplePrecompiledContract extends PrecompiledContracts.PrecompiledC
 
     public void AddBalance(Object... args)
     {
-        UscAddress addr = new UscAddress("cd2a3d9f938e13cd947ec05abc7fe734df8dd826");
+        RskAddress addr = new RskAddress("cd2a3d9f938e13cd947ec05abc7fe734df8dd826");
 
         Coin balance = Coin.valueOf(50000);
         repository.addBalance(addr, balance);
@@ -129,7 +129,7 @@ public class SamplePrecompiledContract extends PrecompiledContracts.PrecompiledC
 
     public int GetBalance(Object... args)
     {
-        UscAddress addr = new UscAddress("cd2a3d9f938e13cd947ec05abc7fe734df8dd826");
+        RskAddress addr = new RskAddress("cd2a3d9f938e13cd947ec05abc7fe734df8dd826");
 
         return repository.getBalance(addr).asBigInteger().intValue();
     }

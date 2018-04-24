@@ -19,16 +19,16 @@
 
 package org.ethereum.crypto;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+
 import org.spongycastle.crypto.*;
 import org.spongycastle.crypto.generators.EphemeralKeyPairGenerator;
 import org.spongycastle.crypto.params.*;
 import org.spongycastle.util.Arrays;
 import org.spongycastle.util.BigIntegers;
 import org.spongycastle.util.Pack;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.math.BigInteger;
 
 /**
  * Support class for constructing integrated encryption cipher

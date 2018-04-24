@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import static org.ethereum.net.client.Capability.RSK;
+import static org.ethereum.net.client.Capability.*;
 import static org.ethereum.net.eth.EthVersion.fromCode;
 
 /**

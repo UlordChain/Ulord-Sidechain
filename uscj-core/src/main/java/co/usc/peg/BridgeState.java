@@ -38,16 +38,16 @@ import java.util.*;
  * Created by mario on 27/09/2016.
  */
 public class BridgeState {
-    private final int UldBlockchainBestChainHeight;
+    private final int UldBlockChainBestChainHeight;
     private final Map<Sha256Hash, Long> btcTxHashesAlreadyProcessed;
     private final List<UTXO> activeFederationBtcUTXOs;
     private final SortedMap<Keccak256, UldTransaction> rskTxsWaitingForSignatures;
     private final ReleaseRequestQueue releaseRequestQueue;
     private final ReleaseTransactionSet releaseTransactionSet;
 
-    private BridgeState(int UldBlockchainBestChainHeight, Map<Sha256Hash, Long> btcTxHashesAlreadyProcessed, List<UTXO> activeFederationBtcUTXOs,
+    private BridgeState(int UldBlockChainBestChainHeight, Map<Sha256Hash, Long> btcTxHashesAlreadyProcessed, List<UTXO> activeFederationBtcUTXOs,
                         SortedMap<Keccak256, UldTransaction> rskTxsWaitingForSignatures, ReleaseRequestQueue releaseRequestQueue, ReleaseTransactionSet releaseTransactionSet) {
-        this.UldBlockchainBestChainHeight = UldBlockchainBestChainHeight;
+        this.UldBlockChainBestChainHeight = UldBlockChainBestChainHeight;
         this.btcTxHashesAlreadyProcessed = btcTxHashesAlreadyProcessed;
         this.activeFederationBtcUTXOs = activeFederationBtcUTXOs;
         this.rskTxsWaitingForSignatures = rskTxsWaitingForSignatures;
@@ -55,8 +55,8 @@ public class BridgeState {
         this.releaseTransactionSet = releaseTransactionSet;
     }
 
-    public BridgeState(int UldBlockchainBestChainHeight, BridgeStorageProvider provider) throws IOException {
-        this(UldBlockchainBestChainHeight,
+    public BridgeState(int UldBlockChainBestChainHeight, BridgeStorageProvider provider) throws IOException {
+        this(UldBlockChainBestChainHeight,
                 provider.getBtcTxHashesAlreadyProcessed(),
                 provider.getNewFederationBtcUTXOs(),
                 provider.getRskTxsWaitingForSignatures(),
@@ -64,8 +64,8 @@ public class BridgeState {
                 provider.getReleaseTransactionSet());
     }
 
-    public int getUldBlockchainBestChainHeight() {
-        return this.UldBlockchainBestChainHeight;
+    public int getUldBlockChainBestChainHeight() {
+        return this.UldBlockChainBestChainHeight;
     }
 
     public Map<Sha256Hash, Long> getBtcTxHashesAlreadyProcessed() {
@@ -91,7 +91,7 @@ public class BridgeState {
     @Override
     public String toString() {
         return "StateForDebugging{" + "\n" +
-                "UldBlockchainBestChainHeight=" + UldBlockchainBestChainHeight + "\n" +
+                "UldBlockChainBestChainHeight=" + UldBlockChainBestChainHeight + "\n" +
                 ", btcTxHashesAlreadyProcessed=" + btcTxHashesAlreadyProcessed + "\n" +
                 ", activeFederationBtcUTXOs=" + activeFederationBtcUTXOs + "\n" +
                 ", rskTxsWaitingForSignatures=" + rskTxsWaitingForSignatures + "\n" +
@@ -112,26 +112,26 @@ public class BridgeState {
         Map<String, Object> result = new HashedMap<>();
         result.put("btcTxHashesAlreadyProcessed", this.formatedAlreadyProcessedHashes());
         result.put("rskTxsWaitingForSignatures", this.toStringList(rskTxsWaitingForSignatures.keySet()));
-        result.put("UldBlockchainBestChainHeight", this.UldBlockchainBestChainHeight);
+        result.put("UldBlockChainBestChainHeight", this.UldBlockChainBestChainHeight);
         return result;
     }
 
     public byte[] getEncoded() throws IOException {
-        byte[] rlpUldBlockchainBestChainHeight = RLP.encodeBigInteger(BigInteger.valueOf(this.UldBlockchainBestChainHeight));
+        byte[] rlpUldBlockChainBestChainHeight = RLP.encodeBigInteger(BigInteger.valueOf(this.UldBlockChainBestChainHeight));
         byte[] rlpBtcTxHashesAlreadyProcessed = RLP.encodeElement(BridgeSerializationUtils.serializeMapOfHashesToLong(btcTxHashesAlreadyProcessed));
         byte[] rlpActiveFederationBtcUTXOs = RLP.encodeElement(BridgeSerializationUtils.serializeUTXOList(activeFederationBtcUTXOs));
         byte[] rlpRskTxsWaitingForSignatures = RLP.encodeElement(BridgeSerializationUtils.serializeMap(rskTxsWaitingForSignatures));
         byte[] rlpReleaseRequestQueue = RLP.encodeElement(BridgeSerializationUtils.serializeReleaseRequestQueue(releaseRequestQueue));
         byte[] rlpReleaseTransactionSet = RLP.encodeElement(BridgeSerializationUtils.serializeReleaseTransactionSet(releaseTransactionSet));
 
-        return RLP.encodeList(rlpUldBlockchainBestChainHeight, rlpBtcTxHashesAlreadyProcessed, rlpActiveFederationBtcUTXOs, rlpRskTxsWaitingForSignatures, rlpReleaseRequestQueue, rlpReleaseTransactionSet);
+        return RLP.encodeList(rlpUldBlockChainBestChainHeight, rlpBtcTxHashesAlreadyProcessed, rlpActiveFederationBtcUTXOs, rlpRskTxsWaitingForSignatures, rlpReleaseRequestQueue, rlpReleaseTransactionSet);
     }
 
     public static BridgeState create(BridgeConstants bridgeConstants, byte[] data) throws IOException {
         RLPList rlpList = (RLPList)RLP.decode2(data).get(0);
 
-        byte[] UldBlockchainBestChainHeightBytes = rlpList.get(0).getRLPData();
-        int UldBlockchainBestChainHeight = UldBlockchainBestChainHeightBytes == null ? 0 : (new BigInteger(1, UldBlockchainBestChainHeightBytes)).intValue();
+        byte[] UldBlockChainBestChainHeightBytes = rlpList.get(0).getRLPData();
+        int UldBlockChainBestChainHeight = UldBlockChainBestChainHeightBytes == null ? 0 : (new BigInteger(1, UldBlockChainBestChainHeightBytes)).intValue();
         byte[] btcTxHashesAlreadyProcessedBytes = rlpList.get(1).getRLPData();
         Map<Sha256Hash, Long> btcTxHashesAlreadyProcessed = BridgeSerializationUtils.deserializeMapOfHashesToLong(btcTxHashesAlreadyProcessedBytes);
         byte[] btcUTXOsBytes = rlpList.get(2).getRLPData();
@@ -144,7 +144,7 @@ public class BridgeState {
         ReleaseTransactionSet releaseTransactionSet = BridgeSerializationUtils.deserializeReleaseTransactionSet(releaseTransactionSetBytes, bridgeConstants.getBtcParams());
 
         return new BridgeState(
-                UldBlockchainBestChainHeight,
+                UldBlockChainBestChainHeight,
                 btcTxHashesAlreadyProcessed,
                 btcUTXOs,
                 rskTxsWaitingForSignatures,

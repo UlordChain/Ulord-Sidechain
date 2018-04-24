@@ -19,12 +19,12 @@
 
 package co.usc.validators;
 
-import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.core.UldBlock;
 import co.usc.ulordj.core.PartialMerkleTree;
 import co.usc.ulordj.core.Sha256Hash;
 import co.usc.config.BridgeConstants;
-import co.usc.config.UscMiningConstants;
+import co.usc.config.RskMiningConstants;
+import co.usc.config.RskSystemProperties;
 import co.usc.util.DifficultyUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.ethereum.config.Constants;
@@ -59,7 +59,7 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
     private boolean fallbackMiningEnabled = true;
 
     @Autowired
-    public ProofOfWorkRule(UscSystemProperties config) {
+    public ProofOfWorkRule(RskSystemProperties config) {
         this.bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         this.constants = config.getBlockchainConfig().getCommonConstants();
     }
@@ -145,14 +145,14 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
             return false;
         }
 
-        byte[] bitcoinMergedMiningCoinbaseTransactionMidstate = new byte[UscMiningConstants.MIDSTATE_SIZE];
-        System.arraycopy(bitcoinMergedMiningCoinbaseTransactionCompressed, 0, bitcoinMergedMiningCoinbaseTransactionMidstate, 8, UscMiningConstants.MIDSTATE_SIZE_TRIMMED);
+        byte[] bitcoinMergedMiningCoinbaseTransactionMidstate = new byte[RskMiningConstants.MIDSTATE_SIZE];
+        System.arraycopy(bitcoinMergedMiningCoinbaseTransactionCompressed, 0, bitcoinMergedMiningCoinbaseTransactionMidstate, 8, RskMiningConstants.MIDSTATE_SIZE_TRIMMED);
 
-        byte[] bitcoinMergedMiningCoinbaseTransactionTail = new byte[bitcoinMergedMiningCoinbaseTransactionCompressed.length - UscMiningConstants.MIDSTATE_SIZE_TRIMMED];
-        System.arraycopy(bitcoinMergedMiningCoinbaseTransactionCompressed, UscMiningConstants.MIDSTATE_SIZE_TRIMMED,
+        byte[] bitcoinMergedMiningCoinbaseTransactionTail = new byte[bitcoinMergedMiningCoinbaseTransactionCompressed.length - RskMiningConstants.MIDSTATE_SIZE_TRIMMED];
+        System.arraycopy(bitcoinMergedMiningCoinbaseTransactionCompressed, RskMiningConstants.MIDSTATE_SIZE_TRIMMED,
                 bitcoinMergedMiningCoinbaseTransactionTail, 0, bitcoinMergedMiningCoinbaseTransactionTail.length);
 
-        byte[] expectedCoinbaseMessageBytes = org.spongycastle.util.Arrays.concatenate(UscMiningConstants.USC_TAG, header.getHashForMergedMining());
+        byte[] expectedCoinbaseMessageBytes = org.spongycastle.util.Arrays.concatenate(RskMiningConstants.RSK_TAG, header.getHashForMergedMining());
 
 
         List<Byte> bitcoinMergedMiningCoinbaseTransactionTailAsList = Arrays.asList(ArrayUtils.toObject(bitcoinMergedMiningCoinbaseTransactionTail));
@@ -165,16 +165,16 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         }
 
         /*
-        * We check that the there is no other block before the usc tag, to avoid a possible malleability attack:
-        * If we have a mid state with 10 blocks, and the usc tag, we can also have
-        * another mid state with 9 blocks, 64bytes + the usc tag, giving us two blocks with different hashes but the same spv proof.
+        * We check that the there is no other block before the rsk tag, to avoid a possible malleability attack:
+        * If we have a mid state with 10 blocks, and the rsk tag, we can also have
+        * another mid state with 9 blocks, 64bytes + the rsk tag, giving us two blocks with different hashes but the same spv proof.
         * */
         if (rskTagPosition >= 64) {
             logger.warn("bitcoin coinbase transaction tag position is bigger than expected 64. Actual: {}.", Integer.toString(rskTagPosition));
             return false;
         }
 
-        List<Byte> rskTagAsList = Arrays.asList(ArrayUtils.toObject(UscMiningConstants.USC_TAG));
+        List<Byte> rskTagAsList = Arrays.asList(ArrayUtils.toObject(RskMiningConstants.RSK_TAG));
         int lastTag = Collections.lastIndexOfSubList(bitcoinMergedMiningCoinbaseTransactionTailAsList, rskTagAsList);
         if (rskTagPosition !=lastTag) {
             logger.warn("The valid RSK tag is not the last RSK tag. Tail: {}.", Arrays.toString(bitcoinMergedMiningCoinbaseTransactionTail));
@@ -183,10 +183,10 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
 
         int remainingByteCount = bitcoinMergedMiningCoinbaseTransactionTail.length -
                 rskTagPosition -
-                UscMiningConstants.USC_TAG.length -
-                UscMiningConstants.BLOCK_HEADER_HASH_SIZE;
+                RskMiningConstants.RSK_TAG.length -
+                RskMiningConstants.BLOCK_HEADER_HASH_SIZE;
 
-        if (remainingByteCount > UscMiningConstants.MAX_BYTES_AFTER_MERGED_MINING_HASH) {
+        if (remainingByteCount > RskMiningConstants.MAX_BYTES_AFTER_MERGED_MINING_HASH) {
             logger.warn("More than 128 bytes after RSK tag");
             return false;
         }

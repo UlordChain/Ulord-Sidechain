@@ -19,6 +19,7 @@
 package co.usc.config;
 
 import co.usc.remasc.RemascException;
+import co.usc.remasc.RemascException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

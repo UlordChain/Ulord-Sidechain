@@ -445,7 +445,7 @@ public abstract class SystemProperties {
 
     @ValidateMe
     public List<String> peerCapabilities() {
-        return configFromFiles.hasPath("peer.capabilities") ?  configFromFiles.getStringList("peer.capabilities") : new ArrayList<>(Arrays.asList("usc"));
+        return configFromFiles.hasPath("peer.capabilities") ?  configFromFiles.getStringList("peer.capabilities") : new ArrayList<>(Arrays.asList("rsk"));
     }
 
     @ValidateMe

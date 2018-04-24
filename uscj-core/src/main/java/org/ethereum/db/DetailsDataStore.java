@@ -19,8 +19,8 @@
 
 package org.ethereum.db;
 
-import co.usc.config.UscSystemProperties;
-import co.usc.core.UscAddress;
+import co.usc.config.RskSystemProperties;
+import co.usc.core.RskAddress;
 import co.usc.db.ContractDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,18 +40,18 @@ public class DetailsDataStore {
 
     private static final Logger gLogger = LoggerFactory.getLogger("general");
 
-    private final Map<UscAddress, ContractDetails> cache = new ConcurrentHashMap<>();
-    private final Set<UscAddress> removes = new HashSet<>();
+    private final Map<RskAddress, ContractDetails> cache = new ConcurrentHashMap<>();
+    private final Set<RskAddress> removes = new HashSet<>();
 
-    private final UscSystemProperties config;
+    private final RskSystemProperties config;
     private final DatabaseImpl db;
 
-    public DetailsDataStore(UscSystemProperties config, DatabaseImpl db) {
+    public DetailsDataStore(RskSystemProperties config, DatabaseImpl db) {
         this.config = config;
         this.db = db;
     }
 
-    public synchronized ContractDetails get(UscAddress addr) {
+    public synchronized ContractDetails get(RskAddress addr) {
         ContractDetails details = cache.get(addr);
 
         if (details == null) {
@@ -81,13 +81,13 @@ public class DetailsDataStore {
         return new ContractDetailsImpl(config, data);
     }
 
-    public synchronized void update(UscAddress addr, ContractDetails contractDetails) {
+    public synchronized void update(RskAddress addr, ContractDetails contractDetails) {
         contractDetails.setAddress(addr.getBytes());
         cache.put(addr, contractDetails);
         removes.remove(addr);
     }
 
-    public synchronized void remove(UscAddress addr) {
+    public synchronized void remove(RskAddress addr) {
         cache.remove(addr);
         removes.add(addr);
     }
@@ -108,7 +108,7 @@ public class DetailsDataStore {
         long totalSize = 0;
 
         Map<byte[], byte[]> batch = new HashMap<>();
-        for (Map.Entry<UscAddress, ContractDetails> entry : cache.entrySet()) {
+        for (Map.Entry<RskAddress, ContractDetails> entry : cache.entrySet()) {
             ContractDetails details = entry.getValue();
             details.syncStorage();
 
@@ -121,7 +121,7 @@ public class DetailsDataStore {
 
         db.getDb().updateBatch(batch);
 
-        for (UscAddress key : removes) {
+        for (RskAddress key : removes) {
             db.delete(key.getBytes());
         }
 
@@ -132,10 +132,10 @@ public class DetailsDataStore {
     }
 
 
-    public synchronized Set<UscAddress> keys() {
-        Set<UscAddress> keys = new HashSet<>();
+    public synchronized Set<RskAddress> keys() {
+        Set<RskAddress> keys = new HashSet<>();
         keys.addAll(cache.keySet());
-        keys.addAll(db.dumpKeys(UscAddress::new));
+        keys.addAll(db.dumpKeys(RskAddress::new));
 
         return keys;
     }

@@ -19,9 +19,9 @@
 
 package org.ethereum.core;
 
-import co.usc.config.UscSystemProperties;
+import co.usc.config.RskSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.UscAddress;
+import co.usc.core.RskAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
 import co.usc.peg.BridgeUtils;
@@ -83,7 +83,7 @@ public class Transaction {
 
     /* the address of the destination account
      * In creation transaction the receive address is - 0 */
-    private UscAddress receiveAddress;
+    private RskAddress receiveAddress;
 
     /**
      * The amount to pay as a transaction fee to the miner for each unit of gas.
@@ -115,7 +115,7 @@ public class Transaction {
      * (including public key recovery bits) */
     private ECDSASignature signature;
 
-    protected UscAddress sender;
+    protected RskAddress sender;
 
     /* Tx in encoded form */
     protected byte[] rlpEncoded;
@@ -189,7 +189,7 @@ public class Transaction {
     // There was a method called NEW_getTransactionCost that implemented this alternative solution:
     // "return (this.isContractCreation() ? GasCost.TRANSACTION_CREATE_CONTRACT : GasCost.TRANSACTION)
     //         + zeroVals * GasCost.TX_ZERO_DATA + nonZeroes * GasCost.TX_NO_ZERO_DATA;"
-    public long transactionCost(UscSystemProperties config, Block block){
+    public long transactionCost(RskSystemProperties config, Block block){
         if (!parsed) {
             rlpParse();
         }
@@ -306,7 +306,7 @@ public class Transaction {
         return value;
     }
 
-    public UscAddress getReceiveAddress() {
+    public RskAddress getReceiveAddress() {
         if (!parsed) {
             rlpParse();
         }
@@ -403,12 +403,12 @@ public class Transaction {
     }
 
     @Nullable
-    public UscAddress getContractAddress() {
+    public RskAddress getContractAddress() {
         if (!isContractCreation()) {
             return null;
         }
 
-        return new UscAddress(HashUtil.calcNewAddr(this.getSender().getBytes(), this.getNonce()));
+        return new RskAddress(HashUtil.calcNewAddr(this.getSender().getBytes(), this.getNonce()));
     }
 
     public boolean isContractCreation() {
@@ -416,7 +416,7 @@ public class Transaction {
             rlpParse();
         }
 
-        return this.receiveAddress.equals(UscAddress.nullAddress());
+        return this.receiveAddress.equals(RskAddress.nullAddress());
     }
 
     /*
@@ -429,18 +429,18 @@ public class Transaction {
         return ECKey.recoverFromSignature((signature.v - 27) & ~4, signature, rawHash, true);
     }
 
-    public synchronized UscAddress getSender() {
+    public synchronized RskAddress getSender() {
         if (sender != null) {
             return sender;
         }
 
         try {
             ECKey key = ECKey.signatureToKey(getRawHash().getBytes(), getSignature().toBase64());
-            sender = new UscAddress(key.getAddress());
+            sender = new RskAddress(key.getAddress());
         } catch (SignatureException e) {
             logger.error(e.getMessage(), e);
             panicProcessor.panic("transaction", e.getMessage());
-            sender = UscAddress.nullAddress();
+            sender = RskAddress.nullAddress();
         }
 
         return sender;
@@ -590,16 +590,16 @@ public class Transaction {
         return Objects.equals(this.getHash(), tx.getHash());
     }
 
-    public static Transaction create(UscSystemProperties config, String to, BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit){
+    public static Transaction create(RskSystemProperties config, String to, BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit){
         return create(config, to, amount, nonce, gasPrice, gasLimit, (byte[]) null);
     }
 
-    public static Transaction create(UscSystemProperties config, String to, BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String data){
+    public static Transaction create(RskSystemProperties config, String to, BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String data){
         byte[] decodedData = data == null ? null : Hex.decode(data);
         return create(config, to, amount, nonce, gasPrice, gasLimit, decodedData);
     }
 
-    public static Transaction create(UscSystemProperties config, String to, BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, byte[] decodedData) {
+    public static Transaction create(RskSystemProperties config, String to, BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, byte[] decodedData) {
         return new Transaction(BigIntegers.asUnsignedByteArray(nonce),
                 BigIntegers.asUnsignedByteArray(gasPrice),
                 BigIntegers.asUnsignedByteArray(gasLimit),

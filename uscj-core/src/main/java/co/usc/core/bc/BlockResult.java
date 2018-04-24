@@ -21,6 +21,8 @@ package co.usc.core.bc;
 import co.usc.core.Coin;
 import co.usc.trie.Trie;
 import co.usc.trie.TrieImpl;
+import co.usc.trie.Trie;
+import co.usc.trie.TrieImpl;
 import org.ethereum.core.Bloom;
 import org.ethereum.core.Transaction;
 import org.ethereum.core.TransactionReceipt;

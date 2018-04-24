@@ -19,7 +19,7 @@ public class RskErrorResolver implements ErrorResolver {
     @Override
     public JsonError resolveError(Throwable t, Method method, List<JsonNode> arguments) {
         JsonError error = null;
-        if(t instanceof RskJsonRpcRequestException) {
+        if(t instanceof  RskJsonRpcRequestException) {
             error =  new JsonError(((RskJsonRpcRequestException) t).getCode(), t.getMessage(), null);
         } else if (t instanceof InvalidFormatException) {
             error = new JsonError(-32603, "Internal server error, probably due to invalid parameter type", null);

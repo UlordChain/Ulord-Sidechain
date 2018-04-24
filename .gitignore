@@ -1,6 +1,84 @@
+# local credentials
+credentials.properties
+
+# Vim
+*.sw[op]
+
+# Gradle
+.gradle
+build
+
 # IDEA
 out
 .idea
 !.idea/codeStyleSettings.xml
 *.iml
 *.iws
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin
+
+# Maven
+*.log
+log/
+target/
+
+# Output
+database-test
+logs
+test_db*
+
+# Mac
+.DS_Store
+
+
+# Local configuration
+**/user.conf
+**/out.log
+
+# Nodes
+node1
+node2
+node3
+devnet-federator
+testnet1
+rsk-database
+blocksminer
+
+# Jacoco Reports
+jacocoHtml/
+
+# CheckStyle Reports
+config/checkstyle/reports/
+
+# PMD
+config/pmd/reports/
+
+blocksminer1.txt
+
+blocksminer1.txt
+build-info.properties
+
+# Test File
+fileMonitor.txt
+
+rpc-tests/node_modules/
+samples/tokenapp/node_modules/
+rskdump.json
+
+uscj-core/keyfiletest.txt
+uscj-core/java/nodeId.properties
+
+#GradleJARS
+uscj-core/libs/gradle-witness.jar
+uscj-core/libs/rsk-gradle-witness.jar
+gradle/wrapper/gradle-wrapper.jar
+
+#Classes
+classes/
+
+#Infer
+infer-out/

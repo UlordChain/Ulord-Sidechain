@@ -19,6 +19,7 @@
 package co.usc.net.discovery;
 
 import co.usc.net.discovery.message.PeerDiscoveryMessage;
+import co.usc.net.discovery.message.PeerDiscoveryMessage;
 
 import java.net.InetSocketAddress;
 

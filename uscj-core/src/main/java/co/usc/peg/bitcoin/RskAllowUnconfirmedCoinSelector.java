@@ -18,12 +18,12 @@
 
 package co.usc.peg.bitcoin;
 
+import com.google.common.annotations.VisibleForTesting;
 import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.core.TransactionOutput;
-import co.usc.ulordj.wallet.CoinSelection;
 import co.usc.ulordj.wallet.CoinSelector;
-import com.google.common.annotations.VisibleForTesting;
+import co.usc.ulordj.wallet.CoinSelection;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
