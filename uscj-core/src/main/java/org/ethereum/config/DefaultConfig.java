@@ -34,7 +34,7 @@ import co.usc.net.discovery.PeerExplorer;
 import co.usc.net.discovery.UDPServer;
 import co.usc.net.discovery.table.KademliaOptions;
 import co.usc.net.discovery.table.NodeDistanceTable;
-import co.usc.util.RskCustomCache;
+import co.usc.util.UscCustomCache;
 import co.usc.validators.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.ethereum.core.Repository;
@@ -111,7 +111,7 @@ public class DefaultConfig {
 
     @Bean
     public HashRateCalculator hashRateCalculator(UscSystemProperties uscSystemProperties, BlockStore blockStore, MiningConfig miningConfig) {
-        RskCustomCache<Keccak256, BlockHeaderElement> cache = new RskCustomCache<>(60000L);
+        UscCustomCache<Keccak256, BlockHeaderElement> cache = new UscCustomCache<>(60000L);
         if (!uscSystemProperties.isMinerServerEnabled()) {
             return new HashRateCalculatorNonMining(blockStore, cache);
         }

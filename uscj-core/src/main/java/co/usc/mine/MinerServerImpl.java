@@ -481,7 +481,7 @@ public class MinerServerImpl implements MinerServer {
 
     public static byte[] compressCoinbase(byte[] bitcoinMergedMiningCoinbaseTransactionSerialized, boolean lastOccurrence) {
         List<Byte> coinBaseTransactionSerializedAsList = java.util.Arrays.asList(ArrayUtils.toObject(bitcoinMergedMiningCoinbaseTransactionSerialized));
-        List<Byte> tagAsList = java.util.Arrays.asList(ArrayUtils.toObject(UscMiningConstants.RSK_TAG));
+        List<Byte> tagAsList = java.util.Arrays.asList(ArrayUtils.toObject(UscMiningConstants.USC_TAG));
 
         int rskTagPosition;
         if (lastOccurrence) {
@@ -490,7 +490,7 @@ public class MinerServerImpl implements MinerServer {
             rskTagPosition = Collections.indexOfSubList(coinBaseTransactionSerializedAsList, tagAsList);
         }
 
-        int remainingByteCount = bitcoinMergedMiningCoinbaseTransactionSerialized.length - rskTagPosition - UscMiningConstants.RSK_TAG.length - UscMiningConstants.BLOCK_HEADER_HASH_SIZE;
+        int remainingByteCount = bitcoinMergedMiningCoinbaseTransactionSerialized.length - rskTagPosition - UscMiningConstants.USC_TAG.length - UscMiningConstants.BLOCK_HEADER_HASH_SIZE;
         if (remainingByteCount > UscMiningConstants.MAX_BYTES_AFTER_MERGED_MINING_HASH) {
             throw new IllegalArgumentException("More than 128 bytes after RSK tag");
         }

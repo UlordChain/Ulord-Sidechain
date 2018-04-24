@@ -22,7 +22,7 @@ package co.usc.config;
  * Created by ajlopez on 3/3/2016.
  */
 public class UscMiningConstants {
-    public static final byte[] RSK_TAG = {'R','S','K','B','L','O','C','K',':'};
+    public static final byte[] USC_TAG = {'U','S','C','B','L','O','C','K',':'};
     public static final int MAX_BYTES_AFTER_MERGED_MINING_HASH = 128;
 
     public static final int BLOCK_HEADER_HASH_SIZE = 32;

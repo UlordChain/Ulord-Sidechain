@@ -227,11 +227,11 @@ public class Web3RskImpl extends Web3Impl {
         byte[] coinbaseAsByteArray = coinbase.bitcoinSerialize();
         List<Byte> coinbaseAsByteList = Arrays.asList(ArrayUtils.toObject(coinbaseAsByteArray));
 
-        List<Byte> rskTagAsByteList = Arrays.asList(ArrayUtils.toObject(UscMiningConstants.RSK_TAG));
+        List<Byte> rskTagAsByteList = Arrays.asList(ArrayUtils.toObject(UscMiningConstants.USC_TAG));
 
         int rskTagPosition = Collections.lastIndexOfSubList(coinbaseAsByteList, rskTagAsByteList);
         byte[] blockHashForMergedMiningArray = new byte[Keccak256Helper.Size.S256.getValue() / 8];
-        System.arraycopy(coinbaseAsByteArray, rskTagPosition + UscMiningConstants.RSK_TAG.length, blockHashForMergedMiningArray, 0, blockHashForMergedMiningArray.length);
+        System.arraycopy(coinbaseAsByteArray, rskTagPosition + UscMiningConstants.USC_TAG.length, blockHashForMergedMiningArray, 0, blockHashForMergedMiningArray.length);
         return TypeConverter.toJsonHex(blockHashForMergedMiningArray);
     }
 

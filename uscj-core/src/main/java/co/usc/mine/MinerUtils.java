@@ -57,7 +57,7 @@ public class MinerUtils {
         SecureRandom random = new SecureRandom();
         byte[] prefix = new byte[random.nextInt(1000)];
         random.nextBytes(prefix);
-        byte[] bytes = Arrays.concatenate(prefix, UscMiningConstants.RSK_TAG, blockHashForMergedMining);
+        byte[] bytes = Arrays.concatenate(prefix, UscMiningConstants.USC_TAG, blockHashForMergedMining);
         // Add the Tag to the scriptSig of first input
         co.usc.ulordj.core.TransactionInput ti = new co.usc.ulordj.core.TransactionInput(params, coinbaseTransaction, bytes);
         coinbaseTransaction.addInput(ti);
@@ -93,9 +93,9 @@ public class MinerUtils {
         byte[] prefix = new byte[random.nextInt(1000)];
         random.nextBytes(prefix);
 
-        byte[] bytes0 = Arrays.concatenate(UscMiningConstants.RSK_TAG, blockHashForMergedMining1);
+        byte[] bytes0 = Arrays.concatenate(UscMiningConstants.USC_TAG, blockHashForMergedMining1);
         // addsecond tag
-        byte[] bytes1 = Arrays.concatenate(bytes0, UscMiningConstants.RSK_TAG, blockHashForMergedMining2);
+        byte[] bytes1 = Arrays.concatenate(bytes0, UscMiningConstants.USC_TAG, blockHashForMergedMining2);
 
         co.usc.ulordj.core.TransactionInput ti = new co.usc.ulordj.core.TransactionInput(params, coinbaseTransaction, prefix);
         coinbaseTransaction.addInput(ti);

@@ -25,7 +25,7 @@ import java.util.concurrent.*;
 /**
  * Created by mario on 09/09/2016.
  */
-public class RskCustomCache<K, T> {
+public class UscCustomCache<K, T> {
 
     private Long timeToLive;
 
@@ -33,7 +33,7 @@ public class RskCustomCache<K, T> {
 
     private ScheduledExecutorService cacheTimer;
 
-    public RskCustomCache(Long timeToLive) {
+    public UscCustomCache(Long timeToLive) {
         this.timeToLive = timeToLive;
 
         cacheTimer = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
