@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e8cbfb10-14d0-4905-b182-2d3cdd5c4d85" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/genesis/ulord-testnet.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/uscj-core_main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/uscj-core_main.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uscj-core/.gradle/4.4/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/.gradle/4.4/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uscj-core/.gradle/4.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/.gradle/4.4/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uscj-core/out/production/resources/build-info.properties" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/out/production/resources/build-info.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uscj-core/src/main/resources/build-info.properties" beforeDir="false" afterPath="$PROJECT_DIR$/uscj-core/src/main/resources/build-info.properties" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/uscj-core/.gradle/" />
     <ignored path="$PROJECT_DIR$/uscj-core/build/" />
@@ -39,105 +43,72 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="GenesisLoader.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/genesis/GenesisLoader.java">
+      <file leaf-file-name="MinerClientImpl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerClientImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="60" column="52" lean-forward="true" selection-start-line="60" selection-start-column="52" selection-end-line="60" selection-end-column="52" />
+            <state relative-caret-position="792">
+              <caret line="74" column="45" selection-start-line="74" selection-start-column="45" selection-end-line="74" selection-end-column="45" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GenesisMapper.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/genesis/GenesisMapper.java">
+      <file leaf-file-name="NetworkParameters.java" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/co/rsk/bitcoinj/core/NetworkParameters.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="648">
-              <caret line="57" column="23" selection-start-line="57" selection-start-column="12" selection-end-line="57" selection-end-column="23" />
+            <state relative-caret-position="252">
+              <caret line="42" column="22" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bamboo-testnet.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/resources/genesis/bamboo-testnet.json">
+      <file leaf-file-name="UDPServer.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/UDPServer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="17" column="49" selection-start-line="17" selection-start-column="49" selection-end-line="17" selection-end-column="49" />
+            <state relative-caret-position="612">
+              <caret line="59" column="21" selection-start-line="59" selection-start-column="21" selection-end-line="59" selection-end-column="21" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ulord-testnet.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/resources/genesis/ulord-testnet.json">
+      <file leaf-file-name="SystemProperties.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/SystemProperties.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="1" column="8" selection-start-line="1" selection-start-column="3" selection-end-line="1" selection-end-column="8" />
+            <state relative-caret-position="4356">
+              <caret line="296" column="43" selection-start-line="296" selection-start-column="24" selection-end-line="296" selection-end-column="43" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GenesisJson.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/genesis/GenesisJson.java">
+      <file leaf-file-name="DefaultConfig.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/DefaultConfig.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1134">
-              <caret line="114" column="13" selection-start-line="114" selection-start-column="13" selection-end-line="114" selection-end-column="13" />
+            <state relative-caret-position="496">
+              <caret line="215" column="17" selection-start-line="215" selection-start-column="17" selection-end-line="215" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/uscj-core/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="179">
+              <caret line="140" column="62" lean-forward="true" selection-start-line="140" selection-start-column="62" selection-end-line="140" selection-end-column="62" />
               <folding>
-                <element signature="e#2695#2696#0" expanded="true" />
-                <element signature="e#2729#2730#0" expanded="true" />
+                <element signature="e#0#36#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BlockDifficulty.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/BlockDifficulty.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="30" column="35" lean-forward="true" selection-start-line="30" selection-start-column="35" selection-end-line="30" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MinerWork.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerWork.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="36" column="19" lean-forward="true" selection-start-line="36" selection-start-column="19" selection-end-line="36" selection-end-column="19" />
-              <folding>
-                <element signature="e#1732#1733#0" expanded="true" />
-                <element signature="e#1761#1762#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MinerServerImpl.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MinerServerImpl.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerServerImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="377">
-              <caret line="650" column="13" lean-forward="true" selection-start-line="650" selection-start-column="13" selection-end-line="650" selection-end-column="13" />
+            <state relative-caret-position="378">
+              <caret line="37" column="31" selection-start-line="37" selection-start-column="31" selection-end-line="37" selection-end-column="31" />
               <folding>
-                <element signature="imports" expanded="true" />
                 <element signature="e#24831#24832#0" expanded="true" />
                 <element signature="e#24870#24871#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="rsk-mainnet.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/resources/genesis/rsk-mainnet.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="15" column="23" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="23" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Genesis.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/Genesis.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="76" column="31" lean-forward="true" selection-start-line="76" selection-start-column="31" selection-end-line="76" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -146,7 +117,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>jsr</find>
       <find>rskLllVersion</find>
       <find>usc</find>
       <find>co.usc.bitcoinj</find>
@@ -160,16 +130,23 @@
       <find>currentWork</find>
       <find>blockHeaderHash</find>
       <find>Genesis</find>
-      <find>NetworkParameters</find>
       <find>org.bitcoin.production</find>
       <find>difficulty</find>
       <find>max</find>
       <find>bamboo</find>
       <find>networkparameters</find>
-      <find>ID_MAINNET</find>
       <find>alloc</find>
       <find>max_VALUE</find>
       <find>target</find>
+      <find>ID_TESTNET</find>
+      <find>ID_MAINNET</find>
+      <find>18AEA41A</find>
+      <find>parseRLP</find>
+      <find>gethash</find>
+      <find>currentWork =</find>
+      <find>NetworkParameters</find>
+      <find>peer.discovery</find>
+      <find>peerDiscoveryIPList</find>
     </findStrings>
     <replaceStrings>
       <replace>co.rsk.bitcoinj</replace>
@@ -468,7 +445,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$/uscj-core" value="6096141955000" />
+        <entry key="$PROJECT_DIR$/uscj-core" value="6096635662000" />
         <entry key="$PROJECT_DIR$/uscj-core/.gradle" value="0" />
         <entry key="$PROJECT_DIR$/uscj-core/build.gradle" value="1153736447" />
         <entry key="$PROJECT_DIR$/uscj-core/gradle/wrapper/gradle-wrapper.properties" value="1741342742" />
@@ -618,7 +595,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/NodeBlockProcessor.java" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/table/Bucket.java" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/table/NodeDistanceTable.java" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/sync/PeersInformation.java" />
@@ -636,7 +612,6 @@
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/bc/BlockUtils.java" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/SyncProcessor.java" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/ReleaseTransactionSet.java" />
-        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerServerImpl.java" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/NodeMessageHandler.java" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/modules/txpool/TxPoolModuleImpl.java" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/rpc/netty/JsonRpcWeb3FilterHandler.java" />
@@ -669,6 +644,8 @@
         <option value="$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/solidity/compiler/Sources.java" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/resources/genesis/bamboo-testnet.json" />
         <option value="$PROJECT_DIR$/uscj-core/src/main/resources/genesis/ulord-testnet.json" />
+        <option value="$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerServerImpl.java" />
+        <option value="$PROJECT_DIR$/uscj-core/build.gradle" />
       </list>
     </option>
   </component>
@@ -742,23 +719,21 @@
               <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="co" type="462c0819:PsiDirectoryNode" />
+              <item name="usc" type="462c0819:PsiDirectoryNode" />
+              <item name="blocks" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Ulord-Sidechain" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Ulord-Sidechain" type="462c0819:PsiDirectoryNode" />
-              <item name="uscj-core" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="genesis" type="462c0819:PsiDirectoryNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -852,6 +827,7 @@
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Messages" order="7" visible="true" weight="0.33880904" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="3" />
@@ -860,7 +836,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Designer" order="2" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19327283" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3295688" />
+      <window_info anchor="bottom" id="Build" order="7" weight="0.3295688" />
       <window_info anchor="right" id="Gradle" order="3" weight="0.39762932" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -870,23 +846,22 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="bottom" id="Messages" order="7" visible="true" weight="0.33880904" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Build" order="7" weight="0.3295688" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3295688" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Gradle" order="4" weight="0.39762932" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3900862" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3295688" />
       <window_info id="Designer" order="2" />
       <window_info id="UI Designer" order="3" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
@@ -894,9 +869,9 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Build" order="10" weight="0.3295688" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3295688" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Messages" order="11" visible="true" weight="0.33932346" />
       <window_info anchor="right" id="Maven Projects" order="6" />
       <window_info id="Favorites" order="4" side_tool="true" />
@@ -907,139 +882,18 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/SystemProperties.java</url>
+          <line>297</line>
+          <properties />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="3" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/FilterManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/rlpx/RlpxConnection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="26" column="17" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/bc/TransactionPoolImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="39" column="19" selection-start-line="39" selection-start-column="19" selection-end-line="39" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/ReleaseTransactionBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="26" column="19" selection-start-line="26" selection-start-column="19" selection-end-line="26" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/IndexedBlockStore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/Web3Impl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="68" column="19" selection-start-line="68" selection-start-column="19" selection-end-line="68" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/sync/SyncPool.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="40" column="24" selection-start-line="40" selection-start-column="24" selection-end-line="40" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/Bridge.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="50" column="19" selection-start-line="50" selection-start-column="19" selection-end-line="50" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/net/server/ChannelManagerImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="65" column="18" selection-start-line="65" selection-start-column="18" selection-end-line="65" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/db/ContractDetailsImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="44" column="19" selection-start-line="44" selection-start-column="19" selection-end-line="44" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/ContractDetailsCacheImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="29" column="19" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/solidity/compiler/SourceArtifact.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="31" lean-forward="true" selection-start-line="31" selection-end-line="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/datasource/HashMapDB.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/db/ReceiptStoreImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="28" column="19" selection-start-line="28" selection-start-column="19" selection-end-line="28" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/BridgeSerializationUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="35" column="19" selection-start-line="35" selection-start-column="19" selection-end-line="35" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/sync/DownloadingHeadersSyncState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="19" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/sync/DownloadingBodiesSyncState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="16" column="19" selection-start-line="16" selection-start-column="19" selection-end-line="16" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/cli/config/Migrator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -1054,31 +908,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/UDPServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="34" column="18" selection-start-line="34" selection-start-column="18" selection-end-line="34" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/Start.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2142">
           <caret line="168" column="21" selection-start-line="168" selection-start-column="12" selection-end-line="168" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/DefaultConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="59">
-          <caret line="192" column="34" lean-forward="true" selection-start-line="192" selection-start-column="34" selection-end-line="192" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/blocks/BlockPlayer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="25" column="17" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
         </state>
       </provider>
     </entry>
@@ -1117,13 +950,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/Block.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="59" column="16" selection-start-line="59" selection-start-column="16" selection-end-line="59" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/core/bc/BlockChainImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="468">
@@ -1149,13 +975,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="314">
           <caret line="56" column="19" lean-forward="true" selection-start-line="56" selection-start-column="19" selection-end-line="56" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerClientImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="367">
-          <caret line="150" lean-forward="true" selection-start-line="150" selection-end-line="150" />
         </state>
       </provider>
     </entry>
@@ -1187,13 +1006,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/co/rsk/bitcoinj/params/TestNet3Params.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-36">
-          <caret line="36" column="13" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/uscj-core/src/main/resources/genesis/rsk-mainnet.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -1208,27 +1020,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/RepositoryBlockStore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="42" column="27" selection-start-line="42" selection-start-column="27" selection-end-line="42" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/co/rsk/bitcoinj/core/NetworkParameters.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="42" column="41" lean-forward="true" selection-start-line="42" selection-start-column="41" selection-end-line="42" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/resources/genesis/bamboo-testnet.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="17" column="49" selection-start-line="17" selection-start-column="49" selection-end-line="17" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/uscj-core/src/main/resources/genesis/ulord-testnet.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="18">
@@ -1240,10 +1031,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1134">
           <caret line="114" column="13" selection-start-line="114" selection-start-column="13" selection-end-line="114" selection-end-column="13" />
-          <folding>
-            <element signature="e#2695#2696#0" expanded="true" />
-            <element signature="e#2729#2730#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1261,25 +1048,212 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/co/rsk/bitcoinj/params/TestNet2Params.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="26" column="57" selection-start-line="26" selection-start-column="57" selection-end-line="26" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/co/rsk/bitcoinj/params/AbstractBitcoinNetParams.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="43" column="7" lean-forward="true" selection-start-line="43" selection-start-column="7" selection-end-line="43" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/co/rsk/bitcoinj/params/RegTestParams.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-87">
+          <caret line="27" column="38" lean-forward="true" selection-start-line="27" selection-start-column="38" selection-end-line="27" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/trie/Trie.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="25" column="17" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/co/rsk/bitcoinj/params/TestNet3Params.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="41" column="33" lean-forward="true" selection-start-line="41" selection-start-column="33" selection-end-line="41" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/config/BridgeMainNetConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="20" column="44" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.madgag.spongycastle/core/1.52.0.0/a015fe1c5101dc12bd2d122362c0b0bb64278e4/core-1.52.0.0-sources.jar!/org/spongycastle/util/encoders/HexEncoder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="305">
+          <caret line="53" column="34" selection-start-line="53" selection-start-column="8" selection-end-line="53" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.madgag.spongycastle/core/1.52.0.0/a015fe1c5101dc12bd2d122362c0b0bb64278e4/core-1.52.0.0-sources.jar!/org/spongycastle/util/encoders/Encoder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="15" column="8" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.madgag.spongycastle/core/1.52.0.0/a015fe1c5101dc12bd2d122362c0b0bb64278e4/core-1.52.0.0-sources.jar!/org/spongycastle/util/encoders/Hex.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="127" column="23" selection-start-line="127" selection-start-column="23" selection-end-line="127" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/rpc/TypeConverter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="458">
+          <caret line="60" column="24" selection-start-line="60" selection-start-column="24" selection-end-line="60" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-821">
+          <caret line="42" column="3" lean-forward="true" selection-start-line="42" selection-start-column="3" selection-end-line="42" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/co/rsk/bitcoinj/core/Message.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="314">
+          <caret line="276" column="22" selection-start-line="276" selection-start-column="22" selection-end-line="276" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="20" column="17" selection-start-line="20" selection-start-column="17" selection-end-line="20" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/co/rsk/bitcoinj/core/Sha256Hash.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3672">
+          <caret line="251" column="22" selection-start-line="251" selection-start-column="22" selection-end-line="251" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/co/rsk/bitcoinj/core/Utils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="738">
+          <caret line="81" column="34" lean-forward="true" selection-start-line="81" selection-start-column="32" selection-end-line="81" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/co/rsk/bitcoinj/core/BtcBlock.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="426" column="28" selection-start-line="426" selection-start-column="28" selection-end-line="426" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerWork.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="342">
-          <caret line="36" column="19" lean-forward="true" selection-start-line="36" selection-start-column="19" selection-end-line="36" selection-end-column="19" />
-          <folding>
-            <element signature="e#1732#1733#0" expanded="true" />
-            <element signature="e#1761#1762#0" expanded="true" />
-          </folding>
+          <caret line="36" column="11" selection-start-line="36" selection-start-column="11" selection-end-line="36" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/BlockHeader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="449">
+          <caret line="307" column="9" lean-forward="true" selection-start-line="307" selection-start-column="9" selection-end-line="307" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/core/Block.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="327" column="30" selection-start-line="327" selection-start-column="30" selection-end-line="327" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/peg/RepositoryBlockStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="42" column="29" selection-start-line="42" selection-start-column="29" selection-end-line="42" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerClientImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="792">
+          <caret line="74" column="45" selection-start-line="74" selection-start-column="45" selection-end-line="74" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-3/bcf641bda82a9cc104defefb4d7575693bf95c36/bitcoinj-thin-0.14.4-rsk-3-sources.jar!/co/rsk/bitcoinj/core/NetworkParameters.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="42" column="22" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/resources/genesis/bamboo-testnet.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/net/discovery/UDPServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="612">
+          <caret line="59" column="21" selection-start-line="59" selection-start-column="21" selection-end-line="59" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/SystemProperties.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4356">
+          <caret line="296" column="43" selection-start-line="296" selection-start-column="24" selection-end-line="296" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/org/ethereum/config/DefaultConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="496">
+          <caret line="215" column="17" selection-start-line="215" selection-start-column="17" selection-end-line="215" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/blocks/BlockPlayer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="25" column="17" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/uscj-core/src/main/java/co/usc/mine/MinerServerImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="377">
-          <caret line="650" column="13" lean-forward="true" selection-start-line="650" selection-start-column="13" selection-end-line="650" selection-end-column="13" />
+        <state relative-caret-position="378">
+          <caret line="37" column="31" selection-start-line="37" selection-start-column="31" selection-end-line="37" selection-end-column="31" />
           <folding>
-            <element signature="imports" expanded="true" />
             <element signature="e#24831#24832#0" expanded="true" />
             <element signature="e#24870#24871#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/uscj-core/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="140" column="62" lean-forward="true" selection-start-line="140" selection-start-column="62" selection-end-line="140" selection-end-column="62" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
           </folding>
         </state>
       </provider>
