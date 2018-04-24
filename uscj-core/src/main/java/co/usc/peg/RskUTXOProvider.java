@@ -18,7 +18,7 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.*;
+import co.usc.ulordj.core.*;
 
 import java.util.List;
 

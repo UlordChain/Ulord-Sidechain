@@ -18,9 +18,9 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.*;
-import co.rsk.bitcoinj.wallet.RedeemData;
-import co.rsk.bitcoinj.wallet.Wallet;
+import co.usc.ulordj.core.*;
+import co.usc.ulordj.wallet.RedeemData;
+import co.usc.ulordj.wallet.Wallet;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;

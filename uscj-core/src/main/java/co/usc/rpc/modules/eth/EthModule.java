@@ -18,7 +18,7 @@
 
 package co.usc.rpc.modules.eth;
 
-import co.rsk.bitcoinj.store.BlockStoreException;
+import co.usc.ulordj.store.BlockStoreException;
 import co.usc.config.RskSystemProperties;
 import co.usc.core.ReversibleTransactionExecutor;
 import co.usc.peg.BridgeState;

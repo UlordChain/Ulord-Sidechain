@@ -18,7 +18,7 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.*;
+import co.usc.ulordj.core.*;
 import co.usc.config.BridgeConstants;
 import co.usc.config.RskSystemProperties;
 import co.usc.core.RskAddress;
@@ -68,7 +68,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     // - A bitcoin tx, serialized with the bitcoin wire protocol format
     // - The bitcoin block height that contains the tx
     // - A merkle tree that shows the tx is included in that block, serialized with the bitcoin wire protocol format.
-    public static final CallTransaction.Function REGISTER_BTC_TRANSACTION = CallTransaction.Function.fromSignature("registerBtcTransaction", new String[]{"bytes", "int", "bytes"}, new String[]{});
+    public static final CallTransaction.Function REGISTER_BTC_TRANSACTION = CallTransaction.Function.fromSignature("registerUldTransaction", new String[]{"bytes", "int", "bytes"}, new String[]{});
     // No parameters, the current usc tx is used as input.
     public static final CallTransaction.Function RELEASE_BTC = CallTransaction.Function.fromSignature("releaseBtc", new String[]{}, new String[]{});
     // Parameters:
@@ -81,11 +81,11 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     // Returns a BridgeState encoded in RLP
     public static final CallTransaction.Function GET_STATE_FOR_DEBUGGING = CallTransaction.Function.fromSignature("getStateForDebugging", new String[]{}, new String[]{"bytes"});
     // Return the bitcoin blockchain best chain height know by the bridge contract
-    public static final CallTransaction.Function GET_BTC_BLOCKCHAIN_BEST_CHAIN_HEIGHT = CallTransaction.Function.fromSignature("getBtcBlockchainBestChainHeight", new String[]{}, new String[]{"int"});
+    public static final CallTransaction.Function GET_BTC_BLOCKCHAIN_BEST_CHAIN_HEIGHT = CallTransaction.Function.fromSignature("getUldBlockchainBestChainHeight", new String[]{}, new String[]{"int"});
     // Returns an array of block hashes known by the bridge contract. Federators can use this to find what is the latest block in the mainchain the bridge has.
     // The goal of this function is to help synchronize bridge and federators blockchains.
     // Protocol inspired by bitcoin sync protocol, see block locator in https://en.bitcoin.it/wiki/Protocol_documentation#getheaders
-    public static final CallTransaction.Function GET_BTC_BLOCKCHAIN_BLOCK_LOCATOR = CallTransaction.Function.fromSignature("getBtcBlockchainBlockLocator", new String[]{}, new String[]{"string[]"});
+    public static final CallTransaction.Function GET_BTC_BLOCKCHAIN_BLOCK_LOCATOR = CallTransaction.Function.fromSignature("getUldBlockchainBlockLocator", new String[]{}, new String[]{"string[]"});
     // Returns the minimum amount of satoshis a user should send to the federation.
     public static final CallTransaction.Function GET_MINIMUM_LOCK_TX_VALUE = CallTransaction.Function.fromSignature("getMinimumLockTxValue", new String[]{}, new String[]{"int"});
 
@@ -364,33 +364,33 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     {
         logger.trace("receiveHeaders");
 
-        Object[] btcBlockSerializedArray = (Object[]) args[0];
-        BtcBlock[] btcBlockArray = new BtcBlock[btcBlockSerializedArray.length];
-        for (int i = 0; i < btcBlockSerializedArray.length; i++) {
-            byte[] btcBlockSerialized = (byte[]) btcBlockSerializedArray[i];
+        Object[] UldBlockSerializedArray = (Object[]) args[0];
+        UldBlock[] UldBlockArray = new UldBlock[UldBlockSerializedArray.length];
+        for (int i = 0; i < UldBlockSerializedArray.length; i++) {
+            byte[] UldBlockSerialized = (byte[]) UldBlockSerializedArray[i];
             try {
-                BtcBlock header = bridgeConstants.getBtcParams().getDefaultSerializer().makeBlock(btcBlockSerialized);
-                btcBlockArray[i] = header;
+                UldBlock header = bridgeConstants.getBtcParams().getDefaultSerializer().makeBlock(UldBlockSerialized);
+                UldBlockArray[i] = header;
             } catch (ProtocolException e) {
-                throw new BridgeIllegalArgumentException("Block " + i + " could not be parsed " + Hex.toHexString(btcBlockSerialized), e);
+                throw new BridgeIllegalArgumentException("Block " + i + " could not be parsed " + Hex.toHexString(UldBlockSerialized), e);
             }
         }
         try {
-            bridgeSupport.receiveHeaders(btcBlockArray);
+            bridgeSupport.receiveHeaders(UldBlockArray);
         } catch (Exception e) {
             logger.warn("Exception adding header", e);
             throw new RuntimeException("Exception adding header", e);
         }
     }
 
-    public void registerBtcTransaction(Object[] args)
+    public void registerUldTransaction(Object[] args)
     {
-        logger.trace("registerBtcTransaction");
+        logger.trace("registerUldTransaction");
 
         byte[] btcTxSerialized = (byte[]) args[0];
-        BtcTransaction btcTx;
+        UldTransaction btcTx;
         try {
-            btcTx = new BtcTransaction(bridgeConstants.getBtcParams(),btcTxSerialized);
+            btcTx = new UldTransaction(bridgeConstants.getBtcParams(),btcTxSerialized);
         } catch (ProtocolException e) {
             throw new BridgeIllegalArgumentException("Transaction could not be parsed " + Hex.toHexString(btcTxSerialized), e);
         }
@@ -409,10 +409,10 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             throw new BridgeIllegalArgumentException("PartialMerkleTree could not be parsed " + Hex.toHexString(pmtSerialized), e);
         }
         try {
-            bridgeSupport.registerBtcTransaction(rskTx, btcTx, height, pmt);
+            bridgeSupport.registerUldTransaction(rskTx, btcTx, height, pmt);
         } catch (Exception e) {
-            logger.warn("Exception in registerBtcTransaction", e);
-            throw new RuntimeException("Exception in registerBtcTransaction", e);
+            logger.warn("Exception in registerUldTransaction", e);
+            throw new RuntimeException("Exception in registerUldTransaction", e);
         }
     }
 
@@ -435,9 +435,9 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         logger.trace("addSignature");
 
         byte[] federatorPublicKeySerialized = (byte[]) args[0];
-        BtcECKey federatorPublicKey;
+        UldECKey federatorPublicKey;
         try {
-            federatorPublicKey = BtcECKey.fromPublicOnly(federatorPublicKeySerialized);
+            federatorPublicKey = UldECKey.fromPublicOnly(federatorPublicKeySerialized);
         } catch (Exception e) {
             throw new BridgeIllegalArgumentException("Public key could not be parsed " + Hex.toHexString(federatorPublicKeySerialized), e);
         }
@@ -449,7 +449,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         for (Object signatureObject : signaturesObjectArray) {
             byte[] signatureByteArray = (byte[])signatureObject;
             try {
-                BtcECKey.ECDSASignature.decodeFromDER((byte[])signatureObject);
+                UldECKey.ECDSASignature.decodeFromDER((byte[])signatureObject);
             } catch (Exception e) {
                 throw new BridgeIllegalArgumentException("Signature could not be parsed " + Hex.toHexString(signatureByteArray), e);
             }
@@ -493,24 +493,24 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         }
     }
 
-    public Integer getBtcBlockchainBestChainHeight(Object[] args)
+    public Integer getUldBlockchainBestChainHeight(Object[] args)
     {
-        logger.trace("getBtcBlockchainBestChainHeight");
+        logger.trace("getUldBlockchainBestChainHeight");
 
         try {
-            return bridgeSupport.getBtcBlockchainBestChainHeight();
+            return bridgeSupport.getUldBlockchainBestChainHeight();
         } catch (Exception e) {
-            logger.warn("Exception in getBtcBlockchainBestChainHeight", e);
-            throw new RuntimeException("Exception in getBtcBlockchainBestChainHeight", e);
+            logger.warn("Exception in getUldBlockchainBestChainHeight", e);
+            throw new RuntimeException("Exception in getUldBlockchainBestChainHeight", e);
         }
     }
 
-    public Object[] getBtcBlockchainBlockLocator(Object[] args)
+    public Object[] getUldBlockchainBlockLocator(Object[] args)
     {
-        logger.trace("getBtcBlockchainBlockLocator");
+        logger.trace("getUldBlockchainBlockLocator");
 
         try {
-            List<Sha256Hash> blockLocatorList = bridgeSupport.getBtcBlockchainBlockLocator();
+            List<Sha256Hash> blockLocatorList = bridgeSupport.getUldBlockchainBlockLocator();
             Object[] blockLocatorArray = new Object[blockLocatorList.size()];
             int i = 0;
             for (Sha256Hash blockHash: blockLocatorList) {
@@ -519,8 +519,8 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             }
             return blockLocatorArray;
         } catch (Exception e) {
-            logger.warn("Exception in getBtcBlockchainBlockLocator", e);
-            throw new RuntimeException("Exception in getBtcBlockchainBlockLocator", e);
+            logger.warn("Exception in getUldBlockchainBlockLocator", e);
+            throw new RuntimeException("Exception in getUldBlockchainBlockLocator", e);
         }
     }
 

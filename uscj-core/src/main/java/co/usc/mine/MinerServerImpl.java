@@ -18,7 +18,7 @@
 
 package co.usc.mine;
 
-import co.rsk.bitcoinj.core.*;
+import co.usc.ulordj.core.*;
 import co.usc.config.MiningConfig;
 import co.usc.config.RskMiningConstants;
 import co.usc.config.RskSystemProperties;
@@ -380,8 +380,8 @@ public class MinerServerImpl implements MinerServer {
     @Override
     public SubmitBlockResult submitBitcoinBlockPartialMerkle(
             String blockHashForMergedMining,
-            BtcBlock blockWithHeaderOnly,
-            BtcTransaction coinbase,
+            UldBlock blockWithHeaderOnly,
+            UldTransaction coinbase,
             List<String> merkleHashes,
             int blockTxnCount) {
         logger.debug("Received merkle solution with hash {} for merged mining", blockHashForMergedMining);
@@ -394,8 +394,8 @@ public class MinerServerImpl implements MinerServer {
     @Override
     public SubmitBlockResult submitBitcoinBlockTransactions(
             String blockHashForMergedMining,
-            BtcBlock blockWithHeaderOnly,
-            BtcTransaction coinbase,
+            UldBlock blockWithHeaderOnly,
+            UldTransaction coinbase,
             List<String> txHashes) {
         logger.debug("Received tx solution with hash {} for merged mining", blockHashForMergedMining);
 
@@ -405,15 +405,15 @@ public class MinerServerImpl implements MinerServer {
     }
 
     @Override
-    public SubmitBlockResult submitBitcoinBlock(String blockHashForMergedMining, BtcBlock bitcoinMergedMiningBlock) {
+    public SubmitBlockResult submitBitcoinBlock(String blockHashForMergedMining, UldBlock bitcoinMergedMiningBlock) {
         return submitBitcoinBlock(blockHashForMergedMining, bitcoinMergedMiningBlock, true);
     }
 
-    SubmitBlockResult submitBitcoinBlock(String blockHashForMergedMining, BtcBlock bitcoinMergedMiningBlock, boolean lastTag) {
+    SubmitBlockResult submitBitcoinBlock(String blockHashForMergedMining, UldBlock bitcoinMergedMiningBlock, boolean lastTag) {
         logger.debug("Received block with hash {} for merged mining", blockHashForMergedMining);
 
         //noinspection ConstantConditions
-        BtcTransaction coinbase = bitcoinMergedMiningBlock.getTransactions().get(0);
+        UldTransaction coinbase = bitcoinMergedMiningBlock.getTransactions().get(0);
         PartialMerkleTree bitcoinMergedMiningMerkleBranch = getBitcoinMergedMerkleBranch(bitcoinMergedMiningBlock);
 
         return processSolution(blockHashForMergedMining, bitcoinMergedMiningBlock, coinbase, bitcoinMergedMiningMerkleBranch, lastTag);
@@ -421,8 +421,8 @@ public class MinerServerImpl implements MinerServer {
 
     private SubmitBlockResult processSolution(
             String blockHashForMergedMining,
-            BtcBlock blockWithHeaderOnly,
-            BtcTransaction coinbase,
+            UldBlock blockWithHeaderOnly,
+            UldTransaction coinbase,
             PartialMerkleTree bitcoinMergedMiningMerkleBranch,
             boolean lastTag) {
         Block newBlock;
@@ -529,7 +529,7 @@ public class MinerServerImpl implements MinerServer {
         }
 
         // bits indicates which nodes are going to be used for building the partial merkle tree
-        // for more information please refer to {@link co.rsk.bitcoinj.core.PartialMerkleTree#buildFromLeaves } method
+        // for more information please refer to {@link co.usc.ulordj.core.PartialMerkleTree#buildFromLeaves } method
         byte[] bits = new byte[(bitList.size() + 7) / 8];
         for (int i = 0; i < bitList.size(); i++) {
             if (bitList.get(i)) {
@@ -561,10 +561,10 @@ public class MinerServerImpl implements MinerServer {
      * @param bitcoinMergedMiningBlock the bitcoin block that includes all the txs.
      * @return A Partial Merkle Branch in which you can validate the coinbase tx.
      */
-    public static PartialMerkleTree getBitcoinMergedMerkleBranch(BtcBlock bitcoinMergedMiningBlock) {
-        List<BtcTransaction> txs = bitcoinMergedMiningBlock.getTransactions();
+    public static PartialMerkleTree getBitcoinMergedMerkleBranch(UldBlock bitcoinMergedMiningBlock) {
+        List<UldTransaction> txs = bitcoinMergedMiningBlock.getTransactions();
         List<Sha256Hash> txHashes = new ArrayList<>(txs.size());
-        for (BtcTransaction tx : txs) {
+        for (UldTransaction tx : txs) {
             txHashes.add(tx.getHash());
         }
 

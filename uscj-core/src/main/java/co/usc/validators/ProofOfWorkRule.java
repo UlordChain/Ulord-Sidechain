@@ -19,9 +19,9 @@
 
 package co.usc.validators;
 
-import co.rsk.bitcoinj.core.BtcBlock;
-import co.rsk.bitcoinj.core.PartialMerkleTree;
-import co.rsk.bitcoinj.core.Sha256Hash;
+import co.usc.ulordj.core.UldBlock;
+import co.usc.ulordj.core.PartialMerkleTree;
+import co.usc.ulordj.core.Sha256Hash;
 import co.usc.config.BridgeConstants;
 import co.usc.config.RskMiningConstants;
 import co.usc.config.RskSystemProperties;
@@ -118,7 +118,7 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
             return validFallbackBlockSignature(constants, header, header.getBitcoinMergedMiningHeader());
         }
 
-        co.rsk.bitcoinj.core.NetworkParameters bitcoinNetworkParameters = bridgeConstants.getBtcParams();
+        co.usc.ulordj.core.NetworkParameters bitcoinNetworkParameters = bridgeConstants.getBtcParams();
         byte[] bitcoinMergedMiningCoinbaseTransactionCompressed = header.getBitcoinMergedMiningCoinbaseTransaction();
 
         if (bitcoinMergedMiningCoinbaseTransactionCompressed==null) {
@@ -133,7 +133,7 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
             return false;
         }
 
-        BtcBlock bitcoinMergedMiningBlock = bitcoinNetworkParameters.getDefaultSerializer().makeBlock(header.getBitcoinMergedMiningHeader());
+        UldBlock bitcoinMergedMiningBlock = bitcoinNetworkParameters.getDefaultSerializer().makeBlock(header.getBitcoinMergedMiningHeader());
         PartialMerkleTree bitcoinMergedMiningMerkleBranch  = new PartialMerkleTree(bitcoinNetworkParameters, header.getBitcoinMergedMiningMerkleProof(), 0);
 
         BigInteger target = DifficultyUtils.difficultyToTarget(header.getDifficulty());

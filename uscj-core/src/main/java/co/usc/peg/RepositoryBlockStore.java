@@ -18,9 +18,9 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.*;
-import co.rsk.bitcoinj.store.BlockStoreException;
-import co.rsk.bitcoinj.store.BtcBlockStore;
+import co.usc.ulordj.core.*;
+import co.usc.ulordj.store.BlockStoreException;
+import co.usc.ulordj.store.BtcBlockStore;
 import co.usc.core.RskAddress;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Repository;
@@ -50,7 +50,7 @@ public class RepositoryBlockStore implements BtcBlockStore{
         try {
             this.params = config.getBlockchainConfig().getCommonConstants().getBridgeConstants().getBtcParams();
             if (getChainHead()==null) {
-                BtcBlock genesisHeader = params.getGenesisBlock().cloneAsHeader();
+                UldBlock genesisHeader = params.getGenesisBlock().cloneAsHeader();
                 StoredBlock storedGenesis = new StoredBlock(genesisHeader, genesisHeader.getWork(), 0);
                 put(storedGenesis);
                 setChainHead(storedGenesis);

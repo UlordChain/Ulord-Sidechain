@@ -18,9 +18,9 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.*;
-import co.rsk.bitcoinj.wallet.SendRequest;
-import co.rsk.bitcoinj.wallet.Wallet;
+import co.usc.ulordj.core.*;
+import co.usc.ulordj.wallet.SendRequest;
+import co.usc.ulordj.wallet.Wallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,15 +38,15 @@ import java.util.stream.Collectors;
  */
 public class ReleaseTransactionBuilder {
     public class BuildResult {
-        private final BtcTransaction btcTx;
+        private final UldTransaction btcTx;
         private final List<UTXO> selectedUTXOs;
 
-        public BuildResult(BtcTransaction btcTx, List<UTXO> selectedUTXOs) {
+        public BuildResult(UldTransaction btcTx, List<UTXO> selectedUTXOs) {
             this.btcTx = btcTx;
             this.selectedUTXOs = selectedUTXOs;
         }
 
-        public BtcTransaction getBtcTx() {
+        public UldTransaction getBtcTx() {
             return btcTx;
         }
 
@@ -105,7 +105,7 @@ public class ReleaseTransactionBuilder {
             String operationDescription) {
 
         // Build a tx and send request and configure it
-        BtcTransaction btcTx = new BtcTransaction(params);
+        UldTransaction btcTx = new UldTransaction(params);
         SendRequest sr = SendRequest.forTx(btcTx);
         // Default settings
         defaultSettingsConfigurator.configure(sr);

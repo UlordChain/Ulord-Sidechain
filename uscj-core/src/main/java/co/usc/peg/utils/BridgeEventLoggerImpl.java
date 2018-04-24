@@ -18,8 +18,8 @@
 
 package co.usc.peg.utils;
 
-import co.rsk.bitcoinj.core.BtcECKey;
-import co.rsk.bitcoinj.core.BtcTransaction;
+import co.usc.ulordj.core.UldECKey;
+import co.usc.ulordj.core.UldTransaction;
 import co.usc.config.BridgeConstants;
 import co.usc.peg.Bridge;
 import co.usc.peg.Federation;
@@ -61,7 +61,7 @@ public class BridgeEventLoggerImpl implements BridgeEventLogger {
         );
     }
 
-    public void logAddSignature(BtcECKey federatorPublicKey, BtcTransaction btcTx, byte[] rskTxHash) {
+    public void logAddSignature(UldECKey federatorPublicKey, UldTransaction btcTx, byte[] rskTxHash) {
         List<DataWord> topics = Collections.singletonList(Bridge.ADD_SIGNATURE_TOPIC);
         byte[] data = RLP.encodeList(RLP.encodeString(btcTx.getHashAsString()),
                                     RLP.encodeElement(federatorPublicKey.getPubKeyHash()),
@@ -70,7 +70,7 @@ public class BridgeEventLoggerImpl implements BridgeEventLogger {
         this.logs.add(new LogInfo(BRIDGE_CONTRACT_ADDRESS, topics, data));
     }
 
-    public void logReleaseBtc(BtcTransaction btcTx) {
+    public void logReleaseBtc(UldTransaction btcTx) {
         List<DataWord> topics = Collections.singletonList(Bridge.RELEASE_BTC_TOPIC);
         byte[] data = RLP.encodeList(RLP.encodeString(btcTx.getHashAsString()), RLP.encodeElement(btcTx.bitcoinSerialize()));
 
@@ -93,7 +93,7 @@ public class BridgeEventLoggerImpl implements BridgeEventLogger {
         this.logs.add(new LogInfo(BRIDGE_CONTRACT_ADDRESS, topics, data));
     }
 
-    private byte[] flatKeysAsRlpCollection(List<BtcECKey> keys) {
+    private byte[] flatKeysAsRlpCollection(List<UldECKey> keys) {
         List<byte[]> pubKeys = keys.stream()
                                     .map(k -> RLP.encodeElement(k.getPubKey()))
                                     .collect(Collectors.toList());

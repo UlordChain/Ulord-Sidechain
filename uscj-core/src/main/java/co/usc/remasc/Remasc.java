@@ -18,7 +18,7 @@
 
 package co.usc.remasc;
 
-import co.rsk.bitcoinj.store.BlockStoreException;
+import co.usc.ulordj.store.BlockStoreException;
 import co.usc.config.RemascConfig;
 import co.usc.config.RskSystemProperties;
 import co.usc.core.Coin;

@@ -18,7 +18,7 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.*;
+import co.usc.ulordj.core.*;
 import co.usc.core.RskAddress;
 import co.usc.crypto.Keccak256;
 import org.ethereum.util.RLP;
@@ -48,13 +48,13 @@ public class BridgeSerializationUtils {
 
     private BridgeSerializationUtils(){}
 
-    public static byte[] serializeMap(SortedMap<Keccak256, BtcTransaction> map) {
+    public static byte[] serializeMap(SortedMap<Keccak256, UldTransaction> map) {
         int ntxs = map.size();
 
         byte[][] bytes = new byte[ntxs * 2][];
         int n = 0;
 
-        for (Map.Entry<Keccak256, BtcTransaction> entry : map.entrySet()) {
+        for (Map.Entry<Keccak256, UldTransaction> entry : map.entrySet()) {
             bytes[n++] = RLP.encodeElement(entry.getKey().getBytes());
             bytes[n++] = RLP.encodeElement(entry.getValue().bitcoinSerialize());
         }
@@ -62,8 +62,8 @@ public class BridgeSerializationUtils {
         return RLP.encodeList(bytes);
     }
 
-    public static SortedMap<Keccak256, BtcTransaction> deserializeMap(byte[] data, NetworkParameters networkParameters, boolean noInputsTxs) {
-        SortedMap<Keccak256, BtcTransaction> map = new TreeMap<>();
+    public static SortedMap<Keccak256, UldTransaction> deserializeMap(byte[] data, NetworkParameters networkParameters, boolean noInputsTxs) {
+        SortedMap<Keccak256, UldTransaction> map = new TreeMap<>();
 
         if (data == null || data.length == 0) {
             return map;
@@ -76,11 +76,11 @@ public class BridgeSerializationUtils {
         for (int k = 0; k < ntxs; k++) {
             Keccak256 hash = new Keccak256(rlpList.get(k * 2).getRLPData());
             byte[] payload = rlpList.get(k * 2 + 1).getRLPData();
-            BtcTransaction tx;
+            UldTransaction tx;
             if (!noInputsTxs) {
-                tx = new BtcTransaction(networkParameters, payload);
+                tx = new UldTransaction(networkParameters, payload);
             } else {
-                tx = new BtcTransaction(networkParameters);
+                tx = new UldTransaction(networkParameters);
                 tx.parseNoInputs(payload);
             }
             map.put(hash, tx);
@@ -201,10 +201,10 @@ public class BridgeSerializationUtils {
     // A federation is serialized as a list in the following order:
     // creation time
     // list of public keys -> [pubkey1, pubkey2, ..., pubkeyn], sorted
-    // using the lexicographical order of the public keys (see BtcECKey.PUBKEY_COMPARATOR).
+    // using the lexicographical order of the public keys (see UldECKey.PUBKEY_COMPARATOR).
     public static byte[] serializeFederation(Federation federation) {
         List<byte[]> publicKeys = federation.getPublicKeys().stream()
-                .sorted(BtcECKey.PUBKEY_COMPARATOR)
+                .sorted(UldECKey.PUBKEY_COMPARATOR)
                 .map(key -> RLP.encodeElement(key.getPubKey()))
                 .collect(Collectors.toList());
         byte[][] rlpElements = new byte[FEDERATION_RLP_LIST_SIZE][];
@@ -225,8 +225,8 @@ public class BridgeSerializationUtils {
         byte[] creationTimeBytes = rlpList.get(FEDERATION_CREATION_TIME_INDEX).getRLPData();
         Instant creationTime = Instant.ofEpochMilli(BigIntegers.fromUnsignedByteArray(creationTimeBytes).longValue());
 
-        List<BtcECKey> pubKeys = ((RLPList) rlpList.get(FEDERATION_PUB_KEYS_INDEX)).stream()
-                .map(pubKeyBytes -> BtcECKey.fromPublicOnly(pubKeyBytes.getRLPData()))
+        List<UldECKey> pubKeys = ((RLPList) rlpList.get(FEDERATION_PUB_KEYS_INDEX)).stream()
+                .map(pubKeyBytes -> UldECKey.fromPublicOnly(pubKeyBytes.getRLPData()))
                 .collect(Collectors.toList());
 
         byte[] creationBlockNumberBytes = rlpList.get(FEDERATION_CREATION_BLOCK_NUMBER_INDEX).getRLPData();
@@ -435,7 +435,7 @@ public class BridgeSerializationUtils {
 
         for (int k = 0; k < n; k++) {
             byte[] txPayload = rlpList.get(k * 2).getRLPData();
-            BtcTransaction tx =  new BtcTransaction(networkParameters, txPayload);
+            UldTransaction tx =  new UldTransaction(networkParameters, txPayload);
 
             Long height = BigIntegers.fromUnsignedByteArray(rlpList.get(k * 2 + 1).getRLPData()).longValue();
 
@@ -475,21 +475,21 @@ public class BridgeSerializationUtils {
     // A list of btc public keys is serialized as
     // [pubkey1, pubkey2, ..., pubkeyn], sorted
     // using the lexicographical order of the public keys
-    // (see BtcECKey.PUBKEY_COMPARATOR).
-    private static byte[] serializeBtcPublicKeys(List<BtcECKey> keys) {
+    // (see UldECKey.PUBKEY_COMPARATOR).
+    private static byte[] serializeBtcPublicKeys(List<UldECKey> keys) {
         List<byte[]> encodedKeys = keys.stream()
-                .sorted(BtcECKey.PUBKEY_COMPARATOR)
+                .sorted(UldECKey.PUBKEY_COMPARATOR)
                 .map(key -> RLP.encodeElement(key.getPubKey()))
                 .collect(Collectors.toList());
         return RLP.encodeList(encodedKeys.toArray(new byte[0][]));
     }
 
     // For the serialization format, see BridgeSerializationUtils::serializePublicKeys
-    private static List<BtcECKey> deserializeBtcPublicKeys(byte[] data) {
+    private static List<UldECKey> deserializeBtcPublicKeys(byte[] data) {
         RLPList rlpList = (RLPList)RLP.decode2(data).get(0);
 
         return rlpList.stream()
-                .map(pubKeyBytes -> BtcECKey.fromPublicOnly(pubKeyBytes.getRLPData()))
+                .map(pubKeyBytes -> UldECKey.fromPublicOnly(pubKeyBytes.getRLPData()))
                 .collect(Collectors.toList());
     }
 

@@ -18,11 +18,11 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.Address;
-import co.rsk.bitcoinj.core.BtcECKey;
-import co.rsk.bitcoinj.core.NetworkParameters;
-import co.rsk.bitcoinj.script.Script;
-import co.rsk.bitcoinj.script.ScriptBuilder;
+import co.usc.ulordj.core.Address;
+import co.usc.ulordj.core.UldECKey;
+import co.usc.ulordj.core.NetworkParameters;
+import co.usc.ulordj.script.Script;
+import co.usc.ulordj.script.ScriptBuilder;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.db.ByteArrayWrapper;
 
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * @author Ariel Mendelzon
  */
 public final class Federation {
-    private final List<BtcECKey> publicKeys;
+    private final List<UldECKey> publicKeys;
     private final List<ECKey> rskPublicKeys;
     private final Instant creationTime;
     private final long creationBlockNumber;
@@ -50,14 +50,14 @@ public final class Federation {
     private Script p2shScript;
     private Address address;
 
-    public Federation(List<BtcECKey> publicKeys, Instant creationTime, long creationBlockNumber,  NetworkParameters btcParams) {
+    public Federation(List<UldECKey> publicKeys, Instant creationTime, long creationBlockNumber,  NetworkParameters btcParams) {
         // Sorting public keys ensures same order of federators for same public keys
         // Immutability provides protection unless unwanted modification, thus making the Federation instance
         // effectively immutable
-        this.publicKeys = Collections.unmodifiableList(publicKeys.stream().sorted(BtcECKey.PUBKEY_COMPARATOR).collect(Collectors.toList()));
+        this.publicKeys = Collections.unmodifiableList(publicKeys.stream().sorted(UldECKey.PUBKEY_COMPARATOR).collect(Collectors.toList()));
         // using this.publicKeys ensures order in rskPublicKeys
         this.rskPublicKeys = Collections.unmodifiableList(this.publicKeys.stream()
-                .map(BtcECKey::getPubKey)
+                .map(UldECKey::getPubKey)
                 .map(ECKey::fromPublicOnly)
                 .collect(Collectors.toList()));
         this.creationTime = creationTime;
@@ -69,7 +69,7 @@ public final class Federation {
         this.address = null;
     }
 
-    public List<BtcECKey> getPublicKeys() {
+    public List<UldECKey> getPublicKeys() {
         return publicKeys;
     }
 
@@ -117,7 +117,7 @@ public final class Federation {
         return publicKeys.size();
     }
 
-    public Integer getPublicKeyIndex(BtcECKey key) {
+    public Integer getPublicKeyIndex(UldECKey key) {
         for (int i = 0; i < publicKeys.size(); i++) {
             // note that this comparison doesn't take into account
             // key compression
@@ -129,7 +129,7 @@ public final class Federation {
         return null;
     }
 
-    public boolean hasPublicKey(BtcECKey key) {
+    public boolean hasPublicKey(UldECKey key) {
         return getPublicKeyIndex(key) != null;
     }
 
@@ -156,11 +156,11 @@ public final class Federation {
         Federation otherFederation = (Federation) other;
 
         ByteArrayWrapper[] thisPublicKeys = this.getPublicKeys().stream()
-                .sorted(BtcECKey.PUBKEY_COMPARATOR)
+                .sorted(UldECKey.PUBKEY_COMPARATOR)
                 .map(k -> new ByteArrayWrapper(k.getPubKey()))
                 .toArray(ByteArrayWrapper[]::new);
         ByteArrayWrapper[] otherPublicKeys = otherFederation.getPublicKeys().stream()
-                .sorted(BtcECKey.PUBKEY_COMPARATOR)
+                .sorted(UldECKey.PUBKEY_COMPARATOR)
                 .map(k -> new ByteArrayWrapper(k.getPubKey()))
                 .toArray(ByteArrayWrapper[]::new);
 
@@ -174,7 +174,7 @@ public final class Federation {
 
     @Override
     public int hashCode() {
-        // Can use java.util.Objects.hash since all of Instant, int and List<BtcECKey> have
+        // Can use java.util.Objects.hash since all of Instant, int and List<UldECKey> have
         // well-defined hashCode()s
         return Objects.hash(
                 getCreationTime(),

@@ -18,8 +18,8 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.BtcTransaction;
-import co.rsk.bitcoinj.core.NetworkParameters;
+import co.usc.ulordj.core.UldTransaction;
+import co.usc.ulordj.core.NetworkParameters;
 import co.usc.crypto.Keccak256;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
@@ -30,9 +30,9 @@ import java.util.SortedMap;
  * Created by mario on 20/04/17.
  */
 public class StateForFederator {
-    private SortedMap<Keccak256, BtcTransaction> rskTxsWaitingForSignatures;
+    private SortedMap<Keccak256, UldTransaction> rskTxsWaitingForSignatures;
 
-    public StateForFederator(SortedMap<Keccak256, BtcTransaction> rskTxsWaitingForSignatures) {
+    public StateForFederator(SortedMap<Keccak256, UldTransaction> rskTxsWaitingForSignatures) {
         this.rskTxsWaitingForSignatures = rskTxsWaitingForSignatures;
     }
 
@@ -43,7 +43,7 @@ public class StateForFederator {
         this.rskTxsWaitingForSignatures = BridgeSerializationUtils.deserializeMap(encodedWaitingForSign, parameters, false);
     }
 
-    public SortedMap<Keccak256, BtcTransaction> getRskTxsWaitingForSignatures() {
+    public SortedMap<Keccak256, UldTransaction> getRskTxsWaitingForSignatures() {
         return rskTxsWaitingForSignatures;
     }
 

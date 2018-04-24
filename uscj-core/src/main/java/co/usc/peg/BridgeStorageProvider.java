@@ -18,7 +18,7 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.*;
+import co.usc.ulordj.core.*;
 import co.usc.config.BridgeConstants;
 import co.usc.core.RskAddress;
 import co.usc.crypto.Keccak256;
@@ -68,7 +68,7 @@ public class BridgeStorageProvider {
     // key = usc tx hash, value = btc tx
     private ReleaseRequestQueue releaseRequestQueue;
     private ReleaseTransactionSet releaseTransactionSet;
-    private SortedMap<Keccak256, BtcTransaction> rskTxsWaitingForSignatures;
+    private SortedMap<Keccak256, UldTransaction> rskTxsWaitingForSignatures;
 
     private List<UTXO> newFederationBtcUTXOs;
     private List<UTXO> oldFederationBtcUTXOs;
@@ -186,7 +186,7 @@ public class BridgeStorageProvider {
         safeSaveToRepository(RELEASE_TX_SET, releaseTransactionSet, BridgeSerializationUtils::serializeReleaseTransactionSet);
     }
 
-    public SortedMap<Keccak256, BtcTransaction> getRskTxsWaitingForSignatures() throws IOException {
+    public SortedMap<Keccak256, UldTransaction> getRskTxsWaitingForSignatures() throws IOException {
         if (rskTxsWaitingForSignatures != null) {
             return rskTxsWaitingForSignatures;
         }

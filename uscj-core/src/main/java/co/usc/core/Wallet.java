@@ -18,7 +18,7 @@
 
 package co.usc.core;
 
-import co.rsk.bitcoinj.core.Sha256Hash;
+import co.usc.ulordj.core.Sha256Hash;
 import co.usc.crypto.EncryptedData;
 import co.usc.crypto.KeyCrypterAes;
 import org.ethereum.core.Account;

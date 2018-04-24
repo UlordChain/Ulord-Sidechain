@@ -18,9 +18,9 @@
 
 package co.usc.config;
 
-import co.rsk.bitcoinj.core.BtcECKey;
-import co.rsk.bitcoinj.core.Coin;
-import co.rsk.bitcoinj.core.NetworkParameters;
+import co.usc.ulordj.core.UldECKey;
+import co.usc.ulordj.core.Coin;
+import co.usc.ulordj.core.NetworkParameters;
 import co.usc.peg.AddressBasedAuthorizer;
 import co.usc.peg.Federation;
 import com.google.common.collect.Lists;
@@ -38,11 +38,11 @@ public class BridgeDevNetConstants extends BridgeConstants {
     BridgeDevNetConstants() {
         btcParamsString = NetworkParameters.ID_TESTNET;
 
-        BtcECKey federator0PublicKey = BtcECKey.fromPublicOnly(Hex.decode("0234ab441aa5edb1c7341315e21408c3947cce345156c465b3336e8c6a5552f35f"));
-        BtcECKey federator1PublicKey = BtcECKey.fromPublicOnly(Hex.decode("03301f6c4422aa96d85f52a93612a0c6eeea3d04cfa32f97a7a764c67e062e992a"));
-        BtcECKey federator2PublicKey = BtcECKey.fromPublicOnly(Hex.decode("02d33a1f8f5cfa2f7be71b0002710f4c8f3ea44fef40056be7b89ed3ca0eb3431c"));
+        UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("0234ab441aa5edb1c7341315e21408c3947cce345156c465b3336e8c6a5552f35f"));
+        UldECKey federator1PublicKey = UldECKey.fromPublicOnly(Hex.decode("03301f6c4422aa96d85f52a93612a0c6eeea3d04cfa32f97a7a764c67e062e992a"));
+        UldECKey federator2PublicKey = UldECKey.fromPublicOnly(Hex.decode("02d33a1f8f5cfa2f7be71b0002710f4c8f3ea44fef40056be7b89ed3ca0eb3431c"));
 
-        List<BtcECKey> genesisFederationPublicKeys = Lists.newArrayList(
+        List<UldECKey> genesisFederationPublicKeys = Lists.newArrayList(
                 federator0PublicKey, federator1PublicKey, federator2PublicKey
         );
         

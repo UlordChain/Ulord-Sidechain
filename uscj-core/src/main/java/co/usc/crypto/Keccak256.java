@@ -18,7 +18,7 @@
 
 package co.usc.crypto;
 
-import co.rsk.bitcoinj.core.Utils;
+import co.usc.ulordj.core.Utils;
 import com.google.common.primitives.Ints;
 import org.ethereum.rpc.TypeConverter;
 import org.ethereum.util.ByteUtil;

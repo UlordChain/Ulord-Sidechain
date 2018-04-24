@@ -18,8 +18,8 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.BtcECKey;
-import co.rsk.bitcoinj.core.NetworkParameters;
+import co.usc.ulordj.core.UldECKey;
+import co.usc.ulordj.core.NetworkParameters;
 import co.usc.crypto.Keccak256;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.db.ByteArrayWrapper;
@@ -39,16 +39,16 @@ import java.util.stream.Collectors;
 public final class PendingFederation {
     private static final int MIN_FEDERATORS_REQUIRED = 2;
 
-    private List<BtcECKey> publicKeys;
+    private List<UldECKey> publicKeys;
 
-    public PendingFederation(List<BtcECKey> publicKeys) {
+    public PendingFederation(List<UldECKey> publicKeys) {
         // Sorting public keys ensures same order of federators for same public keys
         // Immutability provides protection unless unwanted modification, thus making the Pending Federation instance
         // effectively immutable
-        this.publicKeys = Collections.unmodifiableList(publicKeys.stream().sorted(BtcECKey.PUBKEY_COMPARATOR).collect(Collectors.toList()));
+        this.publicKeys = Collections.unmodifiableList(publicKeys.stream().sorted(UldECKey.PUBKEY_COMPARATOR).collect(Collectors.toList()));
     }
 
-    public List<BtcECKey> getPublicKeys() {
+    public List<UldECKey> getPublicKeys() {
         return publicKeys;
     }
 
@@ -61,8 +61,8 @@ public final class PendingFederation {
      * @param key the new public key
      * @return a new PendingFederation with the added public key
      */
-    public PendingFederation addPublicKey(BtcECKey key) {
-        List<BtcECKey> newKeys = new ArrayList<>(publicKeys);
+    public PendingFederation addPublicKey(UldECKey key) {
+        List<UldECKey> newKeys = new ArrayList<>(publicKeys);
         newKeys.add(key);
         return new PendingFederation(newKeys);
     }
@@ -103,11 +103,11 @@ public final class PendingFederation {
 
         PendingFederation otherFederation = (PendingFederation) other;
         ByteArrayWrapper[] thisPublicKeys = this.getPublicKeys().stream()
-                .sorted(BtcECKey.PUBKEY_COMPARATOR)
+                .sorted(UldECKey.PUBKEY_COMPARATOR)
                 .map(k -> new ByteArrayWrapper(k.getPubKey()))
                 .toArray(ByteArrayWrapper[]::new);
         ByteArrayWrapper[] otherPublicKeys = otherFederation.getPublicKeys().stream()
-                .sorted(BtcECKey.PUBKEY_COMPARATOR)
+                .sorted(UldECKey.PUBKEY_COMPARATOR)
                 .map(k -> new ByteArrayWrapper(k.getPubKey()))
                 .toArray(ByteArrayWrapper[]::new);
 
@@ -122,7 +122,7 @@ public final class PendingFederation {
 
     @Override
     public int hashCode() {
-        // Can use java.util.Objects.hash since List<BtcECKey> has a
+        // Can use java.util.Objects.hash since List<UldECKey> has a
         // well-defined hashCode()
         return Objects.hash(getPublicKeys());
     }

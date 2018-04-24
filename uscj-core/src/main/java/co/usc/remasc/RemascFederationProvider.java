@@ -1,6 +1,6 @@
 package co.usc.remasc;
 
-import co.rsk.bitcoinj.store.BlockStoreException;
+import co.usc.ulordj.store.BlockStoreException;
 import co.usc.core.RskAddress;
 import co.usc.peg.BridgeSupport;
 import org.ethereum.crypto.ECKey;

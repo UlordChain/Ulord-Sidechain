@@ -18,8 +18,8 @@
 
 package co.usc.mine;
 
-import co.rsk.bitcoinj.core.BtcBlock;
-import co.rsk.bitcoinj.core.BtcTransaction;
+import co.usc.ulordj.core.UldBlock;
+import co.usc.ulordj.core.UldTransaction;
 import co.usc.core.RskAddress;
 import org.ethereum.core.Block;
 
@@ -38,20 +38,20 @@ public interface MinerServer {
 
     SubmitBlockResult submitBitcoinBlockPartialMerkle(
             String blockHashForMergedMining,
-            BtcBlock blockWithOnlyHeader,
-            BtcTransaction coinbase,
+            UldBlock blockWithOnlyHeader,
+            UldTransaction coinbase,
             List<String> merkleHashes,
             int blockTxnCount
     );
 
     SubmitBlockResult submitBitcoinBlockTransactions(
             String blockHashForMergedMining,
-            BtcBlock blockWithOnlyHeader,
-            BtcTransaction coinbase,
+            UldBlock blockWithOnlyHeader,
+            UldTransaction coinbase,
             List<String> txHashes
     );
 
-    SubmitBlockResult submitBitcoinBlock(String blockHashForMergedMining, BtcBlock bitcoinMergedMiningBlock);
+    SubmitBlockResult submitBitcoinBlock(String blockHashForMergedMining, UldBlock bitcoinMergedMiningBlock);
 
     boolean generateFallbackBlock();
 

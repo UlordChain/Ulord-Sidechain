@@ -77,8 +77,8 @@ public class Coin implements Comparable<Coin> {
     /**
      * @return the value denominated in Bitcoin, according to the 2-way peg convertibility rules.
      */
-    public co.rsk.bitcoinj.core.Coin toBitcoin() {
-        return co.rsk.bitcoinj.core.Coin.valueOf(Denomination.weisToSatoshis(value).longValue());
+    public co.usc.ulordj.core.Coin toBitcoin() {
+        return co.usc.ulordj.core.Coin.valueOf(Denomination.weisToSatoshis(value).longValue());
     }
 
     @Override
@@ -117,7 +117,7 @@ public class Coin implements Comparable<Coin> {
         return new Coin(BigInteger.valueOf(val));
     }
 
-    public static Coin fromBitcoin(co.rsk.bitcoinj.core.Coin val) {
+    public static Coin fromBitcoin(co.usc.ulordj.core.Coin val) {
         return new Coin(Denomination.satoshisToWeis(val.getValue()));
     }
 }

@@ -18,11 +18,11 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.*;
-import co.rsk.bitcoinj.script.Script;
-import co.rsk.bitcoinj.store.BlockStoreException;
-import co.rsk.bitcoinj.store.BtcBlockStore;
-import co.rsk.bitcoinj.wallet.Wallet;
+import co.usc.ulordj.core.*;
+import co.usc.ulordj.script.Script;
+import co.usc.ulordj.store.BlockStoreException;
+import co.usc.ulordj.store.BtcBlockStore;
+import co.usc.ulordj.wallet.Wallet;
 import co.usc.config.BridgeConstants;
 import co.usc.core.RskAddress;
 import co.usc.peg.bitcoin.RskAllowUnconfirmedCoinSelector;
@@ -93,7 +93,7 @@ public class BridgeUtils {
         return wallet;
     }
 
-    private static boolean scriptCorrectlySpendsTx(BtcTransaction tx, int index, Script script) {
+    private static boolean scriptCorrectlySpendsTx(UldTransaction tx, int index, Script script) {
         try {
             TransactionInput txInput = tx.getInput(index);
             txInput.getScriptSig().correctlySpends(tx, index, script, Script.ALL_VERIFY_FLAGS);
@@ -103,7 +103,7 @@ public class BridgeUtils {
         }
     }
 
-    public static boolean isLockTx(BtcTransaction tx, List<Federation> federations, Context btcContext, BridgeConstants bridgeConstants) {
+    public static boolean isLockTx(UldTransaction tx, List<Federation> federations, Context btcContext, BridgeConstants bridgeConstants) {
         // First, check tx is not a typical release tx (tx spending from the any of the federation addresses and
         // optionally sending some change to any of the federation addresses)
         for (int i = 0; i < tx.getInputs().size(); i++) {
@@ -123,11 +123,11 @@ public class BridgeUtils {
         return (valueSentToMeSignum > 0 && !valueSentToMe.isLessThan(bridgeConstants.getMinimumLockTxValue()));
     }
 
-    public static boolean isLockTx(BtcTransaction tx, Federation federation, Context btcContext, BridgeConstants bridgeConstants) {
+    public static boolean isLockTx(UldTransaction tx, Federation federation, Context btcContext, BridgeConstants bridgeConstants) {
         return isLockTx(tx, Arrays.asList(federation), btcContext, bridgeConstants);
     }
 
-    public static boolean isReleaseTx(BtcTransaction tx, Federation federation, BridgeConstants bridgeConstants) {
+    public static boolean isReleaseTx(UldTransaction tx, Federation federation, BridgeConstants bridgeConstants) {
         int i = 0;
         for (TransactionInput transactionInput : tx.getInputs()) {
             try {
@@ -142,7 +142,7 @@ public class BridgeUtils {
         return false;
     }
 
-    public static boolean isMigrationTx(BtcTransaction btcTx, Federation activeFederation, Federation retiringFederation, Context btcContext, BridgeConstants bridgeConstants) {
+    public static boolean isMigrationTx(UldTransaction btcTx, Federation activeFederation, Federation retiringFederation, Context btcContext, BridgeConstants bridgeConstants) {
         if (retiringFederation == null) {
             return false;
         }
@@ -155,7 +155,7 @@ public class BridgeUtils {
     public static Address recoverBtcAddressFromEthTransaction(org.ethereum.core.Transaction tx, NetworkParameters networkParameters) {
         org.ethereum.crypto.ECKey key = tx.getKey();
         byte[] pubKey = key.getPubKey(true);
-        return BtcECKey.fromPublicOnly(pubKey).toAddress(networkParameters);
+        return UldECKey.fromPublicOnly(pubKey).toAddress(networkParameters);
     }
 
     public static boolean isFreeBridgeTx(SystemProperties config, Transaction rskTx, long blockNumber) {

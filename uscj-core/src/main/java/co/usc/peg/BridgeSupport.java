@@ -18,15 +18,15 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.*;
-import co.rsk.bitcoinj.crypto.TransactionSignature;
-import co.rsk.bitcoinj.script.Script;
-import co.rsk.bitcoinj.script.ScriptBuilder;
-import co.rsk.bitcoinj.script.ScriptChunk;
-import co.rsk.bitcoinj.store.BlockStoreException;
-import co.rsk.bitcoinj.store.BtcBlockStore;
-import co.rsk.bitcoinj.wallet.SendRequest;
-import co.rsk.bitcoinj.wallet.Wallet;
+import co.usc.ulordj.core.*;
+import co.usc.ulordj.crypto.TransactionSignature;
+import co.usc.ulordj.script.Script;
+import co.usc.ulordj.script.ScriptBuilder;
+import co.usc.ulordj.script.ScriptChunk;
+import co.usc.ulordj.store.BlockStoreException;
+import co.usc.ulordj.store.BtcBlockStore;
+import co.usc.ulordj.wallet.SendRequest;
+import co.usc.ulordj.wallet.Wallet;
 import co.usc.config.BridgeConstants;
 import co.usc.config.RskSystemProperties;
 import co.usc.core.RskAddress;
@@ -76,8 +76,8 @@ public class BridgeSupport {
 
     private final BridgeConstants bridgeConstants;
     private final Context btcContext;
-    private final BtcBlockStore btcBlockStore;
-    private final BtcBlockChain btcBlockChain;
+    private final BtcBlockStore BtcBlockStore;
+    private final UldBlockChain UldBlockChain;
     private final BridgeStorageProvider provider;
     private final Repository rskRepository;
     private final RskSystemProperties config;
@@ -103,28 +103,28 @@ public class BridgeSupport {
         NetworkParameters btcParams = this.bridgeConstants.getBtcParams();
         this.btcContext = new Context(btcParams);
 
-        this.btcBlockStore = new RepositoryBlockStore(config, repository, PrecompiledContracts.BRIDGE_ADDR);
-        if (btcBlockStore.getChainHead().getHeader().getHash().equals(btcParams.getGenesisBlock().getHash())) {
+        this.BtcBlockStore = new RepositoryBlockStore(config, repository, PrecompiledContracts.BRIDGE_ADDR);
+        if (BtcBlockStore.getChainHead().getHeader().getHash().equals(btcParams.getGenesisBlock().getHash())) {
             // We are building the blockstore for the first time, so we have not set the checkpoints yet.
             long time = getActiveFederation().getCreationTime().toEpochMilli();
             InputStream checkpoints = this.getCheckPoints();
             if (time > 0 && checkpoints != null) {
-                CheckpointManager.checkpoint(btcParams, checkpoints, btcBlockStore, time);
+                CheckpointManager.checkpoint(btcParams, checkpoints, BtcBlockStore, time);
             }
         }
-        this.btcBlockChain = new BtcBlockChain(btcContext, btcBlockStore);
+        this.UldBlockChain = new UldBlockChain(btcContext, BtcBlockStore);
         this.initialBtcStoredBlock = this.getLowestBlock();
     }
 
 
     // Used by unit tests
-    public BridgeSupport(RskSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeConstants bridgeConstants, BridgeStorageProvider provider, BtcBlockStore btcBlockStore, BtcBlockChain btcBlockChain) {
+    public BridgeSupport(RskSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeConstants bridgeConstants, BridgeStorageProvider provider, BtcBlockStore BtcBlockStore, UldBlockChain UldBlockChain) {
         this.provider = provider;
         this.config = config;
         this.bridgeConstants = bridgeConstants;
         this.btcContext = new Context(this.bridgeConstants.getBtcParams());
-        this.btcBlockStore = btcBlockStore;
-        this.btcBlockChain = btcBlockChain;
+        this.BtcBlockStore = BtcBlockStore;
+        this.UldBlockChain = UldBlockChain;
         this.rskRepository = repository;
         this.eventLogger = eventLogger;
     }
@@ -147,7 +147,7 @@ public class BridgeSupport {
      * Receives an array of serialized Bitcoin block headers and adds them to the internal BlockChain structure.
      * @param headers The bitcoin headers
      */
-    public void receiveHeaders(BtcBlock[] headers) {
+    public void receiveHeaders(UldBlock[] headers) {
         if (headers.length > 0) {
             logger.debug("Received {} headers. First {}, last {}.", headers.length, headers[0].getHash(), headers[headers.length - 1].getHash());
         } else {
@@ -157,7 +157,7 @@ public class BridgeSupport {
         Context.propagate(btcContext);
         for (int i = 0; i < headers.length; i++) {
             try {
-                btcBlockChain.add(headers[i]);
+                UldBlockChain.add(headers[i]);
             } catch (Exception e) {
                 // If we tray to add an orphan header bitcoinj throws an exception
                 // This catches that case and any other exception that may be thrown
@@ -228,7 +228,7 @@ public class BridgeSupport {
      * @throws BlockStoreException
      * @throws IOException
      */
-    public void registerBtcTransaction(Transaction rskTx, BtcTransaction btcTx, int height, PartialMerkleTree pmt) throws BlockStoreException, IOException {
+    public void registerUldTransaction(Transaction rskTx, UldTransaction btcTx, int height, PartialMerkleTree pmt) throws BlockStoreException, IOException {
         Context.propagate(btcContext);
 
         Federation federation = getActiveFederation();
@@ -255,14 +255,14 @@ public class BridgeSupport {
         }
 
         // Check there are at least N blocks on top of the supplied height
-        int headHeight = btcBlockChain.getBestChainHeight();
+        int headHeight = UldBlockChain.getBestChainHeight();
         if ((headHeight - height + 1) < bridgeConstants.getBtc2RskMinimumAcceptableConfirmations()) {
             logger.warn("At least " + bridgeConstants.getBtc2RskMinimumAcceptableConfirmations() + " confirmations are required, but there are only " + (headHeight - height) + " confirmations");
             return;
         }
 
         // Check the the merkle root equals merkle root of btc block at specified height in the btc best chain
-        BtcBlock blockHeader = BridgeUtils.getStoredBlockAtHeight(btcBlockStore, height).getHeader();
+        UldBlock blockHeader = BridgeUtils.getStoredBlockAtHeight(BtcBlockStore, height).getHeader();
         if (!blockHeader.getMerkleRoot().equals(merkleRoot)) {
             logger.warn("Supplied merkle root " + merkleRoot + "does not match block's merkle root " + blockHeader.getMerkleRoot());
             panicProcessor.panic("btclock", "Supplied merkle root " + merkleRoot + "does not match block's merkle root " + blockHeader.getMerkleRoot());
@@ -304,7 +304,7 @@ public class BridgeSupport {
             byte[] data = scriptSig.getChunks().get(1).data;
 
             // Tx is a lock tx, check whether the sender is whitelisted
-            BtcECKey senderBtcKey = BtcECKey.fromPublicOnly(data);
+            UldECKey senderBtcKey = UldECKey.fromPublicOnly(data);
             Address senderBtcAddress = new Address(btcContext.getParams(), senderBtcKey.getPubKeyHash());
 
             // If the address is not whitelisted, then return the funds
@@ -362,8 +362,8 @@ public class BridgeSupport {
             // Used utxos should had been removed when we created the release tx.
             // Invoking removeUsedUTXOs() here would make "some" sense in theses scenarios:
             // a) In testnet, devnet or local: we restart the RSK blockchain whithout changing the federation address. We don't want to have utxos that were already spent.
-            // Open problem: TxA spends TxB. registerBtcTransaction() for TxB is called, it spends a utxo the bridge is not yet aware of,
-            // so nothing is removed. Then registerBtcTransaction() for TxA and the "already spent" utxo is added as it was not spent.
+            // Open problem: TxA spends TxB. registerUldTransaction() for TxB is called, it spends a utxo the bridge is not yet aware of,
+            // so nothing is removed. Then registerUldTransaction() for TxA and the "already spent" utxo is added as it was not spent.
             // When is not guaranteed to be called in the chronological order, so a Federator can inform
             // b) In prod: Federator created a tx manually or the federation was compromised and some utxos were spent. Better not try to spend them.
             // Open problem: For performance removeUsedUTXOs() just removes 1 utxo
@@ -391,7 +391,7 @@ public class BridgeSupport {
     /*
       Add the btcTx outputs that send btc to the federation(s) to the UTXO list
      */
-    private void saveNewUTXOs(BtcTransaction btcTx) throws IOException {
+    private void saveNewUTXOs(UldTransaction btcTx) throws IOException {
         // Outputs to the active federation
         List<TransactionOutput> outputsToTheActiveFederation = btcTx.getWalletOutputs(getActiveFederationWallet());
         for (TransactionOutput output : outputsToTheActiveFederation) {
@@ -529,8 +529,8 @@ public class BridgeSupport {
                     rskExecutionBlock.getNumber() - activeFederation.getCreationBlockNumber(),
                     retiringFederationWallet.getBalance().toFriendlyString());
 
-            Pair<BtcTransaction, List<UTXO>> createResult = createMigrationTransaction(retiringFederationWallet, activeFederation.getAddress());
-            BtcTransaction btcTx = createResult.getLeft();
+            Pair<UldTransaction, List<UTXO>> createResult = createMigrationTransaction(retiringFederationWallet, activeFederation.getAddress());
+            UldTransaction btcTx = createResult.getLeft();
             List<UTXO> selectedUTXOs = createResult.getRight();
 
             // Add the TX to the release set
@@ -549,8 +549,8 @@ public class BridgeSupport {
                         retiringFederationWallet.getBalance().toFriendlyString());
 
                 try {
-                    Pair<BtcTransaction, List<UTXO>> createResult = createMigrationTransaction(retiringFederationWallet, activeFederation.getAddress());
-                    BtcTransaction btcTx = createResult.getLeft();
+                    Pair<UldTransaction, List<UTXO>> createResult = createMigrationTransaction(retiringFederationWallet, activeFederation.getAddress());
+                    UldTransaction btcTx = createResult.getLeft();
                     List<UTXO> selectedUTXOs = createResult.getRight();
 
                     // Add the TX to the release set
@@ -627,7 +627,7 @@ public class BridgeSupport {
             // to the release set.
 
             List<UTXO> selectedUTXOs = result.get().getSelectedUTXOs();
-            BtcTransaction generatedTransaction = result.get().getBtcTx();
+            UldTransaction generatedTransaction = result.get().getBtcTx();
             List<UTXO> availableUTXOs;
             ReleaseTransactionSet releaseTransactionSet;
 
@@ -675,7 +675,7 @@ public class BridgeSupport {
      * @param rskTx the RSK transaction that is causing this processing.
      */
     private void processReleaseTransactions(Transaction rskTx) {
-        final Map<Keccak256, BtcTransaction> txsWaitingForSignatures;
+        final Map<Keccak256, UldTransaction> txsWaitingForSignatures;
         final ReleaseTransactionSet releaseTransactionSet;
 
         try {
@@ -695,7 +695,7 @@ public class BridgeSupport {
         // TODO: (at least at this stage).
 
         // IMPORTANT: sliceWithEnoughConfirmations also modifies the transaction set in place
-        Set<BtcTransaction> txsWithEnoughConfirmations = releaseTransactionSet.sliceWithConfirmations(
+        Set<UldTransaction> txsWithEnoughConfirmations = releaseTransactionSet.sliceWithConfirmations(
                 rskExecutionBlock.getNumber(),
                 bridgeConstants.getRsk2BtcMinimumAcceptableConfirmations(),
                 Optional.of(1)
@@ -714,7 +714,7 @@ public class BridgeSupport {
      * @param btcTx      The btc tx that was just completed
      * @param sentByUser The number of sBTC originaly sent by the user
      */
-    private void adjustBalancesIfChangeOutputWasDust(BtcTransaction btcTx, Coin sentByUser) {
+    private void adjustBalancesIfChangeOutputWasDust(UldTransaction btcTx, Coin sentByUser) {
         if (btcTx.getOutputs().size() <= 1) {
             // If there is no change, do-nothing
             return;
@@ -742,14 +742,14 @@ public class BridgeSupport {
      * @param signatures           1 signature per btc tx input
      * @param rskTxHash            The id of the usc tx
      */
-    public void addSignature(long executionBlockNumber, BtcECKey federatorPublicKey, List<byte[]> signatures, byte[] rskTxHash) throws Exception {
+    public void addSignature(long executionBlockNumber, UldECKey federatorPublicKey, List<byte[]> signatures, byte[] rskTxHash) throws Exception {
         Context.propagate(btcContext);
         Federation retiringFederation = getRetiringFederation();
         if (!getActiveFederation().getPublicKeys().contains(federatorPublicKey) && (retiringFederation == null || !retiringFederation.getPublicKeys().contains(federatorPublicKey))) {
             logger.warn("Supplied federator public key {} does not belong to any of the federators.", federatorPublicKey);
             return;
         }
-        BtcTransaction btcTx = provider.getRskTxsWaitingForSignatures().get(new Keccak256(rskTxHash));
+        UldTransaction btcTx = provider.getRskTxsWaitingForSignatures().get(new Keccak256(rskTxHash));
         if (btcTx == null) {
             logger.warn("No tx waiting for signature for hash {}. Probably fully signed already.", new Keccak256(rskTxHash));
             return;
@@ -762,7 +762,7 @@ public class BridgeSupport {
         processSigning(executionBlockNumber, federatorPublicKey, signatures, rskTxHash, btcTx);
     }
 
-    private void processSigning(long executionBlockNumber, BtcECKey federatorPublicKey, List<byte[]> signatures, byte[] rskTxHash, BtcTransaction btcTx) throws IOException {
+    private void processSigning(long executionBlockNumber, UldECKey federatorPublicKey, List<byte[]> signatures, byte[] rskTxHash, UldTransaction btcTx) throws IOException {
         // Build input hashes for signatures
         int numInputs = btcTx.getInputs().size();
 
@@ -774,14 +774,14 @@ public class BridgeSupport {
             List<ScriptChunk> chunks = inputScript.getChunks();
             byte[] program = chunks.get(chunks.size() - 1).data;
             Script redeemScript = new Script(program);
-            sighashes.add(btcTx.hashForSignature(i, redeemScript, BtcTransaction.SigHash.ALL, false));
+            sighashes.add(btcTx.hashForSignature(i, redeemScript, UldTransaction.SigHash.ALL, false));
         }
 
         // Verify given signatures are correct before proceeding
         for (int i = 0; i < numInputs; i++) {
-            BtcECKey.ECDSASignature sig;
+            UldECKey.ECDSASignature sig;
             try {
-                sig = BtcECKey.ECDSASignature.decodeFromDER(signatures.get(i));
+                sig = UldECKey.ECDSASignature.decodeFromDER(signatures.get(i));
             } catch (RuntimeException e) {
                 logger.warn("Malformed signature for input {} of tx {}: {}", i, new Keccak256(rskTxHash), Hex.toHexString(signatures.get(i)));
                 return;
@@ -794,7 +794,7 @@ public class BridgeSupport {
                 return;
             }
 
-            TransactionSignature txSig = new TransactionSignature(sig, BtcTransaction.SigHash.ALL, false);
+            TransactionSignature txSig = new TransactionSignature(sig, UldTransaction.SigHash.ALL, false);
             txSigs.add(txSig);
             if (!txSig.isCanonical()) {
                 logger.warn("Signature {} {} is not canonical.", i, Hex.toHexString(signatures.get(i)));
@@ -854,7 +854,7 @@ public class BridgeSupport {
      * @param input The input
      * @return true if the input was already signed by the specified key, false otherwise.
      */
-    private boolean isInputSignedByThisFederator(BtcECKey federatorPublicKey, Sha256Hash sighash, TransactionInput input) {
+    private boolean isInputSignedByThisFederator(UldECKey federatorPublicKey, Sha256Hash sighash, TransactionInput input) {
         List<ScriptChunk> chunks = input.getScriptSig().getChunks();
         for (int j = 1; j < chunks.size() - 1; j++) {
             ScriptChunk chunk = chunks.get(j);
@@ -877,7 +877,7 @@ public class BridgeSupport {
      * @param btcTx The btc tx to check
      * @return True if was signed by the required number of federators, false otherwise
      */
-    private boolean hasEnoughSignatures(BtcTransaction btcTx) {
+    private boolean hasEnoughSignatures(UldTransaction btcTx) {
         // When the tx is constructed OP_0 are placed where signature should go.
         // Check all OP_0 have been replaced with actual signatures in all inputs
         Context.propagate(btcContext);
@@ -908,7 +908,7 @@ public class BridgeSupport {
      * @return a BridgeState serialized in RLP
      */
     public byte[] getStateForDebugging() throws IOException {
-        BridgeState stateForDebugging = new BridgeState(getBtcBlockchainBestChainHeight(), provider);
+        BridgeState stateForDebugging = new BridgeState(getUldBlockchainBestChainHeight(), provider);
 
         return stateForDebugging.getEncoded();
     }
@@ -916,18 +916,18 @@ public class BridgeSupport {
     /**
      * Returns the bitcoin blockchain best chain height know by the bridge contract
      */
-    public int getBtcBlockchainBestChainHeight() throws IOException {
-        return btcBlockChain.getChainHead().getHeight();
+    public int getUldBlockchainBestChainHeight() throws IOException {
+        return UldBlockChain.getChainHead().getHeight();
     }
 
     /**
      * Returns an array of block hashes known by the bridge contract. Federators can use this to find what is the latest block in the mainchain the bridge has.
      * @return a List of bitcoin block hashes
      */
-    public List<Sha256Hash> getBtcBlockchainBlockLocator() throws IOException {
+    public List<Sha256Hash> getUldBlockchainBlockLocator() throws IOException {
         final int maxHashesToInform = 100;
         List<Sha256Hash> blockLocator = new ArrayList<>();
-        StoredBlock cursor = btcBlockChain.getChainHead();
+        StoredBlock cursor = UldBlockChain.getChainHead();
         int bestBlockHeight = cursor.getHeight();
         blockLocator.add(cursor.getHeader().getHash());
         if (bestBlockHeight > this.initialBtcStoredBlock.getHeight()) {
@@ -947,7 +947,7 @@ public class BridgeSupport {
                 }
             } catch (Exception e) {
                 logger.error("Failed to walk the block chain whilst constructing a locator");
-                panicProcessor.panic("btcblockchain", "Failed to walk the block chain whilst constructing a locator");
+                panicProcessor.panic("UldBlockchain", "Failed to walk the block chain whilst constructing a locator");
                 throw new RuntimeException(e);
             }
             if (!stop) {
@@ -965,7 +965,7 @@ public class BridgeSupport {
         boolean stop = false;
         StoredBlock current = cursor;
         while (!stop) {
-            current = current.getPrev(this.btcBlockStore);
+            current = current.getPrev(this.BtcBlockStore);
             stop = current.getHeight() == height;
         }
         return current;
@@ -1166,7 +1166,7 @@ public class BridgeSupport {
      * @return the federator's public key
      */
     public byte[] getFederatorPublicKey(int index) {
-        List<BtcECKey> publicKeys = getActiveFederation().getPublicKeys();
+        List<UldECKey> publicKeys = getActiveFederation().getPublicKeys();
 
         if (index < 0 || index >= publicKeys.size()) {
             throw new IndexOutOfBoundsException(String.format("Federator index must be between 0 and {}", publicKeys.size() - 1));
@@ -1242,7 +1242,7 @@ public class BridgeSupport {
             return null;
         }
 
-        List<BtcECKey> publicKeys = retiringFederation.getPublicKeys();
+        List<UldECKey> publicKeys = retiringFederation.getPublicKeys();
 
         if (index < 0 || index >= publicKeys.size()) {
             throw new IndexOutOfBoundsException(String.format("Retiring federator index must be between 0 and {}", publicKeys.size() - 1));
@@ -1340,7 +1340,7 @@ public class BridgeSupport {
      * @param key the public key to add
      * @return 1 upon success, -1 if there was no pending federation, -2 if the key was already in the pending federation
      */
-    private Integer addFederatorPublicKey(boolean dryRun, BtcECKey key) {
+    private Integer addFederatorPublicKey(boolean dryRun, UldECKey key) {
         PendingFederation currentPendingFederation = provider.getPendingFederation();
 
         if (currentPendingFederation == null) {
@@ -1506,9 +1506,9 @@ public class BridgeSupport {
                 break;
             case "add":
                 byte[] publicKeyBytes = (byte[]) callSpec.getArguments()[0];
-                BtcECKey publicKey;
+                UldECKey publicKey;
                 try {
-                    publicKey = BtcECKey.fromPublicOnly(publicKeyBytes);
+                    publicKey = UldECKey.fromPublicOnly(publicKeyBytes);
                 } catch (Exception e) {
                     throw new BridgeIllegalArgumentException("Public key could not be parsed " + Hex.toHexString(publicKeyBytes), e);
                 }
@@ -1572,7 +1572,7 @@ public class BridgeSupport {
             return null;
         }
 
-        List<BtcECKey> publicKeys = currentPendingFederation.getPublicKeys();
+        List<UldECKey> publicKeys = currentPendingFederation.getPublicKeys();
 
         if (index < 0 || index >= publicKeys.size()) {
             throw new IndexOutOfBoundsException(String.format("Federator index must be between 0 and {}", publicKeys.size() - 1));
@@ -1752,7 +1752,7 @@ public class BridgeSupport {
             return -1;
         }
         int disableBlockDelay = disableBlockDelayBI.intValueExact();
-        int bestChainHeight = btcBlockChain.getBestChainHeight();
+        int bestChainHeight = UldBlockChain.getBestChainHeight();
         if (bestChainHeight < 0 || Integer.MAX_VALUE - disableBlockDelay < bestChainHeight) {
             return -2;
         }
@@ -1766,7 +1766,7 @@ public class BridgeSupport {
     private StoredBlock getLowestBlock() throws IOException {
         InputStream checkpoints = this.getCheckPoints();
         if (checkpoints == null) {
-            BtcBlock genesis = bridgeConstants.getBtcParams().getGenesisBlock();
+            UldBlock genesis = bridgeConstants.getBtcParams().getGenesisBlock();
             return new StoredBlock(genesis, genesis.getWork(), 0);
         }
         CheckpointManager manager = new CheckpointManager(bridgeConstants.getBtcParams(), checkpoints);
@@ -1778,13 +1778,13 @@ public class BridgeSupport {
 
     @VisibleForTesting
     BtcBlockStore getBtcBlockStore() {
-        return btcBlockStore;
+        return BtcBlockStore;
     }
 
-    private Pair<BtcTransaction, List<UTXO>> createMigrationTransaction(Wallet originWallet, Address destinationAddress) {
+    private Pair<UldTransaction, List<UTXO>> createMigrationTransaction(Wallet originWallet, Address destinationAddress) {
         Coin expectedMigrationValue = originWallet.getBalance();
         for(;;) {
-            BtcTransaction migrationBtcTx = new BtcTransaction(originWallet.getParams());
+            UldTransaction migrationBtcTx = new UldTransaction(originWallet.getParams());
             migrationBtcTx.addOutput(expectedMigrationValue, destinationAddress);
 
             SendRequest sr = SendRequest.forTx(migrationBtcTx);

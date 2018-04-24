@@ -18,9 +18,9 @@
 
 package co.usc.config;
 
-import co.rsk.bitcoinj.core.BtcECKey;
-import co.rsk.bitcoinj.core.Coin;
-import co.rsk.bitcoinj.core.NetworkParameters;
+import co.usc.ulordj.core.UldECKey;
+import co.usc.ulordj.core.Coin;
+import co.usc.ulordj.core.NetworkParameters;
 import co.usc.peg.AddressBasedAuthorizer;
 import co.usc.peg.Federation;
 import com.google.common.collect.Lists;
@@ -38,17 +38,17 @@ import java.util.stream.Collectors;
 public class BridgeRegTestConstants extends BridgeConstants {
     private static BridgeRegTestConstants instance = new BridgeRegTestConstants();
 
-    protected List<BtcECKey> federatorPrivateKeys;
+    protected List<UldECKey> federatorPrivateKeys;
 
     BridgeRegTestConstants() {
         btcParamsString = NetworkParameters.ID_REGTEST;
 
-        BtcECKey federator0PrivateKey = BtcECKey.fromPrivate(HashUtil.keccak256("federator1".getBytes(StandardCharsets.UTF_8)));
-        BtcECKey federator1PrivateKey = BtcECKey.fromPrivate(HashUtil.keccak256("federator2".getBytes(StandardCharsets.UTF_8)));
-        BtcECKey federator2PrivateKey = BtcECKey.fromPrivate(HashUtil.keccak256("federator3".getBytes(StandardCharsets.UTF_8)));
+        UldECKey federator0PrivateKey = UldECKey.fromPrivate(HashUtil.keccak256("federator1".getBytes(StandardCharsets.UTF_8)));
+        UldECKey federator1PrivateKey = UldECKey.fromPrivate(HashUtil.keccak256("federator2".getBytes(StandardCharsets.UTF_8)));
+        UldECKey federator2PrivateKey = UldECKey.fromPrivate(HashUtil.keccak256("federator3".getBytes(StandardCharsets.UTF_8)));
 
         federatorPrivateKeys = Lists.newArrayList(federator0PrivateKey, federator1PrivateKey, federator2PrivateKey);
-        List<BtcECKey> federatorPublicKeys = federatorPrivateKeys.stream().map(key -> BtcECKey.fromPublicOnly(key.getPubKey())).collect(Collectors.toList());
+        List<UldECKey> federatorPublicKeys = federatorPrivateKeys.stream().map(key -> UldECKey.fromPublicOnly(key.getPubKey())).collect(Collectors.toList());
 
         Instant genesisFederationCreatedAt = ZonedDateTime.parse("2016-01-01T00:00:00Z").toInstant();
 
@@ -112,7 +112,7 @@ public class BridgeRegTestConstants extends BridgeConstants {
         genesisFeePerKb = Coin.MILLICOIN;
     }
 
-    public List<BtcECKey> getFederatorPrivateKeys() {
+    public List<UldECKey> getFederatorPrivateKeys() {
         return federatorPrivateKeys;
     }
 

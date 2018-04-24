@@ -18,8 +18,8 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.Address;
-import co.rsk.bitcoinj.core.Coin;
+import co.usc.ulordj.core.Address;
+import co.usc.ulordj.core.Coin;
 
 import java.util.ArrayList;
 import java.util.List;

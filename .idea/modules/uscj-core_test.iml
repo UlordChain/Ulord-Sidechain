@@ -13,6 +13,7 @@
     <orderEntry type="library" name="Gradle: io.netty:netty-all:4.0.30.Final" level="project" />
     <orderEntry type="library" name="Gradle: com.madgag.spongycastle:prov:1.52.0.0" level="project" />
     <orderEntry type="library" name="Gradle: co.rsk.bitcoinj:bitcoinj-thin:0.14.4-rsk-3" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.UlordChain:ulordj-thin:-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: com.madgag.spongycastle:core:1.52.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.iq80.leveldb:leveldb:0.9" level="project" />
     <orderEntry type="library" name="Gradle: org.fusesource.leveldbjni:leveldbjni:1.8" level="project" />

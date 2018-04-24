@@ -18,8 +18,8 @@
 
 package co.usc.peg.utils;
 
-import co.rsk.bitcoinj.core.BtcECKey;
-import co.rsk.bitcoinj.core.BtcTransaction;
+import co.usc.ulordj.core.UldECKey;
+import co.usc.ulordj.core.UldTransaction;
 import co.usc.peg.Federation;
 import org.ethereum.core.Block;
 import org.ethereum.core.Transaction;
@@ -33,9 +33,9 @@ public interface BridgeEventLogger {
 
     void logUpdateCollections(Transaction rskTx);
 
-    void logAddSignature(BtcECKey federatorPublicKey, BtcTransaction btcTx, byte[] rskTxHash);
+    void logAddSignature(UldECKey federatorPublicKey, UldTransaction btcTx, byte[] rskTxHash);
 
-    void logReleaseBtc(BtcTransaction btcTx);
+    void logReleaseBtc(UldTransaction btcTx);
 
     void logCommitFederation(Block executionBlock, Federation oldFederation, Federation newFederation);
 }

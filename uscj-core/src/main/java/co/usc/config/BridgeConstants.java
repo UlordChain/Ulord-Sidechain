@@ -18,8 +18,8 @@
 
 package co.usc.config;
 
-import co.rsk.bitcoinj.core.Coin;
-import co.rsk.bitcoinj.core.NetworkParameters;
+import co.usc.ulordj.core.Coin;
+import co.usc.ulordj.core.NetworkParameters;
 import co.usc.peg.AddressBasedAuthorizer;
 import co.usc.peg.Federation;
 

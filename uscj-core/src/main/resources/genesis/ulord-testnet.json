@@ -1,7 +1,7 @@
 {
   "alloc": {
     "0000000000000000000000000000000001000006": {
-      "balance": "21000000000000000000000000"
+      "balance": "100000000000000000000000000"
     }
   },
 
@@ -10,7 +10,7 @@
   "bitcoinMergedMiningHeader": "0x00",
   "bitcoinMergedMiningMerkleProof": "0x00",
   "bitcoinMergedMiningCoinbaseTransaction": "0x00",
-  "timestamp": "0x5ADAE23C",
+  "timestamp": "0x5ADE9F07",
   "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
   "extraData": "0x434d272841",
   "gasLimit": "0x4c4b40",

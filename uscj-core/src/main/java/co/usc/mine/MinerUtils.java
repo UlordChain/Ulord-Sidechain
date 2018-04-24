@@ -18,8 +18,8 @@
 
 package co.usc.mine;
 
-import co.rsk.bitcoinj.core.BtcTransaction;
-import co.rsk.bitcoinj.core.NetworkParameters;
+import co.usc.ulordj.core.UldTransaction;
+import co.usc.ulordj.core.NetworkParameters;
 import co.usc.config.RskMiningConstants;
 import co.usc.core.Coin;
 import co.usc.core.RskAddress;
@@ -47,34 +47,34 @@ public class MinerUtils {
 
     private static final Logger logger = LoggerFactory.getLogger("minerserver");
 
-    public static co.rsk.bitcoinj.core.BtcTransaction getBitcoinMergedMiningCoinbaseTransaction(co.rsk.bitcoinj.core.NetworkParameters params, MinerWork work) {
+    public static co.usc.ulordj.core.UldTransaction getBitcoinMergedMiningCoinbaseTransaction(co.usc.ulordj.core.NetworkParameters params, MinerWork work) {
         return getBitcoinMergedMiningCoinbaseTransaction(params, TypeConverter.stringHexToByteArray(work.getBlockHashForMergedMining()));
     }
 
-    public static co.rsk.bitcoinj.core.BtcTransaction getBitcoinMergedMiningCoinbaseTransaction(co.rsk.bitcoinj.core.NetworkParameters params, byte[] blockHashForMergedMining) {
-        co.rsk.bitcoinj.core.BtcTransaction coinbaseTransaction = new co.rsk.bitcoinj.core.BtcTransaction(params);
+    public static co.usc.ulordj.core.UldTransaction getBitcoinMergedMiningCoinbaseTransaction(co.usc.ulordj.core.NetworkParameters params, byte[] blockHashForMergedMining) {
+        co.usc.ulordj.core.UldTransaction coinbaseTransaction = new co.usc.ulordj.core.UldTransaction(params);
         //Add a random number of random bytes before the RSK tag
         SecureRandom random = new SecureRandom();
         byte[] prefix = new byte[random.nextInt(1000)];
         random.nextBytes(prefix);
         byte[] bytes = Arrays.concatenate(prefix, RskMiningConstants.RSK_TAG, blockHashForMergedMining);
         // Add the Tag to the scriptSig of first input
-        co.rsk.bitcoinj.core.TransactionInput ti = new co.rsk.bitcoinj.core.TransactionInput(params, coinbaseTransaction, bytes);
+        co.usc.ulordj.core.TransactionInput ti = new co.usc.ulordj.core.TransactionInput(params, coinbaseTransaction, bytes);
         coinbaseTransaction.addInput(ti);
         ByteArrayOutputStream scriptPubKeyBytes = new ByteArrayOutputStream();
-        co.rsk.bitcoinj.core.BtcECKey key = new co.rsk.bitcoinj.core.BtcECKey();
+        co.usc.ulordj.core.UldECKey key = new co.usc.ulordj.core.UldECKey();
         try {
-            co.rsk.bitcoinj.script.Script.writeBytes(scriptPubKeyBytes, key.getPubKey());
+            co.usc.ulordj.script.Script.writeBytes(scriptPubKeyBytes, key.getPubKey());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        scriptPubKeyBytes.write(co.rsk.bitcoinj.script.ScriptOpCodes.OP_CHECKSIG);
-        coinbaseTransaction.addOutput(new co.rsk.bitcoinj.core.TransactionOutput(params, coinbaseTransaction, co.rsk.bitcoinj.core.Coin.valueOf(50, 0), scriptPubKeyBytes.toByteArray()));
+        scriptPubKeyBytes.write(co.usc.ulordj.script.ScriptOpCodes.OP_CHECKSIG);
+        coinbaseTransaction.addOutput(new co.usc.ulordj.core.TransactionOutput(params, coinbaseTransaction, co.usc.ulordj.core.Coin.valueOf(50, 0), scriptPubKeyBytes.toByteArray()));
         return coinbaseTransaction;
     }
 
-    public static co.rsk.bitcoinj.core.BtcTransaction getBitcoinMergedMiningCoinbaseTransactionWithTwoTags(
-            co.rsk.bitcoinj.core.NetworkParameters params,
+    public static co.usc.ulordj.core.UldTransaction getBitcoinMergedMiningCoinbaseTransactionWithTwoTags(
+            co.usc.ulordj.core.NetworkParameters params,
             MinerWork work,
             MinerWork work2) {
         return getBitcoinMergedMiningCoinbaseTransactionWithTwoTags(
@@ -83,11 +83,11 @@ public class MinerUtils {
                 TypeConverter.stringHexToByteArray(work2.getBlockHashForMergedMining()));
     }
 
-    public static co.rsk.bitcoinj.core.BtcTransaction getBitcoinMergedMiningCoinbaseTransactionWithTwoTags(
-            co.rsk.bitcoinj.core.NetworkParameters params,
+    public static co.usc.ulordj.core.UldTransaction getBitcoinMergedMiningCoinbaseTransactionWithTwoTags(
+            co.usc.ulordj.core.NetworkParameters params,
             byte[] blockHashForMergedMining1,
             byte[] blockHashForMergedMining2) {
-        co.rsk.bitcoinj.core.BtcTransaction coinbaseTransaction = new co.rsk.bitcoinj.core.BtcTransaction(params);
+        co.usc.ulordj.core.UldTransaction coinbaseTransaction = new co.usc.ulordj.core.UldTransaction(params);
         //Add a random number of random bytes before the RSK tag
         SecureRandom random = new SecureRandom();
         byte[] prefix = new byte[random.nextInt(1000)];
@@ -97,41 +97,41 @@ public class MinerUtils {
         // addsecond tag
         byte[] bytes1 = Arrays.concatenate(bytes0, RskMiningConstants.RSK_TAG, blockHashForMergedMining2);
 
-        co.rsk.bitcoinj.core.TransactionInput ti = new co.rsk.bitcoinj.core.TransactionInput(params, coinbaseTransaction, prefix);
+        co.usc.ulordj.core.TransactionInput ti = new co.usc.ulordj.core.TransactionInput(params, coinbaseTransaction, prefix);
         coinbaseTransaction.addInput(ti);
         ByteArrayOutputStream scriptPubKeyBytes = new ByteArrayOutputStream();
-        co.rsk.bitcoinj.core.BtcECKey key = new co.rsk.bitcoinj.core.BtcECKey();
+        co.usc.ulordj.core.UldECKey key = new co.usc.ulordj.core.UldECKey();
         try {
-            co.rsk.bitcoinj.script.Script.writeBytes(scriptPubKeyBytes, key.getPubKey());
+            co.usc.ulordj.script.Script.writeBytes(scriptPubKeyBytes, key.getPubKey());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        scriptPubKeyBytes.write(co.rsk.bitcoinj.script.ScriptOpCodes.OP_CHECKSIG);
-        coinbaseTransaction.addOutput(new co.rsk.bitcoinj.core.TransactionOutput(params, coinbaseTransaction, co.rsk.bitcoinj.core.Coin.valueOf(50, 0), scriptPubKeyBytes.toByteArray()));
+        scriptPubKeyBytes.write(co.usc.ulordj.script.ScriptOpCodes.OP_CHECKSIG);
+        coinbaseTransaction.addOutput(new co.usc.ulordj.core.TransactionOutput(params, coinbaseTransaction, co.usc.ulordj.core.Coin.valueOf(50, 0), scriptPubKeyBytes.toByteArray()));
         // add opreturn output with two tags
         ByteArrayOutputStream output2Bytes = new ByteArrayOutputStream();
-        output2Bytes.write(co.rsk.bitcoinj.script.ScriptOpCodes.OP_RETURN);
+        output2Bytes.write(co.usc.ulordj.script.ScriptOpCodes.OP_RETURN);
 
         try {
-            co.rsk.bitcoinj.script.Script.writeBytes(output2Bytes, bytes1);
+            co.usc.ulordj.script.Script.writeBytes(output2Bytes, bytes1);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         coinbaseTransaction.addOutput(
-                new co.rsk.bitcoinj.core.TransactionOutput(params, coinbaseTransaction, co.rsk.bitcoinj.core.Coin.valueOf(1), output2Bytes.toByteArray()));
+                new co.usc.ulordj.core.TransactionOutput(params, coinbaseTransaction, co.usc.ulordj.core.Coin.valueOf(1), output2Bytes.toByteArray()));
 
         return coinbaseTransaction;
     }
 
-    public static co.rsk.bitcoinj.core.BtcBlock getBitcoinMergedMiningBlock(co.rsk.bitcoinj.core.NetworkParameters params, BtcTransaction transaction) {
+    public static co.usc.ulordj.core.UldBlock getBitcoinMergedMiningBlock(co.usc.ulordj.core.NetworkParameters params, UldTransaction transaction) {
         return getBitcoinMergedMiningBlock(params, Collections.singletonList(transaction));
     }
 
-    public static co.rsk.bitcoinj.core.BtcBlock getBitcoinMergedMiningBlock(co.rsk.bitcoinj.core.NetworkParameters params, List<BtcTransaction> transactions) {
-        co.rsk.bitcoinj.core.Sha256Hash prevBlockHash = co.rsk.bitcoinj.core.Sha256Hash.ZERO_HASH;
+    public static co.usc.ulordj.core.UldBlock getBitcoinMergedMiningBlock(co.usc.ulordj.core.NetworkParameters params, List<UldTransaction> transactions) {
+        co.usc.ulordj.core.Sha256Hash prevBlockHash = co.usc.ulordj.core.Sha256Hash.ZERO_HASH;
         long time = System.currentTimeMillis() / 1000;
-        long difficultyTarget = co.rsk.bitcoinj.core.Utils.encodeCompactBits(params.getMaxTarget());
-        return new co.rsk.bitcoinj.core.BtcBlock(params, params.getProtocolVersionNum(NetworkParameters.ProtocolVersion.CURRENT), prevBlockHash, null, time, difficultyTarget, 0, transactions);
+        long difficultyTarget = co.usc.ulordj.core.Utils.encodeCompactBits(params.getMaxTarget());
+        return new co.usc.ulordj.core.UldBlock(params, params.getProtocolVersionNum(NetworkParameters.ProtocolVersion.CURRENT), prevBlockHash, null, time, difficultyTarget, BigInteger.valueOf(0), transactions);
     }
 
     public List<org.ethereum.core.Transaction> getAllTransactions(TransactionPool transactionPool) {

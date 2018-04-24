@@ -18,11 +18,11 @@
 
 package co.usc.rpc;
 
-import co.rsk.bitcoinj.core.BtcBlock;
-import co.rsk.bitcoinj.core.BtcTransaction;
-import co.rsk.bitcoinj.core.Context;
-import co.rsk.bitcoinj.core.NetworkParameters;
-import co.rsk.bitcoinj.params.RegTestParams;
+import co.usc.ulordj.core.UldBlock;
+import co.usc.ulordj.core.UldTransaction;
+import co.usc.ulordj.core.Context;
+import co.usc.ulordj.core.NetworkParameters;
+import co.usc.ulordj.params.RegTestParams;
 import co.usc.config.RskMiningConstants;
 import co.usc.config.RskSystemProperties;
 import co.usc.core.NetworkStateExporter;
@@ -103,8 +103,8 @@ public class Web3RskImpl extends Web3Impl {
         NetworkParameters params = RegTestParams.get();
         new Context(params);
 
-        BtcBlock bitcoinBlock = getBtcBlock(bitcoinBlockHex, params);
-        BtcTransaction coinbase = bitcoinBlock.getTransactions().get(0);
+        UldBlock bitcoinBlock = getUldBlock(bitcoinBlockHex, params);
+        UldTransaction coinbase = bitcoinBlock.getTransactions().get(0);
 
         String blockHashForMergedMining = extractBlockHashForMergedMining(coinbase);
 
@@ -125,8 +125,8 @@ public class Web3RskImpl extends Web3Impl {
         NetworkParameters params = RegTestParams.get();
         new Context(params);
 
-        BtcBlock bitcoinBlockWithHeaderOnly = getBtcBlock(blockHeaderHex, params);
-        BtcTransaction coinbase = new BtcTransaction(params, Hex.decode(coinbaseHex));
+        UldBlock bitcoinBlockWithHeaderOnly = getUldBlock(blockHeaderHex, params);
+        UldTransaction coinbase = new UldTransaction(params, Hex.decode(coinbaseHex));
 
         String blockHashForMergedMining = extractBlockHashForMergedMining(coinbase);
 
@@ -150,8 +150,8 @@ public class Web3RskImpl extends Web3Impl {
         NetworkParameters params = RegTestParams.get();
         new Context(params);
 
-        BtcBlock bitcoinBlockWithHeaderOnly = getBtcBlock(blockHeaderHex, params);
-        BtcTransaction coinbase = new BtcTransaction(params, Hex.decode(coinbaseHex));
+        UldBlock bitcoinBlockWithHeaderOnly = getUldBlock(blockHeaderHex, params);
+        UldTransaction coinbase = new UldTransaction(params, Hex.decode(coinbaseHex));
 
         String blockHashForMergedMining = extractBlockHashForMergedMining(coinbase);
 
@@ -218,12 +218,12 @@ public class Web3RskImpl extends Web3Impl {
         return Hex.toHexString(input).substring(56, 64);
     }
 
-    private BtcBlock getBtcBlock(String blockHeaderHex, NetworkParameters params) {
+    private UldBlock getUldBlock(String blockHeaderHex, NetworkParameters params) {
         byte[] bitcoinBlockByteArray = Hex.decode(blockHeaderHex);
         return params.getDefaultSerializer().makeBlock(bitcoinBlockByteArray);
     }
 
-    private String extractBlockHashForMergedMining(BtcTransaction coinbase) {
+    private String extractBlockHashForMergedMining(UldTransaction coinbase) {
         byte[] coinbaseAsByteArray = coinbase.bitcoinSerialize();
         List<Byte> coinbaseAsByteList = Arrays.asList(ArrayUtils.toObject(coinbaseAsByteArray));
 

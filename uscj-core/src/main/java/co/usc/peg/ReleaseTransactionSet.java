@@ -18,7 +18,7 @@
 
 package co.usc.peg;
 
-import co.rsk.bitcoinj.core.BtcTransaction;
+import co.usc.ulordj.core.UldTransaction;
 import com.google.common.primitives.UnsignedBytes;
 
 import java.util.*;
@@ -42,15 +42,15 @@ public class ReleaseTransactionSet {
             }
         };
 
-        private BtcTransaction transaction;
+        private UldTransaction transaction;
         private Long rskBlockNumber;
 
-        public Entry(BtcTransaction transaction, Long rskBlockNumber) {
+        public Entry(UldTransaction transaction, Long rskBlockNumber) {
             this.transaction = transaction;
             this.rskBlockNumber = rskBlockNumber;
         }
 
-        public BtcTransaction getTransaction() {
+        public UldTransaction getTransaction() {
             return transaction;
         }
 
@@ -85,7 +85,7 @@ public class ReleaseTransactionSet {
         return new HashSet<>(entries);
     }
 
-    public void add(BtcTransaction transaction, Long blockNumber) {
+    public void add(UldTransaction transaction, Long blockNumber) {
         // Disallow duplicate transactions
         if (!entries.stream().anyMatch(e -> e.getTransaction().equals(transaction))) {
             entries.add(new Entry(transaction, blockNumber));
@@ -104,8 +104,8 @@ public class ReleaseTransactionSet {
      * @param maximumSliceSize (optional) the maximum number of elements in the slice.
      * @return the slice of btc transactions.
      */
-    public Set<BtcTransaction> sliceWithConfirmations(Long currentBlockNumber, Integer minimumConfirmations, Optional<Integer> maximumSliceSize) {
-        Set<BtcTransaction> output = new HashSet<>();
+    public Set<UldTransaction> sliceWithConfirmations(Long currentBlockNumber, Integer minimumConfirmations, Optional<Integer> maximumSliceSize) {
+        Set<UldTransaction> output = new HashSet<>();
 
         int count = 0;
         Iterator<Entry> iterator = entries.iterator();
