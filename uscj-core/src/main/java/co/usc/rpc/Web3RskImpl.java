@@ -18,13 +18,13 @@
 
 package co.usc.rpc;
 
+import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.core.UldBlock;
 import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.core.Context;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.params.RegTestParams;
-import co.usc.config.RskMiningConstants;
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscMiningConstants;
 import co.usc.core.NetworkStateExporter;
 import co.usc.metrics.HashRateCalculator;
 import co.usc.mine.*;
@@ -70,7 +70,7 @@ public class Web3RskImpl extends Web3Impl {
     public Web3RskImpl(Ethereum eth,
                        Blockchain blockchain,
                        TransactionPool transactionPool,
-                       RskSystemProperties properties,
+                       UscSystemProperties properties,
                        MinerClient minerClient,
                        MinerServer minerServer,
                        PersonalModule personalModule,
@@ -227,11 +227,11 @@ public class Web3RskImpl extends Web3Impl {
         byte[] coinbaseAsByteArray = coinbase.bitcoinSerialize();
         List<Byte> coinbaseAsByteList = Arrays.asList(ArrayUtils.toObject(coinbaseAsByteArray));
 
-        List<Byte> rskTagAsByteList = Arrays.asList(ArrayUtils.toObject(RskMiningConstants.RSK_TAG));
+        List<Byte> rskTagAsByteList = Arrays.asList(ArrayUtils.toObject(UscMiningConstants.RSK_TAG));
 
         int rskTagPosition = Collections.lastIndexOfSubList(coinbaseAsByteList, rskTagAsByteList);
         byte[] blockHashForMergedMiningArray = new byte[Keccak256Helper.Size.S256.getValue() / 8];
-        System.arraycopy(coinbaseAsByteArray, rskTagPosition + RskMiningConstants.RSK_TAG.length, blockHashForMergedMiningArray, 0, blockHashForMergedMiningArray.length);
+        System.arraycopy(coinbaseAsByteArray, rskTagPosition + UscMiningConstants.RSK_TAG.length, blockHashForMergedMiningArray, 0, blockHashForMergedMiningArray.length);
         return TypeConverter.toJsonHex(blockHashForMergedMiningArray);
     }
 

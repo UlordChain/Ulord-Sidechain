@@ -19,7 +19,7 @@
 package co.usc.peg;
 
 import co.usc.ulordj.core.*;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
@@ -255,7 +255,7 @@ public class BridgeSerializationUtils {
         byte[][] bytes = new byte[election.getVotes().size() * 2][];
         int n = 0;
 
-        Map<ABICallSpec, List<RskAddress>> votes = election.getVotes();
+        Map<ABICallSpec, List<UscAddress>> votes = election.getVotes();
         ABICallSpec[] specs = votes.keySet().toArray(new ABICallSpec[0]);
         Arrays.sort(specs, ABICallSpec.byBytesComparator);
 
@@ -282,11 +282,11 @@ public class BridgeSerializationUtils {
 
         int numEntries = rlpList.size() / 2;
 
-        Map<ABICallSpec, List<RskAddress>> votes = new HashMap<>();
+        Map<ABICallSpec, List<UscAddress>> votes = new HashMap<>();
 
         for (int k = 0; k < numEntries; k++) {
             ABICallSpec spec = deserializeABICallSpec(rlpList.get(k * 2).getRLPData());
-            List<RskAddress> specVotes = deserializeVoters(rlpList.get(k * 2 + 1).getRLPData());
+            List<UscAddress> specVotes = deserializeVoters(rlpList.get(k * 2 + 1).getRLPData());
             votes.put(spec, specVotes);
         }
 
@@ -496,20 +496,20 @@ public class BridgeSerializationUtils {
     // A list of voters is serialized as
     // [voterBytes1, voterBytes2, ..., voterBytesn], sorted
     // using the lexicographical order of the voters' unsigned bytes
-    private static byte[] serializeVoters(List<RskAddress> voters) {
+    private static byte[] serializeVoters(List<UscAddress> voters) {
         List<byte[]> encodedKeys = voters.stream()
-                .sorted(RskAddress.LEXICOGRAPHICAL_COMPARATOR)
+                .sorted(UscAddress.LEXICOGRAPHICAL_COMPARATOR)
                 .map(key -> RLP.encodeElement(key.getBytes()))
                 .collect(Collectors.toList());
         return RLP.encodeList(encodedKeys.toArray(new byte[0][]));
     }
 
     // For the serialization format, see BridgeSerializationUtils::serializeVoters
-    private static List<RskAddress> deserializeVoters(byte[] data) {
+    private static List<UscAddress> deserializeVoters(byte[] data) {
         RLPList rlpList = (RLPList)RLP.decode2(data).get(0);
 
         return rlpList.stream()
-                .map(pubKeyBytes -> new RskAddress(pubKeyBytes.getRLPData()))
+                .map(pubKeyBytes -> new UscAddress(pubKeyBytes.getRLPData()))
                 .collect(Collectors.toList());
     }
 }

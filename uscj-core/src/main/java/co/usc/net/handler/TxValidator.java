@@ -18,7 +18,7 @@
 
 package co.usc.net.handler;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.Coin;
 import co.usc.net.handler.txvalidator.*;
 import org.ethereum.core.AccountState;
@@ -42,14 +42,14 @@ class TxValidator {
 
     private static final Logger logger = LoggerFactory.getLogger("txvalidator");
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final Repository repository;
     private final Blockchain blockchain;
 
     private final List<TxValidatorStep> validatorSteps = new LinkedList<>();
     private final List<TxFilter> txFilters = new LinkedList<>();
 
-    public TxValidator(RskSystemProperties config, Repository repository, Blockchain blockchain) {
+    public TxValidator(UscSystemProperties config, Repository repository, Blockchain blockchain) {
         this.config = config;
         this.repository = repository;
         this.blockchain = blockchain;

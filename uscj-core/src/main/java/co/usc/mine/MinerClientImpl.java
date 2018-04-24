@@ -18,7 +18,7 @@
 
 package co.usc.mine;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.Rsk;
 import co.usc.panic.PanicProcessor;
 import org.ethereum.config.blockchain.DevNetConfig;
@@ -52,7 +52,7 @@ public class MinerClientImpl implements MinerClient {
 
     private final Rsk rsk;
     private final MinerServer minerServer;
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
 
     private volatile boolean stop = false;
 
@@ -64,7 +64,7 @@ public class MinerClientImpl implements MinerClient {
     private Timer aTimer;
 
     @Autowired
-    public MinerClientImpl(Rsk rsk, MinerServer minerServer, RskSystemProperties config) {
+    public MinerClientImpl(Rsk rsk, MinerServer minerServer, UscSystemProperties config) {
         this.rsk = rsk;
         this.minerServer = minerServer;
         this.config = config;

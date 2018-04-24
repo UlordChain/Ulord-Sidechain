@@ -20,7 +20,7 @@
 package org.ethereum.vm.program;
 
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
@@ -43,11 +43,11 @@ import java.util.Set;
 public class Storage implements Repository, ProgramListenerAware {
 
     private final Repository repository;
-    private final RskAddress addr;
+    private final UscAddress addr;
     private ProgramListener traceListener;
 
     public Storage(ProgramInvoke programInvoke) {
-        this.addr = new RskAddress(programInvoke.getOwnerAddress());
+        this.addr = new UscAddress(programInvoke.getOwnerAddress());
         this.repository = programInvoke.getRepository();
     }
 
@@ -57,22 +57,22 @@ public class Storage implements Repository, ProgramListenerAware {
     }
 
     @Override
-    public AccountState createAccount(RskAddress addr) {
+    public AccountState createAccount(UscAddress addr) {
         return repository.createAccount(addr);
     }
 
     @Override
-    public boolean isExist(RskAddress addr) {
+    public boolean isExist(UscAddress addr) {
         return repository.isExist(addr);
     }
 
     @Override
-    public AccountState getAccountState(RskAddress addr) {
+    public AccountState getAccountState(UscAddress addr) {
         return repository.getAccountState(addr);
     }
 
     @Override
-    public void delete(RskAddress addr) {
+    public void delete(UscAddress addr) {
         if (canListenTrace(addr)) {
             traceListener.onStorageClear();
         }
@@ -80,37 +80,37 @@ public class Storage implements Repository, ProgramListenerAware {
     }
 
     @Override
-    public void hibernate(RskAddress addr) {
+    public void hibernate(UscAddress addr) {
         repository.hibernate(addr);
     }
 
     @Override
-    public BigInteger increaseNonce(RskAddress addr) {
+    public BigInteger increaseNonce(UscAddress addr) {
         return repository.increaseNonce(addr);
     }
 
     @Override
-    public BigInteger getNonce(RskAddress addr) {
+    public BigInteger getNonce(UscAddress addr) {
         return repository.getNonce(addr);
     }
 
     @Override
-    public ContractDetails getContractDetails(RskAddress addr) {
+    public ContractDetails getContractDetails(UscAddress addr) {
         return repository.getContractDetails(addr);
     }
 
     @Override
-    public void saveCode(RskAddress addr, byte[] code) {
+    public void saveCode(UscAddress addr, byte[] code) {
         repository.saveCode(addr, code);
     }
 
     @Override
-    public byte[] getCode(RskAddress addr) {
+    public byte[] getCode(UscAddress addr) {
         return repository.getCode(addr);
     }
 
     @Override
-    public void addStorageRow(RskAddress addr, DataWord key, DataWord value) {
+    public void addStorageRow(UscAddress addr, DataWord key, DataWord value) {
         if (canListenTrace(addr)) {
             traceListener.onStoragePut(key, value);
         }
@@ -118,39 +118,39 @@ public class Storage implements Repository, ProgramListenerAware {
     }
 
     @Override
-    public void addStorageBytes(RskAddress addr, DataWord key, byte[] value) {
+    public void addStorageBytes(UscAddress addr, DataWord key, byte[] value) {
         if (canListenTrace(addr)) {
             traceListener.onStoragePut(key, value);
         }
         repository.addStorageBytes(addr, key, value);
     }
 
-    private boolean canListenTrace(RskAddress addr) {
+    private boolean canListenTrace(UscAddress addr) {
         return this.addr.equals(addr) && traceListener != null;
     }
 
     @Override
-    public DataWord getStorageValue(RskAddress addr, DataWord key) {
+    public DataWord getStorageValue(UscAddress addr, DataWord key) {
         return repository.getStorageValue(addr, key);
     }
 
     @Override
-    public byte[] getStorageBytes(RskAddress addr, DataWord key) {
+    public byte[] getStorageBytes(UscAddress addr, DataWord key) {
         return repository.getStorageBytes(addr, key);
     }
 
     @Override
-    public Coin getBalance(RskAddress addr) {
+    public Coin getBalance(UscAddress addr) {
         return repository.getBalance(addr);
     }
 
     @Override
-    public Coin addBalance(RskAddress addr, Coin value) {
+    public Coin addBalance(UscAddress addr, Coin value) {
         return repository.addBalance(addr, value);
     }
 
     @Override
-    public Set<RskAddress> getAccountsKeys() {
+    public Set<UscAddress> getAccountsKeys() {
         return repository.getAccountsKeys();
     }
 
@@ -206,8 +206,8 @@ public class Storage implements Repository, ProgramListenerAware {
     }
 
     @Override
-    public void updateBatch(Map<RskAddress, AccountState> accountStates, Map<RskAddress, ContractDetails> contractDetails) {
-        for (RskAddress addr : contractDetails.keySet()) {
+    public void updateBatch(Map<UscAddress, AccountState> accountStates, Map<UscAddress, ContractDetails> contractDetails) {
+        for (UscAddress addr : contractDetails.keySet()) {
             if (!canListenTrace(addr)) {
                 return;
             }
@@ -230,7 +230,7 @@ public class Storage implements Repository, ProgramListenerAware {
     }
 
     @Override
-    public void loadAccount(RskAddress addr, Map<RskAddress, AccountState> cacheAccounts, Map<RskAddress, ContractDetails> cacheDetails) {
+    public void loadAccount(UscAddress addr, Map<UscAddress, AccountState> cacheAccounts, Map<UscAddress, ContractDetails> cacheDetails) {
         repository.loadAccount(addr, cacheAccounts, cacheDetails);
     }
 
@@ -245,12 +245,12 @@ public class Storage implements Repository, ProgramListenerAware {
     }
 
     @Override
-    public void updateContractDetails(RskAddress addr, ContractDetails contractDetails) {
+    public void updateContractDetails(UscAddress addr, ContractDetails contractDetails) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void updateAccountState(RskAddress addr, AccountState accountState) {
+    public void updateAccountState(UscAddress addr, AccountState accountState) {
         throw new UnsupportedOperationException();
     }
 

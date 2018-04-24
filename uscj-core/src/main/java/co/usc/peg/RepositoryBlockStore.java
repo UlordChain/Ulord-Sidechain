@@ -21,7 +21,7 @@ package co.usc.peg;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.store.BlockStoreException;
 import co.usc.ulordj.store.BtcBlockStore;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Repository;
 import org.ethereum.vm.DataWord;
@@ -38,11 +38,11 @@ public class RepositoryBlockStore implements BtcBlockStore{
     public static final String BLOCK_STORE_CHAIN_HEAD_KEY = "blockStoreChainHead";
 
     private final Repository repository;
-    private final RskAddress contractAddress;
+    private final UscAddress contractAddress;
 
     private final NetworkParameters params;
 
-    public RepositoryBlockStore(SystemProperties config, Repository repository, RskAddress contractAddress) {
+    public RepositoryBlockStore(SystemProperties config, Repository repository, UscAddress contractAddress) {
         this.repository = repository;
         this.contractAddress = contractAddress;
 

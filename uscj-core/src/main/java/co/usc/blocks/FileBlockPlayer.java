@@ -18,7 +18,7 @@
 
 package co.usc.blocks;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import org.ethereum.core.Block;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +35,9 @@ public class FileBlockPlayer implements BlockPlayer, AutoCloseable {
     private static final Logger logger = LoggerFactory.getLogger("blockplayer");
     private BufferedReader reader;
     private FileReader freader;
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
 
-    public FileBlockPlayer(RskSystemProperties config, String filename) {
+    public FileBlockPlayer(UscSystemProperties config, String filename) {
         this.config = config;
         try {
             this.freader = new FileReader(filename);

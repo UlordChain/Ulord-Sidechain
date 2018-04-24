@@ -18,10 +18,10 @@
 
 package co.usc.peg;
 
+import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.core.*;
 import co.usc.config.BridgeConstants;
-import co.usc.config.RskSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.panic.PanicProcessor;
 import co.usc.peg.utils.BridgeEventLogger;
 import co.usc.peg.utils.BridgeEventLoggerImpl;
@@ -161,7 +161,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     private Map<ByteArrayWrapper, CallTransaction.Function> functions = new HashMap<>();
     private static Map<CallTransaction.Function, Long> functionCostMap = new HashMap<>();
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final BridgeConstants bridgeConstants;
 
     private org.ethereum.core.Transaction rskTx;
@@ -171,7 +171,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
 
     private BridgeSupport bridgeSupport;
 
-    public Bridge(RskSystemProperties config, RskAddress contractAddress) {
+    public Bridge(UscSystemProperties config, UscAddress contractAddress) {
         this.config = config;
         this.bridgeConstants = this.config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         this.contractAddress = contractAddress;

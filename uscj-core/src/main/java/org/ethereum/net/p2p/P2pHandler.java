@@ -19,7 +19,7 @@
 
 package org.ethereum.net.p2p;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.ethereum.core.Transaction;
@@ -77,11 +77,11 @@ public class P2pHandler extends SimpleChannelInboundHandler<P2pMessage> {
     private int ethInbound;
     private int ethOutbound;
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final EthereumListener ethereumListener;
     private final ConfigCapabilities configCapabilities;
 
-    public P2pHandler(RskSystemProperties config, EthereumListener ethereumListener, ConfigCapabilities configCapabilities) {
+    public P2pHandler(UscSystemProperties config, EthereumListener ethereumListener, ConfigCapabilities configCapabilities) {
         this.config = config;
         this.ethereumListener = ethereumListener;
         this.configCapabilities = configCapabilities;

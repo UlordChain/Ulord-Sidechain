@@ -1,7 +1,7 @@
 package co.usc.remasc;
 
 import co.usc.ulordj.store.BlockStoreException;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.peg.BridgeSupport;
 import org.ethereum.crypto.ECKey;
 
@@ -21,8 +21,8 @@ public class RemascFederationProvider {
         return this.bridgeSupport.getFederationSize().intValue();
     }
 
-    public RskAddress getFederatorAddress(int n) {
+    public UscAddress getFederatorAddress(int n) {
         byte[] publicKey = this.bridgeSupport.getFederatorPublicKey(n);
-        return new RskAddress(ECKey.fromPublicOnly(publicKey).getAddress());
+        return new UscAddress(ECKey.fromPublicOnly(publicKey).getAddress());
     }
 }

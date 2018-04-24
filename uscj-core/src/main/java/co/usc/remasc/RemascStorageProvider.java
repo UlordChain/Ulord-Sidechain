@@ -19,7 +19,7 @@
 package co.usc.remasc;
 
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.core.Repository;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
@@ -43,7 +43,7 @@ class RemascStorageProvider {
     private static final String BROKEN_SELECTION_RULE_KEY = "brokenSelectionRule";
 
     private Repository repository;
-    private RskAddress contractAddress;
+    private UscAddress contractAddress;
 
     // Values retrieved / to be stored on the contract state
     private Coin rewardBalance;
@@ -51,7 +51,7 @@ class RemascStorageProvider {
     private SortedMap<Long, List<Sibling>> siblings;
     private Boolean brokenSelectionRule;
 
-    public RemascStorageProvider(Repository repository, RskAddress contractAddress) {
+    public RemascStorageProvider(Repository repository, UscAddress contractAddress) {
         this.repository = repository;
         this.contractAddress = contractAddress;
     }

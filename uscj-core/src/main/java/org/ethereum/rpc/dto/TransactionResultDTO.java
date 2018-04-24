@@ -19,7 +19,7 @@
 package org.ethereum.rpc.dto;
 
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.remasc.RemascTransaction;
 import org.ethereum.core.Block;
 import org.ethereum.core.Transaction;
@@ -73,11 +73,11 @@ public class TransactionResultDTO {
         input = TypeConverter.toJsonHex(tx.getData());
     }
 
-    private String addressToJsonHex(RskAddress address) {
+    private String addressToJsonHex(UscAddress address) {
         // Web3.js requires the address to be valid (20 bytes),
         // so we have to serialize the Remasc sender as a valid address.
         if (address.equals(RemascTransaction.REMASC_ADDRESS)) {
-            return TypeConverter.toJsonHex(RskAddress.nullAddress().getBytes());
+            return TypeConverter.toJsonHex(UscAddress.nullAddress().getBytes());
         }
 
         return TypeConverter.toJsonHex(address.getBytes());

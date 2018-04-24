@@ -18,7 +18,7 @@
 
 package co.usc.core;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.metrics.HashRateCalculator;
@@ -104,7 +104,7 @@ public class RskFactory {
     }
 
     @Bean
-    public SyncProcessor getSyncProcessor(RskSystemProperties config,
+    public SyncProcessor getSyncProcessor(UscSystemProperties config,
                                           Blockchain blockchain,
                                           BlockSyncService blockSyncService,
                                           PeerScoringManager peerScoringManager,
@@ -119,7 +119,7 @@ public class RskFactory {
     }
 
     @Bean
-    public BlockSyncService getBlockSyncService(RskSystemProperties config,
+    public BlockSyncService getBlockSyncService(UscSystemProperties config,
                                                 Blockchain blockchain,
                                                 BlockStore store,
                                                 BlockNodeInformation nodeInformation,
@@ -130,13 +130,13 @@ public class RskFactory {
     @Bean
     public SyncPool getSyncPool(@Qualifier("compositeEthereumListener") EthereumListener ethereumListener,
                                 Blockchain blockchain,
-                                RskSystemProperties config,
+                                UscSystemProperties config,
                                 NodeManager nodeManager) {
         return new SyncPool(ethereumListener, blockchain, config, nodeManager);
     }
 
     @Bean
-    public TxHandler getTxHandler(RskSystemProperties config, CompositeEthereumListener compositeEthereumListener, Repository repository, Blockchain blockchain) {
+    public TxHandler getTxHandler(UscSystemProperties config, CompositeEthereumListener compositeEthereumListener, Repository repository, Blockchain blockchain) {
         return new TxHandlerImpl(config, compositeEthereumListener, repository, blockchain);
     }
 
@@ -144,7 +144,7 @@ public class RskFactory {
     public Web3 getWeb3(Rsk rsk,
                         Blockchain blockchain,
                         TransactionPool transactionPool,
-                        RskSystemProperties config,
+                        UscSystemProperties config,
                         MinerClient minerClient,
                         MinerServer minerServer,
                         PersonalModule personalModule,
@@ -184,25 +184,25 @@ public class RskFactory {
     }
 
     @Bean
-    public JsonRpcWeb3FilterHandler getJsonRpcWeb3FilterHandler(RskSystemProperties rskSystemProperties) {
-        return new JsonRpcWeb3FilterHandler(rskSystemProperties.corsDomains(), rskSystemProperties.rpcAddress(), rskSystemProperties.rpcHost());
+    public JsonRpcWeb3FilterHandler getJsonRpcWeb3FilterHandler(UscSystemProperties uscSystemProperties) {
+        return new JsonRpcWeb3FilterHandler(uscSystemProperties.corsDomains(), uscSystemProperties.rpcAddress(), uscSystemProperties.rpcHost());
     }
 
     @Bean
-    public JsonRpcWeb3ServerHandler getJsonRpcWeb3ServerHandler(Web3 web3Service, RskSystemProperties rskSystemProperties) {
-        return new JsonRpcWeb3ServerHandler(web3Service, rskSystemProperties.getRpcModules());
+    public JsonRpcWeb3ServerHandler getJsonRpcWeb3ServerHandler(Web3 web3Service, UscSystemProperties uscSystemProperties) {
+        return new JsonRpcWeb3ServerHandler(web3Service, uscSystemProperties.getRpcModules());
     }
 
     @Bean
-    public Web3HttpServer getWeb3HttpServer(RskSystemProperties rskSystemProperties,
+    public Web3HttpServer getWeb3HttpServer(UscSystemProperties uscSystemProperties,
                                             JsonRpcWeb3FilterHandler filterHandler,
                                             JsonRpcWeb3ServerHandler serverHandler) {
         return new Web3HttpServer(
-            rskSystemProperties.rpcAddress(),
-            rskSystemProperties.rpcPort(),
-            rskSystemProperties.soLingerTime(),
+            uscSystemProperties.rpcAddress(),
+            uscSystemProperties.rpcPort(),
+            uscSystemProperties.soLingerTime(),
             true,
-            new CorsConfiguration(rskSystemProperties.corsDomains()),
+            new CorsConfiguration(uscSystemProperties.corsDomains()),
             filterHandler,
             serverHandler
         );
@@ -217,7 +217,7 @@ public class RskFactory {
     public TransactionPool getTransactionPool(org.ethereum.db.BlockStore blockStore,
                                               ReceiptStore receiptStore,
                                               org.ethereum.core.Repository repository,
-                                              RskSystemProperties config,
+                                              UscSystemProperties config,
                                               ProgramInvokeFactory programInvokeFactory,
                                               @Qualifier("compositeEthereumListener") EthereumListener listener) {
         return new TransactionPoolImpl(
@@ -243,7 +243,7 @@ public class RskFactory {
     }
 
     @Bean
-    public EthereumChannelInitializer.ChannelFactory getChannelFactory(RskSystemProperties config,
+    public EthereumChannelInitializer.ChannelFactory getChannelFactory(UscSystemProperties config,
                                                                        @Qualifier("compositeEthereumListener") EthereumListener ethereumListener,
                                                                        ConfigCapabilities configCapabilities,
                                                                        NodeManager nodeManager,
@@ -263,7 +263,7 @@ public class RskFactory {
     public EthHandlerFactoryImpl.RskWireProtocolFactory getRskWireProtocolFactory(PeerScoringManager peerScoringManager,
                                                                                   MessageHandler messageHandler,
                                                                                   Blockchain blockchain,
-                                                                                  RskSystemProperties config,
+                                                                                  UscSystemProperties config,
                                                                                   CompositeEthereumListener ethereumListener){
         return () -> new RskWireProtocol(config, peerScoringManager, messageHandler, blockchain, ethereumListener);
     }
@@ -276,7 +276,7 @@ public class RskFactory {
     }
 
     @Bean
-    public Wallet getWallet(RskSystemProperties config) {
+    public Wallet getWallet(UscSystemProperties config) {
         if (!config.isWalletEnabled()) {
             logger.info("Local wallet disabled");
             return null;
@@ -289,7 +289,7 @@ public class RskFactory {
     }
 
     @Bean
-    public PersonalModule getPersonalModuleWallet(RskSystemProperties config, Rsk rsk, Wallet wallet, TransactionPool transactionPool) {
+    public PersonalModule getPersonalModuleWallet(UscSystemProperties config, Rsk rsk, Wallet wallet, TransactionPool transactionPool) {
         if (wallet == null) {
             return new PersonalModuleWalletDisabled();
         }
@@ -298,7 +298,7 @@ public class RskFactory {
     }
 
     @Bean
-    public EthModuleWallet getEthModuleWallet(RskSystemProperties config, Rsk rsk, Wallet wallet, TransactionPool transactionPool) {
+    public EthModuleWallet getEthModuleWallet(UscSystemProperties config, Rsk rsk, Wallet wallet, TransactionPool transactionPool) {
         if (wallet == null) {
             return new EthModuleWalletDisabled();
         }
@@ -307,7 +307,7 @@ public class RskFactory {
     }
 
     @Bean
-    public EthModuleSolidity getEthModuleSolidity(RskSystemProperties config) {
+    public EthModuleSolidity getEthModuleSolidity(UscSystemProperties config) {
         try {
             return new EthModuleSolidityEnabled(new SolidityCompiler(config));
         } catch (RuntimeException e) {
@@ -318,7 +318,7 @@ public class RskFactory {
     }
 
     @Bean
-    public SyncConfiguration getSyncConfiguration(RskSystemProperties config) {
+    public SyncConfiguration getSyncConfiguration(UscSystemProperties config) {
         int expectedPeers = config.getExpectedPeers();
         int timeoutWaitingPeers = config.getTimeoutWaitingPeers();
         int timeoutWaitingRequest = config.getTimeoutWaitingRequest();

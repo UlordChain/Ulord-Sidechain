@@ -19,7 +19,7 @@
 
 package org.ethereum.rpc;
 
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.core.Bloom;
 import org.ethereum.crypto.Keccak256Helper;
 import org.ethereum.vm.DataWord;
@@ -30,10 +30,10 @@ import java.util.List;
 
 public class AddressesTopicsFilter {
     private List<Topic[]> topics = new ArrayList<>();  //  [[addr1, addr2], null, [A, B], [C]]
-    private RskAddress[] addresses = new RskAddress[0];
+    private UscAddress[] addresses = new UscAddress[0];
     private Bloom[][] filterBlooms;
 
-    public AddressesTopicsFilter(RskAddress[] addresses, Topic[] topics) {
+    public AddressesTopicsFilter(UscAddress[] addresses, Topic[] topics) {
         if (topics != null) {
             this.topics.add(topics);
         }
@@ -103,8 +103,8 @@ public class AddressesTopicsFilter {
         return true;
     }
 
-    boolean matchesContractAddress(RskAddress toAddr) {
-        for (RskAddress address : addresses) {
+    boolean matchesContractAddress(UscAddress toAddr) {
+        for (UscAddress address : addresses) {
             if (address.equals(toAddr)) {
                 return true;
             }
@@ -114,7 +114,7 @@ public class AddressesTopicsFilter {
     }
 
     public boolean matchesExactly(LogInfo logInfo) {
-        if (!matchesContractAddress(new RskAddress(logInfo.getAddress()))) {
+        if (!matchesContractAddress(new UscAddress(logInfo.getAddress()))) {
             return false;
         }
 

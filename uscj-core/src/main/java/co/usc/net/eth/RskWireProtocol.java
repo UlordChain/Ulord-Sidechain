@@ -18,7 +18,7 @@
 
 package co.usc.net.eth;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.bc.BlockChainStatus;
 import co.usc.net.*;
@@ -74,13 +74,13 @@ public class RskWireProtocol extends EthHandler {
     protected SyncState syncState = SyncState.IDLE;
     protected boolean syncDone = false;
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final MessageChannel messageSender;
     private final MessageHandler messageHandler;
     private final Blockchain blockchain;
     private final MessageRecorder messageRecorder;
 
-    public RskWireProtocol(RskSystemProperties config, PeerScoringManager peerScoringManager, MessageHandler messageHandler, Blockchain blockchain, CompositeEthereumListener ethereumListener) {
+    public RskWireProtocol(UscSystemProperties config, PeerScoringManager peerScoringManager, MessageHandler messageHandler, Blockchain blockchain, CompositeEthereumListener ethereumListener) {
         super(blockchain, config, ethereumListener, V62);
         this.peerScoringManager = peerScoringManager;
         this.messageHandler = messageHandler;

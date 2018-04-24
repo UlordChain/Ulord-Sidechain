@@ -19,7 +19,7 @@
 
 package org.ethereum.datasource;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.panic.PanicProcessor;
 import org.iq80.leveldb.*;
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ public class LevelDbDataSource implements KeyValueDataSource {
     private static final Logger logger = LoggerFactory.getLogger("db");
     private static final PanicProcessor panicProcessor = new PanicProcessor();
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private String name;
     private DB db;
     private boolean alive;
@@ -62,7 +62,7 @@ public class LevelDbDataSource implements KeyValueDataSource {
     // however blocks them on init/close/delete operations
     private ReadWriteLock resetDbLock = new ReentrantReadWriteLock();
 
-    public LevelDbDataSource(RskSystemProperties config, String name) {
+    public LevelDbDataSource(UscSystemProperties config, String name) {
         this.config = config;
         this.name = name;
         logger.debug("New LevelDbDataSource: {}", name);

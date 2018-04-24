@@ -19,7 +19,7 @@
 
 package org.ethereum.net.eth.message;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.net.eth.RskMessage;
 import org.ethereum.net.message.Message;
 import org.ethereum.net.message.MessageFactory;
@@ -32,9 +32,9 @@ import static org.ethereum.net.eth.EthVersion.V62;
  */
 public class Eth62MessageFactory implements MessageFactory {
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
 
-    public Eth62MessageFactory(RskSystemProperties config) {
+    public Eth62MessageFactory(UscSystemProperties config) {
         this.config = config;
     }
 

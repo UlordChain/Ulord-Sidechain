@@ -18,14 +18,14 @@
 
 package co.usc.mine;
 
+import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.core.*;
 import co.usc.config.MiningConfig;
-import co.usc.config.RskMiningConstants;
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscMiningConstants;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.Coin;
 import co.usc.core.DifficultyCalculator;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.net.BlockProcessor;
 import co.usc.panic.PanicProcessor;
@@ -103,7 +103,7 @@ public class MinerServerImpl implements MinerServer {
     private volatile MinerWork currentWork; // This variable can be read at anytime without the lock.
     private final Object lock = new Object();
 
-    private final RskAddress coinbaseAddress;
+    private final UscAddress coinbaseAddress;
     private final BigDecimal minFeesNotifyInDollars;
     private final BigDecimal gasUnitInDollars;
 
@@ -112,11 +112,11 @@ public class MinerServerImpl implements MinerServer {
 
     private boolean autoSwitchBetweenNormalAndFallbackMining;
     private boolean fallbackMiningScheduled;
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
 
     @Autowired
     public MinerServerImpl(
-            RskSystemProperties config,
+            UscSystemProperties config,
             Ethereum ethereum,
             Blockchain blockchain,
             BlockProcessor nodeBlockProcessor,
@@ -481,7 +481,7 @@ public class MinerServerImpl implements MinerServer {
 
     public static byte[] compressCoinbase(byte[] bitcoinMergedMiningCoinbaseTransactionSerialized, boolean lastOccurrence) {
         List<Byte> coinBaseTransactionSerializedAsList = java.util.Arrays.asList(ArrayUtils.toObject(bitcoinMergedMiningCoinbaseTransactionSerialized));
-        List<Byte> tagAsList = java.util.Arrays.asList(ArrayUtils.toObject(RskMiningConstants.RSK_TAG));
+        List<Byte> tagAsList = java.util.Arrays.asList(ArrayUtils.toObject(UscMiningConstants.RSK_TAG));
 
         int rskTagPosition;
         if (lastOccurrence) {
@@ -490,8 +490,8 @@ public class MinerServerImpl implements MinerServer {
             rskTagPosition = Collections.indexOfSubList(coinBaseTransactionSerializedAsList, tagAsList);
         }
 
-        int remainingByteCount = bitcoinMergedMiningCoinbaseTransactionSerialized.length - rskTagPosition - RskMiningConstants.RSK_TAG.length - RskMiningConstants.BLOCK_HEADER_HASH_SIZE;
-        if (remainingByteCount > RskMiningConstants.MAX_BYTES_AFTER_MERGED_MINING_HASH) {
+        int remainingByteCount = bitcoinMergedMiningCoinbaseTransactionSerialized.length - rskTagPosition - UscMiningConstants.RSK_TAG.length - UscMiningConstants.BLOCK_HEADER_HASH_SIZE;
+        if (remainingByteCount > UscMiningConstants.MAX_BYTES_AFTER_MERGED_MINING_HASH) {
             throw new IllegalArgumentException("More than 128 bytes after RSK tag");
         }
         int sha256Blocks = rskTagPosition / 64;
@@ -499,8 +499,8 @@ public class MinerServerImpl implements MinerServer {
         SHA256Digest digest = new SHA256Digest();
         digest.update(bitcoinMergedMiningCoinbaseTransactionSerialized, 0, bytesToHash);
         byte[] hashedContent = digest.getEncodedState();
-        byte[] trimmedHashedContent = new byte[RskMiningConstants.MIDSTATE_SIZE_TRIMMED];
-        System.arraycopy(hashedContent, 8, trimmedHashedContent, 0, RskMiningConstants.MIDSTATE_SIZE_TRIMMED);
+        byte[] trimmedHashedContent = new byte[UscMiningConstants.MIDSTATE_SIZE_TRIMMED];
+        System.arraycopy(hashedContent, 8, trimmedHashedContent, 0, UscMiningConstants.MIDSTATE_SIZE_TRIMMED);
         byte[] unHashedContent = new byte[bitcoinMergedMiningCoinbaseTransactionSerialized.length - bytesToHash];
         System.arraycopy(bitcoinMergedMiningCoinbaseTransactionSerialized, bytesToHash, unHashedContent, 0, unHashedContent.length);
         return Arrays.concatenate(trimmedHashedContent, unHashedContent);
@@ -585,7 +585,7 @@ public class MinerServerImpl implements MinerServer {
     }
 
     @Override
-    public RskAddress getCoinbaseAddress() {
+    public UscAddress getCoinbaseAddress() {
         return coinbaseAddress;
     }
 
@@ -709,7 +709,7 @@ public class MinerServerImpl implements MinerServer {
         }
 
         // note: integer divisions might truncate values
-        BigInteger percentage = BigInteger.valueOf(100L + RskMiningConstants.NOTIFY_FEES_PERCENTAGE_INCREASE);
+        BigInteger percentage = BigInteger.valueOf(100L + UscMiningConstants.NOTIFY_FEES_PERCENTAGE_INCREASE);
         Coin minFeesNotify = latestPaidFeesWithNotify.multiply(percentage).divide(BigInteger.valueOf(100L));
         Coin feesPaidToMiner = block.getFeesPaidToMiner();
         BigDecimal feesPaidToMinerInDollars = new BigDecimal(feesPaidToMiner.asBigInteger()).multiply(gasUnitInDollars);

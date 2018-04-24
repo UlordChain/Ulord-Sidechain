@@ -20,7 +20,7 @@ package co.usc;
 
 import co.usc.blocks.FileBlockPlayer;
 import co.usc.blocks.FileBlockRecorder;
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.Rsk;
 import co.usc.core.RskImpl;
 import co.usc.mine.MinerClient;
@@ -61,7 +61,7 @@ public class Start {
     private final UDPServer udpServer;
     private final MinerServer minerServer;
     private final MinerClient minerClient;
-    private final RskSystemProperties rskSystemProperties;
+    private final UscSystemProperties uscSystemProperties;
     private final Web3HttpServer web3HttpServer;
     private final Repository repository;
     private final Blockchain blockchain;
@@ -88,7 +88,7 @@ public class Start {
                  UDPServer udpServer,
                  MinerServer minerServer,
                  MinerClient minerClient,
-                 RskSystemProperties rskSystemProperties,
+                 UscSystemProperties uscSystemProperties,
                  Web3 web3Service,
                  Web3HttpServer web3HttpServer,
                  Repository repository,
@@ -105,7 +105,7 @@ public class Start {
         this.udpServer = udpServer;
         this.minerServer = minerServer;
         this.minerClient = minerClient;
-        this.rskSystemProperties = rskSystemProperties;
+        this.uscSystemProperties = uscSystemProperties;
         this.web3HttpServer = web3HttpServer;
         this.web3Service = web3Service;
         this.repository = repository;
@@ -123,8 +123,8 @@ public class Start {
     public void startNode(String[] args) throws Exception {
         logger.info("Starting RSK");
 
-        CLIInterface.call(rskSystemProperties, args);
-        logger.info("Running {},  core version: {}-{}", rskSystemProperties.genesisInfo(), rskSystemProperties.projectVersion(), rskSystemProperties.projectVersionModifier());
+        CLIInterface.call(uscSystemProperties, args);
+        logger.info("Running {},  core version: {}-{}", uscSystemProperties.genesisInfo(), uscSystemProperties.projectVersion(), uscSystemProperties.projectVersionModifier());
         BuildInfo.printInfo();
 
         // this should be the genesis block at this point
@@ -137,27 +137,27 @@ public class Start {
             String versions = EthVersion.supported().stream().map(EthVersion::name).collect(Collectors.joining(", "));
             logger.info("Capability eth version: [{}]", versions);
         }
-        if (rskSystemProperties.isBlocksEnabled()) {
-            setupRecorder(rskSystemProperties.blocksRecorder());
-            setupPlayer(rsk, channelManager, blockchain, rskSystemProperties.blocksPlayer());
+        if (uscSystemProperties.isBlocksEnabled()) {
+            setupRecorder(uscSystemProperties.blocksRecorder());
+            setupPlayer(rsk, channelManager, blockchain, uscSystemProperties.blocksPlayer());
         }
 
-        if (!"".equals(rskSystemProperties.blocksLoader())) {
-            rskSystemProperties.setSyncEnabled(Boolean.FALSE);
-            rskSystemProperties.setDiscoveryEnabled(Boolean.FALSE);
+        if (!"".equals(uscSystemProperties.blocksLoader())) {
+            uscSystemProperties.setSyncEnabled(Boolean.FALSE);
+            uscSystemProperties.setDiscoveryEnabled(Boolean.FALSE);
         }
 
-        Metrics.registerNodeID(rskSystemProperties.nodeId());
+        Metrics.registerNodeID(uscSystemProperties.nodeId());
 
-        if (rskSystemProperties.simulateTxs()) {
+        if (uscSystemProperties.simulateTxs()) {
             enableSimulateTxs();
         }
 
-        if (rskSystemProperties.simulateTxsEx()) {
+        if (uscSystemProperties.simulateTxsEx()) {
             enableSimulateTxsEx();
         }
 
-        if (rskSystemProperties.isRpcEnabled()) {
+        if (uscSystemProperties.isRpcEnabled()) {
             logger.info("RPC enabled");
             startRPCServer();
         }
@@ -165,22 +165,22 @@ public class Start {
             logger.info("RPC disabled");
         }
 
-        if (rskSystemProperties.isPeerDiscoveryEnabled()) {
+        if (uscSystemProperties.isPeerDiscoveryEnabled()) {
             udpServer.start();
         }
 
-        if (rskSystemProperties.isSyncEnabled()) {
+        if (uscSystemProperties.isSyncEnabled()) {
             syncPool.updateLowerUsefulDifficulty();
             syncPool.start(peerClientFactory);
-            if (rskSystemProperties.waitForSync()) {
+            if (uscSystemProperties.waitForSync()) {
                 waitRskSyncDone();
             }
         }
 
-        if (rskSystemProperties.isMinerServerEnabled()) {
+        if (uscSystemProperties.isMinerServerEnabled()) {
             minerServer.start();
 
-            if (rskSystemProperties.isMinerClientEnabled()) {
+            if (uscSystemProperties.isMinerClientEnabled()) {
                 minerClient.mine();
             }
         }
@@ -193,11 +193,11 @@ public class Start {
     }
 
     private void enableSimulateTxs() {
-        new TxBuilder(rskSystemProperties, rsk, nodeBlockProcessor, repository).simulateTxs();
+        new TxBuilder(uscSystemProperties, rsk, nodeBlockProcessor, repository).simulateTxs();
     }
 
     private void enableSimulateTxsEx() {
-        new TxBuilderEx(rskSystemProperties, rsk, repository, nodeBlockProcessor, transactionPool).simulateTxs();
+        new TxBuilderEx(uscSystemProperties, rsk, repository, nodeBlockProcessor, transactionPool).simulateTxs();
     }
 
     private void waitRskSyncDone() throws InterruptedException {
@@ -214,7 +214,7 @@ public class Start {
     public void stop() {
         logger.info("Shutting down RSK node");
         syncPool.stop();
-        if (rskSystemProperties.isRpcEnabled()) {
+        if (uscSystemProperties.isRpcEnabled()) {
             web3Service.stop();
         }
         peerServer.stop();
@@ -235,7 +235,7 @@ public class Start {
 
         new Thread(() -> {
             RskImpl rskImpl = (RskImpl) rsk;
-            try (FileBlockPlayer bplayer = new FileBlockPlayer(rskSystemProperties, blocksPlayerFileName)) {
+            try (FileBlockPlayer bplayer = new FileBlockPlayer(uscSystemProperties, blocksPlayerFileName)) {
                 rskImpl.setIsPlayingBlocks(true);
                 connectBlocks(bplayer, bc, cm);
             } catch (Exception e) {

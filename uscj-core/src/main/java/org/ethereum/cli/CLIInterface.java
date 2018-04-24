@@ -19,7 +19,7 @@
 
 package org.ethereum.cli;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import org.ethereum.config.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class CLIInterface {
 
     private static final Logger logger = LoggerFactory.getLogger("cli");
 
-    public static Map<String, String> call(RskSystemProperties config, String[] args) {
+    public static Map<String, String> call(UscSystemProperties config, String[] args) {
 
         Map<String, String> cliOptions = new HashMap<>();
 

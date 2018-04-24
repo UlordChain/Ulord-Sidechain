@@ -18,7 +18,7 @@
 
 package co.usc.net.eth;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.net.MessageChannel;
 import co.usc.net.NodeID;
 import co.usc.net.messages.Message;
@@ -33,7 +33,7 @@ import java.net.InetAddress;
  * Created by ajlopez on 5/16/2016.
  */
 public class EthMessageSender implements MessageChannel {
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final Eth eth;
     private NodeID nodeID;
     private InetAddress address;
@@ -44,7 +44,7 @@ public class EthMessageSender implements MessageChannel {
      * @param config
      * @param eth the underlying ethereum peer interface
      */
-    public EthMessageSender(RskSystemProperties config, @Nonnull final Eth eth) {
+    public EthMessageSender(UscSystemProperties config, @Nonnull final Eth eth) {
         this.config = config;
         this.eth = eth;
     }

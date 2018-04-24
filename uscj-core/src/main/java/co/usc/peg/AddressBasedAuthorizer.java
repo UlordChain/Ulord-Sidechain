@@ -18,7 +18,7 @@
 
 package co.usc.peg;
 
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.core.Transaction;
 import org.ethereum.crypto.ECKey;
 
@@ -42,7 +42,7 @@ public class AddressBasedAuthorizer {
         this.requiredCalculation = requiredCalculation;
     }
 
-    public boolean isAuthorized(RskAddress sender) {
+    public boolean isAuthorized(UscAddress sender) {
         return authorizedKeys.stream()
                 .map(key -> key.getAddress())
                 .anyMatch(address -> Arrays.equals(address, sender.getBytes()));

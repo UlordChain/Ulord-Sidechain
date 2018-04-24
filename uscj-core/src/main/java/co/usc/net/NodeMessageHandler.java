@@ -18,7 +18,7 @@
 
 package co.usc.net;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.bc.BlockChainStatus;
 import co.usc.crypto.Keccak256;
@@ -55,7 +55,7 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
     public static final int MAX_NUMBER_OF_MESSAGES_CACHED = 5000;
     public static final long RECEIVED_MESSAGES_CACHE_DURATION = TimeUnit.MINUTES.toMillis(2);
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final BlockProcessor blockProcessor;
     private final SyncProcessor syncProcessor;
     private final ChannelManager channelManager;
@@ -77,7 +77,7 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
     private TxHandler txHandler;
 
     @Autowired
-    public NodeMessageHandler(RskSystemProperties config,
+    public NodeMessageHandler(UscSystemProperties config,
                               @Nonnull final BlockProcessor blockProcessor,
                               final SyncProcessor syncProcessor,
                               @Nullable final ChannelManager channelManager,

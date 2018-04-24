@@ -18,7 +18,7 @@
 
 package co.usc.validators;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.bc.FamilyUtils;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
@@ -59,9 +59,9 @@ public class BlockUnclesValidationRule implements BlockValidationRule {
     private final BlockValidationRule validations;
     private final BlockParentDependantValidationRule parentValidations;
     private final BlockUnclesHashValidationRule blockValidationRule;
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
 
-    public BlockUnclesValidationRule(RskSystemProperties config, BlockStore blockStore, int uncleListLimit,
+    public BlockUnclesValidationRule(UscSystemProperties config, BlockStore blockStore, int uncleListLimit,
                                      int uncleGenerationLimit, BlockValidationRule validations,
                                      BlockParentDependantValidationRule parentValidations) {
         this.config = config;

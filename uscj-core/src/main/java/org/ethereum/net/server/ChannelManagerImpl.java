@@ -19,7 +19,7 @@
 
 package org.ethereum.net.server;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.net.Metrics;
 import co.usc.net.NodeID;
 import co.usc.net.Status;
@@ -65,7 +65,7 @@ public class ChannelManagerImpl implements ChannelManager {
     private static final int INBOUND_CONNECTION_BAN_TIMEOUT = 10 * 1000;
     private final Map<NodeID, Channel> activePeers = Collections.synchronizedMap(new HashMap<>());
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final SyncPool syncPool;
 
     // Using a concurrent list
@@ -79,7 +79,7 @@ public class ChannelManagerImpl implements ChannelManager {
     private NodeFilter trustedPeers;
 
     @Autowired
-    public ChannelManagerImpl(RskSystemProperties config, SyncPool syncPool) {
+    public ChannelManagerImpl(UscSystemProperties config, SyncPool syncPool) {
         this.config = config;
         this.syncPool = syncPool;
     }

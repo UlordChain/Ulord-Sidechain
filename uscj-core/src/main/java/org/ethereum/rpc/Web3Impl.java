@@ -18,9 +18,9 @@
 
 package org.ethereum.rpc;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.SnapshotManager;
 import co.usc.crypto.Keccak256;
 import co.usc.metrics.HashRateCalculator;
@@ -101,7 +101,7 @@ public class Web3Impl implements Web3 {
     private final ConfigCapabilities configCapabilities;
     private final BlockStore blockStore;
     private final TransactionPool transactionPool;
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
 
     private final PersonalModule personalModule;
     private final EthModule ethModule;
@@ -114,7 +114,7 @@ public class Web3Impl implements Web3 {
                        TransactionPool transactionPool,
                        BlockStore blockStore,
                        ReceiptStore receiptStore,
-                       RskSystemProperties config,
+                       UscSystemProperties config,
                        MinerClient minerClient,
                        MinerServer minerServer,
                        PersonalModule personalModule,
@@ -418,7 +418,7 @@ public class Web3Impl implements Web3 {
             throw new NullPointerException();
         }
 
-        RskAddress addr = new RskAddress(address);
+        UscAddress addr = new UscAddress(address);
         BigInteger balance = repository.getBalance(addr).asBigInteger();
 
         return toJsonHex(balance);
@@ -426,7 +426,7 @@ public class Web3Impl implements Web3 {
 
     @Override
     public String eth_getBalance(String address) throws Exception {
-        RskAddress addr = new RskAddress(address);
+        UscAddress addr = new UscAddress(address);
         BigInteger balance = this.repository.getBalance(addr).asBigInteger();
 
         return toJsonHex(balance);
@@ -437,7 +437,7 @@ public class Web3Impl implements Web3 {
         String s = null;
 
         try {
-            RskAddress addr = new RskAddress(address);
+            UscAddress addr = new UscAddress(address);
             Repository repository = getRepoByJsonBlockId(blockId);
 
             if(repository == null) {
@@ -462,7 +462,7 @@ public class Web3Impl implements Web3 {
     public String eth_getTransactionCount(String address, String blockId) throws Exception {
         String s = null;
         try {
-            RskAddress addr = new RskAddress(address);
+            UscAddress addr = new UscAddress(address);
 
             Repository repository = getRepoByJsonBlockId(blockId);
 
@@ -573,7 +573,7 @@ public class Web3Impl implements Web3 {
                 return null;
             }
 
-            RskAddress addr = new RskAddress(address);
+            UscAddress addr = new UscAddress(address);
 
             Repository repository = getRepoByJsonBlockId(blockId);
 

@@ -18,7 +18,7 @@
 
 package co.usc.net;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.bc.BlockUtils;
 import co.usc.crypto.Keccak256;
 import co.usc.net.messages.GetBlockMessage;
@@ -53,12 +53,12 @@ public class BlockSyncService {
     private final Blockchain blockchain;
     private final SyncConfiguration syncConfiguration;
     private final BlockNodeInformation nodeInformation; // keep tabs on which nodes know which blocks.
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
 
     // this is tightly coupled with NodeProcessorService and SyncProcessor,
     // and we should use the same objects everywhere to ensure consistency
     public BlockSyncService(
-            @Nonnull final RskSystemProperties config,
+            @Nonnull final UscSystemProperties config,
             @Nonnull final BlockStore store,
             @Nonnull final Blockchain blockchain,
             @Nonnull final BlockNodeInformation nodeInformation,

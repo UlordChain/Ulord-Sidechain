@@ -20,9 +20,9 @@ package co.usc.mine;
 
 import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.core.NetworkParameters;
-import co.usc.config.RskMiningConstants;
+import co.usc.config.UscMiningConstants;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.crypto.Keccak256;
 import co.usc.remasc.RemascTransaction;
@@ -57,7 +57,7 @@ public class MinerUtils {
         SecureRandom random = new SecureRandom();
         byte[] prefix = new byte[random.nextInt(1000)];
         random.nextBytes(prefix);
-        byte[] bytes = Arrays.concatenate(prefix, RskMiningConstants.RSK_TAG, blockHashForMergedMining);
+        byte[] bytes = Arrays.concatenate(prefix, UscMiningConstants.RSK_TAG, blockHashForMergedMining);
         // Add the Tag to the scriptSig of first input
         co.usc.ulordj.core.TransactionInput ti = new co.usc.ulordj.core.TransactionInput(params, coinbaseTransaction, bytes);
         coinbaseTransaction.addInput(ti);
@@ -93,9 +93,9 @@ public class MinerUtils {
         byte[] prefix = new byte[random.nextInt(1000)];
         random.nextBytes(prefix);
 
-        byte[] bytes0 = Arrays.concatenate(RskMiningConstants.RSK_TAG, blockHashForMergedMining1);
+        byte[] bytes0 = Arrays.concatenate(UscMiningConstants.RSK_TAG, blockHashForMergedMining1);
         // addsecond tag
-        byte[] bytes1 = Arrays.concatenate(bytes0, RskMiningConstants.RSK_TAG, blockHashForMergedMining2);
+        byte[] bytes1 = Arrays.concatenate(bytes0, UscMiningConstants.RSK_TAG, blockHashForMergedMining2);
 
         co.usc.ulordj.core.TransactionInput ti = new co.usc.ulordj.core.TransactionInput(params, coinbaseTransaction, prefix);
         coinbaseTransaction.addInput(ti);
@@ -145,14 +145,14 @@ public class MinerUtils {
         return new LinkedList<>(ret);
     }
 
-    public List<org.ethereum.core.Transaction> filterTransactions(List<Transaction> txsToRemove, List<Transaction> txs, Map<RskAddress, BigInteger> accountNonces, Repository originalRepo, Coin minGasPrice) {
+    public List<org.ethereum.core.Transaction> filterTransactions(List<Transaction> txsToRemove, List<Transaction> txs, Map<UscAddress, BigInteger> accountNonces, Repository originalRepo, Coin minGasPrice) {
         List<org.ethereum.core.Transaction> txsResult = new ArrayList<>();
         for (org.ethereum.core.Transaction tx : txs) {
             try {
                 Keccak256 hash = tx.getHash();
                 Coin txValue = tx.getValue();
                 BigInteger txNonce = new BigInteger(1, tx.getNonce());
-                RskAddress txSender = tx.getSender();
+                UscAddress txSender = tx.getSender();
                 logger.debug("Examining tx={} sender: {} value: {} nonce: {}", hash, txSender, txValue, txNonce);
 
                 BigInteger expectedNonce;
