@@ -30,10 +30,10 @@ public class ContractRunner {
     public final Account sender;
 
     public ContractRunner() {
-        this(new RskTestFactory());
+        this(new UscTestFactory());
     }
 
-    public ContractRunner(RskTestFactory factory) {
+    public ContractRunner(UscTestFactory factory) {
         this(factory.getRepository(), factory.getBlockchain(), factory.getBlockStore(), factory.getReceiptStore());
     }
 

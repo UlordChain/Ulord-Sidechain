@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -49,7 +49,7 @@ public class UscMessageTest {
         EthMessage ethmessage = (EthMessage)factory.create((byte)0x08, encoded);
 
         Assert.assertNotNull(ethmessage);
-        Assert.assertEquals(EthMessageCodes.RSK_MESSAGE, ethmessage.getCommand());
+        Assert.assertEquals(EthMessageCodes.USC_MESSAGE, ethmessage.getCommand());
 
         UscMessage result = (UscMessage)ethmessage;
 
@@ -75,7 +75,7 @@ public class UscMessageTest {
         EthMessage ethmessage = (EthMessage)factory.create((byte)0x08, encoded);
 
         Assert.assertNotNull(ethmessage);
-        Assert.assertEquals(EthMessageCodes.RSK_MESSAGE, ethmessage.getCommand());
+        Assert.assertEquals(EthMessageCodes.USC_MESSAGE, ethmessage.getCommand());
 
         UscMessage result = (UscMessage)ethmessage;
 
@@ -101,7 +101,7 @@ public class UscMessageTest {
         EthMessage ethmessage = (EthMessage)factory.create((byte)0x08, encoded);
 
         Assert.assertNotNull(ethmessage);
-        Assert.assertEquals(EthMessageCodes.RSK_MESSAGE, ethmessage.getCommand());
+        Assert.assertEquals(EthMessageCodes.USC_MESSAGE, ethmessage.getCommand());
 
         UscMessage result = (UscMessage)ethmessage;
 

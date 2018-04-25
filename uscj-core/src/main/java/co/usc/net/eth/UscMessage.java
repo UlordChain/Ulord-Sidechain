@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -45,7 +45,7 @@ public class UscMessage extends EthMessage {
 
     @Override
     public EthMessageCodes getCommand() {
-        return EthMessageCodes.RSK_MESSAGE;
+        return EthMessageCodes.USC_MESSAGE;
     }
 
     public Message getMessage() {

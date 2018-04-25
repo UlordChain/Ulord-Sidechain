@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -177,7 +177,7 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         List<Byte> uscTagAsList = Arrays.asList(ArrayUtils.toObject(UscMiningConstants.USC_TAG));
         int lastTag = Collections.lastIndexOfSubList(bitcoinMergedMiningCoinbaseTransactionTailAsList, uscTagAsList);
         if (uscTagPosition !=lastTag) {
-            logger.warn("The valid RSK tag is not the last RSK tag. Tail: {}.", Arrays.toString(bitcoinMergedMiningCoinbaseTransactionTail));
+            logger.warn("The valid USC tag is not the last USC tag. Tail: {}.", Arrays.toString(bitcoinMergedMiningCoinbaseTransactionTail));
             return false;
         }
 
@@ -187,7 +187,7 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
                 UscMiningConstants.BLOCK_HEADER_HASH_SIZE;
 
         if (remainingByteCount > UscMiningConstants.MAX_BYTES_AFTER_MERGED_MINING_HASH) {
-            logger.warn("More than 128 bytes after RSK tag");
+            logger.warn("More than 128 bytes after USC tag");
             return false;
         }
 

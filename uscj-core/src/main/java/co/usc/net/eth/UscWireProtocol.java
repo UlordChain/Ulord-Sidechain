@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -55,7 +55,7 @@ import java.util.NoSuchElementException;
 import static org.ethereum.net.eth.EthVersion.V62;
 import static org.ethereum.net.message.ReasonCode.USELESS_PEER;
 
-public class RskWireProtocol extends EthHandler {
+public class UscWireProtocol extends EthHandler {
 
     private static final Logger logger = LoggerFactory.getLogger("sync");
     private static final Logger loggerNet = LoggerFactory.getLogger("net");
@@ -77,7 +77,7 @@ public class RskWireProtocol extends EthHandler {
     private final Blockchain blockchain;
     private final MessageRecorder messageRecorder;
 
-    public RskWireProtocol(UscSystemProperties config, PeerScoringManager peerScoringManager, MessageHandler messageHandler, Blockchain blockchain, CompositeEthereumListener ethereumListener) {
+    public UscWireProtocol(UscSystemProperties config, PeerScoringManager peerScoringManager, MessageHandler messageHandler, Blockchain blockchain, CompositeEthereumListener ethereumListener) {
         super(blockchain, config, ethereumListener, V62);
         this.peerScoringManager = peerScoringManager;
         this.messageHandler = messageHandler;
@@ -118,27 +118,27 @@ public class RskWireProtocol extends EthHandler {
             case STATUS:
                 processStatus((org.ethereum.net.eth.message.StatusMessage) msg, ctx);
                 break;
-            case RSK_MESSAGE:
-                UscMessage rskmessage = (UscMessage)msg;
-                Message message = rskmessage.getMessage();
+            case USC_MESSAGE:
+                UscMessage uscmessage = (UscMessage)msg;
+                Message message = uscmessage.getMessage();
 
                 switch (message.getMessageType()) {
                     case BLOCK_MESSAGE:
-                        loggerNet.trace("RSK Block Message: Block {} {} from {}", ((BlockMessage)message).getBlock().getNumber(), ((BlockMessage)message).getBlock().getShortHash(), this.messageSender.getPeerNodeID());
+                        loggerNet.trace("USC Block Message: Block {} {} from {}", ((BlockMessage)message).getBlock().getNumber(), ((BlockMessage)message).getBlock().getShortHash(), this.messageSender.getPeerNodeID());
                         syncStats.addBlocks(1);
                         break;
                     case GET_BLOCK_MESSAGE:
-                        loggerNet.trace("RSK Get Block Message: Block {} from {}", Hex.toHexString(((GetBlockMessage)message).getBlockHash()).substring(0, 10), this.messageSender.getPeerNodeID());
+                        loggerNet.trace("USC Get Block Message: Block {} from {}", Hex.toHexString(((GetBlockMessage)message).getBlockHash()).substring(0, 10), this.messageSender.getPeerNodeID());
                         syncStats.getBlock();
                         break;
                     case STATUS_MESSAGE:
-                        loggerNet.trace("RSK Status Message: Block {} {} from {}", ((StatusMessage)message).getStatus().getBestBlockNumber(), Hex.toHexString(((StatusMessage)message).getStatus().getBestBlockHash()).substring(0, 10), this.messageSender.getPeerNodeID());
+                        loggerNet.trace("USC Status Message: Block {} {} from {}", ((StatusMessage)message).getStatus().getBestBlockNumber(), Hex.toHexString(((StatusMessage)message).getStatus().getBestBlockHash()).substring(0, 10), this.messageSender.getPeerNodeID());
                         syncStats.addStatus();
                         break;
                 }
 
                 if (this.messageHandler != null) {
-                    this.messageHandler.postMessage(this.messageSender, rskmessage.getMessage());
+                    this.messageHandler.postMessage(this.messageSender, uscmessage.getMessage());
                 }
                 break;
             default:
@@ -243,11 +243,11 @@ public class RskWireProtocol extends EthHandler {
                 ByteUtil.bigIntegerToBytes(totalDifficulty.asBigInteger()), bestBlock.getHash().getBytes(), genesis.getHash().getBytes());
         sendMessage(msg);
 
-        // RSK new protocol send status
+        // USC new protocol send status
         Status status = new Status(bestBlock.getNumber(), bestBlock.getHash().getBytes(), bestBlock.getParentHash().getBytes(), totalDifficulty);
-        UscMessage rskmessage = new UscMessage(config, new StatusMessage(status));
+        UscMessage uscmessage = new UscMessage(config, new StatusMessage(status));
         loggerNet.trace("Sending status best block {} to {}", status.getBestBlockNumber(), this.messageSender.getPeerNodeID().toString());
-        sendMessage(rskmessage);
+        sendMessage(uscmessage);
 
         ethState = EthState.STATUS_SENT;
     }

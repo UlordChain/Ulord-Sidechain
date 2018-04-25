@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -59,8 +59,8 @@ public class Eth62MessageFactory implements MessageFactory {
                 return new BlockBodiesMessage(encoded);
             case NEW_BLOCK:
                 return new NewBlockMessage(encoded);
-            // RSK new message
-            case RSK_MESSAGE:
+            // USC new message
+            case USC_MESSAGE:
                 return new UscMessage(config, encoded);
             default:
                 throw new IllegalArgumentException("No such message");

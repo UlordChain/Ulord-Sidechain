@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ import org.ethereum.core.Block;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.util.ContractRunner;
-import org.ethereum.util.RskTestFactory;
+import org.ethereum.util.UscTestFactory;
 import org.ethereum.vm.program.ProgramResult;
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,7 +32,7 @@ import org.spongycastle.util.encoders.Hex;
 
 public class ReversibleTransactionExecutorTest {
 
-    private final RskTestFactory factory = new RskTestFactory();
+    private final UscTestFactory factory = new UscTestFactory();
     private final ContractRunner contractRunner = new ContractRunner(factory);
     private final ReversibleTransactionExecutor reversibleTransactionExecutor = factory.getReversibleTransactionExecutor();
 

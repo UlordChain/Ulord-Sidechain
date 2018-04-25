@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -54,7 +54,7 @@ public interface BlockProcessor {
 
     boolean isAdvancedBlock(long number);
 
-    // New messages for RSK's sync protocol
+    // New messages for USC's sync protocol
 
     void processBlockRequest(MessageChannel sender, long requestId, byte[] hash);
 

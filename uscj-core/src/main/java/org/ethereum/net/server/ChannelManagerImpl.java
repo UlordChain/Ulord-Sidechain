@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -196,7 +196,7 @@ public class ChannelManagerImpl implements ChannelManager {
         final EthMessage newBlockHashes = new UscMessage(config, new NewBlockHashesMessage(Arrays.asList(bi)));
         synchronized (activePeers) {
             // Get a randomized list with all the peers that don't have the block yet.
-            activePeers.values().forEach(c -> logger.trace("RSK activePeers: {}", c));
+            activePeers.values().forEach(c -> logger.trace("USC activePeers: {}", c));
             final Vector<Channel> peers = activePeers.values().stream()
                     .filter(p -> skip == null || !skip.contains(p.getNodeId()))
                     .collect(Collectors.toCollection(Vector::new));
@@ -206,12 +206,12 @@ public class ChannelManagerImpl implements ChannelManager {
             for (int i = 0; i < sqrt; i++) {
                 Channel peer = peers.get(i);
                 res.add(peer.getNodeId());
-                logger.trace("RSK propagate: {}", peer);
+                logger.trace("USC propagate: {}", peer);
                 peer.sendMessage(newBlock);
             }
             for (int i = sqrt; i < peers.size(); i++) {
                 Channel peer = peers.get(i);
-                logger.trace("RSK announce: {}", peer);
+                logger.trace("USC announce: {}", peer);
                 peer.sendMessage(newBlockHashes);
             }
         }
@@ -225,12 +225,12 @@ public class ChannelManagerImpl implements ChannelManager {
         final EthMessage newBlockHash = new UscMessage(config, new NewBlockHashesMessage(identifiers));
 
         synchronized (activePeers) {
-            activePeers.values().forEach(c -> logger.trace("RSK activePeers: {}", c));
+            activePeers.values().forEach(c -> logger.trace("USC activePeers: {}", c));
 
             activePeers.values().stream()
                     .filter(p -> targets == null || targets.contains(p.getNodeId()))
                     .forEach(peer -> {
-                        logger.trace("RSK announce hash: {}", peer);
+                        logger.trace("USC announce hash: {}", peer);
                         peer.sendMessage(newBlockHash);
                     });
         }

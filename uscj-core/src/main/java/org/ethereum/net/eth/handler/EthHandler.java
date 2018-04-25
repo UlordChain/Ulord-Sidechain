@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -110,8 +110,8 @@ public abstract class EthHandler extends SimpleChannelInboundHandler<EthMessage>
     }
 
     public void activate() {
-        logger.info("RSK protocol activated");
-        ethereumListener.trace("RSK protocol activated");
+        logger.info("USC protocol activated");
+        ethereumListener.trace("USC protocol activated");
         sendStatus();
     }
 

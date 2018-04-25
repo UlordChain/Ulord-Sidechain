@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -121,7 +121,7 @@ public class Start {
     }
 
     public void startNode(String[] args) throws Exception {
-        logger.info("Starting RSK");
+        logger.info("Starting USC");
 
         CLIInterface.call(uscSystemProperties, args);
         logger.info("Running {},  core version: {}-{}", uscSystemProperties.genesisInfo(), uscSystemProperties.projectVersion(), uscSystemProperties.projectVersionModifier());
@@ -212,7 +212,7 @@ public class Start {
     }
 
     public void stop() {
-        logger.info("Shutting down RSK node");
+        logger.info("Shutting down USC node");
         syncPool.stop();
         if (uscSystemProperties.isRpcEnabled()) {
             web3Service.stop();

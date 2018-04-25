@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -187,7 +187,7 @@ public class P2pHandler extends SimpleChannelInboundHandler<P2pMessage> {
             List<Capability> capInCommon = getSupportedCapabilities(msg);
             channel.initMessageCodes(capInCommon);
             for (Capability capability : capInCommon) {
-                if (capability.getName().equals(Capability.RSK)) {
+                if (capability.getName().equals(Capability.USC)) {
 
                     // Activate EthHandler for this peer
                     channel.activateEth(ctx, fromCode(capability.getVersion()));
@@ -263,7 +263,7 @@ public class P2pHandler extends SimpleChannelInboundHandler<P2pMessage> {
 
         for (Capability cap : hello.getCapabilities()) {
             if (configCaps.contains(cap)) {
-                if (cap.isRSK()) {
+                if (cap.isUSC()) {
                     eths.add(cap);
                 } else {
                     supported.add(cap);

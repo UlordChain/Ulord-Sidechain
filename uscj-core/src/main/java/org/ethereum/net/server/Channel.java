@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -180,7 +180,7 @@ public class Channel {
 
         logger.info("Eth{} [ address = {} | id = {} ]", handler.getVersion(), inetSocketAddress, getPeerIdShort());
 
-        ctx.pipeline().addLast(Capability.RSK, handler);
+        ctx.pipeline().addLast(Capability.USC, handler);
 
         handler.setMsgQueue(msgQueue);
         handler.setChannel(this);
@@ -276,7 +276,7 @@ public class Channel {
         return peerStats;
     }
 
-    // RSK sub protocol
+    // USC sub protocol
 
     public boolean isEthCompatible(Channel peer) {
         return peer != null && peer.getEthVersion().isCompatible(getEthVersion());

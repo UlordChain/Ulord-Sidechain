@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * Immutable representation of an RSK address.
+ * Immutable representation of an USC address.
  * It is a simple wrapper on the raw byte[].
  *
  * @author Ariel Mendelzon
@@ -69,7 +69,7 @@ public class UscAddress {
      */
     public UscAddress(byte[] bytes) {
         if (bytes.length != LENGTH_IN_BYTES) {
-            throw new RuntimeException(String.format("An RSK address must be %d bytes long", LENGTH_IN_BYTES));
+            throw new RuntimeException(String.format("An USC address must be %d bytes long", LENGTH_IN_BYTES));
         }
 
         this.bytes = bytes;

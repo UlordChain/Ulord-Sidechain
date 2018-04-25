@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -75,7 +75,7 @@ public class MinerHelper {
         // this variable is set before iterating transactions in case list is empty
         latestStateRootHash = originalRepo.getRoot();
 
-        // RSK test, remove
+        // USC test, remove
         String stateHash1 = Hex.toHexString(blockchain.getBestBlock().getStateRoot());
         String stateHash2 = Hex.toHexString(repository.getRoot());
         if (stateHash1.compareTo(stateHash2) != 0) {

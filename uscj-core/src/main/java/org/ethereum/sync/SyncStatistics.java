@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ public class SyncStatistics {
     private long headersCount;
     private int headerBunchesCount;
 
-    // RSK new fields
+    // USC new fields
     private long statusCount;
     private long getBlocksCount;
 
@@ -48,13 +48,13 @@ public class SyncStatistics {
         getBlocksCount = 0;
     }
 
-    // RSK new method
+    // USC new method
     public void getBlock() {
         getBlocksCount++;
         fixCommon(1);
     }
 
-    // RSK new method
+    // USC new method
     public void addStatus() {
         statusCount++;
         fixCommon(1);

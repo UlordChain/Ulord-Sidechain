@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,7 +25,7 @@ import co.usc.metrics.HashRateCalculator;
 import co.usc.mine.MinerClient;
 import co.usc.mine.MinerServer;
 import co.usc.net.*;
-import co.usc.net.eth.RskWireProtocol;
+import co.usc.net.eth.UscWireProtocol;
 import co.usc.net.handler.TxHandler;
 import co.usc.net.handler.TxHandlerImpl;
 import co.usc.net.sync.SyncConfiguration;
@@ -265,7 +265,7 @@ public class UscFactory {
                                                                                   Blockchain blockchain,
                                                                                   UscSystemProperties config,
                                                                                   CompositeEthereumListener ethereumListener){
-        return () -> new RskWireProtocol(config, peerScoringManager, messageHandler, blockchain, ethereumListener);
+        return () -> new UscWireProtocol(config, peerScoringManager, messageHandler, blockchain, ethereumListener);
     }
 
     @Bean

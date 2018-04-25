@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,7 +23,7 @@ import org.ethereum.util.RLP;
 import java.math.BigInteger;
 
 /**
- * Wrapper around an RSK GetSkeleton message.
+ * Wrapper around an USC GetSkeleton message.
  */
 public class SkeletonRequestMessage extends MessageWithId {
     private long id;

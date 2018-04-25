@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -53,7 +53,7 @@ public class MinerUtils {
 
     public static co.usc.ulordj.core.UldTransaction getBitcoinMergedMiningCoinbaseTransaction(co.usc.ulordj.core.NetworkParameters params, byte[] blockHashForMergedMining) {
         co.usc.ulordj.core.UldTransaction coinbaseTransaction = new co.usc.ulordj.core.UldTransaction(params);
-        //Add a random number of random bytes before the RSK tag
+        //Add a random number of random bytes before the USC tag
         SecureRandom random = new SecureRandom();
         byte[] prefix = new byte[random.nextInt(1000)];
         random.nextBytes(prefix);
@@ -88,7 +88,7 @@ public class MinerUtils {
             byte[] blockHashForMergedMining1,
             byte[] blockHashForMergedMining2) {
         co.usc.ulordj.core.UldTransaction coinbaseTransaction = new co.usc.ulordj.core.UldTransaction(params);
-        //Add a random number of random bytes before the RSK tag
+        //Add a random number of random bytes before the USC tag
         SecureRandom random = new SecureRandom();
         byte[] prefix = new byte[random.nextInt(1000)];
         random.nextBytes(prefix);

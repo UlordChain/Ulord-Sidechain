@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2018 RSK Labs Ltd.
+ * Copyright (C) 2018 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 import java.math.BigInteger;
 
 /**
- * RSK's native coin.
+ * USC's native coin.
  * One coin is convertible to (10^10)^(-1) satoshis.
  * It is comparable to 1 wei in the Ethereum network.
  */

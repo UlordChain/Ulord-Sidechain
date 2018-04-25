@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,7 +51,7 @@ public class MessageCodesResolver {
         int offset = P2pMessageCodes.USER.asByte() + 1;
 
         for (Capability capability : caps) {
-            if (capability.getName().equals(Capability.RSK)) {
+            if (capability.getName().equals(Capability.USC)) {
                 setEthOffset(offset);
                 EthVersion v = fromCode(capability.getVersion());
                 offset += EthMessageCodes.values(v).length;
@@ -65,7 +65,7 @@ public class MessageCodesResolver {
     }
 
     public byte withEthOffset(byte code) {
-        return withOffset(code, Capability.RSK);
+        return withOffset(code, Capability.USC);
     }
 
     public byte withOffset(byte code, String cap) {
@@ -78,7 +78,7 @@ public class MessageCodesResolver {
     }
 
     public byte resolveEth(byte code) {
-        return resolve(code, Capability.RSK);
+        return resolve(code, Capability.USC);
     }
 
     private byte resolve(byte code, String cap) {
@@ -92,7 +92,7 @@ public class MessageCodesResolver {
     }
 
     public void setEthOffset(int offset) {
-        setOffset(Capability.RSK, offset);
+        setOffset(Capability.USC, offset);
     }
 
     private void setOffset(String cap, int offset) {

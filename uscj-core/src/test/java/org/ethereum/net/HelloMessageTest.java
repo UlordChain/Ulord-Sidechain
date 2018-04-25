@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -69,7 +69,7 @@ public class HelloMessageTest {
         byte version = 2;
         String clientStr = "Ethereum(++)/v0.7.9/Release/Linux/g++";
         List<Capability> capabilities = Arrays.asList(
-                new Capability(Capability.RSK, EthVersion.UPPER),
+                new Capability(Capability.USC, EthVersion.UPPER),
                 new Capability(Capability.P2P, P2pHandler.VERSION));
         int listenPort = 992;
         String peerId = "1fbf1e41f08078918c9f7b6734594ee56d7f538614f602c71194db0a1af5a";

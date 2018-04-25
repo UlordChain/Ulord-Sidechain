@@ -1,10 +1,9 @@
 package co.usc.core.bc;
 
 import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.blockchain.utils.BlockGenerator;
 import org.ethereum.core.Block;
 import org.ethereum.core.Blockchain;
-import org.ethereum.util.RskTestFactory;
+import org.ethereum.util.UscTestFactory;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ public class SelectionRuleTest {
     }
 
     private static BlockChainImpl createBlockchain() {
-        RskTestFactory factory = new RskTestFactory();
+        UscTestFactory factory = new UscTestFactory();
         return factory.getBlockchain();
     }
 }

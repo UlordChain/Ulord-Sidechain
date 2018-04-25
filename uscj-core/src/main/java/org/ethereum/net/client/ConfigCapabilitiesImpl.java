@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,11 +47,11 @@ public class ConfigCapabilitiesImpl implements ConfigCapabilities{
         if (config.syncVersion() != null) {
             EthVersion eth = fromCode(config.syncVersion());
             if (eth != null) {
-                allCaps.add(new Capability(RSK, eth.getCode()));
+                allCaps.add(new Capability(USC, eth.getCode()));
             }
         } else {
             for (EthVersion v : EthVersion.supported()) {
-                allCaps.add(new Capability(RSK, v.getCode()));
+                allCaps.add(new Capability(USC, v.getCode()));
             }
         }
         this.config = config;

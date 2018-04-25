@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -97,7 +97,7 @@ public class Web3ImplTest {
 
         String netVersion = web3.net_version();
 
-        Assert.assertTrue("RSK net version different than expected", netVersion.compareTo(Byte.toString(config.getBlockchainConfig().getCommonConstants().getChainId())) == 0);
+        Assert.assertTrue("USC net version different than expected", netVersion.compareTo(Byte.toString(config.getBlockchainConfig().getCommonConstants().getChainId())) == 0);
     }
 
     @Test
@@ -107,7 +107,7 @@ public class Web3ImplTest {
 
         String netVersion = web3.eth_protocolVersion();
 
-        Assert.assertTrue("RSK net version different than one", netVersion.compareTo("1") == 0);
+        Assert.assertTrue("USC net version different than one", netVersion.compareTo("1") == 0);
     }
 
     @Test
@@ -123,7 +123,7 @@ public class Web3ImplTest {
 
     @Test
     public void web3_sha3() throws Exception {
-        String toHash = "RSK";
+        String toHash = "USC";
 
         Web3 web3 = createWeb3();
 

@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -168,7 +168,7 @@ public class MinerClientImpl implements MinerClient {
     @Override
     public boolean fallbackMineBlock() {
         // This is not used now. In the future this method could allow
-        // a HSM to provide the signature for an RSK block here.
+        // a HSM to provide the signature for an USC block here.
 
         if (this.usc != null) {
             if (this.usc.hasBetterBlockToSync()) {

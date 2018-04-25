@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -70,7 +70,7 @@ public class MessageFilterTest {
     @Test
     public void filterAcceptRskMessageWhenCommandIsSpecified() {
         List<String> commands = new ArrayList<>();
-        commands.add("RSK_MESSAGE");
+        commands.add("USC_MESSAGE");
 
         MessageFilter filter = new MessageFilter(commands);
 
@@ -84,7 +84,7 @@ public class MessageFilterTest {
     @Test
     public void filterMessagesWhenCommandsAreSpecified() {
         List<String> commands = new ArrayList<>();
-        commands.add("RSK_MESSAGE");
+        commands.add("USC_MESSAGE");
         commands.add("TRANSACTIONS");
         commands.add("BLOCKS");
 
@@ -100,7 +100,7 @@ public class MessageFilterTest {
     @Test
     public void filterMessagesWhenRskMessageTypeIsSpecified() {
         List<String> commands = new ArrayList<>();
-        commands.add("RSK_MESSAGE:GET_BLOCK_MESSAGE");
+        commands.add("USC_MESSAGE:GET_BLOCK_MESSAGE");
         commands.add("TRANSACTIONS");
         commands.add("BLOCKS");
 
@@ -116,7 +116,7 @@ public class MessageFilterTest {
     @Test
     public void rejectRskMessageIfMessageTypeDoesNotMatch() {
         List<String> commands = new ArrayList<>();
-        commands.add("RSK_MESSAGE:GET_BLOCKS_MESSAGE");
+        commands.add("USC_MESSAGE:GET_BLOCKS_MESSAGE");
         commands.add("TRANSACTIONS");
         commands.add("BLOCKS");
 

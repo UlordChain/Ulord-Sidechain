@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,7 +29,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Immutable representation of an RSK Pending Federation.
+ * Immutable representation of an USC Pending Federation.
  * A pending federation is one that is being actively
  * voted by the current federation to potentially become
  * the new active federation.

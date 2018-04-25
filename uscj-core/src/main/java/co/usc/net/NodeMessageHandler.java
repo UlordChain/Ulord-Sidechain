@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -98,7 +98,7 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
     }
 
     /**
-     * processMessage processes a RSK Message, doing the appropriate action based on the message type.
+     * processMessage processes a USC Message, doing the appropriate action based on the message type.
      *
      * @param sender  the message sender.
      * @param message the message to be processed.

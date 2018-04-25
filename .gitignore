@@ -67,7 +67,7 @@ fileMonitor.txt
 
 rpc-tests/node_modules/
 samples/tokenapp/node_modules/
-rskdump.json
+uscdump.json
 
 uscj-core/keyfiletest.txt
 uscj-core/java/nodeId.properties

@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ package org.ethereum.net.client;
 public class Capability implements Comparable<Capability> {
 
     public static final String P2P = "p2p";
-    public static final String RSK = "rsk";
+    public static final String USC = "usc";
 
     private String name;
     private byte version;
@@ -43,8 +43,8 @@ public class Capability implements Comparable<Capability> {
         return version;
     }
 
-    public boolean isRSK() {
-        return RSK.equals(name);
+    public boolean isUSC() {
+        return USC.equals(name);
     }
 
     @Override

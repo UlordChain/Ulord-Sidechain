@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -114,7 +114,7 @@ public class ProofOfWorkRuleTest {
 
     @Test
     public void test_RSKTagInCoinbaseTransactionTooFar() {
-        /* This test is about a rsk block, with a compressed coinbase that leaves more than 64 bytes before the start of the RSK tag. */
+        /* This test is about a rsk block, with a compressed coinbase that leaves more than 64 bytes before the start of the USC tag. */
         BlockGenerator blockGenerator = new BlockGenerator();
         byte[] prefix = new byte[1000];
         byte[] bytes = org.spongycastle.util.Arrays.concatenate(prefix, UscMiningConstants.USC_TAG);
@@ -151,7 +151,7 @@ public class ProofOfWorkRuleTest {
 
     private static co.usc.ulordj.core.UldTransaction getBitcoinMergedMiningCoinbaseTransactionWithoutRSKTag(co.usc.ulordj.core.NetworkParameters params, byte[] blockHashForMergedMining) {
         co.usc.ulordj.core.UldTransaction coinbaseTransaction = new co.usc.ulordj.core.UldTransaction(params);
-        //Add a random number of random bytes before the RSK tag
+        //Add a random number of random bytes before the USC tag
         SecureRandom random = new SecureRandom();
         byte[] bytes = new byte[1000];
         random.nextBytes(bytes);

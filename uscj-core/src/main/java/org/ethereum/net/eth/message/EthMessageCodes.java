@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -133,7 +133,7 @@ public enum EthMessageCodes {
      */
     NEW_BLOCK(0x07),
 
-    RSK_MESSAGE(0x08);
+    USC_MESSAGE(0x08);
 
     private int cmd;
 
@@ -151,7 +151,7 @@ public enum EthMessageCodes {
                 GET_BLOCK_BODIES,
                 BLOCK_BODIES,
                 NEW_BLOCK,
-                RSK_MESSAGE
+                USC_MESSAGE
         });
 
         for (EthVersion v : EthVersion.values()) {

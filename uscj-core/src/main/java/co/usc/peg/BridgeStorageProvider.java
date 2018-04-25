@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -60,8 +60,8 @@ public class BridgeStorageProvider {
 
     private Map<Sha256Hash, Long> btcTxHashesAlreadyProcessed;
 
-    // RSK release txs follow these steps: First, they are waiting for coin selection (releaseRequestQueue),
-    // then they are waiting for enough confirmations on the RSK network (releaseTransactionSet),
+    // USC release txs follow these steps: First, they are waiting for coin selection (releaseRequestQueue),
+    // then they are waiting for enough confirmations on the USC network (releaseTransactionSet),
     // then they are waiting for federators' signatures (rskTxsWaitingForSignatures),
     // then they are logged into the block that has them as completely signed for btc release
     // and are removed from rskTxsWaitingForSignatures.

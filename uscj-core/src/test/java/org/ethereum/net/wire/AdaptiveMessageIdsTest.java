@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -95,7 +95,7 @@ public class AdaptiveMessageIdsTest {
     public void test4() {
 
         List<Capability> capabilities = Arrays.asList(
-                new Capability(Capability.RSK, EthVersion.V62.getCode()));
+                new Capability(Capability.USC, EthVersion.V62.getCode()));
 
         messageCodesResolver.init(capabilities);
 
@@ -114,7 +114,7 @@ public class AdaptiveMessageIdsTest {
     public void test5() {
 
         List<Capability> capabilities = Arrays.asList(
-                new Capability(Capability.RSK, EthVersion.V62.getCode()));
+                new Capability(Capability.USC, EthVersion.V62.getCode()));
 
         messageCodesResolver.init(capabilities);
 

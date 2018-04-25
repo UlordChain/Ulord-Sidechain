@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -427,7 +427,7 @@ public class TransactionExecutor {
             return;
         }
 
-        // RSK if local call gas balances must not be changed
+        // USC if local call gas balances must not be changed
         if (localCall) {
             return;
         }

@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -311,7 +311,7 @@ public class BridgeSupport {
             // using the exact same utxos sent to us.
             // That is, build a release transaction and get it in the release transaction set.
             // Otherwise, transfer SBTC to the sender of the BTC
-            // The RSK account to update is the one that matches the pubkey "spent" on the first bitcoin tx input
+            // The USC account to update is the one that matches the pubkey "spent" on the first bitcoin tx input
             LockWhitelist lockWhitelist = provider.getLockWhitelist();
             if (!lockWhitelist.isWhitelistedFor(senderBtcAddress, totalAmount, height)) {
                 locked = false;
@@ -361,7 +361,7 @@ public class BridgeSupport {
             // We could call removeUsedUTXOs(btcTx) here, but we decided to not do that.
             // Used utxos should had been removed when we created the release tx.
             // Invoking removeUsedUTXOs() here would make "some" sense in theses scenarios:
-            // a) In testnet, devnet or local: we restart the RSK blockchain whithout changing the federation address. We don't want to have utxos that were already spent.
+            // a) In testnet, devnet or local: we restart the USC blockchain whithout changing the federation address. We don't want to have utxos that were already spent.
             // Open problem: TxA spends TxB. registerUldTransaction() for TxB is called, it spends a utxo the bridge is not yet aware of,
             // so nothing is removed. Then registerUldTransaction() for TxA and the "already spent" utxo is added as it was not spent.
             // When is not guaranteed to be called in the chronological order, so a Federator can inform
@@ -385,7 +385,7 @@ public class BridgeSupport {
         if (locked) {
             saveNewUTXOs(btcTx);
         }
-        logger.info("BTC Tx {} processed in RSK", btcTxHash);
+        logger.info("BTC Tx {} processed in USC", btcTxHash);
     }
 
     /*
@@ -481,7 +481,7 @@ public class BridgeSupport {
      * processing of any outstanding btc release requests; and
      * processing of any outstanding release btc transactions.
      * @throws IOException
-     * @param rskTx current RSK transaction
+     * @param rskTx current USC transaction
      */
     public void updateCollections(Transaction rskTx) throws IOException {
         Context.propagate(btcContext);
@@ -672,7 +672,7 @@ public class BridgeSupport {
      * It basically looks for transactions with enough confirmations
      * and marks them as ready for signing as well as removes them
      * from the set.
-     * @param rskTx the RSK transaction that is causing this processing.
+     * @param rskTx the USC transaction that is causing this processing.
      */
     private void processReleaseTransactions(Transaction rskTx) {
         final Map<Keccak256, UldTransaction> txsWaitingForSignatures;
@@ -984,7 +984,7 @@ public class BridgeSupport {
     }
 
     /**
-     * Returns the RSK blockchain height a given btc transaction hash
+     * Returns the USC blockchain height a given btc transaction hash
      * was processed at by the bridge.
      * @param btcTxHash the btc tx hash for which to retrieve the height.
      * @return a Long with the processed height. If the hash was not processed
@@ -1738,7 +1738,7 @@ public class BridgeSupport {
 
     /**
      * Sets a delay in the BTC best chain to disable lock whitelist
-     * @param tx current RSK transaction
+     * @param tx current USC transaction
      * @param disableBlockDelayBI block since current BTC best chain height to disable lock whitelist
      * @return 1 if it was successful, -1 if a delay was already set, -2 if disableBlockDelay contains an invalid value
      */

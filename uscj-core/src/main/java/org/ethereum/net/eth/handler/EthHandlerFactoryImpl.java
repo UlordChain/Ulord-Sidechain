@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 package org.ethereum.net.eth.handler;
 
-import co.usc.net.eth.RskWireProtocol;
+import co.usc.net.eth.UscWireProtocol;
 import org.ethereum.net.eth.EthVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -51,6 +51,6 @@ public class EthHandlerFactoryImpl implements EthHandlerFactory {
     }
 
     public interface RskWireProtocolFactory {
-        RskWireProtocol newInstance();
+        UscWireProtocol newInstance();
     }
 }

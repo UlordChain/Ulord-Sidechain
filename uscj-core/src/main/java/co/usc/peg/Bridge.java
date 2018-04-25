@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -51,7 +51,7 @@ import java.time.Instant;
 import java.util.*;
 
 /**
- * Precompiled contract that manages the 2 way peg between bitcoin and RSK.
+ * Precompiled contract that manages the 2 way peg between bitcoin and USC.
  * This class is just a wrapper, actual functionality is found in BridgeSupport.
  * @author Oscar Guindzberg
  */

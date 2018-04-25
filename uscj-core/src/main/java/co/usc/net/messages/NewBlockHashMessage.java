@@ -3,7 +3,7 @@ package co.usc.net.messages;
 import org.ethereum.util.RLP;
 
 /**
- * Wrapper around an RSK NewBlockHash message.
+ * Wrapper around an USC NewBlockHash message.
  */
 public class NewBlockHashMessage extends Message {
     private byte[] hash;

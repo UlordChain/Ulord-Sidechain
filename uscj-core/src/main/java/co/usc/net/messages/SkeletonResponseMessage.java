@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2017 USC Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ import org.ethereum.util.RLP;
 import java.util.List;
 
 /**
- * Wrapper around an RSK Skeleton message.
+ * Wrapper around an USC Skeleton message.
  */
 public class SkeletonResponseMessage extends MessageWithId {
 

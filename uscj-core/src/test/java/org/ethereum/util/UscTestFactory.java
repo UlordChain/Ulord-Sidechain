@@ -5,7 +5,6 @@ import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.ReversibleTransactionExecutor;
 import co.usc.core.UscAddress;
-import co.usc.core.UscFactory;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.db.RepositoryImpl;
@@ -24,14 +23,14 @@ import java.math.BigInteger;
 import java.util.HashMap;
 
 /**
- * This is the test version of {@link UscFactory}, but without Spring.
+ * This is the test version of {@link co.usc.core.UscFactory}, but without Spring.
  *
  * We try to recreate the objects used in production as best as we can,
  * replacing persistent storage with in-memory storage.
  * There are many nulls in place of objects that aren't part of our
  * tests yet.
  */
-public class RskTestFactory {
+public class UscTestFactory {
     private final TestSystemProperties config = new TestSystemProperties();
     private BlockChainImpl blockchain;
     private IndexedBlockStore blockStore;
@@ -40,7 +39,7 @@ public class RskTestFactory {
     private ProgramInvokeFactoryImpl programInvokeFactory;
     private ReversibleTransactionExecutor reversibleTransactionExecutor;
 
-    public RskTestFactory() {
+    public UscTestFactory() {
         Genesis genesis = new BlockGenerator().getGenesisBlock();
         genesis.setStateRoot(getRepository().getRoot());
         genesis.flushRLP();
