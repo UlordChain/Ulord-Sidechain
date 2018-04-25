@@ -45,7 +45,7 @@ node2
 node3
 devnet-federator
 testnet1
-rsk-database
+usc-database
 blocksminer
 
 # Jacoco Reports

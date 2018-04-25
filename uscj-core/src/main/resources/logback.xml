@@ -22,14 +22,14 @@
 
     <appender name="FILE-AUDIT"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/rsk.log</file>
+        <file>./logs/usc.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>
                 %date{yyyy-MM-dd-HH:mm:ss.SSS} %p [%c{1}]  %m%n
             </Pattern>
         </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-        <fileNamePattern>./logs/rskj-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+        <fileNamePattern>./logs/uscj-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
         <maxFileSize>100MB</maxFileSize>
         <maxHistory>7</maxHistory>
         <totalSizeCap>1GB</totalSizeCap>
