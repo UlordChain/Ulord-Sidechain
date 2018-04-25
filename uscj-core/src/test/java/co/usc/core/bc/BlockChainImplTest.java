@@ -22,18 +22,13 @@ import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.blocks.DummyBlockRecorder;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.db.RepositoryImpl;
 import co.usc.test.builders.BlockBuilder;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.trie.TrieStoreImpl;
 import co.usc.validators.BlockValidator;
 import co.usc.validators.DummyBlockValidator;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
-import co.usc.db.RepositoryImpl;
-import co.usc.test.builders.BlockBuilder;
-import co.usc.test.builders.BlockChainBuilder;
 import org.ethereum.core.*;
 import org.ethereum.core.genesis.GenesisLoader;
 import org.ethereum.crypto.HashUtil;
@@ -923,7 +918,7 @@ public class BlockChainImplTest {
 
         Genesis genesis = GenesisLoader.loadGenesis(config, "usc-unittests.json", BigInteger.ZERO, true);
 
-        for (RskAddress addr : genesis.getPremine().keySet()) {
+        for (UscAddress addr : genesis.getPremine().keySet()) {
             repository.createAccount(addr);
             repository.addBalance(addr, genesis.getPremine().get(addr).getAccountState().getBalance());
         }

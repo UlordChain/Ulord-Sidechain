@@ -20,7 +20,7 @@
 package org.ethereum.jsontestsuite;
 
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
@@ -62,15 +62,15 @@ public class TestProgramInvokeFactory implements ProgramInvokeFactory {
 
         /***         ADDRESS op       ***/
         // YP: Get address of currently executing account.
-        RskAddress addr = tx.isContractCreation() ? tx.getContractAddress() : tx.getReceiveAddress();
+        UscAddress addr = tx.isContractCreation() ? tx.getContractAddress() : tx.getReceiveAddress();
 
         /***         ORIGIN op       ***/
         // YP: This is the sender of original transaction; it is never a contract.
-        RskAddress origin = tx.getSender();
+        UscAddress origin = tx.getSender();
 
         /***         CALLER op       ***/
         // YP: This is the address of the account that is directly responsible for this execution.
-        RskAddress caller = tx.getSender();
+        UscAddress caller = tx.getSender();
 
         /***         BALANCE op       ***/
         Coin balance = repository.getBalance(addr);

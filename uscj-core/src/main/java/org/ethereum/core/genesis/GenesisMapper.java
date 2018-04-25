@@ -31,7 +31,7 @@ import org.ethereum.util.RLP;
 public class GenesisMapper {
     private static final byte[] EMPTY_LIST_HASH = HashUtil.keccak256(RLP.encodeList());
 
-    public Genesis mapFromJson(GenesisJson json, boolean rskFormat) {
+    public Genesis mapFromJson(GenesisJson json, boolean uscFormat) {
         byte[] nonce = Utils.parseData(json.nonce);
         byte[] difficulty = Utils.parseData(json.difficulty);
         byte[] mixHash = Utils.parseData(json.mixhash);
@@ -51,7 +51,7 @@ public class GenesisMapper {
         byte[] bitcoinMergedMiningCoinbaseTransaction = null;
         byte[] minGasPrice = null;
 
-        if (rskFormat) {
+        if (uscFormat) {
             bitcoinMergedMiningHeader = Utils.parseData(json.bitcoinMergedMiningHeader);
             bitcoinMergedMiningMerkleProof = Utils.parseData(json.bitcoinMergedMiningMerkleProof);
             bitcoinMergedMiningCoinbaseTransaction = Utils.parseData(json.bitcoinMergedMiningCoinbaseTransaction);

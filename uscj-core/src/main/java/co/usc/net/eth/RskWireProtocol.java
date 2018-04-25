@@ -18,7 +18,7 @@
 
 package co.usc.net.eth;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.bc.BlockChainStatus;
 import co.usc.net.*;
@@ -28,10 +28,6 @@ import co.usc.net.messages.Message;
 import co.usc.net.messages.StatusMessage;
 import co.usc.scoring.EventType;
 import co.usc.scoring.PeerScoringManager;
-import co.usc.net.messages.BlockMessage;
-import co.usc.net.messages.GetBlockMessage;
-import co.usc.net.messages.Message;
-import co.usc.net.messages.StatusMessage;
 import io.netty.channel.ChannelHandlerContext;
 import org.ethereum.core.*;
 import org.ethereum.core.genesis.GenesisLoader;
@@ -75,13 +71,13 @@ public class RskWireProtocol extends EthHandler {
     protected SyncState syncState = SyncState.IDLE;
     protected boolean syncDone = false;
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final MessageChannel messageSender;
     private final MessageHandler messageHandler;
     private final Blockchain blockchain;
     private final MessageRecorder messageRecorder;
 
-    public RskWireProtocol(RskSystemProperties config, PeerScoringManager peerScoringManager, MessageHandler messageHandler, Blockchain blockchain, CompositeEthereumListener ethereumListener) {
+    public RskWireProtocol(UscSystemProperties config, PeerScoringManager peerScoringManager, MessageHandler messageHandler, Blockchain blockchain, CompositeEthereumListener ethereumListener) {
         super(blockchain, config, ethereumListener, V62);
         this.peerScoringManager = peerScoringManager;
         this.messageHandler = messageHandler;
@@ -123,7 +119,7 @@ public class RskWireProtocol extends EthHandler {
                 processStatus((org.ethereum.net.eth.message.StatusMessage) msg, ctx);
                 break;
             case RSK_MESSAGE:
-                RskMessage rskmessage = (RskMessage)msg;
+                UscMessage rskmessage = (UscMessage)msg;
                 Message message = rskmessage.getMessage();
 
                 switch (message.getMessageType()) {
@@ -249,7 +245,7 @@ public class RskWireProtocol extends EthHandler {
 
         // RSK new protocol send status
         Status status = new Status(bestBlock.getNumber(), bestBlock.getHash().getBytes(), bestBlock.getParentHash().getBytes(), totalDifficulty);
-        RskMessage rskmessage = new RskMessage(config, new StatusMessage(status));
+        UscMessage rskmessage = new UscMessage(config, new StatusMessage(status));
         loggerNet.trace("Sending status best block {} to {}", status.getBestBlockNumber(), this.messageSender.getPeerNodeID().toString());
         sendMessage(rskmessage);
 

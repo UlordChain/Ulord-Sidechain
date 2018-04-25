@@ -18,8 +18,7 @@
 
 package co.usc.mine;
 
-import co.usc.config.RskSystemProperties;
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import org.ethereum.config.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,10 +32,10 @@ import java.math.BigInteger;
 @Component
 public class GasLimitCalculator {
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
 
     @Autowired
-    public GasLimitCalculator(RskSystemProperties config) {
+    public GasLimitCalculator(UscSystemProperties config) {
         this.config = config;
     }
 

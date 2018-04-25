@@ -18,7 +18,7 @@
 
 package co.usc.config;
 
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.remasc.RemascException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class RemascConfigFactoryTest {
         Assert.assertNotNull(remascConfig.getPublishersDivisor());
         Assert.assertNotNull(remascConfig.getPunishmentDivisor());
         Assert.assertNotNull(remascConfig.getRskLabsAddress());
-        Assert.assertNotEquals(RskAddress.nullAddress(), remascConfig.getRskLabsAddress());
+        Assert.assertNotEquals(UscAddress.nullAddress(), remascConfig.getRskLabsAddress());
         Assert.assertNotNull(remascConfig.getRskLabsDivisor());
         Assert.assertNotNull(remascConfig.getSyntheticSpan());
         Assert.assertNotNull(remascConfig.getLateUncleInclusionPunishmentDivisor());
@@ -53,7 +53,7 @@ public class RemascConfigFactoryTest {
         Assert.assertNotNull(remascConfig.getPublishersDivisor());
         Assert.assertNotNull(remascConfig.getPunishmentDivisor());
         Assert.assertNotNull(remascConfig.getRskLabsAddress());
-        Assert.assertNotEquals(RskAddress.nullAddress(), remascConfig.getRskLabsAddress());
+        Assert.assertNotEquals(UscAddress.nullAddress(), remascConfig.getRskLabsAddress());
         Assert.assertNotNull(remascConfig.getRskLabsDivisor());
         Assert.assertNotNull(remascConfig.getSyntheticSpan());
         Assert.assertNotNull(remascConfig.getLateUncleInclusionPunishmentDivisor());
@@ -64,7 +64,7 @@ public class RemascConfigFactoryTest {
         Assert.assertNotNull(remascConfig.getPublishersDivisor());
         Assert.assertNotNull(remascConfig.getPunishmentDivisor());
         Assert.assertNotNull(remascConfig.getRskLabsAddress());
-        Assert.assertNotEquals(RskAddress.nullAddress(), remascConfig.getRskLabsAddress());
+        Assert.assertNotEquals(UscAddress.nullAddress(), remascConfig.getRskLabsAddress());
         Assert.assertNotNull(remascConfig.getRskLabsDivisor());
         Assert.assertNotNull(remascConfig.getSyntheticSpan());
         Assert.assertNotNull(remascConfig.getLateUncleInclusionPunishmentDivisor());
@@ -75,7 +75,7 @@ public class RemascConfigFactoryTest {
         Assert.assertNotNull(remascConfig.getPublishersDivisor());
         Assert.assertNotNull(remascConfig.getPunishmentDivisor());
         Assert.assertNotNull(remascConfig.getRskLabsAddress());
-        Assert.assertNotEquals(RskAddress.nullAddress(), remascConfig.getRskLabsAddress());
+        Assert.assertNotEquals(UscAddress.nullAddress(), remascConfig.getRskLabsAddress());
         Assert.assertNotNull(remascConfig.getRskLabsDivisor());
         Assert.assertNotNull(remascConfig.getSyntheticSpan());
         Assert.assertNotNull(remascConfig.getLateUncleInclusionPunishmentDivisor());

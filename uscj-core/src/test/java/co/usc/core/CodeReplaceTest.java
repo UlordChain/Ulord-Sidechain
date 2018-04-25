@@ -21,7 +21,6 @@ package co.usc.core;
 import co.usc.asm.EVMAssembler;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.bc.BlockChainImpl;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
 import org.ethereum.core.TransactionExecutor;
@@ -71,7 +70,7 @@ public class CodeReplaceTest {
         Transaction tx1 = createTx(blockchain, sender, new byte[0], code);
         executeTransaction(blockchain, tx1);
         // Now we can directly check the store and see the new code.
-        RskAddress createdContract = tx1.getContractAddress();
+        UscAddress createdContract = tx1.getContractAddress();
         byte[] expectedCode  = Arrays.copyOfRange(code, 12, 12+20);
         byte[] installedCode = blockchain.getRepository().getContractDetails(createdContract).getCode();
         // assert the contract has been created
@@ -135,7 +134,7 @@ public class CodeReplaceTest {
 
     protected Transaction createTx(BlockChainImpl blockchain, ECKey sender, byte[] receiveAddress,
                                    byte[] data, long value) throws InterruptedException {
-        BigInteger nonce = blockchain.getRepository().getNonce(new RskAddress(sender.getAddress()));
+        BigInteger nonce = blockchain.getRepository().getNonce(new UscAddress(sender.getAddress()));
         Transaction tx = new Transaction(
                 ByteUtil.bigIntegerToBytes(nonce),
                 ByteUtil.longToBytesNoLeadZeroes(1),
@@ -150,7 +149,7 @@ public class CodeReplaceTest {
 
     public TransactionExecutor executeTransaction(BlockChainImpl blockchain, Transaction tx) {
         Repository track = blockchain.getRepository().startTracking();
-        TransactionExecutor executor = new TransactionExecutor(config, tx, 0, RskAddress.nullAddress(), blockchain.getRepository(),
+        TransactionExecutor executor = new TransactionExecutor(config, tx, 0, UscAddress.nullAddress(), blockchain.getRepository(),
                 blockchain.getBlockStore(), null, new ProgramInvokeFactoryImpl(), blockchain.getBestBlock());
 
         executor.init();

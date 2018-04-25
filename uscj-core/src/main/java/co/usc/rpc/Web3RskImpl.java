@@ -23,8 +23,8 @@ import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.core.Context;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.params.RegTestParams;
-import co.usc.config.RskMiningConstants;
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscMiningConstants;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.NetworkStateExporter;
 import co.usc.metrics.HashRateCalculator;
 import co.usc.mine.*;
@@ -70,7 +70,7 @@ public class Web3RskImpl extends Web3Impl {
     public Web3RskImpl(Ethereum eth,
                        Blockchain blockchain,
                        TransactionPool transactionPool,
-                       RskSystemProperties properties,
+                       UscSystemProperties properties,
                        MinerClient minerClient,
                        MinerServer minerServer,
                        PersonalModule personalModule,
@@ -165,7 +165,7 @@ public class Web3RskImpl extends Web3Impl {
     public void ext_dumpState() {
         Block bestBlcock = blockStore.getBestBlock();
         logger.info("Dumping state for block hash {}, block number {}", bestBlcock.getHash(), bestBlcock.getNumber());
-        networkStateExporter.exportStatus(System.getProperty("user.dir") + "/" + "rskdump.json");
+        networkStateExporter.exportStatus(System.getProperty("user.dir") + "/" + "uscdump.json");
     }
 
     /**
@@ -227,11 +227,11 @@ public class Web3RskImpl extends Web3Impl {
         byte[] coinbaseAsByteArray = coinbase.bitcoinSerialize();
         List<Byte> coinbaseAsByteList = Arrays.asList(ArrayUtils.toObject(coinbaseAsByteArray));
 
-        List<Byte> rskTagAsByteList = Arrays.asList(ArrayUtils.toObject(RskMiningConstants.RSK_TAG));
+        List<Byte> uscTagAsByteList = Arrays.asList(ArrayUtils.toObject(UscMiningConstants.USC_TAG));
 
-        int rskTagPosition = Collections.lastIndexOfSubList(coinbaseAsByteList, rskTagAsByteList);
+        int uscTagPosition = Collections.lastIndexOfSubList(coinbaseAsByteList, uscTagAsByteList);
         byte[] blockHashForMergedMiningArray = new byte[Keccak256Helper.Size.S256.getValue() / 8];
-        System.arraycopy(coinbaseAsByteArray, rskTagPosition + RskMiningConstants.RSK_TAG.length, blockHashForMergedMiningArray, 0, blockHashForMergedMiningArray.length);
+        System.arraycopy(coinbaseAsByteArray, uscTagPosition + UscMiningConstants.USC_TAG.length, blockHashForMergedMiningArray, 0, blockHashForMergedMiningArray.length);
         return TypeConverter.toJsonHex(blockHashForMergedMiningArray);
     }
 

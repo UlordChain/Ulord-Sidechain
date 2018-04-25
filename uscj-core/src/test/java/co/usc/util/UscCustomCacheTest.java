@@ -28,7 +28,7 @@ import org.mockito.Mockito;
 /**
  * Created by mario on 09/09/2016.
  */
-public class RskCustomCacheTest {
+public class UscCustomCacheTest {
 
     private static Long TIME_TO_LIVE = 2000L;
     private static Long WAIT_PERIOD = 1000L;

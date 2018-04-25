@@ -18,7 +18,7 @@
 
 package org.ethereum.rpc;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.*;
 import co.usc.core.bc.BlockChainImpl;
@@ -247,7 +247,7 @@ public class Web3ImplTest {
         Blockchain blockchain = Web3Mocks.getMockBlockchain();
         TransactionPool transactionPool = Web3Mocks.getMockTransactionPool();
         BlockStore blockStore = Web3Mocks.getMockBlockStore();
-        RskSystemProperties mockProperties = Web3Mocks.getMockProperties();
+        UscSystemProperties mockProperties = Web3Mocks.getMockProperties();
         MinerClient minerClient = new SimpleMinerClient();
         PersonalModule personalModule = new PersonalModuleWalletDisabled();
         TxPoolModule txPoolModule = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
@@ -936,13 +936,13 @@ public class Web3ImplTest {
     public void eth_coinbase()  {
         String originalCoinbase = "1dcc4de8dec75d7aab85b513f0a142fd40d49347";
         MinerServer minerServerMock = Mockito.mock(MinerServer.class);
-        Mockito.when(minerServerMock.getCoinbaseAddress()).thenReturn(new RskAddress(originalCoinbase));
+        Mockito.when(minerServerMock.getCoinbaseAddress()).thenReturn(new UscAddress(originalCoinbase));
 
         Ethereum ethMock = Web3Mocks.getMockEthereum();
         Blockchain blockchain = Web3Mocks.getMockBlockchain();
         TransactionPool transactionPool = Web3Mocks.getMockTransactionPool();
         BlockStore blockStore = Web3Mocks.getMockBlockStore();
-        RskSystemProperties mockProperties = Web3Mocks.getMockProperties();
+        UscSystemProperties mockProperties = Web3Mocks.getMockProperties();
         PersonalModule personalModule = new PersonalModuleWalletDisabled();
         Web3 web3 = new Web3Impl(
                 ethMock,
@@ -1004,7 +1004,7 @@ public class Web3ImplTest {
             e.printStackTrace();
         }
 
-        String expectedSignature = "0x" + wallet.getAccount(new RskAddress(addr1)).getEcKey().sign(hash).r.toString() + wallet.getAccount(new RskAddress(addr1)).getEcKey().sign(hash).s.toString() + wallet.getAccount(new RskAddress(addr1)).getEcKey().sign(hash).v;
+        String expectedSignature = "0x" + wallet.getAccount(new UscAddress(addr1)).getEcKey().sign(hash).r.toString() + wallet.getAccount(new UscAddress(addr1)).getEcKey().sign(hash).s.toString() + wallet.getAccount(new UscAddress(addr1)).getEcKey().sign(hash).v;
 
         Assert.assertTrue("Signature is not the same one returned by the key", expectedSignature.compareTo(signature) == 0);
     }
@@ -1019,7 +1019,7 @@ public class Web3ImplTest {
         Account account = null;
 
         try {
-            account = wallet.getAccount(new RskAddress(addr), "passphrase1");
+            account = wallet.getAccount(new UscAddress(addr), "passphrase1");
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -1058,11 +1058,11 @@ public class Web3ImplTest {
 
         org.junit.Assert.assertNotNull(address);
 
-        Account account0 = wallet.getAccount(new RskAddress(address));
+        Account account0 = wallet.getAccount(new UscAddress(address));
 
         org.junit.Assert.assertNull(account0);
 
-        Account account = wallet.getAccount(new RskAddress(address), "passphrase1");
+        Account account = wallet.getAccount(new UscAddress(address), "passphrase1");
 
         org.junit.Assert.assertNotNull(account);
         org.junit.Assert.assertEquals(address, "0x" + Hex.toHexString(account.getAddress().getBytes()));
@@ -1120,7 +1120,7 @@ public class Web3ImplTest {
 
         // ***** Verifies tx hash
         Transaction tx = Transaction.create(config, toAddress.substring(2), value, nonce, gasPrice, gasLimit, args.data);
-        Account account = wallet.getAccount(new RskAddress(addr1), "passphrase1");
+        Account account = wallet.getAccount(new UscAddress(addr1), "passphrase1");
         tx.sign(account.getEcKey().getPrivKeyBytes());
 
         String expectedHash = tx.getHash().toJsonString();
@@ -1135,13 +1135,13 @@ public class Web3ImplTest {
 
         String addr = web3.personal_newAccount("passphrase1");
 
-        Account account0 = wallet.getAccount(new RskAddress(addr));
+        Account account0 = wallet.getAccount(new UscAddress(addr));
 
         org.junit.Assert.assertNull(account0);
 
         org.junit.Assert.assertTrue(web3.personal_unlockAccount(addr, "passphrase1", ""));
 
-        Account account = wallet.getAccount(new RskAddress(addr));
+        Account account = wallet.getAccount(new UscAddress(addr));
 
         org.junit.Assert.assertNotNull(account);
     }
@@ -1153,7 +1153,7 @@ public class Web3ImplTest {
 
         String addr = web3.personal_newAccount("passphrase1");
 
-        Account account0 = wallet.getAccount(new RskAddress(addr));
+        Account account0 = wallet.getAccount(new UscAddress(addr));
 
         org.junit.Assert.assertNull(account0);
 
@@ -1169,19 +1169,19 @@ public class Web3ImplTest {
 
         String addr = web3.personal_newAccount("passphrase1");
 
-        Account account0 = wallet.getAccount(new RskAddress(addr));
+        Account account0 = wallet.getAccount(new UscAddress(addr));
 
         org.junit.Assert.assertNull(account0);
 
         org.junit.Assert.assertTrue(web3.personal_unlockAccount(addr, "passphrase1", ""));
 
-        Account account = wallet.getAccount(new RskAddress(addr));
+        Account account = wallet.getAccount(new UscAddress(addr));
 
         org.junit.Assert.assertNotNull(account);
 
         org.junit.Assert.assertTrue(web3.personal_lockAccount(addr));
 
-        Account account1 = wallet.getAccount(new RskAddress(addr));
+        Account account1 = wallet.getAccount(new UscAddress(addr));
 
         org.junit.Assert.assertNull(account1);
     }
@@ -1224,7 +1224,7 @@ public class Web3ImplTest {
 
         // ***** Verifies tx hash
         Transaction tx = Transaction.create(config, toAddress.substring(2), value, nonce, gasPrice, gasLimit, args.data);
-        tx.sign(wallet.getAccount(new RskAddress(addr1)).getEcKey().getPrivKeyBytes());
+        tx.sign(wallet.getAccount(new UscAddress(addr1)).getEcKey().getPrivKeyBytes());
 
         String expectedHash = tx.getHash().toJsonString();
 
@@ -1337,7 +1337,7 @@ public class Web3ImplTest {
     @Test
     @Ignore
     public void eth_compileSolidity() throws Exception {
-        RskSystemProperties systemProperties = Mockito.mock(RskSystemProperties.class);
+        UscSystemProperties systemProperties = Mockito.mock(UscSystemProperties.class);
         String solc = System.getProperty("solc");
         if(StringUtils.isEmpty(solc))
             solc = "/usr/bin/solc";

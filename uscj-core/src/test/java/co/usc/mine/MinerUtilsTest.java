@@ -21,10 +21,8 @@ package co.usc.mine;
 import co.usc.TestHelpers.Tx;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
-import co.usc.TestHelpers.Tx;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.core.TransactionPool;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
@@ -74,7 +72,7 @@ public class MinerUtilsTest {
         //Mockito.when(tx.checkGasPrice(Mockito.any(BigInteger.class))).thenReturn(true);
         List<Transaction> txs = new LinkedList<>();
         txs.add(tx);
-        Map<RskAddress, BigInteger> accountNounces = new HashMap();
+        Map<UscAddress, BigInteger> accountNounces = new HashMap();
         Repository repository = Mockito.mock(Repository.class);
         Mockito.when(repository.getNonce(tx.getSender())).thenReturn(BigInteger.valueOf(0));
         Coin minGasPrice = Coin.valueOf(1L);
@@ -89,7 +87,7 @@ public class MinerUtilsTest {
         //Mockito.when(tx.checkGasPrice(Mockito.any(BigInteger.class))).thenReturn(true);
         List<Transaction> txs = new LinkedList<>();
         txs.add(tx);
-        Map<RskAddress, BigInteger> accountNounces = new HashMap();
+        Map<UscAddress, BigInteger> accountNounces = new HashMap();
         accountNounces.put(tx.getSender(), BigInteger.valueOf(0));
         Repository repository = Mockito.mock(Repository.class);
         Coin minGasPrice = Coin.valueOf(1L);
@@ -103,7 +101,7 @@ public class MinerUtilsTest {
         Transaction tx = Tx.create(config, 0, 50000, 2, 0, 0, 0);
         List<Transaction> txs = new LinkedList<>();
         txs.add(tx);
-        Map<RskAddress, BigInteger> accountNounces = new HashMap();
+        Map<UscAddress, BigInteger> accountNounces = new HashMap();
         accountNounces.put(tx.getSender(), BigInteger.valueOf(0));
         Repository repository = Mockito.mock(Repository.class);
         Coin minGasPrice = Coin.valueOf(1L);
@@ -119,9 +117,9 @@ public class MinerUtilsTest {
         Transaction tx = Tx.create(config, 0, 50000, 1, 0, 0, 0);
         List<Transaction> txs = new LinkedList<>();
         txs.add(tx);
-        Map<RskAddress, BigInteger> accountNounces = new HashMap();
+        Map<UscAddress, BigInteger> accountNounces = new HashMap();
         byte[] addressBytes = ByteUtil.leftPadBytes(BigInteger.valueOf(new Random(0).nextLong()).toByteArray(), 20);
-        accountNounces.put(new RskAddress(addressBytes), BigInteger.valueOf(0));
+        accountNounces.put(new UscAddress(addressBytes), BigInteger.valueOf(0));
         Repository repository = Mockito.mock(Repository.class);
         Coin minGasPrice = Coin.valueOf(2L);
 
@@ -137,9 +135,9 @@ public class MinerUtilsTest {
         List<Transaction> txs = new LinkedList<>();
         txs.add(tx);
         Mockito.when(tx.getGasPrice()).thenReturn(null);
-        Map<RskAddress, BigInteger> accountNounces = new HashMap();
+        Map<UscAddress, BigInteger> accountNounces = new HashMap();
         byte[] addressBytes = ByteUtil.leftPadBytes(BigInteger.valueOf(new Random(0).nextLong()).toByteArray(), 20);
-        accountNounces.put(new RskAddress(addressBytes), BigInteger.valueOf(0));
+        accountNounces.put(new UscAddress(addressBytes), BigInteger.valueOf(0));
         Repository repository = Mockito.mock(Repository.class);
         Coin minGasPrice = Coin.valueOf(2L);
 

@@ -22,7 +22,7 @@ package org.ethereum.core;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.trie.Trie;
 import co.usc.trie.TrieImpl;
@@ -134,7 +134,7 @@ public class StateTest {
         Trie trie = new TrieImpl();
         Genesis genesis = (Genesis)Genesis.getInstance(new TestSystemProperties());
 
-        for (RskAddress addr : genesis.getPremine().keySet()) {
+        for (UscAddress addr : genesis.getPremine().keySet()) {
             trie = trie.put(addr.getBytes(), genesis.getPremine().get(addr).getAccountState().getEncoded());
         }
 

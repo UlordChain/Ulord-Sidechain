@@ -19,8 +19,8 @@
 
 package org.ethereum.core;
 
-import co.usc.config.RskSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.config.UscSystemProperties;
+import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import org.ethereum.core.genesis.GenesisLoader;
 import org.ethereum.core.genesis.InitialAddressState;
@@ -50,7 +50,7 @@ import static org.ethereum.crypto.HashUtil.EMPTY_TRIE_HASH;
  */
 public class Genesis extends Block {
 
-    private Map<RskAddress, InitialAddressState> premine = new HashMap<>();
+    private Map<UscAddress, InitialAddressState> premine = new HashMap<>();
 
     private static final byte[] ZERO_HASH_2048 = new byte[256];
     protected static final long NUMBER = 0;
@@ -72,7 +72,7 @@ public class Genesis extends Block {
                 bitcoinMergedMiningCoinbaseTransaction, EMPTY_TRIE_HASH, EMPTY_TRIE_HASH, EMPTY_TRIE_HASH, null, null, minimumGasPrice);
     }
 
-    public static Block getInstance(RskSystemProperties config) {
+    public static Block getInstance(UscSystemProperties config) {
         return GenesisLoader.loadGenesis(config, config.genesisInfo(), config.getBlockchainConfig().getCommonConstants().getInitialNonce(), false);
     }
 
@@ -91,11 +91,11 @@ public class Genesis extends Block {
         return Keccak256.ZERO_HASH;
     }
 
-    public Map<RskAddress, InitialAddressState> getPremine() {
+    public Map<UscAddress, InitialAddressState> getPremine() {
         return premine;
     }
 
-    public void setPremine(Map<RskAddress, InitialAddressState> premine) {
+    public void setPremine(Map<UscAddress, InitialAddressState> premine) {
         this.premine = premine;
     }
 }

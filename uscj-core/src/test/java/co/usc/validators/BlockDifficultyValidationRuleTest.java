@@ -21,7 +21,7 @@ package co.usc.validators;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.DifficultyCalculator;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
@@ -47,7 +47,7 @@ public class BlockDifficultyValidationRuleTest {
 
     private BlockHeader getEmptyHeader(BlockDifficulty difficulty, long blockTimestamp, int uCount) {
         BlockHeader header = new BlockHeader(null, null,
-                RskAddress.nullAddress().getBytes(), null, difficulty.getBytes(), 0,
+                UscAddress.nullAddress().getBytes(), null, difficulty.getBytes(), 0,
                 null, 0,
                 blockTimestamp, null, null, uCount);
         return header;

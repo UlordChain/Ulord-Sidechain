@@ -22,14 +22,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.spongycastle.util.encoders.DecoderException;
 
-public class RskAddressTest {
+public class UscAddressTest {
     @Test
     public void testEquals() {
-        RskAddress senderA = new RskAddress("0000000000000000000000000000000001000006");
-        RskAddress senderB = new RskAddress("0000000000000000000000000000000001000006");
-        RskAddress senderC = new RskAddress("0000000000000000000000000000000001000008");
-        RskAddress senderD = RskAddress.nullAddress();
-        RskAddress senderE = new RskAddress("0x00002000f000000a000000330000000001000006");
+        UscAddress senderA = new UscAddress("0000000000000000000000000000000001000006");
+        UscAddress senderB = new UscAddress("0000000000000000000000000000000001000006");
+        UscAddress senderC = new UscAddress("0000000000000000000000000000000001000008");
+        UscAddress senderD = UscAddress.nullAddress();
+        UscAddress senderE = new UscAddress("0x00002000f000000a000000330000000001000006");
 
         Assert.assertEquals(senderA, senderB);
         Assert.assertNotEquals(senderA, senderC);
@@ -39,55 +39,55 @@ public class RskAddressTest {
 
     @Test
     public void nullAddress() {
-        RskAddress senderA = new RskAddress("0000000000000000000000000000000000000000");
-        RskAddress senderB = new RskAddress("0x0000000000000000000000000000000000000000");
-        RskAddress senderC = new RskAddress(new byte[20]);
-        RskAddress senderD = new RskAddress("0000000000000000000000000000000000000001");
+        UscAddress senderA = new UscAddress("0000000000000000000000000000000000000000");
+        UscAddress senderB = new UscAddress("0x0000000000000000000000000000000000000000");
+        UscAddress senderC = new UscAddress(new byte[20]);
+        UscAddress senderD = new UscAddress("0000000000000000000000000000000000000001");
 
-        Assert.assertEquals(RskAddress.nullAddress(), senderA);
-        Assert.assertEquals(RskAddress.nullAddress(), senderB);
-        Assert.assertEquals(RskAddress.nullAddress(), senderC);
-        Assert.assertNotEquals(RskAddress.nullAddress(), senderD);
+        Assert.assertEquals(UscAddress.nullAddress(), senderA);
+        Assert.assertEquals(UscAddress.nullAddress(), senderB);
+        Assert.assertEquals(UscAddress.nullAddress(), senderC);
+        Assert.assertNotEquals(UscAddress.nullAddress(), senderD);
     }
 
     @Test(expected = RuntimeException.class)
     public void invalidLongAddress() {
-        new RskAddress("00000000000000000000000000000000010000060");
+        new UscAddress("00000000000000000000000000000000010000060");
     }
 
     @Test(expected = RuntimeException.class)
     public void invalidShortAddress() {
-        new RskAddress("0000000000000000000000000000000001006");
+        new UscAddress("0000000000000000000000000000000001006");
     }
 
     @Test
     public void oddLengthAddressPaddedWithOneZero() {
-        new RskAddress("000000000000000000000000000000000100006");
+        new UscAddress("000000000000000000000000000000000100006");
     }
 
     @Test(expected = DecoderException.class)
     public void invalidHexAddress() {
-        new RskAddress("000000000000000000000000000000000100000X");
+        new UscAddress("000000000000000000000000000000000100000X");
     }
 
     @Test(expected = NullPointerException.class)
     public void invalidNullAddressBytes() {
-        new RskAddress((byte[]) null);
+        new UscAddress((byte[]) null);
     }
 
     @Test(expected = NullPointerException.class)
     public void invalidNullAddressString() {
-        new RskAddress((String) null);
+        new UscAddress((String) null);
     }
 
     @Test(expected = RuntimeException.class)
     public void invalidShortAddressBytes() {
-        new RskAddress(new byte[19]);
+        new UscAddress(new byte[19]);
     }
 
     @Test(expected = RuntimeException.class)
     public void invalidLongAddressBytes() {
-        new RskAddress(new byte[21]);
+        new UscAddress(new byte[21]);
     }
 
 }

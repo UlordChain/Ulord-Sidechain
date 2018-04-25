@@ -22,10 +22,6 @@ import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
 import co.usc.net.Status;
 import co.usc.net.messages.*;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
-import co.usc.net.Status;
-import co.usc.net.messages.*;
 import org.ethereum.core.Block;
 import org.ethereum.net.eth.message.Eth62MessageFactory;
 import org.ethereum.net.eth.message.EthMessage;
@@ -36,7 +32,7 @@ import org.junit.Test;
 /**
  * Created by ajlopez on 5/14/2016.
  */
-public class RskMessageTest {
+public class UscMessageTest {
 
     private final TestSystemProperties config = new TestSystemProperties();
 
@@ -44,7 +40,7 @@ public class RskMessageTest {
     public void encodeDecodeGetBlockMessage() {
         Block block = new BlockGenerator().getBlock(1);
         GetBlockMessage message = new GetBlockMessage(block.getHash().getBytes());
-        RskMessage rskmessage = new RskMessage(config, message);
+        UscMessage rskmessage = new UscMessage(config, message);
 
         byte[] encoded = rskmessage.getEncoded();
 
@@ -55,7 +51,7 @@ public class RskMessageTest {
         Assert.assertNotNull(ethmessage);
         Assert.assertEquals(EthMessageCodes.RSK_MESSAGE, ethmessage.getCommand());
 
-        RskMessage result = (RskMessage)ethmessage;
+        UscMessage result = (UscMessage)ethmessage;
 
         Assert.assertNotNull(result.getMessage());
 
@@ -70,7 +66,7 @@ public class RskMessageTest {
         Block block = new BlockGenerator().getBlock(1);
         Status status = new Status(block.getNumber(), block.getHash().getBytes());
         StatusMessage message = new StatusMessage(status);
-        RskMessage rskmessage = new RskMessage(config, message);
+        UscMessage rskmessage = new UscMessage(config, message);
 
         byte[] encoded = rskmessage.getEncoded();
 
@@ -81,7 +77,7 @@ public class RskMessageTest {
         Assert.assertNotNull(ethmessage);
         Assert.assertEquals(EthMessageCodes.RSK_MESSAGE, ethmessage.getCommand());
 
-        RskMessage result = (RskMessage)ethmessage;
+        UscMessage result = (UscMessage)ethmessage;
 
         Assert.assertNotNull(result.getMessage());
 
@@ -96,7 +92,7 @@ public class RskMessageTest {
     public void encodeDecodeBlockMessage() {
         Block block = new BlockGenerator().getBlock(1);
         BlockMessage message = new BlockMessage(block);
-        RskMessage rskmessage = new RskMessage(config, message);
+        UscMessage rskmessage = new UscMessage(config, message);
 
         byte[] encoded = rskmessage.getEncoded();
 
@@ -107,7 +103,7 @@ public class RskMessageTest {
         Assert.assertNotNull(ethmessage);
         Assert.assertEquals(EthMessageCodes.RSK_MESSAGE, ethmessage.getCommand());
 
-        RskMessage result = (RskMessage)ethmessage;
+        UscMessage result = (UscMessage)ethmessage;
 
         Assert.assertNotNull(result.getMessage());
 

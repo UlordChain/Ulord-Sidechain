@@ -19,8 +19,7 @@
 package co.usc.peg.performance;
 
 import co.usc.ulordj.core.UldECKey;
-import co.usc.core.RskAddress;
-import co.usc.peg.*;
+import co.usc.core.UscAddress;
 import co.usc.peg.*;
 import org.ethereum.core.Repository;
 import org.ethereum.crypto.ECKey;
@@ -211,7 +210,7 @@ public class FederationChangeTest extends BridgePerformanceTestCase {
             if (specToVoteGenerator != null) {
                 ABICallSpec specToVote = specToVoteGenerator.generate();
                 for (int i = 0; i < votes; i++) {
-                    election.vote(specToVote, new RskAddress(shuffledKeys.get(i).getAddress()));
+                    election.vote(specToVote, new UscAddress(shuffledKeys.get(i).getAddress()));
                 }
             }
 

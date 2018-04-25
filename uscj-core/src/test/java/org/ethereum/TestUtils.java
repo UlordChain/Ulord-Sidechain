@@ -20,7 +20,7 @@
 package org.ethereum;
 
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.apache.commons.lang3.StringUtils;
 import org.ethereum.core.Block;
 import org.ethereum.db.IndexedBlockStore;
@@ -28,7 +28,6 @@ import org.ethereum.vm.DataWord;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.Serializer;
-import org.spongycastle.util.BigIntegers;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -56,8 +55,8 @@ public final class TestUtils {
         return new DataWord(randomBytes(32));
     }
 
-    public static RskAddress randomAddress() {
-        return new RskAddress(randomBytes(20));
+    public static UscAddress randomAddress() {
+        return new UscAddress(randomBytes(20));
     }
 
     public static Map<Long, List<IndexedBlockStore.BlockInfo>> createIndexMap(DB db){
@@ -98,7 +97,7 @@ public final class TestUtils {
             byte[] difficutly = new BigInteger(8, new Random()).toByteArray();
             byte[] newHash = randomHash();
 
-            Block block = new Block(lastHash, newHash,  RskAddress.nullAddress().getBytes(), null, difficutly, lastIndex, new byte[] {0}, 0, 0, null, null,
+            Block block = new Block(lastHash, newHash,  UscAddress.nullAddress().getBytes(), null, difficutly, lastIndex, new byte[] {0}, 0, 0, null, null,
                     null, null, EMPTY_TRIE_HASH, randomHash(), null, null, null, Coin.ZERO);
 
             ++lastIndex;

@@ -20,7 +20,7 @@
 package org.ethereum.vm;
 
 import co.usc.config.VmConfig;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.MessageCall.MsgType;
@@ -1487,7 +1487,7 @@ public class VM {
         long callGas = GasCost.CALL;
 
         //check to see if account does not exist and is not a precompiled contract
-        if (op == OpCode.CALL && !program.getStorage().isExist(new RskAddress(codeAddress))) {
+        if (op == OpCode.CALL && !program.getStorage().isExist(new UscAddress(codeAddress))) {
             callGas += GasCost.NEW_ACCT_CALL;
         }
 
@@ -1549,7 +1549,7 @@ public class VM {
         if (computeGas) {
             gasCost = GasCost.SUICIDE;
             DataWord suicideAddressWord = stack.get(stack.size() - 1);
-            if (!program.getStorage().isExist(new RskAddress(suicideAddressWord))) {
+            if (!program.getStorage().isExist(new UscAddress(suicideAddressWord))) {
                 gasCost += GasCost.NEW_ACCT_SUICIDE;
             }
             spendOpCodeGas();
@@ -1989,7 +1989,7 @@ public class VM {
                 case SUICIDE:
 
                     ContractDetails details = program.getStorage()
-                            .getContractDetails(new RskAddress(program.getOwnerAddress()));
+                            .getContractDetails(new UscAddress(program.getOwnerAddress()));
                     List<DataWord> storageKeys = new ArrayList<>(details.getStorage().keySet());
                     Collections.sort(storageKeys);
 
@@ -2018,7 +2018,7 @@ public class VM {
 
             dumpLogger.trace("    STORAGE");
             ContractDetails details = program.getStorage()
-                    .getContractDetails(new RskAddress(program.getOwnerAddress()));
+                    .getContractDetails(new UscAddress(program.getOwnerAddress()));
             List<DataWord> storageKeys = new ArrayList<>(details.getStorage().keySet());
             Collections.sort(storageKeys);
 

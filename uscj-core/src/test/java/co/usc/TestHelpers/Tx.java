@@ -18,9 +18,9 @@
 
 package co.usc.TestHelpers;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import org.ethereum.TestUtils;
 import org.ethereum.core.Block;
@@ -38,7 +38,7 @@ import static org.mockito.Matchers.eq;
 public class Tx {
 
     public static Transaction create(
-            RskSystemProperties config,
+            UscSystemProperties config,
             long value,
             long gaslimit,
             long gasprice,
@@ -56,11 +56,11 @@ public class Tx {
 
         byte[] returnSenderBytes = new byte[20];
         r.nextBytes(returnSenderBytes);
-        RskAddress returnSender = new RskAddress(returnSenderBytes);
+        UscAddress returnSender = new UscAddress(returnSenderBytes);
 
         byte[] returnReceiveAddressBytes = new byte[20];
         r.nextBytes(returnReceiveAddressBytes);
-        RskAddress returnReceiveAddress = new RskAddress(returnReceiveAddressBytes);
+        UscAddress returnReceiveAddress = new UscAddress(returnReceiveAddressBytes);
 
         Mockito.when(transaction.getSender()).thenReturn(returnSender);
         Mockito.when(transaction.getHash()).thenReturn(new Keccak256(TestUtils.randomBytes(32)));

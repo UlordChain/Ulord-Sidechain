@@ -19,7 +19,7 @@
 
 package org.ethereum.jsontestsuite;
 
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.util.ByteUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -57,10 +57,10 @@ public class TestCase {
     private byte[] out;
 
     //            "pre": { ... },
-    private Map<RskAddress, AccountState> pre = new HashMap<>();
+    private Map<UscAddress, AccountState> pre = new HashMap<>();
 
     //            "post": { ... },
-    private Map<RskAddress, AccountState> post = new HashMap<>();
+    private Map<UscAddress, AccountState> post = new HashMap<>();
 
     //            "callcreates": { ... }
     private List<CallCreate> callCreateList = new ArrayList<>();
@@ -106,7 +106,7 @@ public class TestCase {
 
             for (Object key : preJSON.keySet()) {
 
-                RskAddress addr = new RskAddress(key.toString());
+                UscAddress addr = new UscAddress(key.toString());
                 AccountState accountState =
                         new AccountState(addr, (JSONObject) preJSON.get(key));
 
@@ -115,7 +115,7 @@ public class TestCase {
 
             for (Object key : postJSON.keySet()) {
 
-                RskAddress addr = new RskAddress(key.toString());
+                UscAddress addr = new UscAddress(key.toString());
                 AccountState accountState =
                         new AccountState(addr, (JSONObject) postJSON.get(key));
 
@@ -169,11 +169,11 @@ public class TestCase {
         return out;
     }
 
-    public Map<RskAddress, AccountState> getPre() {
+    public Map<UscAddress, AccountState> getPre() {
         return pre;
     }
 
-    public Map<RskAddress, AccountState> getPost() {
+    public Map<UscAddress, AccountState> getPost() {
         return post;
     }
 

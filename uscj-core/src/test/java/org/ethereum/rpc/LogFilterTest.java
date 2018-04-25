@@ -20,7 +20,7 @@ package org.ethereum.rpc;
 
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.test.World;
 import org.ethereum.core.Block;
 import org.junit.Assert;
@@ -61,7 +61,7 @@ public class LogFilterTest {
         World world = Web3ImplLogsTest.getWorld3WithBlockWithEventInContractCreation(config);
         Block block = world.getBlockChain().getBestBlock();
 
-        AddressesTopicsFilter atfilter = new AddressesTopicsFilter(new RskAddress[0], null);
+        AddressesTopicsFilter atfilter = new AddressesTopicsFilter(new UscAddress[0], null);
 
         LogFilter filter = new LogFilter(atfilter, world.getBlockChain(), false, true);
 
@@ -78,7 +78,7 @@ public class LogFilterTest {
         World world = Web3ImplLogsTest.getWorld3WithBlockWithEventInContractCreation(config);
         Block block = world.getBlockChain().getBestBlock();
 
-        AddressesTopicsFilter atfilter = new AddressesTopicsFilter(new RskAddress[0], null);
+        AddressesTopicsFilter atfilter = new AddressesTopicsFilter(new UscAddress[0], null);
 
         LogFilter filter = new LogFilter(atfilter, world.getBlockChain(), false, true);
 
@@ -96,7 +96,7 @@ public class LogFilterTest {
         World world = Web3ImplLogsTest.getWorld3WithBlockWithEventInContractCreation(config);
         Block block = world.getBlockChain().getBestBlock();
 
-        AddressesTopicsFilter atfilter = new AddressesTopicsFilter(new RskAddress[0], null);
+        AddressesTopicsFilter atfilter = new AddressesTopicsFilter(new UscAddress[0], null);
 
         LogFilter filter = new LogFilter(atfilter, world.getBlockChain(), true, true);
 

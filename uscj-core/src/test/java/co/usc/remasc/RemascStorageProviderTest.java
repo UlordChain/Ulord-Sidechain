@@ -21,11 +21,9 @@ package co.usc.remasc;
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.db.RepositoryImpl;
 import co.usc.db.RepositoryImplForTesting;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.db.RepositoryImpl;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
 import org.junit.Assert;
@@ -46,7 +44,7 @@ public class RemascStorageProviderTest {
 
     @Test
     public void getDefautRewardBalance() {
-        RskAddress accountAddress = randomAddress();
+        UscAddress accountAddress = randomAddress();
         Repository repository = new RepositoryImpl(config);
 
         RemascStorageProvider provider = new RemascStorageProvider(repository, accountAddress);
@@ -56,7 +54,7 @@ public class RemascStorageProviderTest {
 
     @Test
     public void setAndGetRewardBalance() {
-        RskAddress accountAddress = randomAddress();
+        UscAddress accountAddress = randomAddress();
         Repository repository = new RepositoryImpl(config);
 
         RemascStorageProvider provider = new RemascStorageProvider(repository, accountAddress);
@@ -68,7 +66,7 @@ public class RemascStorageProviderTest {
 
     @Test
     public void setSaveRetrieveAndGetRewardBalance() throws IOException {
-        RskAddress accountAddress = randomAddress();
+        UscAddress accountAddress = randomAddress();
         Repository repository = new RepositoryImplForTesting();
 
         RemascStorageProvider provider = new RemascStorageProvider(repository, accountAddress);
@@ -84,7 +82,7 @@ public class RemascStorageProviderTest {
 
     @Test
     public void getDefautBurnedBalance() {
-        RskAddress accountAddress = randomAddress();
+        UscAddress accountAddress = randomAddress();
         Repository repository = new RepositoryImpl(config);
 
         RemascStorageProvider provider = new RemascStorageProvider(repository, accountAddress);
@@ -94,7 +92,7 @@ public class RemascStorageProviderTest {
 
     @Test
     public void setAndGetBurnedBalance() {
-        RskAddress accountAddress = randomAddress();
+        UscAddress accountAddress = randomAddress();
         Repository repository = new RepositoryImpl(config);
 
         RemascStorageProvider provider = new RemascStorageProvider(repository, accountAddress);
@@ -106,7 +104,7 @@ public class RemascStorageProviderTest {
 
     @Test
     public void setSaveRetrieveAndGetBurnedBalance() throws IOException {
-        RskAddress accountAddress = randomAddress();
+        UscAddress accountAddress = randomAddress();
         Repository repository = new RepositoryImplForTesting();
 
         RemascStorageProvider provider = new RemascStorageProvider(repository, accountAddress);
@@ -122,7 +120,7 @@ public class RemascStorageProviderTest {
 
     @Test
     public void getDefaultBrokenSelectionRule() {
-        RskAddress accountAddress = randomAddress();
+        UscAddress accountAddress = randomAddress();
         Repository repository = new RepositoryImpl(config);
 
         RemascStorageProvider provider = new RemascStorageProvider(repository, accountAddress);
@@ -132,7 +130,7 @@ public class RemascStorageProviderTest {
 
     @Test
     public void setAndGetBrokenSelectionRule() {
-        RskAddress accountAddress = randomAddress();
+        UscAddress accountAddress = randomAddress();
         Repository repository = new RepositoryImpl(config);
 
         RemascStorageProvider provider = new RemascStorageProvider(repository, accountAddress);
@@ -144,7 +142,7 @@ public class RemascStorageProviderTest {
 
     @Test
     public void setSaveRetrieveAndGetBrokenSelectionRule() throws IOException {
-        RskAddress accountAddress = randomAddress();
+        UscAddress accountAddress = randomAddress();
         Repository repository = new RepositoryImplForTesting();
 
         RemascStorageProvider provider = new RemascStorageProvider(repository, accountAddress);
@@ -160,7 +158,7 @@ public class RemascStorageProviderTest {
 
     @Test
     public void getDefaultSiblings() {
-        RskAddress accountAddress = randomAddress();
+        UscAddress accountAddress = randomAddress();
         Repository repository = new RepositoryImpl(config);
 
         RemascStorageProvider provider = new RemascStorageProvider(repository, accountAddress);
@@ -173,7 +171,7 @@ public class RemascStorageProviderTest {
 
     @Test
     public void setAndGetSiblings() {
-        RskAddress accountAddress = randomAddress();
+        UscAddress accountAddress = randomAddress();
         Repository repository = new RepositoryImpl(config);
 
         RemascStorageProvider provider = new RemascStorageProvider(repository, accountAddress);
@@ -202,7 +200,7 @@ public class RemascStorageProviderTest {
 
     @Test
     public void setSaveRetrieveAndGetSiblings() throws IOException {
-        RskAddress accountAddress = randomAddress();
+        UscAddress accountAddress = randomAddress();
         Repository repository = new RepositoryImplForTesting();
 
         RemascStorageProvider provider = new RemascStorageProvider(repository, accountAddress);
@@ -235,7 +233,7 @@ public class RemascStorageProviderTest {
 
     @Test
     public void setSaveRetrieveAndGetManySiblings() throws IOException {
-        RskAddress accountAddress = randomAddress();
+        UscAddress accountAddress = randomAddress();
         Repository repository = new RepositoryImplForTesting();
 
         RemascStorageProvider provider = new RemascStorageProvider(repository, accountAddress);
@@ -309,11 +307,11 @@ public class RemascStorageProviderTest {
         Assert.assertArrayEquals(block5.getHeader().getHash().getBytes(), list2.get(1).getHash());
     }
 
-    private RskAddress randomAddress() {
+    private UscAddress randomAddress() {
         byte[] bytes = new byte[20];
 
         new Random().nextBytes(bytes);
 
-        return new RskAddress(bytes);
+        return new UscAddress(bytes);
     }
 }

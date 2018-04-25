@@ -18,6 +18,7 @@
 
 package co.usc.peg;
 
+import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.crypto.TransactionSignature;
 import co.usc.ulordj.script.Script;
@@ -28,11 +29,9 @@ import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.wallet.SendRequest;
 import co.usc.ulordj.wallet.Wallet;
 import co.usc.config.BridgeConstants;
-import co.usc.config.RskSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
-import co.usc.peg.utils.BridgeEventLogger;
 import co.usc.peg.utils.BridgeEventLogger;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.tuple.Pair;
@@ -81,19 +80,19 @@ public class BridgeSupport {
     private final UldBlockChain UldBlockChain;
     private final BridgeStorageProvider provider;
     private final Repository rskRepository;
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
 
     private final BridgeEventLogger eventLogger;
     private org.ethereum.core.Block rskExecutionBlock;
     private StoredBlock initialBtcStoredBlock;
 
     // Used by bridge
-    public BridgeSupport(RskSystemProperties config, Repository repository, BridgeEventLogger eventLogger, RskAddress contractAddress, Block rskExecutionBlock) throws IOException, BlockStoreException {
+    public BridgeSupport(UscSystemProperties config, Repository repository, BridgeEventLogger eventLogger, UscAddress contractAddress, Block rskExecutionBlock) throws IOException, BlockStoreException {
         this(config, repository, eventLogger, new BridgeStorageProvider(repository, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants()), rskExecutionBlock);
     }
 
     // Used by unit tests
-    public BridgeSupport(RskSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeStorageProvider provider, Block rskExecutionBlock) throws IOException, BlockStoreException {
+    public BridgeSupport(UscSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeStorageProvider provider, Block rskExecutionBlock) throws IOException, BlockStoreException {
         this.rskRepository = repository;
         this.provider = provider;
         this.rskExecutionBlock = rskExecutionBlock;
@@ -119,7 +118,7 @@ public class BridgeSupport {
 
 
     // Used by unit tests
-    public BridgeSupport(RskSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeConstants bridgeConstants, BridgeStorageProvider provider, UldBlockStore UldBlockStore, UldBlockChain UldBlockChain) {
+    public BridgeSupport(UscSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeConstants bridgeConstants, BridgeStorageProvider provider, UldBlockStore UldBlockStore, UldBlockChain UldBlockChain) {
         this.provider = provider;
         this.config = config;
         this.bridgeConstants = bridgeConstants;
@@ -347,7 +346,7 @@ public class BridgeSupport {
                 }
             } else {
                 org.ethereum.crypto.ECKey key = org.ethereum.crypto.ECKey.fromPublicOnly(data);
-                RskAddress sender = new RskAddress(key.getAddress());
+                UscAddress sender = new UscAddress(key.getAddress());
 
                 rskRepository.transfer(
                         PrecompiledContracts.BRIDGE_ADDR,
@@ -728,7 +727,7 @@ public class BridgeSupport {
         Coin spentByFederation = sumInputs.subtract(change);
         if (spentByFederation.isLessThan(sentByUser)) {
             Coin coinsToBurn = sentByUser.subtract(spentByFederation);
-            RskAddress burnAddress = config.getBlockchainConfig().getCommonConstants().getBurnAddress();
+            UscAddress burnAddress = config.getBlockchainConfig().getCommonConstants().getBurnAddress();
             rskRepository.transfer(PrecompiledContracts.BRIDGE_ADDR, burnAddress, co.usc.core.Coin.fromBitcoin(coinsToBurn));
         }
     }

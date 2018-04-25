@@ -4,7 +4,8 @@ import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.ReversibleTransactionExecutor;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
+import co.usc.core.UscFactory;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.db.RepositoryImpl;
@@ -23,7 +24,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 
 /**
- * This is the test version of {@link co.usc.core.RskFactory}, but without Spring.
+ * This is the test version of {@link UscFactory}, but without Spring.
  *
  * We try to recreate the objects used in production as best as we can,
  * replacing persistent storage with in-memory storage.
@@ -86,7 +87,7 @@ public class RskTestFactory {
 
     private TransactionExecutor executeTransaction(Transaction transaction) {
         Repository track = getRepository().startTracking();
-        TransactionExecutor executor = new TransactionExecutor(config, transaction, 0, RskAddress.nullAddress(),
+        TransactionExecutor executor = new TransactionExecutor(config, transaction, 0, UscAddress.nullAddress(),
                 getRepository(), getBlockStore(), getReceiptStore(),
                 getProgramInvokeFactory(), getBlockchain().getBestBlock());
         executor.init();

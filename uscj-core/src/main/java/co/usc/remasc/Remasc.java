@@ -18,13 +18,12 @@
 
 package co.usc.remasc;
 
+import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.store.BlockStoreException;
 import co.usc.config.RemascConfig;
-import co.usc.config.RskSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.bc.SelectionRule;
-import co.usc.peg.BridgeSupport;
 import co.usc.peg.BridgeSupport;
 import org.apache.commons.collections4.CollectionUtils;
 import org.ethereum.core.Block;
@@ -50,7 +49,7 @@ import java.util.List;
 public class Remasc {
     private static final Logger logger = LoggerFactory.getLogger(Remasc.class);
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final Repository repository;
     private final BlockStore blockStore;
     private final RemascConfig remascConstants;
@@ -61,7 +60,7 @@ public class Remasc {
     private final RemascStorageProvider provider;
     private final RemascFeesPayer feesPayer;
 
-    public Remasc(RskSystemProperties config, Repository repository, BlockStore blockStore, RemascConfig remascConstants, Transaction executionTx, RskAddress contractAddress, Block executionBlock, List<LogInfo> logs) {
+    public Remasc(UscSystemProperties config, Repository repository, BlockStore blockStore, RemascConfig remascConstants, Transaction executionTx, UscAddress contractAddress, Block executionBlock, List<LogInfo> logs) {
         this.config = config;
         this.repository = repository;
         this.blockStore = blockStore;
@@ -158,7 +157,7 @@ public class Remasc {
         Coin paidToFederation = Coin.ZERO;
 
         for (int k = 0; k < nfederators; k++) {
-            RskAddress federatorAddress = federationProvider.getFederatorAddress(k);
+            UscAddress federatorAddress = federationProvider.getFederatorAddress(k);
 
             if (k == nfederators - 1 && restToLastFederator.compareTo(Coin.ZERO) > 0) {
                 feesPayer.payMiningFees(processingBlockHash, payToFederator.add(restToLastFederator), federatorAddress, logs);

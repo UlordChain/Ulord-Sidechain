@@ -18,10 +18,8 @@
 
 package co.usc.mine;
 
-import co.usc.config.RskSystemProperties;
-import co.usc.core.RskAddress;
-import co.usc.net.BlockProcessor;
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
+import co.usc.core.UscAddress;
 import co.usc.net.BlockProcessor;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
@@ -43,7 +41,7 @@ public class TxBuilderEx {
 
     private static final Logger logger = LoggerFactory.getLogger("txbuilderex");
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final Ethereum ethereum;
     private final Repository repository;
     private final BlockProcessor nodeBlockProcessor;
@@ -53,7 +51,7 @@ public class TxBuilderEx {
 
     private volatile boolean stop = false;
 
-    public TxBuilderEx(RskSystemProperties config,
+    public TxBuilderEx(UscSystemProperties config,
                        Ethereum ethereum,
                        Repository repository,
                        BlockProcessor nodeBlockProcessor,
@@ -68,7 +66,7 @@ public class TxBuilderEx {
     public void simulateTxs() {
         final byte[] privateKeyBytes = HashUtil.keccak256(config.simulateTxsExAccountSeed().getBytes(StandardCharsets.UTF_8));
         final ECKey key = ECKey.fromPrivate(privateKeyBytes);
-        RskAddress addr = new RskAddress(key.getAddress());
+        UscAddress addr = new UscAddress(key.getAddress());
 
         final Account targetAcc = new Account(new ECKey(Utils.getRandom()));
         final String targetAddress = targetAcc.getAddress().toString();

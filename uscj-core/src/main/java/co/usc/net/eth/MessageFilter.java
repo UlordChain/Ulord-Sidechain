@@ -50,11 +50,11 @@ public class MessageFilter {
             return true;
         }
 
-        if (!(message instanceof RskMessage)) {
+        if (!(message instanceof UscMessage)) {
             return false;
         }
 
-        String messageType = String.valueOf(((RskMessage)message).getMessage().getMessageType());
+        String messageType = String.valueOf(((UscMessage)message).getMessage().getMessageType());
 
         for (String cmd : commands) {
             if (!cmd.contains(":")) {

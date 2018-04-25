@@ -18,7 +18,7 @@
 
 package org.ethereum.rpc;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.mine.MinerClient;
 import co.usc.mine.MinerServer;
 import org.ethereum.core.Blockchain;
@@ -41,8 +41,8 @@ public class Web3Mocks {
         return mockBlockchain;
     }
 
-    public static RskSystemProperties getMockProperties() {
-        return mock(RskSystemProperties.class);
+    public static UscSystemProperties getMockProperties() {
+        return mock(UscSystemProperties.class);
     }
 
     public static MinerClient getMockMinerClient() {

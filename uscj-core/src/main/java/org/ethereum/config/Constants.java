@@ -22,7 +22,7 @@ package org.ethereum.config;
 import co.usc.config.BridgeConstants;
 import co.usc.config.BridgeTestNetConstants;
 import co.usc.core.BlockDifficulty;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigDecimal;
@@ -69,7 +69,7 @@ public class Constants {
 
     private static final BigInteger SECP256K1N = new BigInteger("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141", 16);
 
-    private static final RskAddress BURN_ADDRESS = new RskAddress("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+    private static final UscAddress BURN_ADDRESS = new UscAddress("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
 
     private static final byte CHAIN_ID = 30;
 
@@ -156,7 +156,7 @@ public class Constants {
         return this.newBlockMaxSecondsInTheFuture;
     }
 
-    public RskAddress getBurnAddress() { return Constants.BURN_ADDRESS; }
+    public UscAddress getBurnAddress() { return Constants.BURN_ADDRESS; }
 
     /**
      * EIP155: https://github.com/ethereum/EIPs/issues/155

@@ -21,7 +21,7 @@ package org.ethereum.core;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.core.BlockDifficulty;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.db.RepositoryImpl;
@@ -80,7 +80,7 @@ public class ImportLightTest {
 
         Repository track = repository.startTracking();
 
-        for (RskAddress addr : genesis.getPremine().keySet()) {
+        for (UscAddress addr : genesis.getPremine().keySet()) {
             track.createAccount(addr);
             track.addBalance(addr, genesis.getPremine().get(addr).getAccountState().getBalance());
         }

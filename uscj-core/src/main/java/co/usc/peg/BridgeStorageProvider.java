@@ -20,7 +20,7 @@ package co.usc.peg;
 
 import co.usc.ulordj.core.*;
 import co.usc.config.BridgeConstants;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import org.ethereum.core.Repository;
 import org.ethereum.rpc.TypeConverter;
@@ -54,7 +54,7 @@ public class BridgeStorageProvider {
     private static final DataWord FEE_PER_KB_ELECTION_KEY = new DataWord(TypeConverter.stringToByteArray("feePerKbElection"));
 
     private final Repository repository;
-    private final RskAddress contractAddress;
+    private final UscAddress contractAddress;
     private final NetworkParameters networkParameters;
     private final Context btcContext;
 
@@ -86,7 +86,7 @@ public class BridgeStorageProvider {
     private Coin feePerKb;
     private ABICallElection feePerKbElection;
 
-    public BridgeStorageProvider(Repository repository, RskAddress contractAddress, BridgeConstants bridgeConstants) {
+    public BridgeStorageProvider(Repository repository, UscAddress contractAddress, BridgeConstants bridgeConstants) {
         this.repository = repository;
         this.contractAddress = contractAddress;
         this.networkParameters = bridgeConstants.getBtcParams();

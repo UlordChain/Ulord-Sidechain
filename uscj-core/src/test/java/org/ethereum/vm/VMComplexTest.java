@@ -22,7 +22,7 @@ package org.ethereum.vm;
 import co.usc.config.TestSystemProperties;
 import co.usc.config.VmConfig;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Repository;
@@ -84,8 +84,8 @@ public class VMComplexTest {
         String code =
                 "6103e75460005260006000511115630000004c576001600051036103e755600060006000600060007377045e71a7a2c50903d88e564cd72fab11e820516008600a5a0402f1630000004c00565b00";
 
-        RskAddress contractAddrB = new RskAddress(contractAddr);
-        RskAddress callerAddrB = new RskAddress(callerAddr);
+        UscAddress contractAddrB = new UscAddress(contractAddr);
+        UscAddress callerAddrB = new UscAddress(callerAddr);
         byte[] codeB = Hex.decode(code);
 
         byte[] codeKey = HashUtil.keccak256(codeB);
@@ -164,12 +164,12 @@ public class VMComplexTest {
         String code_a = "60006020023560005260016020023560205260005160005560205160015500";
         String code_b = "6000601f5360e05960e05952600060c05901536060596020015980602001600b9052806040016016905280606001602190526080905260007377045e71a7a2c50903d88e564cd72fab11e820516103e8f1602060000260a00160200151600052";
 
-        RskAddress caller_addr = new RskAddress(caller_addr_str);
+        UscAddress caller_addr = new UscAddress(caller_addr_str);
 
-        RskAddress contractA_addr = new RskAddress(contractA_addr_str);
+        UscAddress contractA_addr = new UscAddress(contractA_addr_str);
         byte[] codeA = Hex.decode(code_a);
 
-        RskAddress contractB_addr = new RskAddress(contractB_addr_str);
+        UscAddress contractB_addr = new UscAddress(contractB_addr_str);
         byte[] codeB = Hex.decode(code_b);
 
         ProgramInvokeMockImpl pi = new ProgramInvokeMockImpl();
@@ -255,10 +255,10 @@ public class VMComplexTest {
         long expectedVal_6 = 66;
 
         // Set contract into Database
-        RskAddress caller_addr = new RskAddress("cd2a3d9f938e13cd947ec05abc7fe734df8dd826");
+        UscAddress caller_addr = new UscAddress("cd2a3d9f938e13cd947ec05abc7fe734df8dd826");
 
-        RskAddress contractA_addr = new RskAddress("77045e71a7a2c50903d88e564cd72fab11e82051");
-        RskAddress contractB_addr = new RskAddress("83c5541a6c8d2dbad642f385d8d06ca9b6c731ee");
+        UscAddress contractA_addr = new UscAddress("77045e71a7a2c50903d88e564cd72fab11e82051");
+        UscAddress contractB_addr = new UscAddress("83c5541a6c8d2dbad642f385d8d06ca9b6c731ee");
 
         byte[] codeA = Hex.decode("600b60005260166020526021604052602c6060526037608052604260a05260c06000f2");
         byte[] codeB = Hex.decode("6000601f5360e05960e05952600060c05901536060596020015980602001600b9052806040016016905280606001602190526080905260007377045e71a7a2c50903d88e564cd72fab11e820516103e8f1602060000260a00160200151600052");
@@ -335,9 +335,9 @@ public class VMComplexTest {
          */
 
         // Set contract into Database
-        RskAddress caller_addr = new RskAddress("cd2a3d9f938e13cd947ec05abc7fe734df8dd826");
+        UscAddress caller_addr = new UscAddress("cd2a3d9f938e13cd947ec05abc7fe734df8dd826");
 
-        RskAddress contractA_addr = new RskAddress("77045e71a7a2c50903d88e564cd72fab11e82051");
+        UscAddress contractA_addr = new UscAddress("77045e71a7a2c50903d88e564cd72fab11e82051");
 
         byte[] codeA = Hex.decode("7f7f60c860005461012c602054000000000000" +
                 "00000000000000000000000000006000547e60" +
@@ -402,10 +402,10 @@ public class VMComplexTest {
          */
 
         // Set contract into Database
-        RskAddress caller_addr = new RskAddress("cd1722f3947def4cf144679da39c4c32bdc35681");
+        UscAddress caller_addr = new UscAddress("cd1722f3947def4cf144679da39c4c32bdc35681");
 
-        RskAddress contractA_addr = new RskAddress("945304eb96065b2a98b57a48a06ae28d285a71b5");
-        RskAddress contractB_addr = new RskAddress("0f572e5295c57f15886f9b263e2f6d2d6c7b5ec6");
+        UscAddress contractA_addr = new UscAddress("945304eb96065b2a98b57a48a06ae28d285a71b5");
+        UscAddress contractB_addr = new UscAddress("0f572e5295c57f15886f9b263e2f6d2d6c7b5ec6");
 
         byte[] codeA = Hex.decode("60003554156009570060203560003555");
         byte[] codeB = Hex.decode("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff6000527faaffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffaa6020526000604060406000601773945304eb96065b2a98b57a48a06ae28d285a71b5620f4240f3600055");
@@ -475,8 +475,8 @@ public class VMComplexTest {
         String contractAddr = "0f572e5295c57f15886f9b263e2f6d2d6c7b5ec6";
         String code = "600161040020600055";
 
-        RskAddress contractAddrB = new RskAddress(contractAddr);
-        RskAddress callerAddrB = new RskAddress(callerAddr);
+        UscAddress contractAddrB = new UscAddress(contractAddr);
+        UscAddress callerAddrB = new UscAddress(callerAddr);
         byte[] codeB = Hex.decode(code);
 
         byte[] codeKey = HashUtil.keccak256(codeB);
@@ -535,8 +535,8 @@ public class VMComplexTest {
         String contractAddr = "0f572e5295c57f15886f9b263e2f6d2d6c7b5ec6";
         String code = "60016103c020600055";
 
-        RskAddress contractAddrB = new RskAddress(contractAddr);
-        RskAddress callerAddrB = new RskAddress(callerAddr);
+        UscAddress contractAddrB = new UscAddress(contractAddr);
+        UscAddress callerAddrB = new UscAddress(callerAddr);
         byte[] codeB = Hex.decode(code);
 
         byte[] codeKey = HashUtil.keccak256(codeB);
@@ -595,8 +595,8 @@ public class VMComplexTest {
         String contractAddr = "0f572e5295c57f15886f9b263e2f6d2d6c7b5ec6";
         String code = "60016103e020600055";
 
-        RskAddress contractAddrB = new RskAddress(contractAddr);
-        RskAddress callerAddrB = new RskAddress(callerAddr);
+        UscAddress contractAddrB = new UscAddress(contractAddr);
+        UscAddress callerAddrB = new UscAddress(callerAddr);
         byte[] codeB = Hex.decode(code);
 
         byte[] codeKey = HashUtil.keccak256(codeB);
@@ -655,8 +655,8 @@ public class VMComplexTest {
         String contractAddr = "0f572e5295c57f15886f9b263e2f6d2d6c7b5ec6";
         String code = "600061040020600055";
 
-        RskAddress contractAddrB = new RskAddress(contractAddr);
-        RskAddress callerAddrB = new RskAddress(callerAddr);
+        UscAddress contractAddrB = new UscAddress(contractAddr);
+        UscAddress callerAddrB = new UscAddress(callerAddr);
         byte[] codeB = Hex.decode(code);
 
         byte[] codeKey = HashUtil.keccak256(codeB);

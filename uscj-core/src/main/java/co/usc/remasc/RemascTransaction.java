@@ -18,8 +18,8 @@
 
 package co.usc.remasc;
 
-import co.usc.config.RskSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.config.UscSystemProperties;
+import co.usc.core.UscAddress;
 import org.ethereum.core.Block;
 import org.ethereum.core.Transaction;
 import org.ethereum.util.ByteUtil;
@@ -38,7 +38,7 @@ public class RemascTransaction extends Transaction {
      * Instead of the empty array, it is encoded as the array with just one zero.
      * This instance should not be used for any other reason.
      */
-    public static final RskAddress REMASC_ADDRESS = new RskAddress(RskAddress.nullAddress().getBytes()) {
+    public static final UscAddress REMASC_ADDRESS = new UscAddress(UscAddress.nullAddress().getBytes()) {
         @Override
         public byte[] getBytes() {
             return ZERO_BYTE_ARRAY;
@@ -60,13 +60,13 @@ public class RemascTransaction extends Transaction {
     }
 
     @Override
-    public long transactionCost(RskSystemProperties config, Block block) {
+    public long transactionCost(UscSystemProperties config, Block block) {
         // RemascTransaction does not pay any fees
         return 0;
     }
 
     @Override
-    public RskAddress getSender() {
+    public UscAddress getSender() {
         return REMASC_ADDRESS;
     }
 

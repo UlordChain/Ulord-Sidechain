@@ -18,7 +18,7 @@
 
 package co.usc.db;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
 import co.usc.trie.*;
@@ -53,7 +53,7 @@ public class ContractDetailsImpl implements ContractDetails {
     private static final PanicProcessor panicProcessor = new PanicProcessor();
     private static final Logger logger = LoggerFactory.getLogger("contractdetails");
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
 
     private Trie trie;
     private byte[] code;
@@ -65,16 +65,16 @@ public class ContractDetailsImpl implements ContractDetails {
     private boolean closed;
     private Set<ByteArrayWrapper> keys = new HashSet<>();
 
-    public ContractDetailsImpl(RskSystemProperties config, byte[] encoded) {
+    public ContractDetailsImpl(UscSystemProperties config, byte[] encoded) {
         this.config = config;
         decode(encoded);
     }
 
-    public ContractDetailsImpl(RskSystemProperties config) {
+    public ContractDetailsImpl(UscSystemProperties config) {
         this(config, null, new TrieImpl(new TrieStoreImpl(new HashMapDB()), true), null);
     }
 
-    public ContractDetailsImpl(RskSystemProperties config, byte[] address, Trie trie, byte[] code) {
+    public ContractDetailsImpl(UscSystemProperties config, byte[] address, Trie trie, byte[] code) {
         this.config = config;
         this.address = ByteUtils.clone(address);
         this.trie = trie;

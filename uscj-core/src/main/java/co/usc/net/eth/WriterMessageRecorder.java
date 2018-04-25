@@ -58,8 +58,8 @@ public class WriterMessageRecorder implements MessageRecorder {
             writer.write(String.valueOf(message.getCommand()));
             writer.write(",");
 
-            if (message instanceof RskMessage) {
-                writer.write(String.valueOf(((RskMessage) message).getMessage().getMessageType()));
+            if (message instanceof UscMessage) {
+                writer.write(String.valueOf(((UscMessage) message).getMessage().getMessageType()));
             }
 
             writer.write(",");

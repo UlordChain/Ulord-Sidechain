@@ -18,7 +18,7 @@
 
 package co.usc.peg;
 
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.TestUtils;
 import org.ethereum.crypto.ECKey;
 import org.junit.Assert;
@@ -35,7 +35,7 @@ public class ABICallElectionTest {
     private ABICallSpec spec_fna, spec_fnb;
     private ABICallElection election;
     private AddressBasedAuthorizer authorizer;
-    private Map<ABICallSpec, List<RskAddress>> votes;
+    private Map<ABICallSpec, List<UscAddress>> votes;
 
     @Before
     public void createVotesAuthorizerAndElection() {
@@ -156,8 +156,8 @@ public class ABICallElectionTest {
         Assert.assertEquals(Arrays.asList(createVoter("aa"), createVoter("bb")), election.getVotes().get(spec_fnb));
     }
 
-    private RskAddress createVoter(String hex) {
-        return new RskAddress(TestUtils.padZeroesLeft(hex, 40));
+    private UscAddress createVoter(String hex) {
+        return new UscAddress(TestUtils.padZeroesLeft(hex, 40));
     }
 
     private ECKey createMockKeyForAddress(String hex) {

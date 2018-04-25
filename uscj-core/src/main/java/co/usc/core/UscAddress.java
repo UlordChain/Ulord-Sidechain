@@ -32,20 +32,20 @@ import java.util.Comparator;
  *
  * @author Ariel Mendelzon
  */
-public class RskAddress {
+public class UscAddress {
 
     /**
-     * This is the size of an RSK address in bytes.
+     * This is the size of an USC address in bytes.
      */
     private static final int LENGTH_IN_BYTES = 20;
 
-    private static final RskAddress NULL_ADDRESS = new RskAddress(new byte[LENGTH_IN_BYTES]);
+    private static final UscAddress NULL_ADDRESS = new UscAddress(new byte[LENGTH_IN_BYTES]);
 
     /**
      * This compares using the lexicographical order of the sender unsigned bytes.
      */
-    public static final Comparator<RskAddress> LEXICOGRAPHICAL_COMPARATOR = Comparator.comparing(
-            RskAddress::getBytes,
+    public static final Comparator<UscAddress> LEXICOGRAPHICAL_COMPARATOR = Comparator.comparing(
+            UscAddress::getBytes,
             UnsignedBytes.lexicographicalComparator());
 
     private final byte[] bytes;
@@ -53,21 +53,21 @@ public class RskAddress {
     /**
      * @param address a data word containing an address in the last 20 bytes.
      */
-    public RskAddress(DataWord address) {
+    public UscAddress(DataWord address) {
         this(address.getLast20Bytes());
     }
 
     /**
      * @param address the hex-encoded 20 bytes long address, with or without 0x prefix.
      */
-    public RskAddress(String address) {
+    public UscAddress(String address) {
         this(TypeConverter.stringHexToByteArray(address));
     }
 
     /**
      * @param bytes the 20 bytes long raw address bytes.
      */
-    public RskAddress(byte[] bytes) {
+    public UscAddress(byte[] bytes) {
         if (bytes.length != LENGTH_IN_BYTES) {
             throw new RuntimeException(String.format("An RSK address must be %d bytes long", LENGTH_IN_BYTES));
         }
@@ -78,7 +78,7 @@ public class RskAddress {
     /**
      * @return the null address, which is the receiver of contract creation transactions.
      */
-    public static RskAddress nullAddress() {
+    public static UscAddress nullAddress() {
         return NULL_ADDRESS;
     }
 
@@ -96,7 +96,7 @@ public class RskAddress {
             return false;
         }
 
-        RskAddress otherSender = (RskAddress) other;
+        UscAddress otherSender = (UscAddress) other;
         return Arrays.equals(bytes, otherSender.bytes);
     }
 

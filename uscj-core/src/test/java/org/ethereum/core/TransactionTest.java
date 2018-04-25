@@ -20,7 +20,7 @@
 package org.ethereum.core;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import org.ethereum.config.blockchain.GenesisConfig;
 import org.ethereum.config.net.MainNetConfig;
@@ -433,7 +433,7 @@ public class TransactionTest {
                     Repository track = repository.startTracking();
 
                     Transaction txConst = CallTransaction.createCallTransaction(config, 0, 0, 100000000000000L,
-                            new RskAddress("095e7baea6a6c7c4c2dfeb977efac326af552d87"), 0, CallTransaction.Function.fromSignature("get"));
+                            new UscAddress("095e7baea6a6c7c4c2dfeb977efac326af552d87"), 0, CallTransaction.Function.fromSignature("get"));
                     txConst.sign(new byte[32]);
 
                     Block bestBlock = block;
@@ -681,7 +681,7 @@ public class TransactionTest {
 
     private Transaction createTx(Blockchain blockchain, ECKey sender, byte[] receiveAddress,
                                    byte[] data, long value) throws InterruptedException {
-        BigInteger nonce = blockchain.getRepository().getNonce(new RskAddress(sender.getAddress()));
+        BigInteger nonce = blockchain.getRepository().getNonce(new UscAddress(sender.getAddress()));
         Transaction tx = new Transaction(
                 ByteUtil.bigIntegerToBytes(nonce),
                 ByteUtil.longToBytesNoLeadZeroes(1),
@@ -695,7 +695,7 @@ public class TransactionTest {
 
     private TransactionExecutor executeTransaction(Blockchain blockchain, Transaction tx) {
         Repository track = blockchain.getRepository().startTracking();
-        TransactionExecutor executor = new TransactionExecutor(config, tx, 0, RskAddress.nullAddress(), blockchain.getRepository(),
+        TransactionExecutor executor = new TransactionExecutor(config, tx, 0, UscAddress.nullAddress(), blockchain.getRepository(),
                 blockchain.getBlockStore(), null, new ProgramInvokeFactoryImpl(), blockchain.getBestBlock());
 
         executor.init();

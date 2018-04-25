@@ -19,7 +19,7 @@
 package co.usc.remasc;
 
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.core.Repository;
 import org.ethereum.util.RLP;
 import org.ethereum.vm.DataWord;
@@ -37,24 +37,24 @@ class RemascFeesPayer {
 
     private final Repository repository;
 
-    private final RskAddress contractAddress;
+    private final UscAddress contractAddress;
 
-    public RemascFeesPayer(Repository repository, RskAddress contractAddress) {
+    public RemascFeesPayer(Repository repository, UscAddress contractAddress) {
         this.repository = repository;
         this.contractAddress = contractAddress;
     }
 
-    public void payMiningFees(byte[] blockHash, Coin value, RskAddress toAddress, List<LogInfo> logs) {
+    public void payMiningFees(byte[] blockHash, Coin value, UscAddress toAddress, List<LogInfo> logs) {
         this.transferPayment(value, toAddress);
         this.logPayment(blockHash, value, toAddress, logs);
     }
 
-    private void transferPayment(Coin value, RskAddress toAddress) {
+    private void transferPayment(Coin value, UscAddress toAddress) {
         this.repository.addBalance(contractAddress, value.negate());
         this.repository.addBalance(toAddress, value);
     }
 
-    private void logPayment(byte[] blockHash, Coin value, RskAddress toAddress, List<LogInfo> logs) {
+    private void logPayment(byte[] blockHash, Coin value, UscAddress toAddress, List<LogInfo> logs) {
 
         byte[] loggerContractAddress = this.contractAddress.getBytes();
         List<DataWord> topics = Arrays.asList(RemascContract.MINING_FEE_TOPIC, new DataWord(toAddress.getBytes()));

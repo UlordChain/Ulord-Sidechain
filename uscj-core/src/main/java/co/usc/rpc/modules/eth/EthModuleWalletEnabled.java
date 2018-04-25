@@ -18,11 +18,8 @@
 
 package co.usc.rpc.modules.eth;
 
-import co.usc.config.RskSystemProperties;
-import co.usc.core.RskAddress;
-import co.usc.core.Wallet;
-import co.usc.config.RskSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.config.UscSystemProperties;
+import co.usc.core.UscAddress;
 import co.usc.core.Wallet;
 import org.ethereum.core.Account;
 import org.ethereum.core.TransactionPool;
@@ -46,12 +43,12 @@ public class EthModuleWalletEnabled implements EthModuleWallet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("web3");
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final Ethereum eth;
     private final Wallet wallet;
     private final TransactionPool transactionPool;
 
-    public EthModuleWalletEnabled(RskSystemProperties config, Ethereum eth, Wallet wallet, TransactionPool transactionPool) {
+    public EthModuleWalletEnabled(UscSystemProperties config, Ethereum eth, Wallet wallet, TransactionPool transactionPool) {
         this.config = config;
         this.eth = eth;
         this.wallet = wallet;
@@ -94,7 +91,7 @@ public class EthModuleWalletEnabled implements EthModuleWallet {
     public String sign(String addr, String data) {
         String s = null;
         try {
-            Account account = this.wallet.getAccount(new RskAddress(addr));
+            Account account = this.wallet.getAccount(new UscAddress(addr));
             if (account == null) {
                 throw new JsonRpcInvalidParamException("Account not found");
             }
@@ -116,7 +113,7 @@ public class EthModuleWalletEnabled implements EthModuleWallet {
     }
 
     private Account getAccount(String address) {
-        return this.wallet.getAccount(new RskAddress(address));
+        return this.wallet.getAccount(new UscAddress(address));
     }
 
     private String sign(String data, ECKey ecKey) {

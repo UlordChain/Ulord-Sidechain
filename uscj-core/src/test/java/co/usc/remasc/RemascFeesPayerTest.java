@@ -19,7 +19,7 @@
 package co.usc.remasc;
 
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.core.Repository;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPElement;
@@ -50,7 +50,7 @@ public class RemascFeesPayerTest {
 
         byte[] blockHash = { 0x1, 0x2 };
         Coin value = Coin.valueOf(7L);
-        RskAddress toAddress = new RskAddress("6c386a4b26f73c802f34673f7248bb118f97424a");
+        UscAddress toAddress = new UscAddress("6c386a4b26f73c802f34673f7248bb118f97424a");
         List<LogInfo> logs = new ArrayList<>();
 
         // Do call

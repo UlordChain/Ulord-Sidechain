@@ -23,11 +23,6 @@ import co.usc.config.TestSystemProperties;
 import co.usc.net.NodeID;
 import co.usc.net.messages.GetBlockMessage;
 import co.usc.test.builders.AccountBuilder;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
-import co.usc.net.NodeID;
-import co.usc.net.messages.GetBlockMessage;
-import co.usc.test.builders.AccountBuilder;
 import co.usc.test.builders.TransactionBuilder;
 import org.ethereum.core.Account;
 import org.ethereum.core.Block;
@@ -55,7 +50,7 @@ public class WriterMessageRecorderTest {
 
     @Test
     public void recordRskMessage() throws IOException {
-        Message message = createRskMessage();
+        Message message = createUscMessage();
         StringWriter writer = new StringWriter();
         BufferedWriter bwriter = new BufferedWriter(writer);
 
@@ -75,7 +70,7 @@ public class WriterMessageRecorderTest {
 
     @Test
     public void recordRskMessageWithSender() throws IOException {
-        Message message = createRskMessage();
+        Message message = createUscMessage();
         StringWriter writer = new StringWriter();
         BufferedWriter bwriter = new BufferedWriter(writer);
 
@@ -100,7 +95,7 @@ public class WriterMessageRecorderTest {
 
     @Test
     public void filterMessage() throws IOException {
-        Message message = createRskMessage();
+        Message message = createUscMessage();
         StringWriter writer = new StringWriter();
         BufferedWriter bwriter = new BufferedWriter(writer);
 
@@ -144,10 +139,10 @@ public class WriterMessageRecorderTest {
         Assert.assertTrue(result.contains(",0,TRANSACTIONS,,"));
     }
 
-    public static Message createRskMessage() {
+    public static Message createUscMessage() {
         Block block = new BlockGenerator().getBlock(1);
         GetBlockMessage message = new GetBlockMessage(block.getHash().getBytes());
-        return new RskMessage(config, message);
+        return new UscMessage(config, message);
     }
 
     public static Message createEthMessage() {

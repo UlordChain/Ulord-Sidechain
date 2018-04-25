@@ -19,8 +19,7 @@
 package co.usc.net;
 
 import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.core.RskAddress;
-import co.usc.blockchain.utils.BlockGenerator;
+import co.usc.core.UscAddress;
 import com.google.common.collect.Lists;
 import org.ethereum.TestUtils;
 import org.ethereum.core.Block;
@@ -221,7 +220,7 @@ public class BlockStoreTest {
         BlockStore store = new BlockStore();
         BlockHeader blockHeader = new BlockHeader(new byte[]{},
                 new byte[]{},
-                RskAddress.nullAddress().getBytes(),
+                UscAddress.nullAddress().getBytes(),
                 new Bloom().getData(),
                 new byte[]{},
                 1,
@@ -245,7 +244,7 @@ public class BlockStoreTest {
         BlockStore store = new BlockStore();
         BlockHeader blockHeader = new BlockHeader(new byte[]{},
                 new byte[]{},
-                RskAddress.nullAddress().getBytes(),
+                UscAddress.nullAddress().getBytes(),
                 new Bloom().getData(),
                 new byte[]{},
                 1,

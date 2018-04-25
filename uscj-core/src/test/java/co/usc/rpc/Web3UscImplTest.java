@@ -19,10 +19,8 @@
 package co.usc.rpc;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.core.NetworkStateExporter;
-import co.usc.core.Rsk;
-import co.usc.core.Wallet;
-import co.usc.core.WalletFactory;
+import co.usc.core.*;
+import co.usc.core.Usc;
 import co.usc.crypto.Keccak256;
 import co.usc.peg.PegTestUtils;
 import co.usc.rpc.modules.eth.EthModule;
@@ -32,7 +30,6 @@ import co.usc.rpc.modules.personal.PersonalModule;
 import co.usc.rpc.modules.personal.PersonalModuleWalletEnabled;
 import co.usc.rpc.modules.txpool.TxPoolModule;
 import co.usc.rpc.modules.txpool.TxPoolModuleImpl;
-import co.usc.config.TestSystemProperties;
 import co.usc.core.WalletFactory;
 import org.ethereum.core.Block;
 import org.ethereum.core.Blockchain;
@@ -51,11 +48,11 @@ import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Web3RskImplTest {
+public class Web3UscImplTest {
 
     @Test
     public void web3_ext_dumpState() throws Exception {
-        Rsk rsk = Mockito.mock(Rsk.class);
+        Usc usc = Mockito.mock(Usc.class);
         Blockchain blockchain = Mockito.mock(Blockchain.class);
 
         NetworkStateExporter networkStateExporter = Mockito.mock(NetworkStateExporter.class);
@@ -73,11 +70,11 @@ public class Web3RskImplTest {
 
         Wallet wallet = WalletFactory.createWallet();
         TestSystemProperties config = new TestSystemProperties();
-        PersonalModule pm = new PersonalModuleWalletEnabled(config, rsk, wallet, null);
-        EthModule em = new EthModule(config, blockchain, null, new ExecutionBlockRetriever(blockchain, null, null), new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, rsk, wallet, null));
+        PersonalModule pm = new PersonalModuleWalletEnabled(config, usc, wallet, null);
+        EthModule em = new EthModule(config, blockchain, null, new ExecutionBlockRetriever(blockchain, null, null), new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, usc, wallet, null));
         TxPoolModule tpm = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
         Web3RskImpl web3 = new Web3RskImpl(
-                rsk,
+                usc,
                 blockchain,
                 Web3Mocks.getMockTransactionPool(),
                 config,

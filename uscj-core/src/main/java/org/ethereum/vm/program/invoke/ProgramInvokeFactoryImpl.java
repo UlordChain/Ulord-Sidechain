@@ -20,7 +20,7 @@
 package org.ethereum.vm.program.invoke;
 
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
@@ -53,7 +53,7 @@ public class ProgramInvokeFactoryImpl implements ProgramInvokeFactory {
 
         /***         ADDRESS op       ***/
         // YP: Get address of currently executing account.
-        RskAddress addr = tx.isContractCreation() ? tx.getContractAddress() : tx.getReceiveAddress();
+        UscAddress addr = tx.isContractCreation() ? tx.getContractAddress() : tx.getReceiveAddress();
 
         /***         ORIGIN op       ***/
         // YP: This is the sender of original transaction; it is never a contract.

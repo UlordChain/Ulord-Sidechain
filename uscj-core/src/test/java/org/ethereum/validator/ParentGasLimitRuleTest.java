@@ -18,7 +18,7 @@
 
 package org.ethereum.validator;
 
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.BlockDifficulty;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.vm.DataWord;
@@ -79,7 +79,7 @@ public class ParentGasLimitRuleTest {
     public static BlockHeader getHeader(long gasLimitValue) {
         byte[] gasLimit = new DataWord(gasLimitValue).getData();
 
-        BlockHeader header = new BlockHeader(null, null, RskAddress.nullAddress().getBytes(),
+        BlockHeader header = new BlockHeader(null, null, UscAddress.nullAddress().getBytes(),
                 null, BlockDifficulty.ZERO.getBytes(), 0, gasLimit, 0,
                 0, null, null, 0);
 

@@ -18,7 +18,7 @@
 
 package co.usc.config;
 
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 
 /**
  * Created by mario on 12/12/16.
@@ -65,8 +65,8 @@ public class RemascConfig {
         return syntheticSpan;
     }
 
-    public RskAddress getRskLabsAddress() {
-        return new RskAddress(this.rskLabsAddress);
+    public UscAddress getRskLabsAddress() {
+        return new UscAddress(this.rskLabsAddress);
     }
 
     public long getRskLabsDivisor() {

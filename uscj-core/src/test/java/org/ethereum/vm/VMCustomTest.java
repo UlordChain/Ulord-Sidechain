@@ -22,7 +22,7 @@ package org.ethereum.vm;
 import co.usc.config.TestSystemProperties;
 import co.usc.config.VmConfig;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.vm.program.Program;
 import org.ethereum.vm.program.Program.OutOfGasException;
@@ -51,7 +51,7 @@ public class VMCustomTest {
 
     @Before
     public void setup() {
-        RskAddress ownerAddress = new RskAddress("77045E71A7A2C50903D88E564CD72FAB11E82051");
+        UscAddress ownerAddress = new UscAddress("77045E71A7A2C50903D88E564CD72FAB11E82051");
         byte[] msgData = Hex.decode("00000000000000000000000000000000000000000000000000000000000000A1" +
                 "00000000000000000000000000000000000000000000000000000000000000B1");
 

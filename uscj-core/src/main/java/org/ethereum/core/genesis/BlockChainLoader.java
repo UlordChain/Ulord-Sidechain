@@ -19,9 +19,9 @@
 
 package org.ethereum.core.genesis;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.BlockDifficulty;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.validators.BlockValidator;
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +50,7 @@ public class BlockChainLoader {
 
     private static final Logger logger = LoggerFactory.getLogger("general");
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final BlockStore blockStore;
     private final Repository repository;
     private final ReceiptStore receiptStore;
@@ -61,7 +61,7 @@ public class BlockChainLoader {
 
     @Autowired
     public BlockChainLoader(
-            RskSystemProperties config,
+            UscSystemProperties config,
             org.ethereum.core.Repository repository,
             org.ethereum.db.BlockStore blockStore,
             ReceiptStore receiptStore,
@@ -101,7 +101,7 @@ public class BlockChainLoader {
 
             BigInteger initialNonce = config.getBlockchainConfig().getCommonConstants().getInitialNonce();
             Genesis genesis = GenesisLoader.loadGenesis(config, config.genesisInfo(), initialNonce, true);
-            for (RskAddress addr : genesis.getPremine().keySet()) {
+            for (UscAddress addr : genesis.getPremine().keySet()) {
                 repository.createAccount(addr);
                 InitialAddressState initialAddressState = genesis.getPremine().get(addr);
                 repository.addBalance(addr, initialAddressState.getAccountState().getBalance());

@@ -19,7 +19,7 @@
 
 package org.ethereum.core;
 
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.crypto.ECKey;
 
 /**
@@ -28,18 +28,18 @@ import org.ethereum.crypto.ECKey;
 public class Account {
 
     private final ECKey ecKey;
-    private final RskAddress addr;
+    private final UscAddress addr;
 
     public Account(ECKey ecKey) {
         this.ecKey = ecKey;
-        this.addr = new RskAddress(this.ecKey.getAddress());
+        this.addr = new UscAddress(this.ecKey.getAddress());
     }
 
     public ECKey getEcKey() {
         return ecKey;
     }
 
-    public RskAddress getAddress() {
+    public UscAddress getAddress() {
         return addr;
     }
 }

@@ -1,12 +1,12 @@
 package co.usc.config;
 
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 
 public class ConfigUtils {
     public static MiningConfig getDefaultMiningConfig() {
         final byte[] coinbaseAddress = new byte[]{-120, 95, -109, -18, -43, 119, -14, -4, 52, 30, -69, -102, 92, -101, 44, -28, 70, 93, -106, -60};
         return new MiningConfig(
-                new RskAddress(coinbaseAddress),
+                new UscAddress(coinbaseAddress),
                 0.0,
                 0.0,
                 0,

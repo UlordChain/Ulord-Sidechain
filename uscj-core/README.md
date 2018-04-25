@@ -25,5 +25,5 @@ Run `../gradlew install`.
 
 #### Publish uscj-core builds
 
-Simply push to master, and [the Jenkins build](https://jenkins.rsk.co/) will take care of the rest.
+Simply push to master, and [the Jenkins build](https://jenkins.usc.co/) will take care of the rest.
 

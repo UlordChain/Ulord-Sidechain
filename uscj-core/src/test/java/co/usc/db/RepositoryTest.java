@@ -19,10 +19,9 @@
 package co.usc.db;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.trie.TrieStore;
 import co.usc.trie.TrieStoreImpl;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.core.Repository;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.datasource.HashMapDB;
@@ -47,8 +46,8 @@ import static org.junit.Assert.*;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class RepositoryTest {
 
-    public static final RskAddress COW = new RskAddress("CD2A3D9F938E13CD947EC05ABC7FE734DF8DD826");
-    public static final RskAddress HORSE = new RskAddress("13978AEE95F38490E9769C39B2773ED763D9CD5F");
+    public static final UscAddress COW = new UscAddress("CD2A3D9F938E13CD947EC05ABC7FE734DF8DD826");
+    public static final UscAddress HORSE = new UscAddress("13978AEE95F38490E9769C39B2773ED763D9CD5F");
     private final TestSystemProperties config = new TestSystemProperties();
 
     @Test

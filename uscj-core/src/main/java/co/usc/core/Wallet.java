@@ -21,8 +21,6 @@ package co.usc.core;
 import co.usc.ulordj.core.Sha256Hash;
 import co.usc.crypto.EncryptedData;
 import co.usc.crypto.KeyCrypterAes;
-import co.usc.crypto.EncryptedData;
-import co.usc.crypto.KeyCrypterAes;
 import org.ethereum.core.Account;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.Keccak256Helper;
@@ -40,13 +38,13 @@ public class Wallet {
     private final KeyValueDataSource keyDS;
 
     @GuardedBy("accessLock")
-    private final Map<RskAddress, byte[]> accounts = new HashMap<>();
+    private final Map<UscAddress, byte[]> accounts = new HashMap<>();
 
     @GuardedBy("accessLock")
-    private final List<RskAddress> initialAccounts = new ArrayList<>();
+    private final List<UscAddress> initialAccounts = new ArrayList<>();
 
     private final Object accessLock = new Object();
-    private final Map<RskAddress, Long> unlocksTimeouts = new HashMap<>();
+    private final Map<UscAddress, Long> unlocksTimeouts = new HashMap<>();
 
     public Wallet(KeyValueDataSource keyDS) {
         this.keyDS = keyDS;
@@ -54,21 +52,21 @@ public class Wallet {
 
     public List<byte[]> getAccountAddresses() {
         List<byte[]> addresses = new ArrayList<>();
-        Set<RskAddress> keys = new HashSet<>();
+        Set<UscAddress> keys = new HashSet<>();
 
         synchronized(accessLock) {
-            for (RskAddress addr: this.initialAccounts) {
+            for (UscAddress addr: this.initialAccounts) {
                 addresses.add(addr.getBytes());
             }
 
             for (byte[] address: keyDS.keys()) {
-                keys.add(new RskAddress(address));
+                keys.add(new UscAddress(address));
             }
 
             keys.addAll(accounts.keySet());
             keys.removeAll(this.initialAccounts);
 
-            for (RskAddress addr: keys) {
+            for (UscAddress addr: keys) {
                 addresses.add(addr.getBytes());
             }
         }
@@ -82,24 +80,24 @@ public class Wallet {
                 .toArray(String[]::new);
     }
 
-    public RskAddress addAccount() {
+    public UscAddress addAccount() {
         Account account = new Account(new ECKey());
         saveAccount(account);
         return account.getAddress();
     }
 
-    public RskAddress addAccount(String passphrase) {
+    public UscAddress addAccount(String passphrase) {
         Account account = new Account(new ECKey());
         saveAccount(account, passphrase);
         return account.getAddress();
     }
 
-    public RskAddress addAccount(Account account) {
+    public UscAddress addAccount(Account account) {
         saveAccount(account);
         return account.getAddress();
     }
 
-    public Account getAccount(RskAddress addr) {
+    public Account getAccount(UscAddress addr) {
         synchronized (accessLock) {
             if (!accounts.containsKey(addr)) {
                 return null;
@@ -118,7 +116,7 @@ public class Wallet {
         }
     }
 
-    public Account getAccount(RskAddress addr, String passphrase) {
+    public Account getAccount(UscAddress addr, String passphrase) {
         synchronized (accessLock) {
             byte[] encrypted = keyDS.get(addr.getBytes());
 
@@ -130,7 +128,7 @@ public class Wallet {
         }
     }
 
-    public boolean unlockAccount(RskAddress addr, String passphrase, long duration) {
+    public boolean unlockAccount(UscAddress addr, String passphrase, long duration) {
         long ending = System.currentTimeMillis() + duration;
         boolean unlocked = unlockAccount(addr, passphrase);
 
@@ -143,7 +141,7 @@ public class Wallet {
         return unlocked;
     }
 
-    public boolean unlockAccount(RskAddress addr, String passphrase) {
+    public boolean unlockAccount(UscAddress addr, String passphrase) {
         Account account;
 
         synchronized (accessLock) {
@@ -161,7 +159,7 @@ public class Wallet {
         return true;
     }
 
-    public boolean lockAccount(RskAddress addr) {
+    public boolean lockAccount(UscAddress addr) {
         synchronized (accessLock) {
             if (!accounts.containsKey(addr)) {
                 return false;
@@ -179,7 +177,7 @@ public class Wallet {
     public byte[] addAccountWithPrivateKey(byte[] privateKeyBytes) {
         Account account = new Account(ECKey.fromPrivate(privateKeyBytes));
         synchronized (accessLock) {
-            RskAddress addr = addAccount(account);
+            UscAddress addr = addAccount(account);
             this.initialAccounts.add(addr);
             return addr.getBytes();
         }

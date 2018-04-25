@@ -19,7 +19,7 @@
 
 package org.ethereum.config;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.DifficultyCalculator;
 import co.usc.db.RepositoryImpl;
 import co.usc.trie.TrieStoreImpl;
@@ -50,7 +50,7 @@ public class CommonConfig {
     private static final Logger logger = LoggerFactory.getLogger("general");
 
     @Bean
-    public Repository repository(RskSystemProperties config) {
+    public Repository repository(UscSystemProperties config) {
         String databaseDir = config.databaseDir();
         if (config.databaseReset()){
             FileUtil.recursiveDelete(databaseDir);
@@ -63,7 +63,7 @@ public class CommonConfig {
         return new RepositoryImpl(config, new TrieStoreImpl(ds), detailsDS);
     }
 
-    private KeyValueDataSource makeDataSource(RskSystemProperties config, String name) {
+    private KeyValueDataSource makeDataSource(UscSystemProperties config, String name) {
         KeyValueDataSource ds = new LevelDbDataSource(config, name);
         ds.init();
         return ds;
@@ -75,7 +75,7 @@ public class CommonConfig {
     }
 
     @Bean
-    public ParentBlockHeaderValidator parentHeaderValidator(RskSystemProperties config, DifficultyCalculator difficultyCalculator) {
+    public ParentBlockHeaderValidator parentHeaderValidator(UscSystemProperties config, DifficultyCalculator difficultyCalculator) {
 
         List<DependentBlockHeaderRule> rules = new ArrayList<>(asList(
                 new ParentNumberRule(),

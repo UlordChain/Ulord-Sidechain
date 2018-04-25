@@ -33,10 +33,10 @@ public class MessageFilterTest {
     public void filterWithoutFilteredCommandsAcceptsAnyMessage() {
         MessageFilter filter = new MessageFilter(null);
 
-        Message rskMessage = WriterMessageRecorderTest.createRskMessage();
+        Message uscMessage = WriterMessageRecorderTest.createUscMessage();
         Message ethMessage = WriterMessageRecorderTest.createEthMessage();
 
-        Assert.assertTrue(filter.acceptMessage(rskMessage));
+        Assert.assertTrue(filter.acceptMessage(uscMessage));
         Assert.assertTrue(filter.acceptMessage(ethMessage));
     }
 
@@ -46,10 +46,10 @@ public class MessageFilterTest {
 
         MessageFilter filter = new MessageFilter(commands);
 
-        Message rskMessage = WriterMessageRecorderTest.createRskMessage();
+        Message uscMessage = WriterMessageRecorderTest.createUscMessage();
         Message ethMessage = WriterMessageRecorderTest.createEthMessage();
 
-        Assert.assertTrue(filter.acceptMessage(rskMessage));
+        Assert.assertTrue(filter.acceptMessage(uscMessage));
         Assert.assertTrue(filter.acceptMessage(ethMessage));
     }
 
@@ -60,10 +60,10 @@ public class MessageFilterTest {
 
         MessageFilter filter = new MessageFilter(commands);
 
-        Message rskMessage = WriterMessageRecorderTest.createRskMessage();
+        Message uscMessage = WriterMessageRecorderTest.createUscMessage();
         Message ethMessage = WriterMessageRecorderTest.createEthMessage();
 
-        Assert.assertFalse(filter.acceptMessage(rskMessage));
+        Assert.assertFalse(filter.acceptMessage(uscMessage));
         Assert.assertTrue(filter.acceptMessage(ethMessage));
     }
 
@@ -74,7 +74,7 @@ public class MessageFilterTest {
 
         MessageFilter filter = new MessageFilter(commands);
 
-        Message rskMessage = WriterMessageRecorderTest.createRskMessage();
+        Message rskMessage = WriterMessageRecorderTest.createUscMessage();
         Message ethMessage = WriterMessageRecorderTest.createEthMessage();
 
         Assert.assertTrue(filter.acceptMessage(rskMessage));
@@ -90,7 +90,7 @@ public class MessageFilterTest {
 
         MessageFilter filter = new MessageFilter(commands);
 
-        Message rskMessage = WriterMessageRecorderTest.createRskMessage();
+        Message rskMessage = WriterMessageRecorderTest.createUscMessage();
         Message ethMessage = WriterMessageRecorderTest.createEthMessage();
 
         Assert.assertTrue(filter.acceptMessage(rskMessage));
@@ -106,7 +106,7 @@ public class MessageFilterTest {
 
         MessageFilter filter = new MessageFilter(commands);
 
-        Message rskMessage = WriterMessageRecorderTest.createRskMessage();
+        Message rskMessage = WriterMessageRecorderTest.createUscMessage();
         Message ethMessage = WriterMessageRecorderTest.createEthMessage();
 
         Assert.assertTrue(filter.acceptMessage(rskMessage));
@@ -122,7 +122,7 @@ public class MessageFilterTest {
 
         MessageFilter filter = new MessageFilter(commands);
 
-        Message rskMessage = WriterMessageRecorderTest.createRskMessage();
+        Message rskMessage = WriterMessageRecorderTest.createUscMessage();
         Message ethMessage = WriterMessageRecorderTest.createEthMessage();
 
         Assert.assertFalse(filter.acceptMessage(rskMessage));

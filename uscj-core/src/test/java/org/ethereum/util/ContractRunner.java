@@ -3,7 +3,7 @@ package org.ethereum.util;
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.test.builders.AccountBuilder;
 import co.usc.test.builders.BlockBuilder;
@@ -106,7 +106,7 @@ public class ContractRunner {
 
     private TransactionExecutor executeTransaction(Transaction transaction) {
         Repository track = repository.startTracking();
-        TransactionExecutor executor = new TransactionExecutor(new TestSystemProperties(), transaction, 0, RskAddress.nullAddress(),
+        TransactionExecutor executor = new TransactionExecutor(new TestSystemProperties(), transaction, 0, UscAddress.nullAddress(),
                                                                repository, blockStore, receiptStore,
                                                                new ProgramInvokeFactoryImpl(), blockchain.getBestBlock());
         executor.init();

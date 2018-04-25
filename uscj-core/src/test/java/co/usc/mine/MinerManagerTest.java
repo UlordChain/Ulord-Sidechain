@@ -21,14 +21,11 @@ package co.usc.mine;
 import co.usc.config.ConfigUtils;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.DifficultyCalculator;
-import co.usc.core.RskImpl;
+import co.usc.core.UscImpl;
 import co.usc.core.SnapshotManager;
 import co.usc.test.World;
 import co.usc.validators.BlockValidationRule;
 import co.usc.validators.ProofOfWorkRule;
-import co.usc.config.ConfigUtils;
-import co.usc.config.TestSystemProperties;
-import co.usc.test.World;
 import org.awaitility.Awaitility;
 import org.awaitility.Duration;
 import org.ethereum.core.Block;
@@ -143,7 +140,7 @@ public class MinerManagerTest {
 
         Assert.assertEquals(0, blockchain.getBestBlock().getNumber());
 
-        RskImplForTest rsk = new RskImplForTest() {
+        UscImplForTest rsk = new UscImplForTest() {
             @Override
             public boolean hasBetterBlockToSync() {
                 return true;
@@ -166,7 +163,7 @@ public class MinerManagerTest {
 
         Assert.assertEquals(0, blockchain.getBestBlock().getNumber());
 
-        RskImplForTest rsk = new RskImplForTest() {
+        UscImplForTest rsk = new UscImplForTest() {
             @Override
             public boolean hasBetterBlockToSync() {
                 return false;
@@ -308,7 +305,7 @@ public class MinerManagerTest {
     }
 
     private static MinerClientImpl getMinerClient(MinerServerImpl minerServer) {
-        return getMinerClient(new RskImplForTest() {
+        return getMinerClient(new UscImplForTest() {
             @Override
             public boolean hasBetterBlockToSync() {
                 return false;
@@ -321,7 +318,7 @@ public class MinerManagerTest {
         }, minerServer);
     }
 
-    private static MinerClientImpl getMinerClient(RskImplForTest rsk, MinerServerImpl minerServer) {
+    private static MinerClientImpl getMinerClient(UscImplForTest rsk, MinerServerImpl minerServer) {
         return new MinerClientImpl(rsk, minerServer, config);
     }
 
@@ -359,8 +356,8 @@ public class MinerManagerTest {
         }
     }
 
-    private static class RskImplForTest extends RskImpl {
-        public RskImplForTest() {
+    private static class UscImplForTest extends UscImpl {
+        public UscImplForTest() {
             super(null, null, null, null,
                   new CompositeEthereumListener(), null, null, null);
         }

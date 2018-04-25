@@ -18,11 +18,7 @@
 
 package co.usc.config;
 
-import co.usc.core.RskAddress;
-import co.usc.net.eth.MessageFilter;
-import co.usc.net.eth.MessageRecorder;
-import co.usc.net.eth.WriterMessageRecorder;
-import co.usc.rpc.ModuleDescription;
+import co.usc.core.UscAddress;
 import co.usc.net.eth.MessageFilter;
 import co.usc.net.eth.MessageRecorder;
 import co.usc.net.eth.WriterMessageRecorder;
@@ -52,7 +48,7 @@ import java.util.List;
 /**
  * Created by ajlopez on 3/3/2016.
  */
-public class RskSystemProperties extends SystemProperties {
+public class UscSystemProperties extends SystemProperties {
     private static final Logger logger = LoggerFactory.getLogger("config");
 
     public static final int PD_DEFAULT_REFRESH_PERIOD = 60000;
@@ -69,14 +65,14 @@ public class RskSystemProperties extends SystemProperties {
     private List<ModuleDescription> moduleDescriptions;
     private VmConfig vmConfig;
 
-    public RskSystemProperties(ConfigLoader loader) {
+    public UscSystemProperties(ConfigLoader loader) {
         super(loader);
     }
 
     @Nullable
-    public RskAddress coinbaseAddress() {
+    public UscAddress coinbaseAddress() {
         if (!isMinerServerEnabled()) {
-            return RskAddress.nullAddress();
+            return UscAddress.nullAddress();
         }
 
         // validity checks are performed by localCoinbaseAccount
@@ -87,10 +83,10 @@ public class RskSystemProperties extends SystemProperties {
 
         String coinbaseAddress = configFromFiles.getString(MINER_REWARD_ADDRESS_CONFIG);
         if (coinbaseAddress.length() != Constants.getMaxAddressByteLength() * 2) {
-            throw new RskConfigurationException(MINER_REWARD_ADDRESS_CONFIG + " needs to be Hex encoded and 20 byte length");
+            throw new UscConfigurationException(MINER_REWARD_ADDRESS_CONFIG + " needs to be Hex encoded and 20 byte length");
         }
 
-        return new RskAddress(coinbaseAddress);
+        return new UscAddress(coinbaseAddress);
     }
 
     @Nullable
@@ -101,12 +97,12 @@ public class RskSystemProperties extends SystemProperties {
 
         if (configFromFiles.hasPath(MINER_COINBASE_SECRET_CONFIG) &&
                 configFromFiles.hasPath(MINER_REWARD_ADDRESS_CONFIG)) {
-            throw new RskConfigurationException("It is required to have only one of " + MINER_REWARD_ADDRESS_CONFIG + " or " + MINER_COINBASE_SECRET_CONFIG);
+            throw new UscConfigurationException("It is required to have only one of " + MINER_REWARD_ADDRESS_CONFIG + " or " + MINER_COINBASE_SECRET_CONFIG);
         }
 
         if (!configFromFiles.hasPath(MINER_COINBASE_SECRET_CONFIG) &&
                 !configFromFiles.hasPath(MINER_REWARD_ADDRESS_CONFIG)) {
-            throw new RskConfigurationException("It is required to either have " + MINER_REWARD_ADDRESS_CONFIG + " or " + MINER_COINBASE_SECRET_CONFIG + " to use the miner server");
+            throw new UscConfigurationException("It is required to either have " + MINER_REWARD_ADDRESS_CONFIG + " or " + MINER_COINBASE_SECRET_CONFIG + " to use the miner server");
         }
 
         if (!configFromFiles.hasPath(MINER_COINBASE_SECRET_CONFIG)) {

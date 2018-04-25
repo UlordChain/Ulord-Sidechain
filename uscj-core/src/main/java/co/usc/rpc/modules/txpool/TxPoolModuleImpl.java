@@ -18,8 +18,7 @@
 
 package co.usc.rpc.modules.txpool;
 
-import co.usc.core.RskAddress;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -57,8 +56,8 @@ public class TxPoolModuleImpl implements TxPoolModule {
     @Override
     public String content() {
         Map<String, JsonNode> contentProps = new HashMap<>();
-        Map<RskAddress, Map<BigInteger, List<Transaction>>> pendingGrouped = groupTransactions(transactionPool.getPendingTransactions());
-        Map<RskAddress, Map<BigInteger, List<Transaction>>> queuedGrouped = groupTransactions(transactionPool.getQueuedTransactions());
+        Map<UscAddress, Map<BigInteger, List<Transaction>>> pendingGrouped = groupTransactions(transactionPool.getPendingTransactions());
+        Map<UscAddress, Map<BigInteger, List<Transaction>>> queuedGrouped = groupTransactions(transactionPool.getQueuedTransactions());
         contentProps.put(PENDING, serializeTransactions(pendingGrouped, this::fullSerializer));
         contentProps.put(QUEUED, serializeTransactions(queuedGrouped, this::fullSerializer));
         JsonNode node = jsonNodeFactory.objectNode().setAll(contentProps);
@@ -66,10 +65,10 @@ public class TxPoolModuleImpl implements TxPoolModule {
     }
 
     private JsonNode serializeTransactions(
-            Map<RskAddress, Map<BigInteger, List<Transaction>>> groupedTransactions,
+            Map<UscAddress, Map<BigInteger, List<Transaction>>> groupedTransactions,
             Function<Transaction, JsonNode> txSerializer) {
         Map<String, JsonNode> senderProps = new HashMap<>();
-        for (Map.Entry<RskAddress, Map<BigInteger, List<Transaction>>> entrySender : groupedTransactions.entrySet()){
+        for (Map.Entry<UscAddress, Map<BigInteger, List<Transaction>>> entrySender : groupedTransactions.entrySet()){
             Map<String, JsonNode> nonceProps = new HashMap<>();
             for (Map.Entry<BigInteger, List<Transaction>> entryNonce : entrySender.getValue().entrySet()){
                 ArrayNode txsNodes = jsonNodeFactory.arrayNode();
@@ -110,8 +109,8 @@ public class TxPoolModuleImpl implements TxPoolModule {
         return jsonNodeFactory.textNode(summaryFormatted);
     }
 
-    private Map<RskAddress, Map<BigInteger, List<Transaction>>> groupTransactions(List<Transaction> transactions) {
-        Map<RskAddress, Map<BigInteger, List<Transaction>>> groupedTransactions = new HashMap<>();
+    private Map<UscAddress, Map<BigInteger, List<Transaction>>> groupTransactions(List<Transaction> transactions) {
+        Map<UscAddress, Map<BigInteger, List<Transaction>>> groupedTransactions = new HashMap<>();
         for (Transaction tx : transactions){
             Map<BigInteger, List<Transaction>> txsBySender = groupedTransactions.get(tx.getSender());
             if (txsBySender == null){
@@ -140,8 +139,8 @@ public class TxPoolModuleImpl implements TxPoolModule {
     @Override
     public String inspect() {
         Map<String, JsonNode> contentProps = new HashMap<>();
-        Map<RskAddress, Map<BigInteger, List<Transaction>>> pendingGrouped = groupTransactions(transactionPool.getPendingTransactions());
-        Map<RskAddress, Map<BigInteger, List<Transaction>>> queuedGrouped = groupTransactions(transactionPool.getQueuedTransactions());
+        Map<UscAddress, Map<BigInteger, List<Transaction>>> pendingGrouped = groupTransactions(transactionPool.getPendingTransactions());
+        Map<UscAddress, Map<BigInteger, List<Transaction>>> queuedGrouped = groupTransactions(transactionPool.getQueuedTransactions());
         contentProps.put(PENDING, serializeTransactions(pendingGrouped, this::summarySerializer));
         contentProps.put(QUEUED, serializeTransactions(queuedGrouped, this::summarySerializer));
         JsonNode node = jsonNodeFactory.objectNode().setAll(contentProps);

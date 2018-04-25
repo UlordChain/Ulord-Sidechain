@@ -20,7 +20,7 @@
 package org.ethereum.db;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.db.ContractDetailsImpl;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.vm.DataWord;
@@ -40,7 +40,7 @@ public class DetailsDataStoreTest {
         DatabaseImpl db = new DatabaseImpl(new HashMapDB());
         DetailsDataStore dds = new DetailsDataStore(config, db);
 
-        RskAddress c_key = new RskAddress("0000000000000000000000000000000000001a2b");
+        UscAddress c_key = new UscAddress("0000000000000000000000000000000000001a2b");
         byte[] code = Hex.decode("60606060");
         byte[] key =  Hex.decode("11");
         byte[] value =  Hex.decode("aa");
@@ -72,7 +72,7 @@ public class DetailsDataStoreTest {
         DatabaseImpl db = new DatabaseImpl(new HashMapDB());
         DetailsDataStore dds = new DetailsDataStore(config, db);
 
-        RskAddress c_key = new RskAddress("0000000000000000000000000000000000001a2b");
+        UscAddress c_key = new UscAddress("0000000000000000000000000000000000001a2b");
         byte[] code = Hex.decode("60606060");
         byte[] key =  Hex.decode("11");
         byte[] value =  Hex.decode("aa");
@@ -108,7 +108,7 @@ public class DetailsDataStoreTest {
         DatabaseImpl db = new DatabaseImpl(new HashMapDB());
         DetailsDataStore dds = new DetailsDataStore(config, db);
 
-        RskAddress c_key = new RskAddress("0000000000000000000000000000000000001a2b");
+        UscAddress c_key = new UscAddress("0000000000000000000000000000000000001a2b");
         byte[] code = Hex.decode("60606060");
         byte[] key =  Hex.decode("11");
         byte[] value =  Hex.decode("aa");
@@ -146,7 +146,7 @@ public class DetailsDataStoreTest {
         DatabaseImpl db = new DatabaseImpl(new HashMapDB());
         DetailsDataStore dds = new DetailsDataStore(config, db);
 
-        RskAddress c_key = new RskAddress("0000000000000000000000000000000000001a2b");
+        UscAddress c_key = new UscAddress("0000000000000000000000000000000000001a2b");
 
         ContractDetails contractDetails = dds.get(c_key);
         assertNull(contractDetails);

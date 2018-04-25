@@ -21,7 +21,7 @@ package co.usc.config;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
-public class TestSystemProperties extends RskSystemProperties {
+public class TestSystemProperties extends UscSystemProperties {
     private static final ConfigLoader TEST_LOADER = new ConfigLoader() {
         /**
          * Cache configurations that don't change so we don't read files multiple times.

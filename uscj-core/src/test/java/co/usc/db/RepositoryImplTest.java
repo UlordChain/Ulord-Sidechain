@@ -20,13 +20,11 @@ package co.usc.db;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.trie.TrieImplHashTest;
 import co.usc.trie.TrieStore;
 import co.usc.trie.TrieStoreImpl;
-import co.usc.config.TestSystemProperties;
-import co.usc.trie.TrieImplHashTest;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Repository;
 import org.ethereum.datasource.HashMapDB;
@@ -88,7 +86,7 @@ public class RepositoryImplTest {
 
         repository.flush();
 
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
         byte[] initialRoot = repository.getRoot();
 
         repository.createAccount(accAddress);
@@ -109,7 +107,7 @@ public class RepositoryImplTest {
 
     @Test
     public void updateAccountState() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -128,7 +126,7 @@ public class RepositoryImplTest {
 
     @Test
     public void incrementAccountNonceForNewAccount() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -139,7 +137,7 @@ public class RepositoryImplTest {
 
     @Test
     public void incrementAccountNonceForAlreadyCreatedAccount() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -151,7 +149,7 @@ public class RepositoryImplTest {
 
     @Test
     public void incrementAccountNonceTwiceForAlreadyCreatedAccount() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -164,7 +162,7 @@ public class RepositoryImplTest {
 
     @Test
     public void incrementAccountBalanceForNewAccount() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -175,7 +173,7 @@ public class RepositoryImplTest {
 
     @Test
     public void incrementAccountBalanceForAlreadyCreatedAccount() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -187,7 +185,7 @@ public class RepositoryImplTest {
 
     @Test
     public void incrementAccountBalanceTwiceForAlreadyCreatedAccount() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -207,7 +205,7 @@ public class RepositoryImplTest {
 
     @Test
     public void isExistReturnsTrueForCreatedAccount() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -228,7 +226,7 @@ public class RepositoryImplTest {
 
     @Test
     public void getCodeFromAccountWithoutCode() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -242,7 +240,7 @@ public class RepositoryImplTest {
 
     @Test
     public void saveAndGetCodeFromAccount() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
         byte[] accCode = new byte[] { 0x01, 0x02, 0x03 };
 
         RepositoryImpl repository = new RepositoryImpl(config);
@@ -259,7 +257,7 @@ public class RepositoryImplTest {
 
     @Test
     public void hibernateAccount() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -274,7 +272,7 @@ public class RepositoryImplTest {
 
     @Test
     public void getCodeFromHibernatedAccount() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
         byte[] accCode = new byte[] { 0x01, 0x02, 0x03 };
 
         RepositoryImpl repository = new RepositoryImpl(config);
@@ -301,7 +299,7 @@ public class RepositoryImplTest {
 
     @Test
     public void createAccountInTrackAndCommit() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
         RepositoryImpl repository = new RepositoryImpl(config);
 
         Repository track = repository.startTracking();
@@ -315,7 +313,7 @@ public class RepositoryImplTest {
 
     @Test
     public void createAccountInTrackAndRollback() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
         RepositoryImpl repository = new RepositoryImpl(config);
 
         Repository track = repository.startTracking();
@@ -329,7 +327,7 @@ public class RepositoryImplTest {
 
     @Test
     public void getEmptyStorageValue() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -341,7 +339,7 @@ public class RepositoryImplTest {
 
     @Test
     public void setAndGetStorageValue() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -355,7 +353,7 @@ public class RepositoryImplTest {
 
     @Test
     public void setAndGetStorageValueUsingNewRepositoryForTest() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImplForTesting();
 
@@ -369,7 +367,7 @@ public class RepositoryImplTest {
 
     @Test
     public void setAndGetStorageValueUsingTrack() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -386,7 +384,7 @@ public class RepositoryImplTest {
 
     @Test
     public void getEmptyStorageBytes() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
@@ -397,7 +395,7 @@ public class RepositoryImplTest {
 
     @Test
     public void setAndGetStorageBytesUsingTrack() {
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
         byte[] bytes = new byte[] { 0x01, 0x02, 0x03 };
 
         RepositoryImpl repository = new RepositoryImpl(config);
@@ -417,7 +415,7 @@ public class RepositoryImplTest {
     {
         RepositoryImpl repository = new RepositoryImpl(config);
 
-        Set<RskAddress> keys = repository.getAccountsKeys();
+        Set<UscAddress> keys = repository.getAccountsKeys();
 
         Assert.assertNotNull(keys);
         Assert.assertTrue(keys.isEmpty());
@@ -426,15 +424,15 @@ public class RepositoryImplTest {
     @Test
     public void getAccountsKeys()
     {
-        RskAddress accAddress1 = randomAccountAddress();
-        RskAddress accAddress2 = randomAccountAddress();
+        UscAddress accAddress1 = randomAccountAddress();
+        UscAddress accAddress2 = randomAccountAddress();
 
         RepositoryImpl repository = new RepositoryImpl(config);
 
         repository.createAccount(accAddress1);
         repository.createAccount(accAddress2);
 
-        Set<RskAddress> keys = repository.getAccountsKeys();
+        Set<UscAddress> keys = repository.getAccountsKeys();
 
         Assert.assertNotNull(keys);
         Assert.assertFalse(keys.isEmpty());
@@ -444,8 +442,8 @@ public class RepositoryImplTest {
     @Test
     public void getAccountsKeysOnSnapshot()
     {
-        RskAddress accAddress1 = randomAccountAddress();
-        RskAddress accAddress2 = randomAccountAddress();
+        UscAddress accAddress1 = randomAccountAddress();
+        UscAddress accAddress2 = randomAccountAddress();
 
         TrieStore store = new TrieStoreImpl(new HashMapDB());
         RepositoryImpl repository = new RepositoryImpl(config, store);
@@ -459,7 +457,7 @@ public class RepositoryImplTest {
 
         repository.syncToRoot(root);
 
-        Set<RskAddress> keys = repository.getAccountsKeys();
+        Set<UscAddress> keys = repository.getAccountsKeys();
 
         Assert.assertNotNull(keys);
         Assert.assertFalse(keys.isEmpty());
@@ -478,7 +476,7 @@ public class RepositoryImplTest {
         TrieStore store = new TrieStoreImpl(new HashMapDB());
         RepositoryImpl repository = new RepositoryImpl(config, store);
 
-        RskAddress accAddress = randomAccountAddress();
+        UscAddress accAddress = randomAccountAddress();
         byte[] initialRoot = repository.getRoot();
 
         repository.createAccount(accAddress);
@@ -487,11 +485,11 @@ public class RepositoryImplTest {
         Assert.assertTrue(repository.isExist(accAddress));
     }
 
-    private static RskAddress randomAccountAddress() {
+    private static UscAddress randomAccountAddress() {
         byte[] bytes = new byte[20];
 
         new Random().nextBytes(bytes);
 
-        return new RskAddress(bytes);
+        return new UscAddress(bytes);
     }
 }

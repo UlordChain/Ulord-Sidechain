@@ -22,7 +22,7 @@ package org.ethereum.jsontestsuite;
 import co.usc.config.TestSystemProperties;
 import co.usc.config.VmConfig;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.db.RepositoryImpl;
@@ -210,7 +210,7 @@ public class TestRunner {
             byte[] address = exec.getAddress();
             byte[] origin = exec.getOrigin();
             byte[] caller = exec.getCaller();
-            byte[] balance = ByteUtil.bigIntegerToBytes(repository.getBalance(new RskAddress(exec.getAddress())).asBigInteger());
+            byte[] balance = ByteUtil.bigIntegerToBytes(repository.getBalance(new UscAddress(exec.getAddress())).asBigInteger());
             byte[] gasPrice = exec.getGasPrice();
             byte[] gas = exec.getGas();
             byte[] callValue = exec.getValue();
@@ -223,10 +223,10 @@ public class TestRunner {
             byte[] gaslimit = env.getCurrentGasLimit();
 
             // Origin and caller need to exist in order to be able to execute
-            if (repository.getAccountState(new RskAddress(origin)) == null)
-                repository.createAccount(new RskAddress(origin));
-            if (repository.getAccountState(new RskAddress(caller)) == null)
-                repository.createAccount(new RskAddress(caller));
+            if (repository.getAccountState(new UscAddress(origin)) == null)
+                repository.createAccount(new UscAddress(origin));
+            if (repository.getAccountState(new UscAddress(caller)) == null)
+                repository.createAccount(new UscAddress(caller));
 
             ProgramInvoke programInvoke = new ProgramInvokeImpl(address, origin, caller, balance,
                     gasPrice, gas, callValue, msgData, lastHash, coinbase,
@@ -288,7 +288,7 @@ public class TestRunner {
                 logger.info("--------- POST --------");
 
                 /* 5. Assert Post values */
-                for (RskAddress addr : testCase.getPost().keySet()) {
+                for (UscAddress addr : testCase.getPost().keySet()) {
                     AccountState accountState = testCase.getPost().get(addr);
 
                     long expectedNonce = accountState.getNonceLong();
@@ -587,11 +587,11 @@ public class TestRunner {
         return transaction;
     }
 
-    public Repository loadRepository(Repository track, Map<RskAddress, AccountState> pre) {
+    public Repository loadRepository(Repository track, Map<UscAddress, AccountState> pre) {
 
 
             /* 1. Store pre-exist accounts - Pre */
-        for (RskAddress addr : pre.keySet()) {
+        for (UscAddress addr : pre.keySet()) {
 
             AccountState accountState = pre.get(addr);
 

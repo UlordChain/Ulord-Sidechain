@@ -19,7 +19,7 @@
 
 package org.ethereum.vm.program.invoke;
 
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.db.RepositoryImplForTesting;
 import org.ethereum.core.Repository;
 import org.ethereum.crypto.ECKey;
@@ -42,8 +42,8 @@ public class ProgramInvokeMockImpl implements ProgramInvoke {
     private DataWord txindex;
 
     private Repository repository;
-    private RskAddress ownerAddress = new RskAddress("cd2a3d9f938e13cd947ec05abc7fe734df8dd826");
-    private final RskAddress contractAddress = new RskAddress("471fd3ad3e9eeadeec4608b92d16ce6b500704cc");
+    private UscAddress ownerAddress = new UscAddress("cd2a3d9f938e13cd947ec05abc7fe734df8dd826");
+    private final UscAddress contractAddress = new UscAddress("471fd3ad3e9eeadeec4608b92d16ce6b500704cc");
 
     // default for most tests. This can be overwritten by the test
     private long gasLimit = 1000000;
@@ -221,7 +221,7 @@ public class ProgramInvokeMockImpl implements ProgramInvoke {
         this.gasLimit = gasLimit;
     }
 
-    public void setOwnerAddress(RskAddress ownerAddress) {
+    public void setOwnerAddress(UscAddress ownerAddress) {
         this.ownerAddress = ownerAddress;
     }
 

@@ -19,7 +19,7 @@
 
 package org.ethereum.jsontestsuite.validators;
 
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Repository;
 import org.ethereum.db.ContractDetails;
@@ -36,8 +36,8 @@ public class RepositoryValidator {
 
         List<String> results = new ArrayList<>();
 
-        Set<RskAddress> currentKeys = currentRepository.getAccountsKeys();
-        Set<RskAddress> expectedKeys = postRepository.getAccountsKeys();
+        Set<UscAddress> currentKeys = currentRepository.getAccountsKeys();
+        Set<UscAddress> expectedKeys = postRepository.getAccountsKeys();
 
         if (expectedKeys.size() != currentKeys.size()) {
 
@@ -47,7 +47,7 @@ public class RepositoryValidator {
             results.add(out);
         }
 
-        for (RskAddress addr : currentKeys) {
+        for (UscAddress addr : currentKeys) {
             AccountState state = currentRepository.getAccountState(addr);
             ContractDetails details = currentRepository.getContractDetails(addr);
 
@@ -60,8 +60,8 @@ public class RepositoryValidator {
             results.addAll(accountResult);
         }
 
-        Set<RskAddress> expectedButAbsent = ByteUtil.difference(expectedKeys, currentKeys);
-        for (RskAddress addr : expectedButAbsent){
+        Set<UscAddress> expectedButAbsent = ByteUtil.difference(expectedKeys, currentKeys);
+        for (UscAddress addr : expectedButAbsent){
             String formattedString = String.format("Account: %s: expected but doesn't exist", addr);
             results.add(formattedString);
         }

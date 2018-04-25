@@ -31,17 +31,8 @@ import co.usc.config.BridgeConstants;
 import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.BlockDifficulty;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
-import co.usc.db.RepositoryImpl;
-import co.usc.peg.simples.SimpleBlockChain;
-import co.usc.peg.simples.SimpleRskTransaction;
-import co.usc.peg.simples.SimpleWallet;
-import co.usc.peg.utils.BridgeEventLogger;
-import co.usc.peg.utils.BridgeEventLoggerImpl;
-import co.usc.test.builders.BlockChainBuilder;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
 import co.usc.db.RepositoryImpl;
 import co.usc.peg.simples.SimpleBlockChain;
 import co.usc.peg.simples.SimpleRskTransaction;
@@ -107,7 +98,7 @@ import static org.mockito.Mockito.*;
 @PrepareForTest({ BridgeUtils.class })
 public class BridgeSupportTest {
     private static final co.usc.core.Coin LIMIT_MONETARY_BASE = new co.usc.core.Coin(new BigInteger("21000000000000000000000000"));
-    private static final RskAddress contractAddress = PrecompiledContracts.BRIDGE_ADDR;
+    private static final UscAddress contractAddress = PrecompiledContracts.BRIDGE_ADDR;
     public static final BlockDifficulty TEST_DIFFICULTY = new BlockDifficulty(BigInteger.ONE);
 
     private static BridgeConstants bridgeConstants;
@@ -1599,13 +1590,13 @@ public class BridgeSupportTest {
         co.usc.core.Coin totalAmountExpectedToHaveBeenLocked = amountToHaveBeenCreditedToSrc1
                 .add(amountToHaveBeenCreditedToSrc2)
                 .add(amountToHaveBeenCreditedToSrc3);
-        RskAddress srcKey1RskAddress = new RskAddress(org.ethereum.crypto.ECKey.fromPrivate(srcKey1.getPrivKey()).getAddress());
-        RskAddress srcKey2RskAddress = new RskAddress(org.ethereum.crypto.ECKey.fromPrivate(srcKey2.getPrivKey()).getAddress());
-        RskAddress srcKey3RskAddress = new RskAddress(org.ethereum.crypto.ECKey.fromPrivate(srcKey3.getPrivKey()).getAddress());
+        UscAddress srcKey1UscAddress = new UscAddress(org.ethereum.crypto.ECKey.fromPrivate(srcKey1.getPrivKey()).getAddress());
+        UscAddress srcKey2UscAddress = new UscAddress(org.ethereum.crypto.ECKey.fromPrivate(srcKey2.getPrivKey()).getAddress());
+        UscAddress srcKey3UscAddress = new UscAddress(org.ethereum.crypto.ECKey.fromPrivate(srcKey3.getPrivKey()).getAddress());
 
-        Assert.assertEquals(amountToHaveBeenCreditedToSrc1, repository.getBalance(srcKey1RskAddress));
-        Assert.assertEquals(amountToHaveBeenCreditedToSrc2, repository.getBalance(srcKey2RskAddress));
-        Assert.assertEquals(amountToHaveBeenCreditedToSrc3, repository.getBalance(srcKey3RskAddress));
+        Assert.assertEquals(amountToHaveBeenCreditedToSrc1, repository.getBalance(srcKey1UscAddress));
+        Assert.assertEquals(amountToHaveBeenCreditedToSrc2, repository.getBalance(srcKey2UscAddress));
+        Assert.assertEquals(amountToHaveBeenCreditedToSrc3, repository.getBalance(srcKey3UscAddress));
         Assert.assertEquals(LIMIT_MONETARY_BASE.subtract(totalAmountExpectedToHaveBeenLocked), repository.getBalance(PrecompiledContracts.BRIDGE_ADDR));
 
         BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
@@ -1708,13 +1699,13 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        RskAddress srcKey1RskAddress = new RskAddress(org.ethereum.crypto.ECKey.fromPrivate(srcKey1.getPrivKey()).getAddress());
-        RskAddress srcKey2RskAddress = new RskAddress(org.ethereum.crypto.ECKey.fromPrivate(srcKey2.getPrivKey()).getAddress());
-        RskAddress srcKey3RskAddress = new RskAddress(org.ethereum.crypto.ECKey.fromPrivate(srcKey3.getPrivKey()).getAddress());
+        UscAddress srcKey1UscAddress = new UscAddress(org.ethereum.crypto.ECKey.fromPrivate(srcKey1.getPrivKey()).getAddress());
+        UscAddress srcKey2UscAddress = new UscAddress(org.ethereum.crypto.ECKey.fromPrivate(srcKey2.getPrivKey()).getAddress());
+        UscAddress srcKey3UscAddress = new UscAddress(org.ethereum.crypto.ECKey.fromPrivate(srcKey3.getPrivKey()).getAddress());
 
-        Assert.assertEquals(0, repository.getBalance(srcKey1RskAddress).asBigInteger().intValue());
-        Assert.assertEquals(0, repository.getBalance(srcKey2RskAddress).asBigInteger().intValue());
-        Assert.assertEquals(0, repository.getBalance(srcKey3RskAddress).asBigInteger().intValue());
+        Assert.assertEquals(0, repository.getBalance(srcKey1UscAddress).asBigInteger().intValue());
+        Assert.assertEquals(0, repository.getBalance(srcKey2UscAddress).asBigInteger().intValue());
+        Assert.assertEquals(0, repository.getBalance(srcKey3UscAddress).asBigInteger().intValue());
         Assert.assertEquals(LIMIT_MONETARY_BASE, repository.getBalance(PrecompiledContracts.BRIDGE_ADDR));
 
         BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
@@ -2049,12 +2040,12 @@ public class BridgeSupportTest {
         );
         ABICallSpec spec = new ABICallSpec("create", new byte[][]{});
         Transaction mockedTx = mock(Transaction.class);
-        when(mockedTx.getSender()).thenReturn(new RskAddress(ECKey.fromPrivate(BigInteger.valueOf(12L)).getAddress()));
+        when(mockedTx.getSender()).thenReturn(new UscAddress(ECKey.fromPrivate(BigInteger.valueOf(12L)).getAddress()));
         Assert.assertEquals(BridgeSupport.FEDERATION_CHANGE_GENERIC_ERROR_CODE, bridgeSupport.voteFederationChange(mockedTx, spec));
     }
 
     private class VotingMocksProvider {
-        private RskAddress voter;
+        private UscAddress voter;
         private ABICallElection election;
         private ABICallSpec winner;
         private ABICallSpec spec;
@@ -2065,7 +2056,7 @@ public class BridgeSupportTest {
                     // Public key hex of an authorized voter in regtest, taken from BridgeRegTestConstants
                     "04dde17c5fab31ffc53c91c2390136c325bb8690dc135b0840075dd7b86910d8ab9e88baad0c32f3eea8833446a6bc5ff1cd2efa99ecb17801bcb65fc16fc7d991"
             )).getAddress();
-            voter = new RskAddress(voterBytes);
+            voter = new UscAddress(voterBytes);
 
             tx = mock(Transaction.class);
             when(tx.getSender()).thenReturn(voter);
@@ -2079,7 +2070,7 @@ public class BridgeSupportTest {
             when(election.getWinner()).then((InvocationOnMock m) -> this.getWinner());
         }
 
-        public RskAddress getVoter() { return voter; }
+        public UscAddress getVoter() { return voter; }
 
         public ABICallElection getElection() { return election; }
 
@@ -2706,7 +2697,7 @@ public class BridgeSupportTest {
             // Public key hex of the authorized whitelist admin in regtest, taken from BridgeRegTestConstants
             "04641fb250d7ca7a1cb4f530588e978013038ec4294d084d248869dd54d98873e45c61d00ceeaeeb9e35eab19fa5fbd8f07cb8a5f0ddba26b4d4b18349c09199ad"
         )).getAddress();
-        RskAddress sender = new RskAddress(senderBytes);
+        UscAddress sender = new UscAddress(senderBytes);
         when(mockedTx.getSender()).thenReturn(sender);
         LockWhitelist mockedWhitelist = mock(LockWhitelist.class);
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForWhitelistTests(mockedWhitelist);
@@ -2727,7 +2718,7 @@ public class BridgeSupportTest {
                 // Public key hex of the authorized whitelist admin in regtest, taken from BridgeRegTestConstants
                 "04641fb250d7ca7a1cb4f530588e978013038ec4294d084d248869dd54d98873e45c61d00ceeaeeb9e35eab19fa5fbd8f07cb8a5f0ddba26b4d4b18349c09199ad"
         )).getAddress();
-        RskAddress sender = new RskAddress(senderBytes);
+        UscAddress sender = new UscAddress(senderBytes);
         when(mockedTx.getSender()).thenReturn(sender);
         LockWhitelist mockedWhitelist = mock(LockWhitelist.class);
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForWhitelistTests(mockedWhitelist);
@@ -2744,7 +2735,7 @@ public class BridgeSupportTest {
     public void addLockWhitelistAddress_notAuthorized() throws IOException {
         Transaction mockedTx = mock(Transaction.class);
         byte[] senderBytes = Hex.decode("0000000000000000000000000000000000aabbcc");
-        RskAddress sender = new RskAddress(senderBytes);
+        UscAddress sender = new UscAddress(senderBytes);
         when(mockedTx.getSender()).thenReturn(sender);
         LockWhitelist mockedWhitelist = mock(LockWhitelist.class);
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForWhitelistTests(mockedWhitelist);
@@ -2760,7 +2751,7 @@ public class BridgeSupportTest {
             // Public key hex of the authorized whitelist admin in regtest, taken from BridgeRegTestConstants
             "04641fb250d7ca7a1cb4f530588e978013038ec4294d084d248869dd54d98873e45c61d00ceeaeeb9e35eab19fa5fbd8f07cb8a5f0ddba26b4d4b18349c09199ad"
         )).getAddress();
-        RskAddress sender = new RskAddress(senderBytes);
+        UscAddress sender = new UscAddress(senderBytes);
         when(mockedTx.getSender()).thenReturn(sender);
         LockWhitelist mockedWhitelist = mock(LockWhitelist.class);
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForWhitelistTests(mockedWhitelist);
@@ -2776,7 +2767,7 @@ public class BridgeSupportTest {
                 // Public key hex of the authorized whitelist admin in regtest, taken from BridgeRegTestConstants
                 "04641fb250d7ca7a1cb4f530588e978013038ec4294d084d248869dd54d98873e45c61d00ceeaeeb9e35eab19fa5fbd8f07cb8a5f0ddba26b4d4b18349c09199ad"
         )).getAddress();
-        RskAddress sender = new RskAddress(senderBytes);
+        UscAddress sender = new UscAddress(senderBytes);
         when(mockedTx.getSender()).thenReturn(sender);
         LockWhitelist mockedWhitelist = mock(LockWhitelist.class);
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForWhitelistTests(mockedWhitelist);
@@ -2797,7 +2788,7 @@ public class BridgeSupportTest {
                 // Public key hex of the authorized whitelist admin in regtest, taken from BridgeRegTestConstants
                 "04641fb250d7ca7a1cb4f530588e978013038ec4294d084d248869dd54d98873e45c61d00ceeaeeb9e35eab19fa5fbd8f07cb8a5f0ddba26b4d4b18349c09199ad"
         )).getAddress();
-        RskAddress sender = new RskAddress(senderBytes);
+        UscAddress sender = new UscAddress(senderBytes);
         when(mockedTx.getSender()).thenReturn(sender);
         LockWhitelist mockedWhitelist = mock(LockWhitelist.class);
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForWhitelistTests(mockedWhitelist);
@@ -2815,7 +2806,7 @@ public class BridgeSupportTest {
     public void removeLockWhitelistAddress_notAuthorized() throws IOException {
         Transaction mockedTx = mock(Transaction.class);
         byte[] senderBytes = Hex.decode("0000000000000000000000000000000000aabbcc");
-        RskAddress sender = new RskAddress(senderBytes);
+        UscAddress sender = new UscAddress(senderBytes);
         when(mockedTx.getSender()).thenReturn(sender);
         LockWhitelist mockedWhitelist = mock(LockWhitelist.class);
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForWhitelistTests(mockedWhitelist);
@@ -2831,7 +2822,7 @@ public class BridgeSupportTest {
             // Public key hex of the authorized whitelist admin in regtest, taken from BridgeRegTestConstants
             "04641fb250d7ca7a1cb4f530588e978013038ec4294d084d248869dd54d98873e45c61d00ceeaeeb9e35eab19fa5fbd8f07cb8a5f0ddba26b4d4b18349c09199ad"
         )).getAddress();
-        RskAddress sender = new RskAddress(senderBytes);
+        UscAddress sender = new UscAddress(senderBytes);
         when(mockedTx.getSender()).thenReturn(sender);
         LockWhitelist mockedWhitelist = mock(LockWhitelist.class);
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForWhitelistTests(mockedWhitelist);
@@ -2851,7 +2842,7 @@ public class BridgeSupportTest {
         when(provider.getFeePerKbElection(any()))
                 .thenReturn(new ABICallElection(null));
         when(tx.getSender())
-                .thenReturn(new RskAddress(ByteUtil.leftPadBytes(new byte[] {0x43}, 20)));
+                .thenReturn(new UscAddress(ByteUtil.leftPadBytes(new byte[] {0x43}, 20)));
         when(constants.getFeePerKbChangeAuthorizer())
                 .thenReturn(authorizer);
         when(authorizer.isAuthorized(tx))
@@ -2874,7 +2865,7 @@ public class BridgeSupportTest {
         when(provider.getFeePerKbElection(any()))
                 .thenReturn(new ABICallElection(authorizer));
         when(tx.getSender())
-                .thenReturn(new RskAddress(senderBytes));
+                .thenReturn(new UscAddress(senderBytes));
         when(constants.getFeePerKbChangeAuthorizer())
                 .thenReturn(authorizer);
         when(authorizer.isAuthorized(tx))
@@ -2897,7 +2888,7 @@ public class BridgeSupportTest {
         when(provider.getFeePerKbElection(any()))
                 .thenReturn(new ABICallElection(authorizer));
         when(tx.getSender())
-                .thenReturn(new RskAddress(senderBytes));
+                .thenReturn(new UscAddress(senderBytes));
         when(constants.getFeePerKbChangeAuthorizer())
                 .thenReturn(authorizer);
         when(authorizer.isAuthorized(tx))
@@ -2924,7 +2915,7 @@ public class BridgeSupportTest {
         when(provider.getFeePerKbElection(any()))
                 .thenReturn(new ABICallElection(authorizer));
         when(tx.getSender())
-                .thenReturn(new RskAddress(senderBytes));
+                .thenReturn(new UscAddress(senderBytes));
         when(constants.getFeePerKbChangeAuthorizer())
                 .thenReturn(authorizer);
         when(authorizer.isAuthorized(tx))

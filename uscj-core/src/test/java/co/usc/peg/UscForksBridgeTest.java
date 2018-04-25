@@ -23,11 +23,8 @@ import co.usc.ulordj.core.AddressFormatException;
 import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.params.RegTestParams;
 import co.usc.config.TestSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockChainImpl;
-import co.usc.test.World;
-import co.usc.test.builders.BlockBuilder;
-import co.usc.config.TestSystemProperties;
 import co.usc.test.World;
 import co.usc.test.builders.BlockBuilder;
 import org.ethereum.config.BlockchainNetConfig;
@@ -51,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class RskForksBridgeTest {
+public class UscForksBridgeTest {
     private static BlockchainNetConfig blockchainNetConfigOriginal;
     private static TestSystemProperties config;
 
@@ -79,7 +76,7 @@ public class RskForksBridgeTest {
         genesis = (Genesis)blockChain.getBestBlock();
         keyHoldingRSKs = new ECKey();
         co.usc.core.Coin balance = new co.usc.core.Coin(new BigInteger("10000000000000000000"));
-        repository.addBalance(new RskAddress(keyHoldingRSKs.getAddress()), balance);
+        repository.addBalance(new UscAddress(keyHoldingRSKs.getAddress()), balance);
         genesis.setStateRoot(repository.getRoot());
         genesis.flushRLP();
 

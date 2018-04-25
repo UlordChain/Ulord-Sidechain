@@ -20,15 +20,11 @@ package co.usc.test.dsl;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.BlockExecutor;
 import co.usc.net.NodeBlockProcessor;
 import co.usc.test.World;
-import co.usc.test.builders.AccountBuilder;
-import co.usc.test.builders.BlockBuilder;
-import co.usc.config.TestSystemProperties;
-import co.usc.net.NodeBlockProcessor;
 import co.usc.test.builders.AccountBuilder;
 import co.usc.test.builders.BlockBuilder;
 import org.ethereum.core.Account;
@@ -121,7 +117,7 @@ public class WorldDslProcessor {
         String accountName = cmd.getArgument(0);
         Coin expected = new Coin(new BigInteger(cmd.getArgument(1)));
 
-        RskAddress accountAddress;
+        UscAddress accountAddress;
 
         Account account = world.getAccountByName(accountName);
 
@@ -133,7 +129,7 @@ public class WorldDslProcessor {
             if (tx != null)
                 accountAddress = tx.getContractAddress();
             else
-                accountAddress = new RskAddress(accountName);
+                accountAddress = new UscAddress(accountName);
         }
 
         Coin accountBalance = world.getRepository().getBalance(accountAddress);

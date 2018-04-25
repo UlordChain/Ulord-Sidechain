@@ -54,7 +54,7 @@ public interface EthereumListener {
     void onTransactionPoolChanged(TransactionPool transactionPool);
 
     /**
-     * @deprecated Check Rsk.hasBetterBlockToSync() and isPlayingBlocks()
+     * @deprecated Check Usc.hasBetterBlockToSync() and isPlayingBlocks()
      */
     @Deprecated
     void onSyncDone();

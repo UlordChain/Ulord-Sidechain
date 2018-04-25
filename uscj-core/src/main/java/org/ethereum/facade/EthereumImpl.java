@@ -19,7 +19,7 @@
 
 package org.ethereum.facade;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.Coin;
 import org.ethereum.core.*;
 import org.ethereum.core.TransactionPool;
@@ -42,14 +42,14 @@ public class EthereumImpl implements Ethereum {
 
     private final ChannelManager channelManager;
     private final TransactionPool transactionPool;
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final CompositeEthereumListener compositeEthereumListener;
     private final Blockchain blockchain;
 
     private GasPriceTracker gasPriceTracker = new GasPriceTracker();
 
     public EthereumImpl(
-            RskSystemProperties config,
+            UscSystemProperties config,
             ChannelManager channelManager,
             TransactionPool transactionPool,
             CompositeEthereumListener compositeEthereumListener,

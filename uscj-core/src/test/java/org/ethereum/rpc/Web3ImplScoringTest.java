@@ -36,7 +36,7 @@ import co.usc.scoring.PeerScoringInformation;
 import co.usc.scoring.PeerScoringManager;
 import co.usc.scoring.PunishmentParameters;
 import co.usc.test.World;
-import org.ethereum.rpc.Simples.SimpleRsk;
+import org.ethereum.rpc.Simples.SimpleUsc;
 import org.ethereum.rpc.exception.JsonRpcInvalidParamException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -349,7 +349,7 @@ public class Web3ImplScoringTest {
     }
 
     private static Web3Impl createWeb3(PeerScoringManager peerScoringManager) {
-        SimpleRsk rsk = new SimpleRsk();
+        SimpleUsc rsk = new SimpleUsc();
 
         World world = new World();
         rsk.blockchain = world.getBlockChain();

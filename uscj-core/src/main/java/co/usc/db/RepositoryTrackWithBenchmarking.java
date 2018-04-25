@@ -19,8 +19,8 @@
 
 package co.usc.db;
 
-import co.usc.config.RskSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.config.UscSystemProperties;
+import co.usc.core.UscAddress;
 import org.ethereum.core.Repository;
 import org.ethereum.db.RepositoryTrack;
 import org.ethereum.vm.DataWord;
@@ -63,7 +63,7 @@ public class RepositoryTrackWithBenchmarking extends RepositoryTrack {
 
     private final Statistics statistics;
 
-    public RepositoryTrackWithBenchmarking(RskSystemProperties config, Repository repository) {
+    public RepositoryTrackWithBenchmarking(UscSystemProperties config, Repository repository) {
         super(config, repository);
         statistics = new Statistics();
     }
@@ -73,7 +73,7 @@ public class RepositoryTrackWithBenchmarking extends RepositoryTrack {
     }
 
     @Override
-    public void addStorageBytes(RskAddress addr, DataWord key, byte[] value) {
+    public void addStorageBytes(UscAddress addr, DataWord key, byte[] value) {
         byte[] oldValue = getStorageBytes(addr, key);
         statistics.recordWrite(oldValue, value);
 

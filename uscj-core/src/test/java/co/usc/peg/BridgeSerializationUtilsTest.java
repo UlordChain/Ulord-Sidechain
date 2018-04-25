@@ -19,7 +19,7 @@
 package co.usc.peg;
 
 import co.usc.ulordj.core.*;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import com.google.common.primitives.UnsignedBytes;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
@@ -50,7 +50,7 @@ import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ RLP.class, BridgeSerializationUtils.class, RskAddress.class })
+@PrepareForTest({ RLP.class, BridgeSerializationUtils.class, UscAddress.class })
 public class BridgeSerializationUtilsTest {
     @Test
     public void serializeMapOfHashesToLong() throws Exception {
@@ -287,9 +287,9 @@ public class BridgeSerializationUtilsTest {
         mock_RLP_encodeList();
 
         AddressBasedAuthorizer mockedAuthorizer = mock(AddressBasedAuthorizer.class);
-        when(mockedAuthorizer.isAuthorized(any(RskAddress.class))).thenReturn(true);
+        when(mockedAuthorizer.isAuthorized(any(UscAddress.class))).thenReturn(true);
 
-        Map<ABICallSpec, List<RskAddress>> sampleVotes = new HashMap<>();
+        Map<ABICallSpec, List<UscAddress>> sampleVotes = new HashMap<>();
         sampleVotes.put(
                 new ABICallSpec("one-function", new byte[][]{}),
                 Arrays.asList(mockAddress("8899"), mockAddress("aabb"))
@@ -352,7 +352,7 @@ public class BridgeSerializationUtilsTest {
         mockAddressInstantiation("5555");
 
         AddressBasedAuthorizer mockedAuthorizer = mock(AddressBasedAuthorizer.class);
-        when(mockedAuthorizer.isAuthorized(any(RskAddress.class))).thenReturn(true);
+        when(mockedAuthorizer.isAuthorized(any(UscAddress.class))).thenReturn(true);
 
         StringBuilder sampleBuilder = new StringBuilder();
         sampleBuilder.append("06"); // Total of three specs, two entries for each
@@ -395,7 +395,7 @@ public class BridgeSerializationUtilsTest {
         ABICallElection election = BridgeSerializationUtils.deserializeElection(sample, mockedAuthorizer);
 
         Assert.assertEquals(3, election.getVotes().size());
-        List<RskAddress> voters;
+        List<UscAddress> voters;
         ABICallSpec spec;
 
         spec = new ABICallSpec("funct", new byte[][]{});
@@ -446,7 +446,7 @@ public class BridgeSerializationUtilsTest {
         mock_RLP_decode2(InnerListMode.STARTING_WITH_FF_RECURSIVE);
 
         AddressBasedAuthorizer mockedAuthorizer = mock(AddressBasedAuthorizer.class);
-        when(mockedAuthorizer.isAuthorized(any(RskAddress.class))).thenReturn(true);
+        when(mockedAuthorizer.isAuthorized(any(UscAddress.class))).thenReturn(true);
 
         StringBuilder sampleBuilder = new StringBuilder();
         sampleBuilder.append("05"); // Five elements, uneven
@@ -471,7 +471,7 @@ public class BridgeSerializationUtilsTest {
         mock_RLP_decode2(InnerListMode.STARTING_WITH_FF_RECURSIVE);
 
         AddressBasedAuthorizer mockedAuthorizer = mock(AddressBasedAuthorizer.class);
-        when(mockedAuthorizer.isAuthorized(any(RskAddress.class))).thenReturn(true);
+        when(mockedAuthorizer.isAuthorized(any(UscAddress.class))).thenReturn(true);
 
         StringBuilder sampleBuilder = new StringBuilder();
         sampleBuilder.append("02");
@@ -945,13 +945,13 @@ public class BridgeSerializationUtilsTest {
     }
 
     private void mockAddressInstantiation(String addr) throws Exception {
-        PowerMockito.whenNew(RskAddress.class)
+        PowerMockito.whenNew(UscAddress.class)
                 .withArguments(Hex.decode(addr))
                 .then((InvocationOnMock invocation) -> mockAddress(addr));
     }
 
-    private RskAddress mockAddress(String addr) {
-        RskAddress mock = PowerMockito.mock(RskAddress.class);
+    private UscAddress mockAddress(String addr) {
+        UscAddress mock = PowerMockito.mock(UscAddress.class);
         Mockito.when(mock.getBytes()).thenReturn(Hex.decode(addr));
         return mock;
     }

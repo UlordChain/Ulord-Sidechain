@@ -18,9 +18,7 @@
 
 package co.usc.core;
 
-import co.usc.config.RskSystemProperties;
-import co.usc.net.NodeBlockProcessor;
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.net.NodeBlockProcessor;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.TransactionPool;
@@ -32,17 +30,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RskImpl extends EthereumImpl implements Rsk {
+public class UscImpl extends EthereumImpl implements Usc {
 
     private boolean isplaying;
     private final NodeBlockProcessor nodeBlockProcessor;
 
     @Autowired
-    public RskImpl(
+    public UscImpl(
             ChannelManager channelManager,
             PeerServer peerServer,
             TransactionPool transactionPool,
-            RskSystemProperties config,
+            UscSystemProperties config,
             CompositeEthereumListener compositeEthereumListener,
             NodeBlockProcessor nodeBlockProcessor,
             ReversibleTransactionExecutor reversibleTransactionExecutor,

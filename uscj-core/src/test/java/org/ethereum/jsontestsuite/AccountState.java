@@ -20,7 +20,7 @@
 package org.ethereum.jsontestsuite;
 
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.util.ByteUtil;
 import org.ethereum.vm.DataWord;
 import org.json.simple.JSONObject;
@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class AccountState {
 
-    RskAddress address;
+    UscAddress address;
     Coin balance;
     byte[] code;
     byte[] nonce;
@@ -44,7 +44,7 @@ public class AccountState {
     Map<DataWord, DataWord> storage = new HashMap<>();
 
 
-    public AccountState(RskAddress address, JSONObject accountState) {
+    public AccountState(UscAddress address, JSONObject accountState) {
 
         this.address = address;
         String balance = accountState.get("balance").toString();
@@ -75,7 +75,7 @@ public class AccountState {
         }
     }
 
-    public RskAddress getAddress() {
+    public UscAddress getAddress() {
         return address;
     }
 

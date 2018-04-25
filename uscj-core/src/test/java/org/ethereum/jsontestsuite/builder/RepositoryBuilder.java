@@ -20,7 +20,7 @@
 package org.ethereum.jsontestsuite.builder;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.db.RepositoryImpl;
 import co.usc.trie.TrieStoreImpl;
 import org.ethereum.core.AccountState;
@@ -36,11 +36,11 @@ import java.util.Map;
 public class RepositoryBuilder {
 
     public static Repository build(Map<String, AccountTck> accounts){
-        HashMap<RskAddress, AccountState> stateBatch = new HashMap<>();
-        HashMap<RskAddress, ContractDetails> detailsBatch = new HashMap<>();
+        HashMap<UscAddress, AccountState> stateBatch = new HashMap<>();
+        HashMap<UscAddress, ContractDetails> detailsBatch = new HashMap<>();
 
         for (String address : accounts.keySet()) {
-            RskAddress addr = new RskAddress(address);
+            UscAddress addr = new UscAddress(address);
 
             AccountTck accountTCK = accounts.get(address);
             AccountBuilder.StateWrap stateWrap = AccountBuilder.build(accountTCK);

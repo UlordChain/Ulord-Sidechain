@@ -19,7 +19,7 @@
 
 package org.ethereum.net.server;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.net.NodeID;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -59,7 +59,7 @@ public class Channel {
 
     private static final Logger logger = LoggerFactory.getLogger("net");
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final MessageQueue msgQueue;
     private final P2pHandler p2pHandler;
     private final MessageCodec messageCodec;
@@ -80,7 +80,7 @@ public class Channel {
 
     private final PeerStatistics peerStats = new PeerStatistics();
 
-    public Channel(RskSystemProperties config,
+    public Channel(UscSystemProperties config,
                    MessageQueue msgQueue,
                    P2pHandler p2pHandler,
                    MessageCodec messageCodec,

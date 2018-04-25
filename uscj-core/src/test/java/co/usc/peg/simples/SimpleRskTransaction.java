@@ -19,7 +19,7 @@
 package co.usc.peg.simples;
 
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import org.ethereum.core.Transaction;
 import org.ethereum.crypto.ECKey;
@@ -34,7 +34,7 @@ public class SimpleRskTransaction extends Transaction {
     public SimpleRskTransaction(byte[] hash) {
         super(null);
         this.hash = hash == null ? null : new Keccak256(hash);
-        this.sender = new RskAddress(ECKey.fromPrivate(Keccak256Helper.keccak256("cow".getBytes())).getAddress());
+        this.sender = new UscAddress(ECKey.fromPrivate(Keccak256Helper.keccak256("cow".getBytes())).getAddress());
     }
 
     @Override

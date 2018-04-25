@@ -83,7 +83,7 @@ public class WalletTest {
         Assert.assertNotNull(addr);
         Assert.assertArrayEquals(address, addr);
 
-        Account account = wallet.getAccount(new RskAddress(address), "passphrase");
+        Account account = wallet.getAccount(new UscAddress(address), "passphrase");
 
         Assert.assertNotNull(account);
         Assert.assertArrayEquals(address, account.getAddress().getBytes());
@@ -93,7 +93,7 @@ public class WalletTest {
     public void addAccountWithPassphraseAndWithSeed() {
         Wallet wallet = WalletFactory.createWallet();
 
-        RskAddress addr1 = wallet.addAccount("passphrase");
+        UscAddress addr1 = wallet.addAccount("passphrase");
         Assert.assertNotNull(addr1);
 
         byte[] address2 = wallet.addAccountWithSeed("seed");
@@ -125,7 +125,7 @@ public class WalletTest {
     public void addAccountWithPassphraseAndTwoAccountsWithSeed() {
         Wallet wallet = WalletFactory.createWallet();
 
-        RskAddress addr1 = wallet.addAccount("passphrase");
+        UscAddress addr1 = wallet.addAccount("passphrase");
         Assert.assertNotNull(addr1);
 
         byte[] address2 = wallet.addAccountWithSeed("seed");
@@ -164,7 +164,7 @@ public class WalletTest {
     public void addAndUnlockAccountWithPassphraseAndTwoAccountsWithSeed() {
         Wallet wallet = WalletFactory.createWallet();
 
-        RskAddress addr1 = wallet.addAccount("passphrase");
+        UscAddress addr1 = wallet.addAccount("passphrase");
         Assert.assertNotNull(addr1);
 
         byte[] address2 = wallet.addAccountWithSeed("seed");
@@ -220,13 +220,13 @@ public class WalletTest {
         Assert.assertNotNull(addr);
         Assert.assertArrayEquals(address, addr);
 
-        Account account0 = wallet.getAccount(new RskAddress(address));
+        Account account0 = wallet.getAccount(new UscAddress(address));
 
         Assert.assertNull(account0);
 
-        Assert.assertTrue(wallet.unlockAccount(new RskAddress(address), "passphrase"));
+        Assert.assertTrue(wallet.unlockAccount(new UscAddress(address), "passphrase"));
 
-        Account account = wallet.getAccount(new RskAddress(address));
+        Account account = wallet.getAccount(new UscAddress(address));
 
         Assert.assertNotNull(account);
         Assert.assertArrayEquals(address, account.getAddress().getBytes());
@@ -236,7 +236,7 @@ public class WalletTest {
     public void unlockNonexistentAccount() {
         Wallet wallet = WalletFactory.createWallet();
 
-        RskAddress addr = new RskAddress("0x0000000000000000000000000000000000000023");
+        UscAddress addr = new UscAddress("0x0000000000000000000000000000000000000023");
         Assert.assertFalse(wallet.unlockAccount(addr, "passphrase"));
     }
 
@@ -248,16 +248,16 @@ public class WalletTest {
 
         Assert.assertNotNull(address);
 
-        Assert.assertTrue(wallet.unlockAccount(new RskAddress(address), "passphrase"));
+        Assert.assertTrue(wallet.unlockAccount(new UscAddress(address), "passphrase"));
 
-        Account account = wallet.getAccount(new RskAddress(address));
+        Account account = wallet.getAccount(new UscAddress(address));
 
         Assert.assertNotNull(account);
         Assert.assertArrayEquals(address, account.getAddress().getBytes());
 
-        Assert.assertTrue(wallet.lockAccount(new RskAddress(address)));
+        Assert.assertTrue(wallet.lockAccount(new UscAddress(address)));
 
-        Account account2 = wallet.getAccount(new RskAddress(address));
+        Account account2 = wallet.getAccount(new UscAddress(address));
 
         Assert.assertNull(account2);
     }
@@ -266,7 +266,7 @@ public class WalletTest {
     public void lockNonexistentAccount() {
         Wallet wallet = WalletFactory.createWallet();
 
-        RskAddress addr = new RskAddress("0x0000000000000000000000000000000000000023");
+        UscAddress addr = new UscAddress("0x0000000000000000000000000000000000000023");
         Assert.assertFalse(wallet.lockAccount(addr));
     }
 
@@ -278,7 +278,7 @@ public class WalletTest {
 
         Assert.assertNotNull(address);
 
-        Account account = wallet.getAccount(new RskAddress(address));
+        Account account = wallet.getAccount(new UscAddress(address));
 
         Assert.assertNotNull(account);
 
@@ -289,7 +289,7 @@ public class WalletTest {
     public void getUnknownAccount() {
         Wallet wallet = WalletFactory.createWallet();
 
-        RskAddress addr = new RskAddress("0x0000000000000000000000000000000000000023");
+        UscAddress addr = new UscAddress("0x0000000000000000000000000000000000000023");
         Account account = wallet.getAccount(addr);
 
         Assert.assertNull(account);

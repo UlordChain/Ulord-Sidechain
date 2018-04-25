@@ -21,10 +21,7 @@ package co.usc.vm;
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
-import co.usc.test.World;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
+import co.usc.core.UscAddress;
 import co.usc.test.World;
 import co.usc.test.builders.AccountBuilder;
 import org.ethereum.core.*;
@@ -105,11 +102,11 @@ public class BlockchainVMTest {
         srcAmount = srcAmount.subtract(transactionGasPrice.multiply(transactionGasLimit));
 
         Assert.assertEquals(
-                binfo.repository.getBalance(new RskAddress(binfo.faucetKey.getAddress())),
+                binfo.repository.getBalance(new UscAddress(binfo.faucetKey.getAddress())),
                 srcAmount);
 
         Assert.assertEquals(
-                binfo.repository.getBalance(new RskAddress(dstAddress)),
+                binfo.repository.getBalance(new UscAddress(dstAddress)),
                 transferAmount);
     }
 

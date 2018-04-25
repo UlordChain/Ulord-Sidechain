@@ -39,7 +39,7 @@ public class ConfigLoader {
                 installerConfig.entrySet().isEmpty() ? NO : YES
         );
 
-        String file = System.getProperty("rsk.conf.file");
+        String file = System.getProperty("usc.conf.file");
         Config cmdLineConfigFile = file != null ? ConfigFactory.parseFile(new File(file)) : ConfigFactory.empty();
         logger.info(
                 "Config ( {} ): user properties from -Drsk.conf.file file '{}'",

@@ -16,22 +16,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.usc.config;
+package org.ethereum.rpc.Simples;
+
+import co.usc.core.Usc;
 
 /**
- * Created by ajlopez on 3/3/2016.
+ * Created by ajlopez on 12/07/2017.
  */
-public class RskMiningConstants {
-    public static final byte[] RSK_TAG = {'R','S','K','B','L','O','C','K',':'};
-    public static final int MAX_BYTES_AFTER_MERGED_MINING_HASH = 128;
+public class SimpleUsc extends SimpleEthereum implements Usc {
+    @Override
+    public boolean isPlayingBlocks() {
+        return false;
+    }
 
-    public static final int BLOCK_HEADER_HASH_SIZE = 32;
+    @Override
+    public boolean hasBetterBlockToSync() {
+        return false;
+    }
 
-    public static final int MIDSTATE_SIZE  = 52;
-    public static final int MIDSTATE_SIZE_TRIMMED = 40;
-
-    public static final int NOTIFY_FEES_PERCENTAGE_INCREASE = 10;
-
-    private RskMiningConstants(){
+    @Override
+    public boolean isBlockchainEmpty() {
+        return false;
     }
 }

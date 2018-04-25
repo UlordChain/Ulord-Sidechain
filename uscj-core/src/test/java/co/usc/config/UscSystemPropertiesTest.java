@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by ajlopez on 3/16/2016.
  */
-public class RskSystemPropertiesTest {
+public class UscSystemPropertiesTest {
 
     private final TestSystemProperties config = new TestSystemProperties();
 

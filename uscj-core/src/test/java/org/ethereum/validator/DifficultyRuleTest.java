@@ -20,7 +20,7 @@ package org.ethereum.validator;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.core.DifficultyCalculator;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.vm.DataWord;
 import org.junit.Ignore;
@@ -54,7 +54,7 @@ public class DifficultyRuleTest {
     private static BlockHeader getHeader(long difficultyValue) {
         byte[] difficulty = new DataWord(difficultyValue).getData();
 
-        BlockHeader header = new BlockHeader(null, null, RskAddress.nullAddress().getBytes(), null, difficulty, 0,
+        BlockHeader header = new BlockHeader(null, null, UscAddress.nullAddress().getBytes(), null, difficulty, 0,
                 null, 0,
                 0, null, null, 0);
 

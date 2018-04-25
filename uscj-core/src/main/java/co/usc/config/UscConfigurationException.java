@@ -16,27 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ethereum.rpc.Simples;
-
-import co.usc.core.Rsk;
-import co.usc.net.NodeBlockProcessor;
+package co.usc.config;
 
 /**
- * Created by ajlopez on 12/07/2017.
+ * Created by mario on 10/01/17.
  */
-public class SimpleRsk extends SimpleEthereum implements Rsk {
-    @Override
-    public boolean isPlayingBlocks() {
-        return false;
+public class UscConfigurationException extends RuntimeException {
+    public UscConfigurationException(String message) {
+        super(message);
     }
 
-    @Override
-    public boolean hasBetterBlockToSync() {
-        return false;
-    }
-
-    @Override
-    public boolean isBlockchainEmpty() {
-        return false;
+    public UscConfigurationException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

@@ -24,14 +24,12 @@ import co.usc.config.RemascConfig;
 import co.usc.config.RemascConfigFactory;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockExecutor;
 import co.usc.crypto.Keccak256;
 import co.usc.peg.BridgeSupport;
 import co.usc.peg.PegTestUtils;
 import co.usc.test.builders.BlockChainBuilder;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.peg.BridgeSupport;
 import com.google.common.collect.Lists;
 import org.ethereum.TestUtils;
 import org.ethereum.config.blockchain.RegTestConfig;
@@ -61,11 +59,11 @@ public class RemascProcessMinerFeesTest {
     private long txValue = 10000;
     private ECKey cowKey = ECKey.fromPrivate(Keccak256Helper.keccak256("cow".getBytes()));
     private byte[] cowAddress = cowKey.getAddress();
-    private static RskAddress coinbaseA = TestUtils.randomAddress();
-    private static RskAddress coinbaseB = TestUtils.randomAddress();
-    private static RskAddress coinbaseC = TestUtils.randomAddress();
-    private static RskAddress coinbaseD = TestUtils.randomAddress();
-    private static RskAddress coinbaseE = TestUtils.randomAddress();
+    private static UscAddress coinbaseA = TestUtils.randomAddress();
+    private static UscAddress coinbaseB = TestUtils.randomAddress();
+    private static UscAddress coinbaseC = TestUtils.randomAddress();
+    private static UscAddress coinbaseD = TestUtils.randomAddress();
+    private static UscAddress coinbaseE = TestUtils.randomAddress();
     private static List<byte[]> accountsAddressesUpToD;
 
     private Map<byte[], BigInteger> preMineMap = Collections.singletonMap(cowAddress, cowInitialBalance.asBigInteger());
@@ -115,7 +113,7 @@ public class RemascProcessMinerFeesTest {
             blockchain.tryToConnect(b);
         }
 
-        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), blockchain.getRepository().getAccountState(new RskAddress(cowAddress)).getBalance());
+        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), blockchain.getRepository().getAccountState(new UscAddress(cowAddress)).getBalance());
 
         Repository repository = blockchain.getRepository();
 
@@ -130,7 +128,7 @@ public class RemascProcessMinerFeesTest {
 
         repository = blockchain.getRepository();
 
-        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new RskAddress(cowAddress)).getBalance());
+        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new UscAddress(cowAddress)).getBalance());
         assertEquals(Coin.valueOf(minerFee), repository.getAccountState(PrecompiledContracts.REMASC_ADDR).getBalance());
         assertNull(repository.getAccountState(coinbaseA));
         assertNull(repository.getAccountState(remascConfig.getRskLabsAddress()));
@@ -160,7 +158,7 @@ public class RemascProcessMinerFeesTest {
 
         Repository repository = blockchain.getRepository();
 
-        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new RskAddress(cowAddress)).getBalance());
+        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new UscAddress(cowAddress)).getBalance());
         assertEquals(Coin.valueOf(minerFee), repository.getAccountState(PrecompiledContracts.REMASC_ADDR).getBalance());
         assertNull(repository.getAccountState(coinbaseA));
         assertNull(repository.getAccountState(remascConfig.getRskLabsAddress()));
@@ -178,7 +176,7 @@ public class RemascProcessMinerFeesTest {
 
         repository = blockchain.getRepository();
 
-        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new RskAddress(cowAddress)).getBalance());
+        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new UscAddress(cowAddress)).getBalance());
         long blockReward = minerFee/remascConfig.getSyntheticSpan();
         assertEquals(Coin.valueOf(minerFee - blockReward), repository.getAccountState(PrecompiledContracts.REMASC_ADDR).getBalance());
         long rskReward = blockReward/remascConfig.getRskLabsDivisor();
@@ -218,7 +216,7 @@ public class RemascProcessMinerFeesTest {
 
         Repository repository = blockchain.getRepository();
 
-        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new RskAddress(cowAddress)).getBalance());
+        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new UscAddress(cowAddress)).getBalance());
         assertEquals(Coin.valueOf(minerFee), repository.getAccountState(PrecompiledContracts.REMASC_ADDR).getBalance());
         assertNull(repository.getAccountState(coinbaseA));
         assertNull(repository.getAccountState(coinbaseB));
@@ -240,7 +238,7 @@ public class RemascProcessMinerFeesTest {
 
         repository = blockchain.getRepository();
 
-        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new RskAddress(cowAddress)).getBalance());
+        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new UscAddress(cowAddress)).getBalance());
 
         long blockReward = minerFee/remascConfig.getSyntheticSpan();
         // There is one unit burned
@@ -595,7 +593,7 @@ public class RemascProcessMinerFeesTest {
 
         Repository repository = blockchain.getRepository();
 
-        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new RskAddress(cowAddress)).getBalance());
+        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new UscAddress(cowAddress)).getBalance());
         assertEquals(Coin.valueOf(minerFee), repository.getAccountState(PrecompiledContracts.REMASC_ADDR).getBalance());
         assertNull(repository.getAccountState(coinbaseA));
         assertNull(repository.getAccountState(remascConfig.getRskLabsAddress()));
@@ -623,7 +621,7 @@ public class RemascProcessMinerFeesTest {
         repository = blockchain.getRepository();
 
         // Check "hack" tx makes no changes to the remasc state, sender pays fees, and value is added to remasc account balance
-        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue+minerFee)), repository.getAccountState(new RskAddress(cowAddress)).getBalance());
+        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue+minerFee)), repository.getAccountState(new UscAddress(cowAddress)).getBalance());
         long blockReward = minerFee/remascConfig.getSyntheticSpan();
         long originalBlockReward = blockReward;
         assertEquals(Coin.valueOf(minerFee+minerFee-blockReward), repository.getAccountState(PrecompiledContracts.REMASC_ADDR).getBalance());
@@ -660,7 +658,7 @@ public class RemascProcessMinerFeesTest {
 
         Repository repository = blockchain.getRepository();
 
-        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new RskAddress(cowAddress)).getBalance());
+        assertEquals(cowInitialBalance.subtract(Coin.valueOf(minerFee+txValue)), repository.getAccountState(new UscAddress(cowAddress)).getBalance());
         assertEquals(Coin.valueOf(minerFee), repository.getAccountState(PrecompiledContracts.REMASC_ADDR).getBalance());
         assertNull(repository.getAccountState(coinbaseA));
         assertNull(repository.getAccountState(remascConfig.getRskLabsAddress()));
@@ -712,7 +710,7 @@ public class RemascProcessMinerFeesTest {
         repository = blockchain.getRepository();
 
         // Check "hack" tx makes no changes to the remasc state, sender pays fees, and value is added to remasc account balance
-        assertEquals(cowInitialBalance.subtract(Coin.valueOf(txCreateContractGasLimit+txCallRemascGasLimit+txValue+minerFee)), repository.getAccountState(new RskAddress(cowAddress)).getBalance());
+        assertEquals(cowInitialBalance.subtract(Coin.valueOf(txCreateContractGasLimit+txCallRemascGasLimit+txValue+minerFee)), repository.getAccountState(new UscAddress(cowAddress)).getBalance());
         long blockReward = minerFee/remascConfig.getSyntheticSpan();
         long originalBlockReward = blockReward;
         long rskReward = blockReward/remascConfig.getRskLabsDivisor();

@@ -20,7 +20,7 @@
 package org.ethereum.core;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.crypto.Keccak256Helper;
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class ABITest {
         // demo only
         CallTransaction.Function function = CallTransaction.Function.fromJsonInterface(funcJson1);
         Transaction ctx = CallTransaction.createCallTransaction(config, 1, 1_000_000_000,
-                1_000_000_000, new RskAddress("86e0497e32a8e1d79fe38ab87dc80140df5470d9"), 0, function, "1234567890abcdef1234567890abcdef12345678");
+                1_000_000_000, new UscAddress("86e0497e32a8e1d79fe38ab87dc80140df5470d9"), 0, function, "1234567890abcdef1234567890abcdef12345678");
         ctx.sign(Keccak256Helper.keccak256("974f963ee4571e86e5f9bc3b493e453db9c15e5bd19829a4ef9a790de0da0015".getBytes()));
     }
 
@@ -92,7 +92,7 @@ public class ABITest {
 
         CallTransaction.Function function = CallTransaction.Function.fromJsonInterface(funcJson2);
         Transaction ctx = CallTransaction.createCallTransaction(config, 1, 1_000_000_000, 1_000_000_000,
-                new RskAddress("86e0497e32a8e1d79fe38ab87dc80140df5470d9"), 0, function);
+                new UscAddress("86e0497e32a8e1d79fe38ab87dc80140df5470d9"), 0, function);
         ctx.sign(Keccak256Helper.keccak256("974f963ee4571e86e5f9bc3b493e453db9c15e5bd19829a4ef9a790de0da0015".getBytes()));
 
         Assert.assertEquals("91888f2e", Hex.toHexString(ctx.getData()));

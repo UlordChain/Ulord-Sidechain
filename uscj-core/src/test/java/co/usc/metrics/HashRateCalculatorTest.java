@@ -18,7 +18,7 @@
 
 package co.usc.metrics;
 
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.BlockDifficulty;
 import co.usc.crypto.Keccak256;
 import co.usc.util.RskCustomCache;
@@ -42,8 +42,8 @@ public class HashRateCalculatorTest {
     public static final BlockDifficulty TEST_DIFFICULTY = new BlockDifficulty(BigInteger.ONE);
     private final byte[] FAKE_GENERIC_HASH = TestUtils.randomBytes(32);
     private final byte[] OHTER_FAKE_GENERIC_HASH = TestUtils.randomBytes(32)        ;
-    private final RskAddress FAKE_COINBASE = TestUtils.randomAddress();
-    private final RskAddress NOT_MY_COINBASE = TestUtils.randomAddress();
+    private final UscAddress FAKE_COINBASE = TestUtils.randomAddress();
+    private final UscAddress NOT_MY_COINBASE = TestUtils.randomAddress();
 
 
 

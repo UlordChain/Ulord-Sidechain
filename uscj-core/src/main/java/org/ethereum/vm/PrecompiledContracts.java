@@ -20,8 +20,8 @@ package org.ethereum.vm;
 
 
 import co.usc.config.RemascConfigFactory;
-import co.usc.config.RskSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.config.UscSystemProperties;
+import co.usc.core.UscAddress;
 import co.usc.peg.Bridge;
 import co.usc.peg.SamplePrecompiledContract;
 import co.usc.remasc.RemascContract;
@@ -57,10 +57,10 @@ public class PrecompiledContracts {
     public static final String BRIDGE_ADDR_STR = "0000000000000000000000000000000001000006";
     public static final String REMASC_ADDR_STR = "0000000000000000000000000000000001000008";
 
-    public static final RskAddress BRIDGE_ADDR = new RskAddress(BRIDGE_ADDR_STR);
-    public static final RskAddress IDENTITY_ADDR = new RskAddress(IDENTITY_ADDR_STR);
-    public static final RskAddress REMASC_ADDR = new RskAddress(REMASC_ADDR_STR);
-    public static final RskAddress SAMPLE_ADDR = new RskAddress(SAMPLE_ADDR_STR);
+    public static final UscAddress BRIDGE_ADDR = new UscAddress(BRIDGE_ADDR_STR);
+    public static final UscAddress IDENTITY_ADDR = new UscAddress(IDENTITY_ADDR_STR);
+    public static final UscAddress REMASC_ADDR = new UscAddress(REMASC_ADDR_STR);
+    public static final UscAddress SAMPLE_ADDR = new UscAddress(SAMPLE_ADDR_STR);
 
     private static final String RSK_NATIVECONTRACT_REQUIREDPREFIX = "000000000000000000000000";
     private static ECRecover ecRecover = new ECRecover();
@@ -70,9 +70,9 @@ public class PrecompiledContracts {
     private static SamplePrecompiledContract sample = new SamplePrecompiledContract(SAMPLE_ADDR);
     private static BigIntegerModexp bigIntegerModexp = new BigIntegerModexp();
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
 
-    public PrecompiledContracts(RskSystemProperties config) {
+    public PrecompiledContracts(UscSystemProperties config) {
         this.config = config;
     }
 
@@ -110,7 +110,7 @@ public class PrecompiledContracts {
     }
 
     public abstract static class PrecompiledContract {
-        public RskAddress contractAddress;
+        public UscAddress contractAddress;
 
         public abstract long getGasForData(byte[] data);
 

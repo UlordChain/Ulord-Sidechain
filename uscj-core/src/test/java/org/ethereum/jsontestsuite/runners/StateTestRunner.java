@@ -20,7 +20,7 @@
 package org.ethereum.jsontestsuite.runners;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockChainImpl;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
@@ -73,7 +73,7 @@ public class StateTestRunner {
         Repository track = repository.startTracking();
 
         TransactionExecutor executor =
-                new TransactionExecutor(config, transaction, 0, new RskAddress(env.getCurrentCoinbase()), track, new BlockStoreDummy(), null,
+                new TransactionExecutor(config, transaction, 0, new UscAddress(env.getCurrentCoinbase()), track, new BlockStoreDummy(), null,
                         invokeFactory, blockchain.getBestBlock());
 
         try{

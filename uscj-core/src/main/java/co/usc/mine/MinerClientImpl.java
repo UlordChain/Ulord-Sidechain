@@ -18,10 +18,8 @@
 
 package co.usc.mine;
 
-import co.usc.config.RskSystemProperties;
-import co.usc.core.Rsk;
-import co.usc.panic.PanicProcessor;
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
+import co.usc.core.Usc;
 import co.usc.panic.PanicProcessor;
 import org.ethereum.config.blockchain.DevNetConfig;
 import org.ethereum.config.blockchain.RegTestConfig;
@@ -52,9 +50,9 @@ public class MinerClientImpl implements MinerClient {
 
     private static final long DELAY_BETWEEN_GETWORK_REFRESH_MS = 1000;
 
-    private final Rsk rsk;
+    private final Usc usc;
     private final MinerServer minerServer;
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
 
     private volatile boolean stop = false;
 
@@ -66,8 +64,8 @@ public class MinerClientImpl implements MinerClient {
     private Timer aTimer;
 
     @Autowired
-    public MinerClientImpl(Rsk rsk, MinerServer minerServer, RskSystemProperties config) {
-        this.rsk = rsk;
+    public MinerClientImpl(Usc usc, MinerServer minerServer, UscSystemProperties config) {
+        this.usc = usc;
         this.minerServer = minerServer;
         this.config = config;
     }
@@ -121,8 +119,8 @@ public class MinerClientImpl implements MinerClient {
 
     @Override
     public boolean mineBlock() {
-        if (this.rsk != null) {
-            if (this.rsk.hasBetterBlockToSync()) {
+        if (this.usc != null) {
+            if (this.usc.hasBetterBlockToSync()) {
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException ex) {
@@ -131,7 +129,7 @@ public class MinerClientImpl implements MinerClient {
                 return false;
             }
 
-            if (this.rsk.isPlayingBlocks()) {
+            if (this.usc.isPlayingBlocks()) {
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException ex) {
@@ -172,8 +170,8 @@ public class MinerClientImpl implements MinerClient {
         // This is not used now. In the future this method could allow
         // a HSM to provide the signature for an RSK block here.
 
-        if (this.rsk != null) {
-            if (this.rsk.hasBetterBlockToSync()) {
+        if (this.usc != null) {
+            if (this.usc.hasBetterBlockToSync()) {
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException ex) {
@@ -182,7 +180,7 @@ public class MinerClientImpl implements MinerClient {
                 return false;
             }
 
-            if (this.rsk.isPlayingBlocks()) {
+            if (this.usc.isPlayingBlocks()) {
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException ex) {

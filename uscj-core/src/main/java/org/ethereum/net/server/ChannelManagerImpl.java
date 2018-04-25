@@ -19,11 +19,11 @@
 
 package org.ethereum.net.server;
 
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.net.Metrics;
 import co.usc.net.NodeID;
 import co.usc.net.Status;
-import co.usc.net.eth.RskMessage;
+import co.usc.net.eth.UscMessage;
 import co.usc.net.messages.*;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.collections4.CollectionUtils;
@@ -65,7 +65,7 @@ public class ChannelManagerImpl implements ChannelManager {
     private static final int INBOUND_CONNECTION_BAN_TIMEOUT = 10 * 1000;
     private final Map<NodeID, Channel> activePeers = Collections.synchronizedMap(new HashMap<>());
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final SyncPool syncPool;
 
     // Using a concurrent list
@@ -79,7 +79,7 @@ public class ChannelManagerImpl implements ChannelManager {
     private NodeFilter trustedPeers;
 
     @Autowired
-    public ChannelManagerImpl(RskSystemProperties config, SyncPool syncPool) {
+    public ChannelManagerImpl(UscSystemProperties config, SyncPool syncPool) {
         this.config = config;
         this.syncPool = syncPool;
     }
@@ -169,7 +169,7 @@ public class ChannelManagerImpl implements ChannelManager {
 
         synchronized (activePeers) {
             TransactionsMessage txsmsg = new TransactionsMessage(tx);
-            EthMessage msg = new RskMessage(config, txsmsg);
+            EthMessage msg = new UscMessage(config, txsmsg);
             for (Channel channel : activePeers.values()) {
                 if (channel != receivedFrom) {
                     channel.sendMessage(msg);
@@ -192,8 +192,8 @@ public class ChannelManagerImpl implements ChannelManager {
 
         final Set<NodeID> res = new HashSet<>();
         final BlockIdentifier bi = new BlockIdentifier(block.getHash().getBytes(), block.getNumber());
-        final EthMessage newBlock = new RskMessage(config, new BlockMessage(block));
-        final EthMessage newBlockHashes = new RskMessage(config, new NewBlockHashesMessage(Arrays.asList(bi)));
+        final EthMessage newBlock = new UscMessage(config, new BlockMessage(block));
+        final EthMessage newBlockHashes = new UscMessage(config, new NewBlockHashesMessage(Arrays.asList(bi)));
         synchronized (activePeers) {
             // Get a randomized list with all the peers that don't have the block yet.
             activePeers.values().forEach(c -> logger.trace("RSK activePeers: {}", c));
@@ -222,7 +222,7 @@ public class ChannelManagerImpl implements ChannelManager {
     @Nonnull
     public Set<NodeID> broadcastBlockHash(@Nonnull final List<BlockIdentifier> identifiers, @Nullable final Set<NodeID> targets) {
         final Set<NodeID> res = new HashSet<>();
-        final EthMessage newBlockHash = new RskMessage(config, new NewBlockHashesMessage(identifiers));
+        final EthMessage newBlockHash = new UscMessage(config, new NewBlockHashesMessage(identifiers));
 
         synchronized (activePeers) {
             activePeers.values().forEach(c -> logger.trace("RSK activePeers: {}", c));
@@ -253,7 +253,7 @@ public class ChannelManagerImpl implements ChannelManager {
         transactions.add(transaction);
 
         final Set<NodeID> res = new HashSet<>();
-        final EthMessage newTransactions = new RskMessage(config, new TransactionsMessage(transactions));
+        final EthMessage newTransactions = new UscMessage(config, new TransactionsMessage(transactions));
 
         synchronized (activePeers) {
             final Vector<Channel> peers = activePeers.values().stream()
@@ -271,7 +271,7 @@ public class ChannelManagerImpl implements ChannelManager {
 
     @Override
     public int broadcastStatus(Status status) {
-        final EthMessage message = new RskMessage(config, new StatusMessage(status));
+        final EthMessage message = new UscMessage(config, new StatusMessage(status));
         synchronized (activePeers) {
             if (activePeers.isEmpty()) {
                 return 0;
@@ -305,7 +305,7 @@ public class ChannelManagerImpl implements ChannelManager {
      */
     @Deprecated // Use broadcastBlock
     public void sendNewBlock(Block block, Channel receivedFrom) {
-        EthMessage message = new RskMessage(config, new BlockMessage(block));
+        EthMessage message = new UscMessage(config, new BlockMessage(block));
 
         synchronized (activePeers) {
             for (Channel channel : activePeers.values()) {
@@ -347,7 +347,7 @@ public class ChannelManagerImpl implements ChannelManager {
     @Override
     public boolean sendMessageTo(NodeID nodeID, MessageWithId message) {
         synchronized (activePeers) {
-            EthMessage msg = new RskMessage(config, message);
+            EthMessage msg = new UscMessage(config, message);
             Channel channel = activePeers.get(nodeID);
             if (channel == null){
                 return false;

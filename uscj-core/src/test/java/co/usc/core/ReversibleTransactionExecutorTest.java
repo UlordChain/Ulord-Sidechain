@@ -20,7 +20,6 @@
 package co.usc.core;
 
 import co.usc.util.TestContract;
-import co.usc.util.TestContract;
 import org.ethereum.core.Block;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.db.ContractDetails;
@@ -43,7 +42,7 @@ public class ReversibleTransactionExecutorTest {
         CallTransaction.Function helloFn = hello.functions.get("hello");
         ContractDetails contract = contractRunner.addContract(hello.runtimeBytecode);
 
-        RskAddress from = RskAddress.nullAddress();
+        UscAddress from = UscAddress.nullAddress();
         byte[] gasPrice = Hex.decode("00");
         byte[] value = Hex.decode("00");
         byte[] gasLimit = Hex.decode("f424");
@@ -73,7 +72,7 @@ public class ReversibleTransactionExecutorTest {
         CallTransaction.Function greeterFn = greeter.functions.get("greet");
         ContractDetails contract = contractRunner.addContract(greeter.runtimeBytecode);
 
-        RskAddress from = RskAddress.nullAddress();
+        UscAddress from = UscAddress.nullAddress();
         byte[] gasPrice = Hex.decode("00");
         byte[] value = Hex.decode("00");
         byte[] gasLimit = Hex.decode("f424");
@@ -103,7 +102,7 @@ public class ReversibleTransactionExecutorTest {
         CallTransaction.Function greeterFn = greeter.functions.get("greet");
         ContractDetails contract = contractRunner.addContract(greeter.runtimeBytecode);
 
-        RskAddress from = new RskAddress("0000000000000000000000000000000000000023"); // someone else
+        UscAddress from = new UscAddress("0000000000000000000000000000000000000023"); // someone else
         byte[] gasPrice = Hex.decode("00");
         byte[] value = Hex.decode("00");
         byte[] gasLimit = Hex.decode("f424");
@@ -130,7 +129,7 @@ public class ReversibleTransactionExecutorTest {
         CallTransaction.Function callsFn = countcalls.functions.get("calls");
         ContractDetails contract = contractRunner.addContract(countcalls.runtimeBytecode);
 
-        RskAddress from = new RskAddress("0000000000000000000000000000000000000023"); // someone else
+        UscAddress from = new UscAddress("0000000000000000000000000000000000000023"); // someone else
         byte[] gasPrice = Hex.decode("00");
         byte[] value = Hex.decode("00");
         byte[] gasLimit = Hex.decode("f424");

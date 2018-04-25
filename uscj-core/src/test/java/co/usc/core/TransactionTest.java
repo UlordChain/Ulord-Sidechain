@@ -20,7 +20,6 @@ package co.usc.core;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.crypto.Keccak256;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;
@@ -233,7 +232,7 @@ public class TransactionTest {
                     Repository track = repository.startTracking();
 
                     Transaction txConst = CallTransaction.createCallTransaction(config, 0, 0, 100000000000000L,
-                            new RskAddress("095e7baea6a6c7c4c2dfeb977efac326af552d87"), 0,
+                            new UscAddress("095e7baea6a6c7c4c2dfeb977efac326af552d87"), 0,
                             CallTransaction.Function.fromSignature("get"));
                     txConst.sign(new byte[32]);
 

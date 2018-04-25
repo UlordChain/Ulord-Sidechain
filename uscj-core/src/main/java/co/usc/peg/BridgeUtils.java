@@ -24,8 +24,7 @@ import co.usc.ulordj.store.BlockStoreException;
 import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.wallet.Wallet;
 import co.usc.config.BridgeConstants;
-import co.usc.core.RskAddress;
-import co.usc.peg.bitcoin.RskAllowUnconfirmedCoinSelector;
+import co.usc.core.UscAddress;
 import co.usc.peg.bitcoin.RskAllowUnconfirmedCoinSelector;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.SystemProperties;
@@ -161,8 +160,8 @@ public class BridgeUtils {
 
     public static boolean isFreeBridgeTx(SystemProperties config, Transaction rskTx, long blockNumber) {
         BlockchainNetConfig blockchainConfig = config.getBlockchainConfig();
-        RskAddress receiveAddress = rskTx.getReceiveAddress();
-        if (receiveAddress.equals(RskAddress.nullAddress())) {
+        UscAddress receiveAddress = rskTx.getReceiveAddress();
+        if (receiveAddress.equals(UscAddress.nullAddress())) {
             return false;
         }
 

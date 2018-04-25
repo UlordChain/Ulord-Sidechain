@@ -19,8 +19,7 @@
 package co.usc.db;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.core.RskAddress;
-import co.usc.config.TestSystemProperties;
+import co.usc.core.UscAddress;
 import org.ethereum.core.AccountState;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.DataWord;
@@ -34,7 +33,7 @@ public class RepositoryImplForTesting extends RepositoryImpl {
     }
 
     @Override
-    public synchronized void addStorageRow(RskAddress addr, DataWord key, DataWord value) {
+    public synchronized void addStorageRow(UscAddress addr, DataWord key, DataWord value) {
         super.addStorageRow(addr, key, value);
         AccountState accountState = getAccountState(addr);
         ContractDetails details = getDetailsDataStore().get(addr);
@@ -43,7 +42,7 @@ public class RepositoryImplForTesting extends RepositoryImpl {
     }
 
     @Override
-    public synchronized void addStorageBytes(RskAddress addr, DataWord key, byte[] value) {
+    public synchronized void addStorageBytes(UscAddress addr, DataWord key, byte[] value) {
         super.addStorageBytes(addr, key, value);
         AccountState accountState = getAccountState(addr);
         ContractDetails details = getDetailsDataStore().get(addr);

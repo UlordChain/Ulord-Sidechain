@@ -21,9 +21,7 @@ package co.usc.core;
 import co.usc.config.TestSystemProperties;
 import co.usc.db.RepositoryImpl;
 import co.usc.trie.TrieStoreImpl;
-import co.usc.config.TestSystemProperties;
 import co.usc.db.ContractDetailsImpl;
-import co.usc.db.RepositoryImpl;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.ByteStreams;
@@ -78,18 +76,18 @@ public class NetworkStateExporterTest {
     public void testNoContracts() throws Exception {
         Repository repository = new RepositoryImpl(config, new TrieStoreImpl(new HashMapDB()));
         String address1String = "1000000000000000000000000000000000000000";
-        RskAddress addr1 = new RskAddress(address1String);
+        UscAddress addr1 = new UscAddress(address1String);
         repository.createAccount(addr1);
         repository.addBalance(addr1, Coin.valueOf(1L));
         repository.increaseNonce(addr1);
         String address2String = "2000000000000000000000000000000000000000";
-        RskAddress addr2 = new RskAddress(address2String);
+        UscAddress addr2 = new UscAddress(address2String);
         repository.createAccount(addr2);
         repository.addBalance(addr2, Coin.valueOf(10L));
         repository.increaseNonce(addr2);
         repository.increaseNonce(addr2);
 
-        RskAddress remascSender = RskAddress.nullAddress();
+        UscAddress remascSender = UscAddress.nullAddress();
         repository.createAccount(remascSender);
         repository.increaseNonce(remascSender);
 
@@ -121,7 +119,7 @@ public class NetworkStateExporterTest {
     public void testContracts() throws Exception {
         Repository repository = new RepositoryImpl(config, new TrieStoreImpl(new HashMapDB()));
         String address1String = "1000000000000000000000000000000000000000";
-        RskAddress addr1 = new RskAddress(address1String);
+        UscAddress addr1 = new UscAddress(address1String);
         repository.createAccount(addr1);
         repository.addBalance(addr1, Coin.valueOf(1L));
         repository.increaseNonce(addr1);

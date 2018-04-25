@@ -18,13 +18,11 @@
 
 package co.usc.peg;
 
+import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.core.*;
 import co.usc.config.BridgeConstants;
-import co.usc.config.RskSystemProperties;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.panic.PanicProcessor;
-import co.usc.peg.utils.BridgeEventLogger;
-import co.usc.peg.utils.BridgeEventLoggerImpl;
 import co.usc.peg.utils.BridgeEventLogger;
 import co.usc.peg.utils.BridgeEventLoggerImpl;
 import com.google.common.annotations.VisibleForTesting;
@@ -76,7 +74,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     // Parameters:
     // Federator public key.
     // Transaction signature array, one for each btc tx input.
-    // Rsk tx hash of the tx that required the release of funds.
+    // Usc tx hash of the tx that required the release of funds.
     public static final CallTransaction.Function ADD_SIGNATURE = CallTransaction.Function.fromSignature("addSignature", new String[]{"bytes","bytes[]","bytes"}, new String[]{});
     // Returns a StateForFederator encoded in RLP
     public static final CallTransaction.Function GET_STATE_FOR_BTC_RELEASE_CLIENT = CallTransaction.Function.fromSignature("getStateForBtcReleaseClient", new String[]{}, new String[]{"bytes"});
@@ -163,7 +161,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     private Map<ByteArrayWrapper, CallTransaction.Function> functions = new HashMap<>();
     private static Map<CallTransaction.Function, Long> functionCostMap = new HashMap<>();
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final BridgeConstants bridgeConstants;
 
     private org.ethereum.core.Transaction rskTx;
@@ -173,7 +171,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
 
     private BridgeSupport bridgeSupport;
 
-    public Bridge(RskSystemProperties config, RskAddress contractAddress) {
+    public Bridge(UscSystemProperties config, UscAddress contractAddress) {
         this.config = config;
         this.bridgeConstants = this.config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         this.contractAddress = contractAddress;

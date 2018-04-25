@@ -21,17 +21,13 @@ package co.usc.test.builders;
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.bc.*;
 import co.usc.db.RepositoryImpl;
 import co.usc.peg.RepositoryBlockStore;
 import co.usc.trie.TrieStoreImpl;
 import co.usc.validators.BlockValidator;
 import co.usc.validators.DummyBlockValidator;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
-import co.usc.db.RepositoryImpl;
-import co.usc.peg.RepositoryBlockStore;
 import org.ethereum.core.*;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.datasource.KeyValueDataSource;
@@ -146,7 +142,7 @@ public class BlockChainBuilder {
         blockChain.setTransactionPool(transactionPool);
 
         if (this.genesis != null) {
-            for (RskAddress addr : this.genesis.getPremine().keySet()) {
+            for (UscAddress addr : this.genesis.getPremine().keySet()) {
                 this.repository.createAccount(addr);
                 this.repository.addBalance(addr, this.genesis.getPremine().get(addr).getAccountState().getBalance());
             }

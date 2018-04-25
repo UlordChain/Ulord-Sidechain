@@ -5,7 +5,7 @@
     }
   },
 
-  "nonce": "0xdeadfeeddeadfeed",
+  "nonce": "0xcafecafecafecafe",
   "mixhash": "0x00",
   "bitcoinMergedMiningHeader": "0x00",
   "bitcoinMergedMiningMerkleProof": "0x00",

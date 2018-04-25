@@ -18,10 +18,8 @@
 
 package co.usc.mine;
 
-import co.usc.config.RskSystemProperties;
-import co.usc.core.RskAddress;
-import co.usc.net.BlockProcessor;
-import co.usc.config.RskSystemProperties;
+import co.usc.config.UscSystemProperties;
+import co.usc.core.UscAddress;
 import co.usc.net.BlockProcessor;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Repository;
@@ -45,7 +43,7 @@ import java.security.SecureRandom;
 
 public class TxBuilder {
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final Ethereum ethereum;
     private final BlockProcessor blockProcessor;
     private final Repository repository;
@@ -56,7 +54,7 @@ public class TxBuilder {
     private byte[] privateKeyBytes  = HashUtil.keccak256("this is a seed".getBytes(StandardCharsets.UTF_8));
     private ECKey key;
 
-    public TxBuilder(RskSystemProperties config, Ethereum ethereum, BlockProcessor blockProcessor, Repository repository) {
+    public TxBuilder(UscSystemProperties config, Ethereum ethereum, BlockProcessor blockProcessor, Repository repository) {
         this.config = config;
         this.ethereum = ethereum;
         this.blockProcessor = blockProcessor;
@@ -79,7 +77,7 @@ public class TxBuilder {
 
                     SecureRandom random = new SecureRandom();
 
-                    RskAddress addr = new RskAddress(key.getAddress());
+                    UscAddress addr = new UscAddress(key.getAddress());
                     AccountState accountState = repository.getAccountState(addr);
                     BigInteger nonce = accountState.getNonce();
 

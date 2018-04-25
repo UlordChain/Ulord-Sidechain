@@ -21,7 +21,7 @@ package co.usc.remasc;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.Coin;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.BlockExecutor;
 import co.usc.crypto.Keccak256;
@@ -124,7 +124,7 @@ class RemascTestRunner {
             }
 
             for(SiblingElement sibling : siblingsForCurrentHeight) {
-                RskAddress siblingCoinbase = TestUtils.randomAddress();
+                UscAddress siblingCoinbase = TestUtils.randomAddress();
                 Block mainchainSiblingParent = mainChainBlocks.get(sibling.getHeight() - 1);
                 Block siblingBlock = createBlock(this.genesis, mainchainSiblingParent, PegTestUtils.createHash3(),
                         siblingCoinbase, null, minerFee, Long.valueOf(i), this.txValue,
@@ -137,7 +137,7 @@ class RemascTestRunner {
             }
 
             long txNonce = i;
-            RskAddress coinbase = TestUtils.randomAddress();
+            UscAddress coinbase = TestUtils.randomAddress();
             Block block = createBlock(this.genesis, this.blockchain.getBestBlock(), PegTestUtils.createHash3(),
                     coinbase, blockSiblings, minerFee, txNonce, this.txValue, this.txSigningKey, null);
             mainChainBlocks.add(block);
@@ -155,27 +155,27 @@ class RemascTestRunner {
         return this.blockchain;
     }
 
-    public Coin getAccountBalance(RskAddress addr) {
+    public Coin getAccountBalance(UscAddress addr) {
         return getAccountBalance(this.blockchain.getRepository(), addr);
     }
 
     public static Coin getAccountBalance(Repository repository, byte[] address) {
-        return getAccountBalance(repository, new RskAddress(address));
+        return getAccountBalance(repository, new UscAddress(address));
     }
 
-    public static Coin getAccountBalance(Repository repository, RskAddress addr) {
+    public static Coin getAccountBalance(Repository repository, UscAddress addr) {
         AccountState accountState = repository.getAccountState(addr);
 
         return accountState == null ? null : repository.getAccountState(addr).getBalance();
     }
 
-    public static Block createBlock(Block genesis, Block parentBlock, Keccak256 blockHash, RskAddress coinbase,
+    public static Block createBlock(Block genesis, Block parentBlock, Keccak256 blockHash, UscAddress coinbase,
                                     List<BlockHeader> uncles, long minerFee, long txNonce, long txValue,
                                     ECKey txSigningKey) {
         return createBlock(genesis, parentBlock, blockHash, coinbase, uncles, minerFee, txNonce,
                 txValue, txSigningKey, null);
     }
-    public static Block createBlock(Block genesis, Block parentBlock, Keccak256 blockHash, RskAddress coinbase,
+    public static Block createBlock(Block genesis, Block parentBlock, Keccak256 blockHash, UscAddress coinbase,
                                     List<BlockHeader> uncles, long minerFee, long txNonce, long txValue,
                                     ECKey txSigningKey, Long difficulty) {
         if (minerFee == 0) throw new IllegalArgumentException();
@@ -193,7 +193,7 @@ class RemascTestRunner {
         return createBlock(genesis, parentBlock, blockHash, coinbase, uncles, difficulty, tx);
     }
 
-    public static Block createBlock(Block genesis, Block parentBlock, Keccak256 blockHash, RskAddress coinbase,
+    public static Block createBlock(Block genesis, Block parentBlock, Keccak256 blockHash, UscAddress coinbase,
                                     List<BlockHeader> uncles, Long difficulty, Transaction... txsToInlcude) {
         List<Transaction> txs = new ArrayList<>();
         if (txsToInlcude != null) {

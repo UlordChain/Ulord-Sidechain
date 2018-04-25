@@ -22,7 +22,7 @@ package org.ethereum.vm;
 import co.usc.asm.EVMAssembler;
 import co.usc.config.TestSystemProperties;
 import co.usc.config.VmConfig;
-import co.usc.core.RskAddress;
+import co.usc.core.UscAddress;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.core.Repository;
 import org.ethereum.util.ByteUtil;
@@ -1682,7 +1682,7 @@ public class VMTest {
         vm.step(program);
 
         DataWord key = new DataWord(Hex.decode(s_expected_key));
-        DataWord val = program.getStorage().getStorageValue(new RskAddress(invoke.getOwnerAddress()), key);
+        DataWord val = program.getStorage().getStorageValue(new UscAddress(invoke.getOwnerAddress()), key);
 
         assertEquals(s_expected_val, Hex.toHexString(val.getData()).toUpperCase());
     }
@@ -1705,7 +1705,7 @@ public class VMTest {
 
         Repository repository = program.getStorage();
         DataWord key = new DataWord(Hex.decode(s_expected_key));
-        DataWord val = repository.getStorageValue(new RskAddress(invoke.getOwnerAddress()), key);
+        DataWord val = repository.getStorageValue(new UscAddress(invoke.getOwnerAddress()), key);
 
         assertEquals(s_expected_val, Hex.toHexString(val.getData()).toUpperCase());
     }
@@ -1928,7 +1928,7 @@ public class VMTest {
         vm.step(program);
 
         DataWord key = new DataWord(Hex.decode(s_expected_key));
-        DataWord val = program.getStorage().getStorageValue(new RskAddress(invoke.getOwnerAddress()), key);
+        DataWord val = program.getStorage().getStorageValue(new UscAddress(invoke.getOwnerAddress()), key);
 
         assertTrue(program.isStopped());
         assertEquals(s_expected_val, Hex.toHexString(val.getData()).toUpperCase());
@@ -1952,7 +1952,7 @@ public class VMTest {
         vm.step(program);
 
         DataWord key = new DataWord(Hex.decode(s_expected_key));
-        DataWord val = program.getStorage().getStorageValue(new RskAddress(invoke.getOwnerAddress()), key);
+        DataWord val = program.getStorage().getStorageValue(new UscAddress(invoke.getOwnerAddress()), key);
 
         assertTrue(program.isStopped());
         assertEquals(s_expected_val, Hex.toHexString(val.getData()).toUpperCase());

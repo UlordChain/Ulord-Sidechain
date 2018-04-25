@@ -18,13 +18,8 @@
 
 package co.usc.rpc.modules.eth;
 
+import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.store.BlockStoreException;
-import co.usc.config.RskSystemProperties;
-import co.usc.core.ReversibleTransactionExecutor;
-import co.usc.peg.BridgeState;
-import co.usc.peg.BridgeSupport;
-import co.usc.rpc.ExecutionBlockRetriever;
-import co.usc.config.RskSystemProperties;
 import co.usc.core.ReversibleTransactionExecutor;
 import co.usc.peg.BridgeState;
 import co.usc.peg.BridgeSupport;
@@ -54,7 +49,7 @@ public class EthModule
 
     private static final Logger LOGGER = LoggerFactory.getLogger("web3");
 
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final Blockchain blockchain;
     private final ReversibleTransactionExecutor reversibleTransactionExecutor;
     private final ExecutionBlockRetriever executionBlockRetriever;
@@ -63,7 +58,7 @@ public class EthModule
 
     @Autowired
     public EthModule(
-            RskSystemProperties config,
+            UscSystemProperties config,
             Blockchain blockchain,
             ReversibleTransactionExecutor reversibleTransactionExecutor,
             ExecutionBlockRetriever executionBlockRetriever,

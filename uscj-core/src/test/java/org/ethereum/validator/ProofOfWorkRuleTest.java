@@ -21,7 +21,7 @@ package org.ethereum.validator;
 
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.blockchain.utils.BlockMiner;
-import co.usc.config.RskMiningConstants;
+import co.usc.config.UscMiningConstants;
 import co.usc.config.TestSystemProperties;
 import co.usc.crypto.Keccak256;
 import co.usc.mine.MinerUtils;
@@ -117,7 +117,7 @@ public class ProofOfWorkRuleTest {
         /* This test is about a rsk block, with a compressed coinbase that leaves more than 64 bytes before the start of the RSK tag. */
         BlockGenerator blockGenerator = new BlockGenerator();
         byte[] prefix = new byte[1000];
-        byte[] bytes = org.spongycastle.util.Arrays.concatenate(prefix, RskMiningConstants.RSK_TAG);
+        byte[] bytes = org.spongycastle.util.Arrays.concatenate(prefix, UscMiningConstants.USC_TAG);
 
         // mined block
         Block b = mineBlockWithCoinbaseTransactionWithCompressedCoinbaseTransactionPrefix(blockGenerator.getBlock(1), bytes);

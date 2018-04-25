@@ -28,10 +28,7 @@ import co.usc.ulordj.wallet.Wallet;
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.TestSystemProperties;
-import co.usc.core.RskAddress;
-import co.usc.peg.bitcoin.RskAllowUnconfirmedCoinSelector;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
+import co.usc.core.UscAddress;
 import co.usc.peg.bitcoin.RskAllowUnconfirmedCoinSelector;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.core.Block;
@@ -409,7 +406,7 @@ public class BridgeUtilsTest {
     }
 
 
-    private void isFreeBridgeTx(boolean expected, RskAddress destinationAddress, byte[] privKeyBytes) {
+    private void isFreeBridgeTx(boolean expected, UscAddress destinationAddress, byte[] privKeyBytes) {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
 
         org.ethereum.core.Transaction rskTx = CallTransaction.createCallTransaction(
