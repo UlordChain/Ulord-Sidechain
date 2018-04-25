@@ -74,7 +74,7 @@ uscj-core/java/nodeId.properties
 
 #GradleJARS
 uscj-core/libs/gradle-witness.jar
-uscj-core/libs/rsk-gradle-witness.jar
+#uscj-core/libs/usc-gradle-witness.jar
 gradle/wrapper/gradle-wrapper.jar
 
 #Classes

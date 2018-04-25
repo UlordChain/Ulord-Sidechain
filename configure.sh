@@ -13,7 +13,7 @@ function downloadJar(){
 	if [ ! -d ./uscj-core/libs ]; then
 		mkdir ./uscj-core/libs
 	fi
-	curl https://deps.rsklabs.io/rsk-gradle-witness.jar -o ~/$DOWNLOAD_FILE1
+	curl https://deps.rsklabs.io/usc-gradle-witness.jar -o ~/$DOWNLOAD_FILE1
 	curl https://deps.rsklabs.io/gradle-wrapper.jar -o ~/$DOWNLOAD_FILE2
 	if [[ $PLATFORM == 'linux' || $PLATFORM == 'windows' ]]; then
 		DOWNLOADED_HASH1=$(sha256sum ~/${DOWNLOAD_FILE1} | cut -d' ' -f1)
@@ -26,7 +26,7 @@ function downloadJar(){
 		rm -f ~/$DOWNLOAD_FILE1
 		exit 1
 	else
-		mv ~/${DOWNLOAD_FILE1} ./uscj-core/libs/rsk-gradle-witness.jar
+		mv ~/${DOWNLOAD_FILE1} ./uscj-core/libs/usc-gradle-witness.jar
 		rm -f ~/${DOWNLOAD_FILE1}
 	fi
 	if [[ $GRADLE_WRAPPER != $DOWNLOADED_HASH2 ]]; then

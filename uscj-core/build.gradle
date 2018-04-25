@@ -13,7 +13,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
-        classpath files('libs/rsk-gradle-witness.jar')
+        classpath files('libs/usc-gradle-witness.jar')
     }
 }
 
