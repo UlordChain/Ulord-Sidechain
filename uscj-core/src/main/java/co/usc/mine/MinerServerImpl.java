@@ -405,7 +405,7 @@ public class MinerServerImpl implements MinerServer {
     }
 
     @Override
-    public SubmitBlockResult submitBitcoinBlock(String blockHashForMergedMining, UldBlock bitcoinMergedMiningBlock) {
+    public SubmitBlockResult submitUlordBlock(String blockHashForMergedMining, UldBlock bitcoinMergedMiningBlock) {
         return submitBitcoinBlock(blockHashForMergedMining, bitcoinMergedMiningBlock, true);
     }
 

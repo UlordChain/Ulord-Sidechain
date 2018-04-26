@@ -23,8 +23,6 @@ import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.peg.AddressBasedAuthorizer;
 import co.usc.peg.Federation;
-import co.usc.peg.AddressBasedAuthorizer;
-import co.usc.peg.Federation;
 import com.google.common.collect.Lists;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;
@@ -43,7 +41,7 @@ public class BridgeRegTestConstants extends BridgeConstants {
     protected List<UldECKey> federatorPrivateKeys;
 
     BridgeRegTestConstants() {
-        btcParamsString = NetworkParameters.ID_REGTEST;
+        uldParamsString = NetworkParameters.ID_REGTEST;
 
         UldECKey federator0PrivateKey = UldECKey.fromPrivate(HashUtil.keccak256("federator1".getBytes(StandardCharsets.UTF_8)));
         UldECKey federator1PrivateKey = UldECKey.fromPrivate(HashUtil.keccak256("federator2".getBytes(StandardCharsets.UTF_8)));
@@ -61,13 +59,13 @@ public class BridgeRegTestConstants extends BridgeConstants {
                 getBtcParams()
         );
 
-        btc2RskMinimumAcceptableConfirmations = 3;
-        btc2RskMinimumAcceptableConfirmationsOnRsk = 5;
-        rsk2BtcMinimumAcceptableConfirmations = 3;
+        uld2UscMinimumAcceptableConfirmations = 3;
+        uld2UscMinimumAcceptableConfirmationsOnUsc = 5;
+        usc2UldMinimumAcceptableConfirmations = 3;
 
         updateBridgeExecutionPeriod = 1 * 15 * 1000; //15 seconds in millis
 
-        maxBtcHeadersPerRskBlock = 500;
+        maxUldHeadersPerUscBlock = 500;
 
         minimumLockTxValue = Coin.COIN;
         minimumReleaseTxValue = Coin.valueOf(500000);

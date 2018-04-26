@@ -22,22 +22,20 @@ import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.peg.AddressBasedAuthorizer;
 import co.usc.peg.Federation;
-import co.usc.peg.AddressBasedAuthorizer;
-import co.usc.peg.Federation;
 
 public class BridgeConstants {
-    protected String btcParamsString;
+    protected String uldParamsString;
 
     protected Federation genesisFederation;
 
-    protected int btc2RskMinimumAcceptableConfirmations;
-    protected int btc2RskMinimumAcceptableConfirmationsOnRsk;
-    protected int rsk2BtcMinimumAcceptableConfirmations;
+    protected int uld2UscMinimumAcceptableConfirmations;
+    protected int uld2UscMinimumAcceptableConfirmationsOnUsc;
+    protected int usc2UldMinimumAcceptableConfirmations;
     protected int btcBroadcastingMinimumAcceptableBlocks;
 
     protected int updateBridgeExecutionPeriod;
 
-    protected int maxBtcHeadersPerRskBlock;
+    protected int maxUldHeadersPerUscBlock;
 
     protected Coin minimumLockTxValue;
     protected Coin minimumReleaseTxValue;
@@ -56,30 +54,30 @@ public class BridgeConstants {
     protected Coin genesisFeePerKb;
 
     public NetworkParameters getBtcParams() {
-        return NetworkParameters.fromID(btcParamsString);
+        return NetworkParameters.fromID(uldParamsString);
     }
 
-    public String getBtcParamsString() {
-        return btcParamsString;
+    public String getUldParamsString() {
+        return uldParamsString;
     }
 
     public Federation getGenesisFederation() { return genesisFederation; }
 
-    public int getBtc2RskMinimumAcceptableConfirmations() {
-        return btc2RskMinimumAcceptableConfirmations;
+    public int getUld2UscMinimumAcceptableConfirmations() {
+        return uld2UscMinimumAcceptableConfirmations;
     }
 
-    public int getBtc2RskMinimumAcceptableConfirmationsOnRsk() {
-        return btc2RskMinimumAcceptableConfirmationsOnRsk;
+    public int getUld2UscMinimumAcceptableConfirmationsOnUsc() {
+        return uld2UscMinimumAcceptableConfirmationsOnUsc;
     }
 
-    public int getRsk2BtcMinimumAcceptableConfirmations() {
-        return rsk2BtcMinimumAcceptableConfirmations;
+    public int getUsc2UldMinimumAcceptableConfirmations() {
+        return usc2UldMinimumAcceptableConfirmations;
     }
 
     public int getUpdateBridgeExecutionPeriod() { return updateBridgeExecutionPeriod; }
 
-    public int getMaxBtcHeadersPerRskBlock() { return maxBtcHeadersPerRskBlock; }
+    public int getMaxUldHeadersPerUscBlock() { return maxUldHeadersPerUscBlock; }
 
     public Coin getMinimumLockTxValue() { return minimumLockTxValue; }
 

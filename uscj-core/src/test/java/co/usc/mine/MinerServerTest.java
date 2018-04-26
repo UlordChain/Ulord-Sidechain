@@ -32,10 +32,6 @@ import co.usc.test.World;
 import co.usc.validators.BlockUnclesValidationRule;
 import co.usc.validators.BlockValidationRule;
 import co.usc.validators.ProofOfWorkRule;
-import co.usc.TestHelpers.Tx;
-import co.usc.config.ConfigUtils;
-import co.usc.config.TestSystemProperties;
-import co.usc.test.World;
 import org.ethereum.core.*;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;
@@ -226,7 +222,7 @@ public class MinerServerTest {
 
             findNonce(work, bitcoinMergedMiningBlock);
 
-            SubmitBlockResult result = minerServer.submitBitcoinBlock(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock);
+            SubmitBlockResult result = minerServer.submitUlordBlock(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock);
 
             assertEquals("OK", result.getStatus());
             Assert.assertNotNull(result.getBlockInfo());
@@ -678,14 +674,14 @@ public class MinerServerTest {
         blockTxs.add(bitcoinMergedMiningCoinbaseTransaction);
         blockTxs.addAll(txs);
 
-        return MinerUtils.getBitcoinMergedMiningBlock(bitcoinNetworkParameters, blockTxs);
+        return MinerUtils.getUlordMergedMiningBlock(bitcoinNetworkParameters, blockTxs);
     }
 
     private UldBlock getMergedMiningBlockWithTwoTags(MinerWork work, MinerWork work2) {
         NetworkParameters bitcoinNetworkParameters = RegTestParams.get();
         UldTransaction bitcoinMergedMiningCoinbaseTransaction =
                 MinerUtils.getBitcoinMergedMiningCoinbaseTransactionWithTwoTags(bitcoinNetworkParameters, work, work2);
-        return MinerUtils.getBitcoinMergedMiningBlock(bitcoinNetworkParameters, bitcoinMergedMiningCoinbaseTransaction);
+        return MinerUtils.getUlordMergedMiningBlock(bitcoinNetworkParameters, bitcoinMergedMiningCoinbaseTransaction);
     }
 
     private void findNonce(MinerWork work, UldBlock bitcoinMergedMiningBlock) {

@@ -142,12 +142,12 @@ public class MinerClientImpl implements MinerClient {
         newBestBlockArrivedFromAnotherNode = false;
         work = minerServer.getWork();
 
-        co.usc.ulordj.core.NetworkParameters bitcoinNetworkParameters = co.usc.ulordj.params.TestNet3Params.get();
-        co.usc.ulordj.core.UldTransaction bitcoinMergedMiningCoinbaseTransaction = MinerUtils.getBitcoinMergedMiningCoinbaseTransaction(bitcoinNetworkParameters, work);
-        co.usc.ulordj.core.UldBlock bitcoinMergedMiningBlock = MinerUtils.getBitcoinMergedMiningBlock(bitcoinNetworkParameters, bitcoinMergedMiningCoinbaseTransaction);
+        co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
+        co.usc.ulordj.core.UldTransaction ulordMergedMiningCoinbaseTransaction = MinerUtils.getBitcoinMergedMiningCoinbaseTransaction(ulordNetworkParameters, work);
+        co.usc.ulordj.core.UldBlock ulordMergedMiningBlock = MinerUtils.getUlordMergedMiningBlock(ulordNetworkParameters, ulordMergedMiningCoinbaseTransaction);
 
         BigInteger target = new BigInteger(1, TypeConverter.stringHexToByteArray(work.getTarget()));
-        boolean foundNonce = findNonce(bitcoinMergedMiningBlock, target);
+        boolean foundNonce = findNonce(ulordMergedMiningBlock, target);
 
         if (newBestBlockArrivedFromAnotherNode) {
             logger.info("Interrupted mining because another best block arrived");
@@ -159,7 +159,7 @@ public class MinerClientImpl implements MinerClient {
 
         if (foundNonce) {
             logger.info("Mined block: " + work.getBlockHashForMergedMining());
-            minerServer.submitBitcoinBlock(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock);
+            minerServer.submitUlordBlock(work.getBlockHashForMergedMining(), ulordMergedMiningBlock);
         }
 
         return foundNonce;
@@ -197,29 +197,29 @@ public class MinerClientImpl implements MinerClient {
 
     }
     /**
-     * findNonce will try to find a valid nonce for bitcoinMergedMiningBlock, that satisfies the given target difficulty.
+     * findNonce will try to find a valid nonce for ulordMergedMiningBlock, that satisfies the given target difficulty.
      *
-     * @param bitcoinMergedMiningBlock bitcoinBlock to find nonce for. This block's nonce will be modified.
+     * @param ulordMergedMiningBlock bitcoinBlock to find nonce for. This block's nonce will be modified.
      * @param target                   target difficulty. Block's hash should be lower than this number.
      * @return true if a nonce was found, false otherwise.
      * @remarks This method will return if the stop or newBetBlockArrivedFromAnotherNode intance variables are set to true.
      */
-    private boolean findNonce(@Nonnull final co.usc.ulordj.core.UldBlock bitcoinMergedMiningBlock,
+    private boolean findNonce(@Nonnull final co.usc.ulordj.core.UldBlock ulordMergedMiningBlock,
                               @Nonnull final BigInteger target) {
-        bitcoinMergedMiningBlock.setNonce(nextNonceToUse);
+        ulordMergedMiningBlock.setNonce(nextNonceToUse);
 
         while (!stop && !newBestBlockArrivedFromAnotherNode) {
             // Is our proof of work valid yet?
-            BigInteger blockHashBI = bitcoinMergedMiningBlock.getHash().toBigInteger();
+            BigInteger blockHashBI = ulordMergedMiningBlock.getHash().toBigInteger();
             if (blockHashBI.compareTo(target) <= 0) {
                 return true;
             }
             // No, so increment the nonce and try again.
 
             nextNonceToUse = nextNonceToUse.add(BigInteger.ONE);
-            bitcoinMergedMiningBlock.setNonce(nextNonceToUse);
-            if (bitcoinMergedMiningBlock.getNonce().mod(BigInteger.valueOf(100000)) == BigInteger.ZERO) {
-                logger.debug("Solving block. Nonce: " + bitcoinMergedMiningBlock.getNonce());
+            ulordMergedMiningBlock.setNonce(nextNonceToUse);
+            if (ulordMergedMiningBlock.getNonce().mod(BigInteger.valueOf(100000)) == BigInteger.ZERO) {
+                logger.debug("Solving block. Nonce: " + ulordMergedMiningBlock.getNonce());
             }
         }
 

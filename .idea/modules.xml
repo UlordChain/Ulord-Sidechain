@@ -3,9 +3,13 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Ulord-Sidechain.iml" filepath="$PROJECT_DIR$/.idea/modules/Ulord-Sidechain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Ulord-Sidechain.iml" filepath="$PROJECT_DIR$/.idea/modules/Ulord-Sidechain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/uscj-core/Ulord-Sidechain-uscj-core.iml" filepath="$PROJECT_DIR$/.idea/modules/uscj-core/Ulord-Sidechain-uscj-core.iml" group="uscj-core" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/uscj-core/Ulord-Sidechain-uscj-core_main.iml" filepath="$PROJECT_DIR$/.idea/modules/uscj-core/Ulord-Sidechain-uscj-core_main.iml" group="uscj-core" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/uscj-core/Ulord-Sidechain-uscj-core_test.iml" filepath="$PROJECT_DIR$/.idea/modules/uscj-core/Ulord-Sidechain-uscj-core_test.iml" group="uscj-core" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/uscj-core/uscj-core.iml" filepath="$PROJECT_DIR$/.idea/modules/uscj-core/uscj-core.iml" group="uscj-core" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/uscj-core/uscj-core_main.iml" filepath="$PROJECT_DIR$/.idea/modules/uscj-core/uscj-core_main.iml" group="uscj-core" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/uscj-core/uscj-core_test.iml" filepath="$PROJECT_DIR$/.idea/modules/uscj-core/uscj-core_test.iml" group="uscj-core" />
     </modules>
   </component>
 </project>

@@ -51,7 +51,7 @@ public interface MinerServer {
             List<String> txHashes
     );
 
-    SubmitBlockResult submitBitcoinBlock(String blockHashForMergedMining, UldBlock bitcoinMergedMiningBlock);
+    SubmitBlockResult submitUlordBlock(String blockHashForMergedMining, UldBlock bitcoinMergedMiningBlock);
 
     boolean generateFallbackBlock();
 

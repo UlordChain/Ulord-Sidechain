@@ -108,7 +108,7 @@ public class Web3UscImpl extends Web3Impl {
 
         String blockHashForMergedMining = extractBlockHashForMergedMining(coinbase);
 
-        SubmitBlockResult result = minerServer.submitBitcoinBlock(blockHashForMergedMining, bitcoinBlock);
+        SubmitBlockResult result = minerServer.submitUlordBlock(blockHashForMergedMining, bitcoinBlock);
 
         return parseResultAndReturn(result);
     }

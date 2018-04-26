@@ -23,8 +23,6 @@ import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.peg.AddressBasedAuthorizer;
 import co.usc.peg.Federation;
-import co.usc.peg.AddressBasedAuthorizer;
-import co.usc.peg.Federation;
 import com.google.common.collect.Lists;
 import org.ethereum.crypto.ECKey;
 import org.spongycastle.util.encoders.Hex;
@@ -38,7 +36,7 @@ public class BridgeTestNetConstants extends BridgeConstants {
     private static BridgeTestNetConstants instance = new BridgeTestNetConstants();
 
     BridgeTestNetConstants() {
-        btcParamsString = NetworkParameters.ID_TESTNET;
+        uldParamsString = NetworkParameters.ID_TESTNET;
 
          UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("039a060badbeb24bee49eb2063f616c0f0f0765d4ca646b20a88ce828f259fcdb9"));
          UldECKey federator1PublicKey = UldECKey.fromPublicOnly(Hex.decode("02afc230c2d355b1a577682b07bc2646041b5d0177af0f98395a46018da699b6da"));
@@ -65,13 +63,13 @@ public class BridgeTestNetConstants extends BridgeConstants {
                 getBtcParams()
         );
 
-        btc2RskMinimumAcceptableConfirmations = 10;
-        btc2RskMinimumAcceptableConfirmationsOnRsk = 10;
-        rsk2BtcMinimumAcceptableConfirmations = 10;
+        uld2UscMinimumAcceptableConfirmations = 10;
+        uld2UscMinimumAcceptableConfirmationsOnUsc = 10;
+        usc2UldMinimumAcceptableConfirmations = 10;
 
         updateBridgeExecutionPeriod = 3 * 60 * 1000; // 3 minutes
 
-        maxBtcHeadersPerRskBlock = 500;
+        maxUldHeadersPerUscBlock = 500;
 
         minimumLockTxValue = Coin.valueOf(1000000);
         minimumReleaseTxValue = Coin.valueOf(500000);

@@ -123,11 +123,11 @@ public class MinerUtils {
         return coinbaseTransaction;
     }
 
-    public static co.usc.ulordj.core.UldBlock getBitcoinMergedMiningBlock(co.usc.ulordj.core.NetworkParameters params, UldTransaction transaction) {
-        return getBitcoinMergedMiningBlock(params, Collections.singletonList(transaction));
+    public static co.usc.ulordj.core.UldBlock getUlordMergedMiningBlock(co.usc.ulordj.core.NetworkParameters params, UldTransaction transaction) {
+        return getUlordMergedMiningBlock(params, Collections.singletonList(transaction));
     }
 
-    public static co.usc.ulordj.core.UldBlock getBitcoinMergedMiningBlock(co.usc.ulordj.core.NetworkParameters params, List<UldTransaction> transactions) {
+    public static co.usc.ulordj.core.UldBlock getUlordMergedMiningBlock(co.usc.ulordj.core.NetworkParameters params, List<UldTransaction> transactions) {
         co.usc.ulordj.core.Sha256Hash prevBlockHash = co.usc.ulordj.core.Sha256Hash.ZERO_HASH;
         long time = System.currentTimeMillis() / 1000;
         long difficultyTarget = co.usc.ulordj.core.Utils.encodeCompactBits(params.getMaxTarget());

@@ -256,8 +256,8 @@ public class BridgeSupport {
 
         // Check there are at least N blocks on top of the supplied height
         int headHeight = UldBlockChain.getBestChainHeight();
-        if ((headHeight - height + 1) < bridgeConstants.getBtc2RskMinimumAcceptableConfirmations()) {
-            logger.warn("At least " + bridgeConstants.getBtc2RskMinimumAcceptableConfirmations() + " confirmations are required, but there are only " + (headHeight - height) + " confirmations");
+        if ((headHeight - height + 1) < bridgeConstants.getUld2UscMinimumAcceptableConfirmations()) {
+            logger.warn("At least " + bridgeConstants.getUld2UscMinimumAcceptableConfirmations() + " confirmations are required, but there are only " + (headHeight - height) + " confirmations");
             return;
         }
 
@@ -697,7 +697,7 @@ public class BridgeSupport {
         // IMPORTANT: sliceWithEnoughConfirmations also modifies the transaction set in place
         Set<UldTransaction> txsWithEnoughConfirmations = releaseTransactionSet.sliceWithConfirmations(
                 rskExecutionBlock.getNumber(),
-                bridgeConstants.getRsk2BtcMinimumAcceptableConfirmations(),
+                bridgeConstants.getUsc2UldMinimumAcceptableConfirmations(),
                 Optional.of(1)
         );
 

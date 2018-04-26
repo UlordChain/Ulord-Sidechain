@@ -12,10 +12,6 @@ import co.usc.test.World;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.validators.BlockUnclesValidationRule;
 import co.usc.validators.ProofOfWorkRule;
-import co.usc.config.ConfigUtils;
-import co.usc.config.TestSystemProperties;
-import co.usc.test.World;
-import co.usc.test.builders.BlockChainBuilder;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.Constants;
@@ -94,7 +90,7 @@ public class MainNetMinerTest {
 
             bitcoinMergedMiningBlock.setNonce(BigInteger.valueOf(2));
 
-            SubmitBlockResult result = minerServer.submitBitcoinBlock(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock);
+            SubmitBlockResult result = minerServer.submitUlordBlock(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock);
 
             Assert.assertEquals("ERROR", result.getStatus());
             Assert.assertNull(result.getBlockInfo());
@@ -264,7 +260,7 @@ public class MainNetMinerTest {
         bitcoinMergedMiningBlock.setNonce(BigInteger.ONE);
 
         // Try to submit a block with invalid PoW, this should not eliminate the block from the cache
-        SubmitBlockResult result1 = minerServer.submitBitcoinBlock(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock);
+        SubmitBlockResult result1 = minerServer.submitUlordBlock(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock);
 
         Assert.assertEquals("ERROR", result1.getStatus());
         Assert.assertNull(result1.getBlockInfo());
@@ -276,14 +272,14 @@ public class MainNetMinerTest {
         /*---------------------------------------------------------
         findNonce(work, bitcoinMergedMiningBlock);
 
-        SubmitBlockResult result2 = minerServer.submitBitcoinBlock(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock);
+        SubmitBlockResult result2 = minerServer.submitUlordBlock(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock);
 
         Assert.assertEquals("OK", result2.getStatus());
         Assert.assertNotNull(result2.getBlockInfo());
         Mockito.verify(ethereumImpl, Mockito.times(1)).addNewMinedBlock(Mockito.any());
 
         // Finally, submit the same block again and validate that addNewMinedBlock is called again
-        SubmitBlockResult result3 = minerServer.submitBitcoinBlock(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock);
+        SubmitBlockResult result3 = minerServer.submitUlordBlock(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock);
 
         Assert.assertEquals("OK", result3.getStatus());
         Assert.assertNotNull(result3.getBlockInfo());
@@ -297,7 +293,7 @@ public class MainNetMinerTest {
     private co.usc.ulordj.core.UldBlock getMergedMiningBlock(MinerWork work) {
         NetworkParameters bitcoinNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
         co.usc.ulordj.core.UldTransaction bitcoinMergedMiningCoinbaseTransaction = MinerUtils.getBitcoinMergedMiningCoinbaseTransaction(bitcoinNetworkParameters, work);
-        return MinerUtils.getBitcoinMergedMiningBlock(bitcoinNetworkParameters, bitcoinMergedMiningCoinbaseTransaction);
+        return MinerUtils.getUlordMergedMiningBlock(bitcoinNetworkParameters, bitcoinMergedMiningCoinbaseTransaction);
     }
 
     private BlockToMineBuilder blockToMineBuilder() {
