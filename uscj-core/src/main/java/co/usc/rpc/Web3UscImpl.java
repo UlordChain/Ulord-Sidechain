@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 USC Labs Ltd.
+ * Copyright (C) 2017 RSK Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -62,12 +62,12 @@ import java.util.*;
  * @author Adrian Eidelman
  * @author Martin Medina
  */
-public class Web3RskImpl extends Web3Impl {
+public class Web3UscImpl extends Web3Impl {
     private static final Logger logger = LoggerFactory.getLogger("web3");
     private final NetworkStateExporter networkStateExporter;
     private final BlockStore blockStore;
 
-    public Web3RskImpl(Ethereum eth,
+    public Web3UscImpl(Ethereum eth,
                        Blockchain blockchain,
                        TransactionPool transactionPool,
                        UscSystemProperties properties,
@@ -169,7 +169,7 @@ public class Web3RskImpl extends Web3Impl {
     }
 
     /**
-     * Export the blockchain tree as a tgf file to user.dir/rskblockchain.tgf
+     * Export the blockchain tree as a tgf file to user.dir/uscblockchain.tgf
      *
      * @param numberOfBlocks Number of block heights to include. Eg if best block is block 2300 and numberOfBlocks is 10, the graph will include blocks in heights 2290 to 2300.
      * @param includeUncles  Whether to show uncle links (recommended value is false)
@@ -179,7 +179,7 @@ public class Web3RskImpl extends Web3Impl {
         logger.info("Dumping blockchain starting on block number {}, to best block number {}", bestBlock.getNumber() - numberOfBlocks, bestBlock.getNumber());
         PrintWriter writer = null;
         try {
-            File graphFile = new File(System.getProperty("user.dir") + "/" + "rskblockchain.tgf");
+            File graphFile = new File(System.getProperty("user.dir") + "/" + "uscblockchain.tgf");
             writer = new PrintWriter(new FileWriter(graphFile));
 
             List<Block> result = new LinkedList<>();

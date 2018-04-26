@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 USC Labs Ltd.
+ * Copyright (C) 2017 RSK Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,8 +20,6 @@ package co.usc.mine;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.net.BlockProcessor;
-import co.usc.config.TestSystemProperties;
-import co.usc.net.BlockProcessor;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
 import org.ethereum.rpc.Simples.SimpleEthereum;
@@ -37,8 +35,8 @@ public class TxBuilderTest {
 
     @Test
     public void createBasicTransaction() {
-        SimpleEthereum rsk = new SimpleEthereum();
-        TxBuilder builder = new TxBuilder(config, rsk, null, (Repository) rsk.repository);
+        SimpleEthereum usc = new SimpleEthereum();
+        TxBuilder builder = new TxBuilder(config, usc, null, (Repository) usc.repository);
 
         BigInteger gasPrice = BigInteger.ONE;
         BigInteger gasLimit = BigInteger.valueOf(21000);
@@ -53,9 +51,9 @@ public class TxBuilderTest {
 
     @Test
     public void createAndBroadcastTransaction() {
-        SimpleEthereum rsk = new SimpleEthereum();
+        SimpleEthereum usc = new SimpleEthereum();
         BlockProcessor blockProcessor = Mockito.mock(BlockProcessor.class);
-        TxBuilder builder = new TxBuilder(config, rsk, blockProcessor, (Repository) rsk.repository);
+        TxBuilder builder = new TxBuilder(config, usc, blockProcessor, (Repository) usc.repository);
 
         BigInteger nonce = BigInteger.TEN;
 

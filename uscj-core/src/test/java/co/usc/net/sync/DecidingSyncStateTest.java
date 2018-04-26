@@ -2,12 +2,10 @@ package co.usc.net.sync;
 
 import co.usc.net.NodeID;
 import co.usc.net.utils.StatusUtils;
-import co.usc.net.NodeID;
-import co.usc.net.utils.StatusUtils;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.net.server.Channel;
 import org.ethereum.net.server.ChannelManager;
-import org.ethereum.util.RskMockFactory;
+import org.ethereum.util.UscMockFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,7 +24,7 @@ public class DecidingSyncStateTest {
         SyncConfiguration syncConfiguration = SyncConfiguration.DEFAULT;
         SimpleSyncEventsHandler syncEventsHandler = new SimpleSyncEventsHandler();
         SimpleSyncInformation syncInformation = new SimpleSyncInformation();
-        ChannelManager channelManager = RskMockFactory.getChannelManager();
+        ChannelManager channelManager = UscMockFactory.getChannelManager();
         PeersInformation knownPeers = new PeersInformation(syncInformation, channelManager, syncConfiguration);
         SyncState syncState = new DecidingSyncState(syncConfiguration, syncEventsHandler, syncInformation, knownPeers);
         Collection<Channel> peers = new ArrayList<>();
@@ -50,7 +48,7 @@ public class DecidingSyncStateTest {
         SyncConfiguration syncConfiguration = SyncConfiguration.DEFAULT;
         SimpleSyncEventsHandler syncEventsHandler = new SimpleSyncEventsHandler();
         SimpleSyncInformation syncInformation = new SimpleSyncInformation();
-        ChannelManager channelManager = RskMockFactory.getChannelManager();
+        ChannelManager channelManager = UscMockFactory.getChannelManager();
         PeersInformation knownPeers = new PeersInformation(syncInformation, channelManager, syncConfiguration);
         SyncState syncState = new DecidingSyncState(syncConfiguration, syncEventsHandler, syncInformation, knownPeers);
         Collection<Channel> peers = new ArrayList<>();
@@ -84,7 +82,7 @@ public class DecidingSyncStateTest {
         SyncConfiguration syncConfiguration = SyncConfiguration.DEFAULT;
         SimpleSyncEventsHandler syncEventsHandler = new SimpleSyncEventsHandler();
         SimpleSyncInformation syncInformation = new SimpleSyncInformation();
-        PeersInformation knownPeers = new PeersInformation(syncInformation, RskMockFactory.getChannelManager(), syncConfiguration);
+        PeersInformation knownPeers = new PeersInformation(syncInformation, UscMockFactory.getChannelManager(), syncConfiguration);
         SyncState syncState = new DecidingSyncState(syncConfiguration, syncEventsHandler, syncInformation, knownPeers);
 
         syncState.tick(Duration.ofMinutes(2));
@@ -96,7 +94,7 @@ public class DecidingSyncStateTest {
         SyncConfiguration syncConfiguration = SyncConfiguration.DEFAULT;
         SimpleSyncEventsHandler syncEventsHandler = new SimpleSyncEventsHandler();
         SimpleSyncInformation syncInformation = new SimpleSyncInformation();
-        ChannelManager channelManager = RskMockFactory.getChannelManager();
+        ChannelManager channelManager = UscMockFactory.getChannelManager();
         PeersInformation knownPeers = new PeersInformation(syncInformation, channelManager, syncConfiguration);
         SyncState syncState = new DecidingSyncState(syncConfiguration, syncEventsHandler, syncInformation, knownPeers);
         Assert.assertFalse(syncEventsHandler.startSyncingWasCalled());
@@ -118,7 +116,7 @@ public class DecidingSyncStateTest {
         SyncConfiguration syncConfiguration = SyncConfiguration.DEFAULT;
         SimpleSyncEventsHandler syncEventsHandler = new SimpleSyncEventsHandler();
         SimpleSyncInformation syncInformation = new SimpleSyncInformation();
-        PeersInformation knownPeers = new PeersInformation(syncInformation, RskMockFactory.getChannelManager(), syncConfiguration);
+        PeersInformation knownPeers = new PeersInformation(syncInformation, UscMockFactory.getChannelManager(), syncConfiguration);
         SyncState syncState = new DecidingSyncState(syncConfiguration, syncEventsHandler, syncInformation, knownPeers);
         Assert.assertFalse(syncEventsHandler.startSyncingWasCalled());
 
@@ -133,7 +131,7 @@ public class DecidingSyncStateTest {
         SyncConfiguration syncConfiguration = SyncConfiguration.DEFAULT;
         SimpleSyncEventsHandler syncEventsHandler = new SimpleSyncEventsHandler();
         SimpleSyncInformation syncInformation = new SimpleSyncInformation().withWorsePeers();
-        PeersInformation knownPeers = new PeersInformation(syncInformation, RskMockFactory.getChannelManager(), syncConfiguration);
+        PeersInformation knownPeers = new PeersInformation(syncInformation, UscMockFactory.getChannelManager(), syncConfiguration);
         SyncState syncState = new DecidingSyncState(syncConfiguration, syncEventsHandler, syncInformation, knownPeers);
         Assert.assertFalse(syncEventsHandler.startSyncingWasCalled());
 
@@ -148,7 +146,7 @@ public class DecidingSyncStateTest {
         SyncConfiguration syncConfiguration = SyncConfiguration.DEFAULT;
         SimpleSyncEventsHandler syncEventsHandler = new SimpleSyncEventsHandler();
         SimpleSyncInformation syncInformation = new SimpleSyncInformation().withBadReputation();
-        PeersInformation knownPeers = new PeersInformation(syncInformation, RskMockFactory.getChannelManager(), syncConfiguration);
+        PeersInformation knownPeers = new PeersInformation(syncInformation, UscMockFactory.getChannelManager(), syncConfiguration);
         SyncState syncState = new DecidingSyncState(syncConfiguration, syncEventsHandler, syncInformation, knownPeers);
         Assert.assertFalse(syncEventsHandler.startSyncingWasCalled());
 

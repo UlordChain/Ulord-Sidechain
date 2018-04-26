@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 USC Labs Ltd.
+ * Copyright (C) 2017 RSK Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,7 +28,7 @@ import co.usc.mine.MinerServer;
 import co.usc.net.BlockProcessor;
 import co.usc.net.simples.SimpleBlockProcessor;
 import co.usc.rpc.ExecutionBlockRetriever;
-import co.usc.rpc.Web3RskImpl;
+import co.usc.rpc.Web3UscImpl;
 import co.usc.rpc.modules.eth.EthModule;
 import co.usc.rpc.modules.eth.EthModuleSolidityDisabled;
 import co.usc.rpc.modules.eth.EthModuleSolidityEnabled;
@@ -1261,7 +1261,7 @@ public class Web3ImplTest {
         TxPoolModule txPoolModule = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
         MinerClient minerClient = new SimpleMinerClient();
         ChannelManager channelManager = new SimpleChannelManager();
-        return new Web3RskImpl(
+        return new Web3UscImpl(
                 eth,
                 blockchain,
                 transactionPool,
@@ -1311,7 +1311,7 @@ public class Web3ImplTest {
         TxPoolModule txPoolModule = new TxPoolModuleImpl(transactionPool);
         MinerClient minerClient = new SimpleMinerClient();
         ChannelManager channelManager = new SimpleChannelManager();
-        return new Web3RskImpl(
+        return new Web3UscImpl(
                 eth,
                 blockchain,
                 transactionPool,
@@ -1347,7 +1347,7 @@ public class Web3ImplTest {
         EthModule ethModule = new EthModule(config, null, null, new ExecutionBlockRetriever(null, null, null), new EthModuleSolidityEnabled(new SolidityCompiler(systemProperties)), null);
         PersonalModule personalModule = new PersonalModuleWalletDisabled();
         TxPoolModule txPoolModule = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
-        Web3Impl web3 = new Web3RskImpl(
+        Web3Impl web3 = new Web3UscImpl(
                 eth,
                 null,
                 null,
@@ -1397,7 +1397,7 @@ public class Web3ImplTest {
         TransactionPool transactionPool = Web3Mocks.getMockTransactionPool();
         EthModule ethModule = new EthModule(config, blockchain, null, new ExecutionBlockRetriever(blockchain, null, null), new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, eth, wallet, null));
         TxPoolModule txPoolModule = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
-        Web3Impl web3 = new Web3RskImpl(
+        Web3Impl web3 = new Web3UscImpl(
                 eth,
                 blockchain,
                 transactionPool,

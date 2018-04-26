@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 USC Labs Ltd.
+ * Copyright (C) 2017 RSK Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,7 +30,7 @@ import co.usc.net.handler.TxHandler;
 import co.usc.net.handler.TxHandlerImpl;
 import co.usc.net.sync.SyncConfiguration;
 import co.usc.rpc.CorsConfiguration;
-import co.usc.rpc.Web3RskImpl;
+import co.usc.rpc.Web3UscImpl;
 import co.usc.rpc.modules.eth.*;
 import co.usc.rpc.modules.personal.PersonalModule;
 import co.usc.rpc.modules.personal.PersonalModuleWalletDisabled;
@@ -160,7 +160,7 @@ public class UscFactory {
                         BlockProcessor nodeBlockProcessor,
                         HashRateCalculator hashRateCalculator,
                         ConfigCapabilities configCapabilities) {
-        return new Web3RskImpl(
+        return new Web3UscImpl(
                 usc,
                 blockchain,
                 transactionPool,

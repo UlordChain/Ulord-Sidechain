@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 USC Labs Ltd.
+ * Copyright (C) 2017 RSK Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,13 +30,13 @@ public class RemascConfig {
     // Number of blocks block reward is split into
     private long syntheticSpan;
 
-    // USC labs address.
+    // RSK Labs address.
     // Note that his has to be a basic type (such as String) because RemascConfig
     // is deserialized automatically from JSON.
-    private String rskLabsAddress;
+    private String uscLabsAddress;
 
-    // USC labs cut. Available reward / rskLabsDivisor is what USC gets.
-    private long rskLabsDivisor = 5;
+    // RSK Labs cut. Available reward / uscLabsDivisor is what USC gets.
+    private long uscLabsDivisor = 5;
 
     // Federation cut. Available reward / rskFederationDivisor is what Federation gets.
     private long federationDivisor = 100;
@@ -65,12 +65,12 @@ public class RemascConfig {
         return syntheticSpan;
     }
 
-    public UscAddress getRskLabsAddress() {
-        return new UscAddress(this.rskLabsAddress);
+    public UscAddress getuscLabsAddress() {
+        return new UscAddress(this.uscLabsAddress);
     }
 
-    public long getRskLabsDivisor() {
-        return rskLabsDivisor;
+    public long getuscLabsDivisor() {
+        return uscLabsDivisor;
     }
 
     public long getFederationDivisor() {

@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 USC Labs Ltd.
+ * Copyright (C) 2017 RSK Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -74,10 +74,10 @@ public class MessageFilterTest {
 
         MessageFilter filter = new MessageFilter(commands);
 
-        Message rskMessage = WriterMessageRecorderTest.createUscMessage();
+        Message uscMessage = WriterMessageRecorderTest.createUscMessage();
         Message ethMessage = WriterMessageRecorderTest.createEthMessage();
 
-        Assert.assertTrue(filter.acceptMessage(rskMessage));
+        Assert.assertTrue(filter.acceptMessage(uscMessage));
         Assert.assertFalse(filter.acceptMessage(ethMessage));
     }
 
@@ -90,10 +90,10 @@ public class MessageFilterTest {
 
         MessageFilter filter = new MessageFilter(commands);
 
-        Message rskMessage = WriterMessageRecorderTest.createUscMessage();
+        Message uscMessage = WriterMessageRecorderTest.createUscMessage();
         Message ethMessage = WriterMessageRecorderTest.createEthMessage();
 
-        Assert.assertTrue(filter.acceptMessage(rskMessage));
+        Assert.assertTrue(filter.acceptMessage(uscMessage));
         Assert.assertTrue(filter.acceptMessage(ethMessage));
     }
 
@@ -106,10 +106,10 @@ public class MessageFilterTest {
 
         MessageFilter filter = new MessageFilter(commands);
 
-        Message rskMessage = WriterMessageRecorderTest.createUscMessage();
+        Message uscMessage = WriterMessageRecorderTest.createUscMessage();
         Message ethMessage = WriterMessageRecorderTest.createEthMessage();
 
-        Assert.assertTrue(filter.acceptMessage(rskMessage));
+        Assert.assertTrue(filter.acceptMessage(uscMessage));
         Assert.assertTrue(filter.acceptMessage(ethMessage));
     }
 
@@ -122,10 +122,10 @@ public class MessageFilterTest {
 
         MessageFilter filter = new MessageFilter(commands);
 
-        Message rskMessage = WriterMessageRecorderTest.createUscMessage();
+        Message uscMessage = WriterMessageRecorderTest.createUscMessage();
         Message ethMessage = WriterMessageRecorderTest.createEthMessage();
 
-        Assert.assertFalse(filter.acceptMessage(rskMessage));
+        Assert.assertFalse(filter.acceptMessage(uscMessage));
         Assert.assertTrue(filter.acceptMessage(ethMessage));
     }
 }

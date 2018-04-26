@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 USC Labs Ltd.
+ * Copyright (C) 2017 RSK Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -173,7 +173,7 @@ public class Start {
             syncPool.updateLowerUsefulDifficulty();
             syncPool.start(peerClientFactory);
             if (uscSystemProperties.waitForSync()) {
-                waitRskSyncDone();
+                waitUscSyncDone();
             }
         }
 
@@ -200,7 +200,7 @@ public class Start {
         new TxBuilderEx(uscSystemProperties, usc, repository, nodeBlockProcessor, transactionPool).simulateTxs();
     }
 
-    private void waitRskSyncDone() throws InterruptedException {
+    private void waitUscSyncDone() throws InterruptedException {
         while (usc.isBlockchainEmpty() || usc.hasBetterBlockToSync() || usc.isPlayingBlocks()) {
             try {
                 Thread.sleep(10000);
@@ -234,14 +234,14 @@ public class Start {
         }
 
         new Thread(() -> {
-            UscImpl rskImpl = (UscImpl) usc;
+            UscImpl uscImpl = (UscImpl) usc;
             try (FileBlockPlayer bplayer = new FileBlockPlayer(uscSystemProperties, blocksPlayerFileName)) {
-                rskImpl.setIsPlayingBlocks(true);
+                uscImpl.setIsPlayingBlocks(true);
                 connectBlocks(bplayer, bc, cm);
             } catch (Exception e) {
                 logger.error("Error", e);
             } finally {
-                rskImpl.setIsPlayingBlocks(false);
+                uscImpl.setIsPlayingBlocks(false);
             }
         }).start();
     }

@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 USC Labs Ltd.
+ * Copyright (C) 2017 RSK Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -49,7 +49,7 @@ public class WriterMessageRecorderTest {
     private static final TestSystemProperties config = new TestSystemProperties();
 
     @Test
-    public void recordRskMessage() throws IOException {
+    public void recordUscMessage() throws IOException {
         Message message = createUscMessage();
         StringWriter writer = new StringWriter();
         BufferedWriter bwriter = new BufferedWriter(writer);
@@ -69,7 +69,7 @@ public class WriterMessageRecorderTest {
     }
 
     @Test
-    public void recordRskMessageWithSender() throws IOException {
+    public void recordUscMessageWithSender() throws IOException {
         Message message = createUscMessage();
         StringWriter writer = new StringWriter();
         BufferedWriter bwriter = new BufferedWriter(writer);

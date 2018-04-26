@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 USC Labs Ltd.
+ * Copyright (C) 2017 RSK Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,7 +25,7 @@ import co.usc.core.WalletFactory;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.rpc.ExecutionBlockRetriever;
-import co.usc.rpc.Web3RskImpl;
+import co.usc.rpc.Web3UscImpl;
 import co.usc.rpc.modules.eth.EthModule;
 import co.usc.rpc.modules.eth.EthModuleSolidityDisabled;
 import co.usc.rpc.modules.eth.EthModuleWalletEnabled;
@@ -682,7 +682,7 @@ public class Web3ImplLogsTest {
         PersonalModule personalModule = new PersonalModuleWalletEnabled(config, eth, wallet, null);
         EthModule ethModule = new EthModule(config, blockchain, null, new ExecutionBlockRetriever(blockchain, null, null), new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, eth, wallet, null));
         TxPoolModule txPoolModule = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
-        return new Web3RskImpl(
+        return new Web3UscImpl(
                 eth,
                 blockchain,
                 transactionPool,

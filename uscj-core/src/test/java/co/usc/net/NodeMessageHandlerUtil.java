@@ -8,16 +8,12 @@ import co.usc.test.World;
 import co.usc.validators.BlockValidationRule;
 import co.usc.validators.DummyBlockValidationRule;
 import co.usc.validators.ProofOfWorkRule;
-import co.usc.config.TestSystemProperties;
-import co.usc.net.sync.SyncConfiguration;
-import co.usc.test.World;
-import co.usc.validators.DummyBlockValidationRule;
 import org.ethereum.core.Blockchain;
 import org.ethereum.net.server.ChannelManager;
 import org.ethereum.net.server.ChannelManagerImpl;
 import org.ethereum.rpc.Simples.SimpleChannelManager;
 import org.ethereum.sync.SyncPool;
-import org.ethereum.util.RskMockFactory;
+import org.ethereum.util.UscMockFactory;
 import org.mockito.Mockito;
 
 import static org.mockito.Matchers.isA;
@@ -35,10 +31,10 @@ public class NodeMessageHandlerUtil {
         BlockNodeInformation nodeInformation = new BlockNodeInformation();
         SyncConfiguration syncConfiguration = SyncConfiguration.IMMEDIATE_FOR_TESTING;
         BlockSyncService blockSyncService = new BlockSyncService(config, store, blockchain, nodeInformation, syncConfiguration);
-        SyncProcessor syncProcessor = new SyncProcessor(config, blockchain, blockSyncService, RskMockFactory.getPeerScoringManager(), RskMockFactory.getChannelManager(), syncConfiguration, new DummyBlockValidationRule(), DIFFICULTY_CALCULATOR);
+        SyncProcessor syncProcessor = new SyncProcessor(config, blockchain, blockSyncService, UscMockFactory.getPeerScoringManager(), UscMockFactory.getChannelManager(), syncConfiguration, new DummyBlockValidationRule(), DIFFICULTY_CALCULATOR);
         NodeBlockProcessor processor = new NodeBlockProcessor(store, blockchain, nodeInformation, blockSyncService, syncConfiguration);
 
-        return new NodeMessageHandler(config, processor, syncProcessor, new SimpleChannelManager(), null, null, RskMockFactory.getPeerScoringManager(), validationRule);
+        return new NodeMessageHandler(config, processor, syncProcessor, new SimpleChannelManager(), null, null, UscMockFactory.getPeerScoringManager(), validationRule);
     }
 
     public static NodeMessageHandler createHandlerWithSyncProcessor() {

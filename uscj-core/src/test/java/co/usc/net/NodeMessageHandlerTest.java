@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 USC Labs Ltd.
+ * Copyright (C) 2017 RSK Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -39,20 +39,6 @@ import co.usc.test.World;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.validators.DummyBlockValidationRule;
 import co.usc.validators.ProofOfWorkRule;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
-import co.usc.db.RepositoryImpl;
-import co.usc.net.handler.TxHandler;
-import co.usc.net.handler.TxHandlerImpl;
-import co.usc.net.messages.*;
-import co.usc.net.simples.SimpleBlockProcessor;
-import co.usc.net.simples.SimpleMessageChannel;
-import co.usc.net.simples.SimpleTransactionPool;
-import co.usc.net.sync.SyncConfiguration;
-import co.usc.net.utils.TransactionUtils;
-import co.usc.test.World;
-import co.usc.test.builders.BlockChainBuilder;
-import co.usc.validators.DummyBlockValidationRule;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.HashUtil;
@@ -60,7 +46,7 @@ import org.ethereum.listener.CompositeEthereumListener;
 import org.ethereum.net.server.Channel;
 import org.ethereum.net.server.ChannelManager;
 import org.ethereum.rpc.Simples.SimpleChannelManager;
-import org.ethereum.util.RskMockFactory;
+import org.ethereum.util.UscMockFactory;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -348,7 +334,7 @@ public class NodeMessageHandlerTest {
         BlockSyncService blockSyncService = new BlockSyncService(config, store, blockchain, nodeInformation, syncConfiguration);
         final NodeBlockProcessor bp = new NodeBlockProcessor(store, blockchain, nodeInformation, blockSyncService, syncConfiguration);
         final SimpleMessageChannel sender = new SimpleMessageChannel();
-        final SyncProcessor syncProcessor = new SyncProcessor(config, blockchain, blockSyncService, RskMockFactory.getPeerScoringManager(), RskMockFactory.getChannelManager(), syncConfiguration, new DummyBlockValidationRule(), null);
+        final SyncProcessor syncProcessor = new SyncProcessor(config, blockchain, blockSyncService, UscMockFactory.getPeerScoringManager(), UscMockFactory.getChannelManager(), syncConfiguration, new DummyBlockValidationRule(), null);
         final NodeMessageHandler handler = new NodeMessageHandler(config, bp, syncProcessor, null, null, null, null,
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
 
@@ -959,7 +945,7 @@ public class NodeMessageHandlerTest {
         BlockProcessor blockProcessor = mock(BlockProcessor.class);
         Mockito.when(blockProcessor.hasBetterBlockToSync()).thenReturn(false);
 
-        final NodeMessageHandler handler = new NodeMessageHandler(config, blockProcessor, null, channelManager, transactionPool, txmock, RskMockFactory.getPeerScoringManager(),
+        final NodeMessageHandler handler = new NodeMessageHandler(config, blockProcessor, null, channelManager, transactionPool, txmock, UscMockFactory.getPeerScoringManager(),
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
 
         final SimpleMessageChannel sender = new SimpleMessageChannel();

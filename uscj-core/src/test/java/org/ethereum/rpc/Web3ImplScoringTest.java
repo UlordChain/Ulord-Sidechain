@@ -1,6 +1,6 @@
 /*
  * This file is part of RskJ
- * Copyright (C) 2017 USC Labs Ltd.
+ * Copyright (C) 2017 RSK Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,7 +23,7 @@ import co.usc.core.Wallet;
 import co.usc.core.WalletFactory;
 import co.usc.net.NodeID;
 import co.usc.rpc.ExecutionBlockRetriever;
-import co.usc.rpc.Web3RskImpl;
+import co.usc.rpc.Web3UscImpl;
 import co.usc.rpc.modules.eth.EthModule;
 import co.usc.rpc.modules.eth.EthModuleSolidityDisabled;
 import co.usc.rpc.modules.eth.EthModuleWalletEnabled;
@@ -349,18 +349,18 @@ public class Web3ImplScoringTest {
     }
 
     private static Web3Impl createWeb3(PeerScoringManager peerScoringManager) {
-        SimpleUsc rsk = new SimpleUsc();
+        SimpleUsc usc = new SimpleUsc();
 
         World world = new World();
-        rsk.blockchain = world.getBlockChain();
+        usc.blockchain = world.getBlockChain();
 
         Wallet wallet = WalletFactory.createWallet();
         TestSystemProperties config = new TestSystemProperties();
-        PersonalModule pm = new PersonalModuleWalletEnabled(config, rsk, wallet, null);
-        EthModule em = new EthModule(config, world.getBlockChain(), null, new ExecutionBlockRetriever(world.getBlockChain(), null, null), new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, rsk, wallet, null));
+        PersonalModule pm = new PersonalModuleWalletEnabled(config, usc, wallet, null);
+        EthModule em = new EthModule(config, world.getBlockChain(), null, new ExecutionBlockRetriever(world.getBlockChain(), null, null), new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, usc, wallet, null));
         TxPoolModule tpm = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
-        return new Web3RskImpl(
-                rsk,
+        return new Web3UscImpl(
+                usc,
                 world.getBlockChain(),
                 null,
                 config,
@@ -370,7 +370,7 @@ public class Web3ImplScoringTest {
                 em,
                 tpm,
                 Web3Mocks.getMockChannelManager(),
-                rsk.getRepository(),
+                usc.getRepository(),
                 peerScoringManager,
                 null,
                 null,
