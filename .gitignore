@@ -82,3 +82,6 @@ classes/
 
 #Infer
 infer-out/
+
+#database
+database

@@ -43,7 +43,7 @@ import static java.util.Arrays.asList;
 
 @Configuration
 @ComponentScan(
-        basePackages = { "org.ethereum", "co.rsk" },
+        basePackages = { "org.ethereum", "co.usc" },
         excludeFilters = @ComponentScan.Filter(NoAutoscan.class))
 public class CommonConfig {
 
