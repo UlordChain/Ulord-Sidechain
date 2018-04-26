@@ -144,7 +144,7 @@ dependencies {
     compile "com.typesafe:config:1.3.1"
     compile "org.mapdb:mapdb:2.0-beta13"
     //compile "co.rsk.bitcoinj:bitcoinj-thin:${bitcoinjVersion}"
-    compile 'com.github.UlordChain:ulordj-thin:master-SNAPSHOT'
+    compile 'com.github.UlordChain:ulordj-thin:-SNAPSHOT'
     compile 'com.github.briandilley.jsonrpc4j:jsonrpc4j:1.5.1'
 
     runtime "org.slf4j:jcl-over-slf4j:${slf4jVersion}"

@@ -142,7 +142,7 @@ public class MinerClientImpl implements MinerClient {
         newBestBlockArrivedFromAnotherNode = false;
         work = minerServer.getWork();
 
-        co.usc.ulordj.core.NetworkParameters bitcoinNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
+        co.usc.ulordj.core.NetworkParameters bitcoinNetworkParameters = co.usc.ulordj.params.TestNet3Params.get();
         co.usc.ulordj.core.UldTransaction bitcoinMergedMiningCoinbaseTransaction = MinerUtils.getBitcoinMergedMiningCoinbaseTransaction(bitcoinNetworkParameters, work);
         co.usc.ulordj.core.UldBlock bitcoinMergedMiningBlock = MinerUtils.getBitcoinMergedMiningBlock(bitcoinNetworkParameters, bitcoinMergedMiningCoinbaseTransaction);
 
@@ -206,7 +206,7 @@ public class MinerClientImpl implements MinerClient {
      */
     private boolean findNonce(@Nonnull final co.usc.ulordj.core.UldBlock bitcoinMergedMiningBlock,
                               @Nonnull final BigInteger target) {
-        bitcoinMergedMiningBlock.setNonce(nextNonceToUse.add(BigInteger.ONE));
+        bitcoinMergedMiningBlock.setNonce(nextNonceToUse);
 
         while (!stop && !newBestBlockArrivedFromAnotherNode) {
             // Is our proof of work valid yet?
@@ -215,7 +215,9 @@ public class MinerClientImpl implements MinerClient {
                 return true;
             }
             // No, so increment the nonce and try again.
-            bitcoinMergedMiningBlock.setNonce(nextNonceToUse.add(BigInteger.ONE));
+
+            nextNonceToUse = nextNonceToUse.add(BigInteger.ONE);
+            bitcoinMergedMiningBlock.setNonce(nextNonceToUse);
             if (bitcoinMergedMiningBlock.getNonce().mod(BigInteger.valueOf(100000)) == BigInteger.ZERO) {
                 logger.debug("Solving block. Nonce: " + bitcoinMergedMiningBlock.getNonce());
             }
