@@ -53,7 +53,7 @@ public class BridgeConstants {
 
     protected Coin genesisFeePerKb;
 
-    public NetworkParameters getBtcParams() {
+    public NetworkParameters getUldParams() {
         return NetworkParameters.fromID(uldParamsString);
     }
 

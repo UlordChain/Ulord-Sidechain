@@ -56,7 +56,7 @@ public class BridgeSerializationUtils {
 
         for (Map.Entry<Keccak256, UldTransaction> entry : map.entrySet()) {
             bytes[n++] = RLP.encodeElement(entry.getKey().getBytes());
-            bytes[n++] = RLP.encodeElement(entry.getValue().bitcoinSerialize());
+            bytes[n++] = RLP.encodeElement(entry.getValue().ulordSerialize());
         }
 
         return RLP.encodeList(bytes);
@@ -409,7 +409,7 @@ public class BridgeSerializationUtils {
         int n = 0;
 
         for (ReleaseTransactionSet.Entry entry : entries) {
-            bytes[n++] = RLP.encodeElement(entry.getTransaction().bitcoinSerialize());
+            bytes[n++] = RLP.encodeElement(entry.getTransaction().ulordSerialize());
             bytes[n++] = RLP.encodeBigInteger(BigInteger.valueOf(entry.getRskBlockNumber()));
         }
 

@@ -115,7 +115,7 @@ public class BridgeUtilsTest {
     @Test
     public void testIsLockForTwoFederations() throws Exception {
         BridgeRegTestConstants bridgeConstants = BridgeRegTestConstants.getInstance();
-        NetworkParameters parameters = bridgeConstants.getBtcParams();
+        NetworkParameters parameters = bridgeConstants.getUldParams();
         Context btcContext = new Context(parameters);
 
         List<UldECKey> federation1Keys = Arrays.asList(new UldECKey[]{
@@ -234,7 +234,7 @@ public class BridgeUtilsTest {
     @Test
     public void testIsMigrationTx() {
         BridgeRegTestConstants bridgeConstants = BridgeRegTestConstants.getInstance();
-        NetworkParameters parameters = bridgeConstants.getBtcParams();
+        NetworkParameters parameters = bridgeConstants.getUldParams();
         Context btcContext = new Context(parameters);
 
         List<UldECKey> activeFederationKeys = Stream.of(
@@ -324,7 +324,7 @@ public class BridgeUtilsTest {
         TransactionSignature txSig = new TransactionSignature(sig, UldTransaction.SigHash.ALL, false);
 
         int sigIndex = inputScript.getSigInsertionIndex(sighash, federatorPublicKey);
-        inputScript = ScriptBuilder.updateScriptWithSignature(inputScript, txSig.encodeToBitcoin(), sigIndex, 1, 1);
+        inputScript = ScriptBuilder.updateScriptWithSignature(inputScript, txSig.encodeToUlord(), sigIndex, 1, 1);
         return inputScript;
     }
 

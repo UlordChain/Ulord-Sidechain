@@ -27,12 +27,6 @@ import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageProvider;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.vm.VMPerformanceTest;
-import co.usc.config.TestSystemProperties;
-import co.usc.db.RepositoryImpl;
-import co.usc.db.RepositoryTrackWithBenchmarking;
-import co.usc.peg.Bridge;
-import co.usc.peg.BridgeStorageProvider;
-import co.usc.test.builders.BlockChainBuilder;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.Repository;
@@ -107,7 +101,7 @@ public abstract class BridgePerformanceTestCase {
         config = new TestSystemProperties();
         config.setBlockchainConfig(new RegTestConfig());
         bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
-        networkParameters = bridgeConstants.getBtcParams();
+        networkParameters = bridgeConstants.getUldParams();
     }
 
     @AfterClass

@@ -176,7 +176,7 @@ public class AddSignatureTest extends BridgePerformanceTestCase {
             int sigIndex = inputScript.getSigInsertionIndex(sighash, key);
             UldECKey.ECDSASignature sig = UldECKey.ECDSASignature.decodeFromDER(signatures.get(i));
             TransactionSignature txSig = new TransactionSignature(sig, UldTransaction.SigHash.ALL, false);
-            inputScript = ScriptBuilder.updateScriptWithSignature(inputScript, txSig.encodeToBitcoin(), sigIndex, 1, 1);
+            inputScript = ScriptBuilder.updateScriptWithSignature(inputScript, txSig.encodeToUlord(), sigIndex, 1, 1);
             input.setScriptSig(inputScript);
         }
     }

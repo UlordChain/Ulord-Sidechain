@@ -89,7 +89,7 @@ public class BridgeStorageProvider {
     public BridgeStorageProvider(Repository repository, UscAddress contractAddress, BridgeConstants bridgeConstants) {
         this.repository = repository;
         this.contractAddress = contractAddress;
-        this.networkParameters = bridgeConstants.getBtcParams();
+        this.networkParameters = bridgeConstants.getUldParams();
         this.btcContext = new Context(networkParameters);
     }
 

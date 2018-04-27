@@ -22,7 +22,6 @@ import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.config.TestSystemProperties;
 import co.usc.crypto.Keccak256;
-import co.usc.config.TestSystemProperties;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,7 +40,7 @@ public class StateForFederatorTest {
     private static final String SHA3_3 = "3333333333333333333333333333333333333333333333333333333333333333";
     private static final String SHA3_4 = "4444444444444444444444444444444444444444444444444444444444444444";
 
-    private static final NetworkParameters NETWORK_PARAMETERS = new TestSystemProperties().getBlockchainConfig().getCommonConstants().getBridgeConstants().getBtcParams();
+    private static final NetworkParameters NETWORK_PARAMETERS = new TestSystemProperties().getBlockchainConfig().getCommonConstants().getBridgeConstants().getUldParams();
 
     @Test
     public void serialize() {

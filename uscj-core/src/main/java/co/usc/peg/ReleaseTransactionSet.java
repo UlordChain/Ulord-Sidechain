@@ -38,7 +38,7 @@ public class ReleaseTransactionSet {
 
             @Override
             public int compare(Entry e1, Entry e2) {
-                return comparator.compare(e1.getTransaction().bitcoinSerialize(), e2.getTransaction().bitcoinSerialize());
+                return comparator.compare(e1.getTransaction().ulordSerialize(), e2.getTransaction().ulordSerialize());
             }
         };
 

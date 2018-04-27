@@ -100,7 +100,7 @@ public class BridgeSupport {
         this.bridgeConstants = this.config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         this.eventLogger = eventLogger;
 
-        NetworkParameters btcParams = this.bridgeConstants.getBtcParams();
+        NetworkParameters btcParams = this.bridgeConstants.getUldParams();
         this.btcContext = new Context(btcParams);
 
         this.UldBlockStore = new RepositoryBlockStore(config, repository, PrecompiledContracts.BRIDGE_ADDR);
@@ -122,7 +122,7 @@ public class BridgeSupport {
         this.provider = provider;
         this.config = config;
         this.bridgeConstants = bridgeConstants;
-        this.btcContext = new Context(this.bridgeConstants.getBtcParams());
+        this.btcContext = new Context(this.bridgeConstants.getUldParams());
         this.UldBlockStore = UldBlockStore;
         this.UldBlockChain = UldBlockChain;
         this.rskRepository = repository;
@@ -131,10 +131,10 @@ public class BridgeSupport {
 
     @VisibleForTesting
     InputStream getCheckPoints() {
-        InputStream checkpoints = BridgeSupport.class.getResourceAsStream("/rskbitcoincheckpoints/" + bridgeConstants.getBtcParams().getId() + ".checkpoints");
+        InputStream checkpoints = BridgeSupport.class.getResourceAsStream("/rskbitcoincheckpoints/" + bridgeConstants.getUldParams().getId() + ".checkpoints");
         if (checkpoints == null) {
             // If we don't have a custom checkpoints file, try to use bitcoinj's default checkpoints for that network
-            checkpoints = BridgeSupport.class.getResourceAsStream("/" + bridgeConstants.getBtcParams().getId() + ".checkpoints");
+            checkpoints = BridgeSupport.class.getResourceAsStream("/" + bridgeConstants.getUldParams().getId() + ".checkpoints");
         }
         return checkpoints;
     }
@@ -428,7 +428,7 @@ public class BridgeSupport {
         }
 
         Context.propagate(btcContext);
-        NetworkParameters btcParams = bridgeConstants.getBtcParams();
+        NetworkParameters btcParams = bridgeConstants.getUldParams();
         Address btcDestinationAddress = BridgeUtils.recoverBtcAddressFromEthTransaction(rskTx, btcParams);
         Coin value = rskTx.getValue().toBitcoin();
         boolean addResult = requestRelease(btcDestinationAddress, value);
@@ -817,7 +817,7 @@ public class BridgeSupport {
             if (!alreadySignedByThisFederator) {
                 try {
                     int sigIndex = inputScript.getSigInsertionIndex(sighash, federatorPublicKey);
-                    inputScript = ScriptBuilder.updateScriptWithSignature(inputScript, txSigs.get(i).encodeToBitcoin(), sigIndex, 1, 1);
+                    inputScript = ScriptBuilder.updateScriptWithSignature(inputScript, txSigs.get(i).encodeToUlord(), sigIndex, 1, 1);
                     input.setScriptSig(inputScript);
                     logger.debug("Tx input {} for tx {} signed.", i, new Keccak256(rskTxHash));
                 } catch (IllegalStateException e) {
@@ -839,7 +839,7 @@ public class BridgeSupport {
 
         // If tx fully signed
         if (hasEnoughSignatures(btcTx)) {
-            logger.info("Tx fully signed {}. Hex: {}", btcTx, Hex.toHexString(btcTx.bitcoinSerialize()));
+            logger.info("Tx fully signed {}. Hex: {}", btcTx, Hex.toHexString(btcTx.ulordSerialize()));
             provider.getRskTxsWaitingForSignatures().remove(new Keccak256(rskTxHash));
             eventLogger.logReleaseBtc(btcTx);
         } else {
@@ -863,7 +863,7 @@ public class BridgeSupport {
                 continue;
             }
 
-            TransactionSignature sig2 = TransactionSignature.decodeFromBitcoin(chunk.data, false, false);
+            TransactionSignature sig2 = TransactionSignature.decodeFromUlord(chunk.data, false, false);
 
             if (federatorPublicKey.verify(sighash, sig2)) {
                 return true;
@@ -1405,7 +1405,7 @@ public class BridgeSupport {
         // Creation time is the block's timestamp.
         Instant creationTime = Instant.ofEpochMilli(rskExecutionBlock.getTimestamp());
         provider.setOldFederation(getActiveFederation());
-        provider.setNewFederation(currentPendingFederation.buildFederation(creationTime, rskExecutionBlock.getNumber(), bridgeConstants.getBtcParams()));
+        provider.setNewFederation(currentPendingFederation.buildFederation(creationTime, rskExecutionBlock.getNumber(), bridgeConstants.getUldParams()));
         provider.setPendingFederation(null);
 
         // Clear votes on election
@@ -1766,10 +1766,10 @@ public class BridgeSupport {
     private StoredBlock getLowestBlock() throws IOException {
         InputStream checkpoints = this.getCheckPoints();
         if (checkpoints == null) {
-            UldBlock genesis = bridgeConstants.getBtcParams().getGenesisBlock();
+            UldBlock genesis = bridgeConstants.getUldParams().getGenesisBlock();
             return new StoredBlock(genesis, genesis.getWork(), 0);
         }
-        CheckpointManager manager = new CheckpointManager(bridgeConstants.getBtcParams(), checkpoints);
+        CheckpointManager manager = new CheckpointManager(bridgeConstants.getUldParams(), checkpoints);
         long time = getActiveFederation().getCreationTime().toEpochMilli();
         // Go back 1 week to match CheckpointManager.checkpoint() behaviour
         time -= 86400 * 7;

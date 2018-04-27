@@ -48,7 +48,7 @@ public class RepositoryBlockStore implements UldBlockStore{
 
         // Insert the genesis block.
         try {
-            this.params = config.getBlockchainConfig().getCommonConstants().getBridgeConstants().getBtcParams();
+            this.params = config.getBlockchainConfig().getCommonConstants().getBridgeConstants().getUldParams();
             if (getChainHead()==null) {
                 UldBlock genesisHeader = params.getGenesisBlock().cloneAsHeader();
                 StoredBlock storedGenesis = new StoredBlock(genesisHeader, genesisHeader.getWork(), 0);

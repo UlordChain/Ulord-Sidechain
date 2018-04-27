@@ -93,9 +93,9 @@ public class RegisterUldTransactionTest extends BridgePerformanceTestCase {
     private ABIEncoder getABIEncoder() {
         return (int executionIndex) ->
                 Bridge.REGISTER_BTC_TRANSACTION.encode(new Object[]{
-                        txToLock.bitcoinSerialize(),
+                        txToLock.ulordSerialize(),
                         blockWithTxHeight,
-                        pmtOfLockTx.bitcoinSerialize()
+                        pmtOfLockTx.ulordSerialize()
                 });
     }
 

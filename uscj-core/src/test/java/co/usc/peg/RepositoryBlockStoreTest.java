@@ -72,7 +72,7 @@ public class RepositoryBlockStoreTest {
 //        FileOutputStream fos = new FileOutputStream("RepositoryBlockStore_data.ser");
 //        ObjectOutputStream oos = new ObjectOutputStream(fos);
 //        for (int i = 0; i < 614; i++) {
-//            Triple<byte[], BigInteger , Integer> tripleStoredBlock = new ImmutableTriple<>(storedBlock.getHeader().bitcoinSerialize(), storedBlock.getChainWork(), storedBlock.getHeight());
+//            Triple<byte[], BigInteger , Integer> tripleStoredBlock = new ImmutableTriple<>(storedBlock.getHeader().ulordSerialize(), storedBlock.getChainWork(), storedBlock.getHeight());
 //            oos.writeObject(tripleStoredBlock);
 //            storedBlock = store.get(storedBlock.getHeader().getPrevBlockHash());
 //        }

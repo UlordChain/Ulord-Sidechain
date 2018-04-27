@@ -31,13 +31,13 @@ public class BlockMiner {
         // We need to clone to allow modifications
         Block newBlock = new Block(block.getEncoded()).cloneBlock();
 
-        newBlock.setUlordMergedMiningHeader(bitcoinMergedMiningBlock.cloneAsHeader().bitcoinSerialize());
+        newBlock.setUlordMergedMiningHeader(bitcoinMergedMiningBlock.cloneAsHeader().ulordSerialize());
 
         bitcoinMergedMiningCoinbaseTransaction = bitcoinMergedMiningBlock.getTransactions().get(0);
         co.usc.ulordj.core.PartialMerkleTree bitcoinMergedMiningMerkleBranch = getUlordMergedMerkleBranch(bitcoinMergedMiningBlock);
 
-        newBlock.setUlordMergedMiningCoinbaseTransaction(compressCoinbase(bitcoinMergedMiningCoinbaseTransaction.bitcoinSerialize()));
-        newBlock.setUlordMergedMiningMerkleProof(bitcoinMergedMiningMerkleBranch.bitcoinSerialize());
+        newBlock.setUlordMergedMiningCoinbaseTransaction(compressCoinbase(bitcoinMergedMiningCoinbaseTransaction.ulordSerialize()));
+        newBlock.setUlordMergedMiningMerkleProof(bitcoinMergedMiningMerkleBranch.ulordSerialize());
 
         return newBlock;
     }

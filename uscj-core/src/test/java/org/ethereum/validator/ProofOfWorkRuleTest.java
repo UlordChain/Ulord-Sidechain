@@ -128,23 +128,23 @@ public class ProofOfWorkRuleTest {
     private static Block mineBlockWithCoinbaseTransactionWithCompressedCoinbaseTransactionPrefix(Block block, byte[] compressed) {
         Keccak256 blockMergedMiningHash = new Keccak256(block.getHashForMergedMining());
 
-        co.usc.ulordj.core.NetworkParameters bitcoinNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
-        co.usc.ulordj.core.UldTransaction bitcoinMergedMiningCoinbaseTransaction = MinerUtils.getUlordMergedMiningCoinbaseTransaction(bitcoinNetworkParameters, blockMergedMiningHash.getBytes());
-        co.usc.ulordj.core.UldBlock bitcoinMergedMiningBlock = MinerUtils.getUlordMergedMiningBlock(bitcoinNetworkParameters, bitcoinMergedMiningCoinbaseTransaction);
+        co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
+        co.usc.ulordj.core.UldTransaction ulordMergedMiningCoinbaseTransaction = MinerUtils.getUlordMergedMiningCoinbaseTransaction(ulordNetworkParameters, blockMergedMiningHash.getBytes());
+        co.usc.ulordj.core.UldBlock ulordMergedMiningBlock = MinerUtils.getUlordMergedMiningBlock(ulordNetworkParameters, ulordMergedMiningCoinbaseTransaction);
 
         BigInteger targetBI = DifficultyUtils.difficultyToTarget(block.getDifficulty());
 
-        BlockMiner.findNonce(bitcoinMergedMiningBlock, targetBI);
+        BlockMiner.findNonce(ulordMergedMiningBlock, targetBI);
 
         // We need to clone to allow modifications
         Block newBlock = new Block(block.getEncoded()).cloneBlock();
 
-        newBlock.setUlordMergedMiningHeader(bitcoinMergedMiningBlock.cloneAsHeader().bitcoinSerialize());
+        newBlock.setUlordMergedMiningHeader(ulordMergedMiningBlock.cloneAsHeader().ulordSerialize());
 
-        co.usc.ulordj.core.PartialMerkleTree bitcoinMergedMiningMerkleBranch = getUlordMergedMerkleBranch(bitcoinMergedMiningBlock);
+        co.usc.ulordj.core.PartialMerkleTree ulordMergedMiningMerkleBranch = getUlordMergedMerkleBranch(ulordMergedMiningBlock);
 
         newBlock.setUlordMergedMiningCoinbaseTransaction(org.spongycastle.util.Arrays.concatenate(compressed, blockMergedMiningHash.getBytes()));
-        newBlock.setUlordMergedMiningMerkleProof(bitcoinMergedMiningMerkleBranch.bitcoinSerialize());
+        newBlock.setUlordMergedMiningMerkleProof(ulordMergedMiningMerkleBranch.ulordSerialize());
 
         return newBlock;
     }

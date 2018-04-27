@@ -118,7 +118,7 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
             return validFallbackBlockSignature(constants, header, header.getUlordMergedMiningHeader());
         }
 
-        co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = bridgeConstants.getBtcParams();
+        co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = bridgeConstants.getUldParams();
         byte[] ulordMergedMiningCoinbaseTransactionCompressed = header.getUlordMergedMiningCoinbaseTransaction();
 
         if (ulordMergedMiningCoinbaseTransactionCompressed==null) {

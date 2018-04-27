@@ -184,7 +184,7 @@ public class ReleaseTransactionSetTest {
 
     private UldTransaction mockTxSerialize(String serializationHex) {
         UldTransaction result = mock(UldTransaction.class);
-        when(result.bitcoinSerialize()).thenReturn(Hex.decode(serializationHex));
+        when(result.ulordSerialize()).thenReturn(Hex.decode(serializationHex));
         return result;
     }
 }

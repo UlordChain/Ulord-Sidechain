@@ -56,7 +56,7 @@ public class BridgeDevNetConstants extends BridgeConstants {
                 genesisFederationPublicKeys,
                 genesisFederationAddressCreatedAt,
                 1L,
-                getBtcParams()
+                getUldParams()
         );
 
         uld2UscMinimumAcceptableConfirmations = 1;

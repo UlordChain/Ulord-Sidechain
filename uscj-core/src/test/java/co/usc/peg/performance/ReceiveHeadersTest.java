@@ -70,7 +70,7 @@ public class ReceiveHeadersTest extends BridgePerformanceTestCase {
             // Send just one header (that's the only case we're interested in measuring atm
             headersToSendToBridge.add(blockToTry);
 
-            Object[] headersEncoded = headersToSendToBridge.stream().map(h -> h.bitcoinSerialize()).toArray();
+            Object[] headersEncoded = headersToSendToBridge.stream().map(h -> h.ulordSerialize()).toArray();
 
             return Bridge.RECEIVE_HEADERS.encode(new Object[]{headersEncoded});
         };

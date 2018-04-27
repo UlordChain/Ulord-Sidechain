@@ -56,7 +56,7 @@ public class BridgeRegTestConstants extends BridgeConstants {
                 federatorPublicKeys,
                 genesisFederationCreatedAt,
                 1L,
-                getBtcParams()
+                getUldParams()
         );
 
         uld2UscMinimumAcceptableConfirmations = 3;

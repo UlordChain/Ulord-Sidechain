@@ -72,7 +72,7 @@ public class BridgeEventLoggerImpl implements BridgeEventLogger {
 
     public void logReleaseBtc(UldTransaction btcTx) {
         List<DataWord> topics = Collections.singletonList(Bridge.RELEASE_BTC_TOPIC);
-        byte[] data = RLP.encodeList(RLP.encodeString(btcTx.getHashAsString()), RLP.encodeElement(btcTx.bitcoinSerialize()));
+        byte[] data = RLP.encodeList(RLP.encodeString(btcTx.getHashAsString()), RLP.encodeElement(btcTx.ulordSerialize()));
 
         this.logs.add(new LogInfo(BRIDGE_CONTRACT_ADDRESS, topics, data));
     }

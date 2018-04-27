@@ -756,21 +756,21 @@ public class BridgeSerializationUtilsTest {
 
         StringBuilder sampleBuilder = new StringBuilder();
         sampleBuilder.append("08");
-        sampleBuilder.append(Integer.toHexString(t1.bitcoinSerialize().length));
+        sampleBuilder.append(Integer.toHexString(t1.ulordSerialize().length));
         sampleBuilder.append("01");
-        sampleBuilder.append(Integer.toHexString(t2.bitcoinSerialize().length));
+        sampleBuilder.append(Integer.toHexString(t2.ulordSerialize().length));
         sampleBuilder.append("01");
-        sampleBuilder.append(Integer.toHexString(t3.bitcoinSerialize().length));
+        sampleBuilder.append(Integer.toHexString(t3.ulordSerialize().length));
         sampleBuilder.append("01");
-        sampleBuilder.append(Integer.toHexString(t4.bitcoinSerialize().length));
+        sampleBuilder.append(Integer.toHexString(t4.ulordSerialize().length));
         sampleBuilder.append("01");
-        sampleBuilder.append(Hex.toHexString(t1.bitcoinSerialize()));
+        sampleBuilder.append(Hex.toHexString(t1.ulordSerialize()));
         sampleBuilder.append("20");
-        sampleBuilder.append(Hex.toHexString(t2.bitcoinSerialize()));
+        sampleBuilder.append(Hex.toHexString(t2.ulordSerialize()));
         sampleBuilder.append("0e");
-        sampleBuilder.append(Hex.toHexString(t3.bitcoinSerialize()));
+        sampleBuilder.append(Hex.toHexString(t3.ulordSerialize()));
         sampleBuilder.append("66");
-        sampleBuilder.append(Hex.toHexString(t4.bitcoinSerialize()));
+        sampleBuilder.append(Hex.toHexString(t4.ulordSerialize()));
         sampleBuilder.append("14");
         byte[] sample = Hex.decode(sampleBuilder.toString());
         ReleaseTransactionSet result = BridgeSerializationUtils.deserializeReleaseTransactionSet(sample, params);
@@ -817,7 +817,7 @@ public class BridgeSerializationUtilsTest {
 
     private UldTransaction mockUldTransactionSerialize(String serialized) {
         UldTransaction result = mock(UldTransaction.class);
-        when(result.bitcoinSerialize()).thenReturn(Hex.decode(serialized));
+        when(result.ulordSerialize()).thenReturn(Hex.decode(serialized));
         return result;
     }
 

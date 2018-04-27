@@ -60,7 +60,7 @@ import static org.mockito.Mockito.when;
 @PrepareForTest({ BridgeSerializationUtils.class, UscAddress.class })
 public class BridgeStorageProviderTest {
     private final TestSystemProperties config = new TestSystemProperties();
-    private final NetworkParameters networkParameters = config.getBlockchainConfig().getCommonConstants().getBridgeConstants().getBtcParams();
+    private final NetworkParameters networkParameters = config.getBlockchainConfig().getCommonConstants().getBridgeConstants().getUldParams();
     private int transactionOffset;
 
     @Test

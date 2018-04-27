@@ -446,9 +446,9 @@ public class MinerServerImpl implements MinerServer {
 
         logger.info("Received block {} {}", newBlock.getNumber(), newBlock.getHash());
 
-        newBlock.setUlordMergedMiningHeader(blockWithHeaderOnly.cloneAsHeader().bitcoinSerialize());
-        newBlock.setUlordMergedMiningCoinbaseTransaction(compressCoinbase(coinbase.bitcoinSerialize(), lastTag));
-        newBlock.setUlordMergedMiningMerkleProof(ulordMergedMiningMerkleBranch.bitcoinSerialize());
+        newBlock.setUlordMergedMiningHeader(blockWithHeaderOnly.cloneAsHeader().ulordSerialize());
+        newBlock.setUlordMergedMiningCoinbaseTransaction(compressCoinbase(coinbase.ulordSerialize(), lastTag));
+        newBlock.setUlordMergedMiningMerkleProof(ulordMergedMiningMerkleBranch.ulordSerialize());
         newBlock.seal();
 
         if (!isValid(newBlock)) {

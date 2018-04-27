@@ -224,7 +224,7 @@ public class Web3UscImpl extends Web3Impl {
     }
 
     private String extractBlockHashForMergedMining(UldTransaction coinbase) {
-        byte[] coinbaseAsByteArray = coinbase.bitcoinSerialize();
+        byte[] coinbaseAsByteArray = coinbase.ulordSerialize();
         List<Byte> coinbaseAsByteList = Arrays.asList(ArrayUtils.toObject(coinbaseAsByteArray));
 
         List<Byte> uscTagAsByteList = Arrays.asList(ArrayUtils.toObject(UscMiningConstants.USC_TAG));

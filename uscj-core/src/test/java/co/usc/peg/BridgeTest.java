@@ -29,11 +29,6 @@ import co.usc.core.BlockDifficulty;
 import co.usc.db.RepositoryImpl;
 import co.usc.peg.bitcoin.SimpleUldTransaction;
 import co.usc.test.World;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
-import co.usc.db.RepositoryImpl;
-import co.usc.peg.bitcoin.SimpleUldTransaction;
-import co.usc.test.World;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.core.*;
@@ -75,7 +70,7 @@ public class BridgeTest {
     public static void setUpBeforeClass() throws Exception {
         config.setBlockchainConfig(new RegTestConfig());
         bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
-        networkParameters = bridgeConstants.getBtcParams();
+        networkParameters = bridgeConstants.getUldParams();
     }
 
     @Test
@@ -185,7 +180,7 @@ public class BridgeTest {
         Object[] objectArray = new Object[headers.length];
 
         for (int i = 0; i < headers.length; i++)
-            objectArray[i] = headers[i].bitcoinSerialize();
+            objectArray[i] = headers[i].ulordSerialize();
 
         bridge.execute(Bridge.RECEIVE_HEADERS.encode(new Object[]{objectArray}));
 
@@ -250,7 +245,7 @@ public class BridgeTest {
         tx.addOutput(Coin.COIN, new UldECKey().toAddress(btcParams));
         tx.addInput(PegTestUtils.createHash(), 0, ScriptBuilder.createInputScript(null, new UldECKey()));
 
-        byte[] data = Bridge.REGISTER_BTC_TRANSACTION.encode(tx.bitcoinSerialize(), 1, new byte[3]);
+        byte[] data = Bridge.REGISTER_BTC_TRANSACTION.encode(tx.ulordSerialize(), 1, new byte[3]);
 
         Assert.assertNull(bridge.execute(data));
     }
@@ -268,7 +263,7 @@ public class BridgeTest {
         tx.addOutput(Coin.COIN, new UldECKey().toAddress(btcParams));
         tx.addInput(PegTestUtils.createHash(), 0, ScriptBuilder.createInputScript(null, new UldECKey()));
 
-        byte[] data = Bridge.REGISTER_BTC_TRANSACTION.encode(tx.bitcoinSerialize(), 1, new byte[30]);
+        byte[] data = Bridge.REGISTER_BTC_TRANSACTION.encode(tx.ulordSerialize(), 1, new byte[30]);
 
         Assert.assertNull(bridge.execute(data));
     }

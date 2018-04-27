@@ -369,7 +369,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         for (int i = 0; i < UldBlockSerializedArray.length; i++) {
             byte[] UldBlockSerialized = (byte[]) UldBlockSerializedArray[i];
             try {
-                UldBlock header = bridgeConstants.getBtcParams().getDefaultSerializer().makeBlock(UldBlockSerialized);
+                UldBlock header = bridgeConstants.getUldParams().getDefaultSerializer().makeBlock(UldBlockSerialized);
                 UldBlockArray[i] = header;
             } catch (ProtocolException e) {
                 throw new BridgeIllegalArgumentException("Block " + i + " could not be parsed " + Hex.toHexString(UldBlockSerialized), e);
@@ -390,7 +390,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         byte[] btcTxSerialized = (byte[]) args[0];
         UldTransaction btcTx;
         try {
-            btcTx = new UldTransaction(bridgeConstants.getBtcParams(),btcTxSerialized);
+            btcTx = new UldTransaction(bridgeConstants.getUldParams(),btcTxSerialized);
         } catch (ProtocolException e) {
             throw new BridgeIllegalArgumentException("Transaction could not be parsed " + Hex.toHexString(btcTxSerialized), e);
         }
@@ -399,7 +399,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         byte[] pmtSerialized = (byte[]) args[2];
         PartialMerkleTree pmt;
         try {
-            pmt = new PartialMerkleTree(bridgeConstants.getBtcParams(),pmtSerialized, 0);
+            pmt = new PartialMerkleTree(bridgeConstants.getUldParams(),pmtSerialized, 0);
         } catch (ProtocolException e) {
             throw new BridgeIllegalArgumentException("PartialMerkleTree could not be parsed " + Hex.toHexString(pmtSerialized), e);
         }
