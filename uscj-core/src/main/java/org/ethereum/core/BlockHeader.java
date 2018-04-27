@@ -117,7 +117,7 @@ public class BlockHeader {
     public BlockHeader(RLPList rlpHeader, boolean sealed) {
         this.parentHash = rlpHeader.get(0).getRLPData();
         this.unclesHash = rlpHeader.get(1).getRLPData();
-        this.coinbase = RLP.parseRskAddress(rlpHeader.get(2).getRLPData());
+        this.coinbase = RLP.parseUscAddress(rlpHeader.get(2).getRLPData());
         this.stateRoot = rlpHeader.get(3).getRLPData();
         if (this.stateRoot == null) {
             this.stateRoot = EMPTY_TRIE_HASH;

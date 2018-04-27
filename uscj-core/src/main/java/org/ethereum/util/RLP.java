@@ -422,7 +422,7 @@ public class RLP {
     }
 
     @Nonnull
-    public static UscAddress parseRskAddress(@Nullable byte[] bytes) {
+    public static UscAddress parseUscAddress(@Nullable byte[] bytes) {
         if (bytes == null || isAllZeroes(bytes)) {
             return UscAddress.nullAddress();
         } else {

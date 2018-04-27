@@ -150,7 +150,7 @@ public class Transaction {
         this.gasPriceRaw = ByteUtil.cloneBytes(gasPriceRaw);
         this.gasPrice = RLP.parseCoin(this.gasPriceRaw);
         this.gasLimit = ByteUtil.cloneBytes(gasLimit);
-        this.receiveAddress = RLP.parseRskAddress(ByteUtil.cloneBytes(receiveAddress));
+        this.receiveAddress = RLP.parseUscAddress(ByteUtil.cloneBytes(receiveAddress));
         if (valueRaw == null || ByteUtil.isSingleZero(valueRaw)) {
             this.valueRaw = EMPTY_BYTE_ARRAY;
         } else {
@@ -246,7 +246,7 @@ public class Transaction {
         this.gasPriceRaw = transaction.get(1).getRLPData();
         this.gasPrice = RLP.parseCoin(this.gasPriceRaw);
         this.gasLimit = transaction.get(2).getRLPData();
-        this.receiveAddress = RLP.parseRskAddress(transaction.get(3).getRLPData());
+        this.receiveAddress = RLP.parseUscAddress(transaction.get(3).getRLPData());
         this.valueRaw = transaction.get(4).getRLPData();
         this.value = RLP.parseCoin(this.valueRaw);
         this.data = transaction.get(5).getRLPData();

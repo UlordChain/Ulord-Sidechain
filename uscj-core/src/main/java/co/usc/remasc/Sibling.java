@@ -107,8 +107,8 @@ public class Sibling {
         RLPList sibling = (RLPList) params.get(0);
 
         byte[] hash = sibling.get(0).getRLPData();
-        UscAddress coinbase = RLP.parseRskAddress(sibling.get(1).getRLPData());
-        UscAddress includedBlockCoinbase = RLP.parseRskAddress(sibling.get(2).getRLPData());
+        UscAddress coinbase = RLP.parseUscAddress(sibling.get(1).getRLPData());
+        UscAddress includedBlockCoinbase = RLP.parseUscAddress(sibling.get(2).getRLPData());
 
         Coin paidFees = RLP.parseCoin(sibling.get(3).getRLPData());
         byte[] bytesIncludedHeight = sibling.get(4).getRLPData();
