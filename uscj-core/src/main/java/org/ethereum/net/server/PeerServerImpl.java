@@ -73,7 +73,7 @@ public class PeerServerImpl implements PeerServer {
             peerServiceExecutor.execute(() -> start(config.getBindAddress(), config.getPeerPort()));
         }
 
-        logger.info("RskJ node started: enode://{}@{}:{}" , Hex.toHexString(config.nodeId()), config.getPublicIp(), config.getPeerPort());
+        logger.info("UscJ node started: enode://{}@{}:{}" , Hex.toHexString(config.nodeId()), config.getPublicIp(), config.getPeerPort());
     }
 
     @Override

@@ -59,7 +59,7 @@ import java.util.stream.Collectors;
  *          and shouldn't be changed
  * - system property : each config entry might be altered via -D VM option
  * - [user dir]/config/rskj.conf
- * - config specified with the -Drsk.conf.file=[file.conf] VM option
+ * - config specified with the -Dusc.conf.file=[file.conf] VM option
  * - CLI options
  *
  * @author Roman Mandeleil
