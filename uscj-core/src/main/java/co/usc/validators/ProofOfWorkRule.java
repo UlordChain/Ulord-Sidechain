@@ -93,11 +93,11 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
 
     public boolean isFallbackMiningPossibleAndBlockSigned(BlockHeader header) {
 
-        if (header.getBitcoinMergedMiningCoinbaseTransaction() != null) {
+        if (header.getUlordMergedMiningCoinbaseTransaction() != null) {
             return false;
         }
 
-        if (header.getBitcoinMergedMiningMerkleProof() != null) {
+        if (header.getUlordMergedMiningMerkleProof() != null) {
             return false;
         }
 
@@ -115,52 +115,52 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         // TODO: Make ProofOfWorkRule one of the classes that inherits from AuthenticationRule.
 
         if (isFallbackMiningPossibleAndBlockSigned(header)) {
-            return validFallbackBlockSignature(constants, header, header.getBitcoinMergedMiningHeader());
+            return validFallbackBlockSignature(constants, header, header.getUlordMergedMiningHeader());
         }
 
-        co.usc.ulordj.core.NetworkParameters bitcoinNetworkParameters = bridgeConstants.getBtcParams();
-        byte[] bitcoinMergedMiningCoinbaseTransactionCompressed = header.getBitcoinMergedMiningCoinbaseTransaction();
+        co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = bridgeConstants.getBtcParams();
+        byte[] ulordMergedMiningCoinbaseTransactionCompressed = header.getUlordMergedMiningCoinbaseTransaction();
 
-        if (bitcoinMergedMiningCoinbaseTransactionCompressed==null) {
+        if (ulordMergedMiningCoinbaseTransactionCompressed==null) {
             return false;
         }
 
-        if (header.getBitcoinMergedMiningHeader()==null) {
+        if (header.getUlordMergedMiningHeader()==null) {
             return false;
         }
 
-        if (header.getBitcoinMergedMiningMerkleProof()==null) {
+        if (header.getUlordMergedMiningMerkleProof()==null) {
             return false;
         }
 
-        UldBlock bitcoinMergedMiningBlock = bitcoinNetworkParameters.getDefaultSerializer().makeBlock(header.getBitcoinMergedMiningHeader());
-        PartialMerkleTree bitcoinMergedMiningMerkleBranch  = new PartialMerkleTree(bitcoinNetworkParameters, header.getBitcoinMergedMiningMerkleProof(), 0);
+        UldBlock ulordMergedMiningBlock = ulordNetworkParameters.getDefaultSerializer().makeBlock(header.getUlordMergedMiningHeader());
+        PartialMerkleTree UlordMergedMiningMerkleBranch  = new PartialMerkleTree(ulordNetworkParameters, header.getUlordMergedMiningMerkleProof(), 0);
 
         BigInteger target = DifficultyUtils.difficultyToTarget(header.getDifficulty());
 
-        BigInteger bitcoinMergedMiningBlockHashBI = bitcoinMergedMiningBlock.getHash().toBigInteger();
+        BigInteger ulordMergedMiningBlockHashBI = ulordMergedMiningBlock.getHash().toBigInteger();
 
-        if (bitcoinMergedMiningBlockHashBI.compareTo(target) > 0) {
-            logger.warn("Hash {} is higher than target {}", bitcoinMergedMiningBlockHashBI.toString(16), target.toString(16));
+        if (ulordMergedMiningBlockHashBI.compareTo(target) > 0) {
+            logger.warn("Hash {} is higher than target {}", ulordMergedMiningBlockHashBI.toString(16), target.toString(16));
             return false;
         }
 
-        byte[] bitcoinMergedMiningCoinbaseTransactionMidstate = new byte[UscMiningConstants.MIDSTATE_SIZE];
-        System.arraycopy(bitcoinMergedMiningCoinbaseTransactionCompressed, 0, bitcoinMergedMiningCoinbaseTransactionMidstate, 8, UscMiningConstants.MIDSTATE_SIZE_TRIMMED);
+        byte[] ulordMergedMiningCoinbaseTransactionMidstate = new byte[UscMiningConstants.MIDSTATE_SIZE];
+        System.arraycopy(ulordMergedMiningCoinbaseTransactionCompressed, 0, ulordMergedMiningCoinbaseTransactionMidstate, 8, UscMiningConstants.MIDSTATE_SIZE_TRIMMED);
 
-        byte[] bitcoinMergedMiningCoinbaseTransactionTail = new byte[bitcoinMergedMiningCoinbaseTransactionCompressed.length - UscMiningConstants.MIDSTATE_SIZE_TRIMMED];
-        System.arraycopy(bitcoinMergedMiningCoinbaseTransactionCompressed, UscMiningConstants.MIDSTATE_SIZE_TRIMMED,
-                bitcoinMergedMiningCoinbaseTransactionTail, 0, bitcoinMergedMiningCoinbaseTransactionTail.length);
+        byte[] ulordMergedMiningCoinbaseTransactionTail = new byte[ulordMergedMiningCoinbaseTransactionCompressed.length - UscMiningConstants.MIDSTATE_SIZE_TRIMMED];
+        System.arraycopy(ulordMergedMiningCoinbaseTransactionCompressed, UscMiningConstants.MIDSTATE_SIZE_TRIMMED,
+                ulordMergedMiningCoinbaseTransactionTail, 0, ulordMergedMiningCoinbaseTransactionTail.length);
 
         byte[] expectedCoinbaseMessageBytes = org.spongycastle.util.Arrays.concatenate(UscMiningConstants.USC_TAG, header.getHashForMergedMining());
 
 
-        List<Byte> bitcoinMergedMiningCoinbaseTransactionTailAsList = Arrays.asList(ArrayUtils.toObject(bitcoinMergedMiningCoinbaseTransactionTail));
+        List<Byte> ulordMergedMiningCoinbaseTransactionTailAsList = Arrays.asList(ArrayUtils.toObject(ulordMergedMiningCoinbaseTransactionTail));
         List<Byte> expectedCoinbaseMessageBytesAsList = Arrays.asList(ArrayUtils.toObject(expectedCoinbaseMessageBytes));
 
-        int uscTagPosition = Collections.lastIndexOfSubList(bitcoinMergedMiningCoinbaseTransactionTailAsList, expectedCoinbaseMessageBytesAsList);
+        int uscTagPosition = Collections.lastIndexOfSubList(ulordMergedMiningCoinbaseTransactionTailAsList, expectedCoinbaseMessageBytesAsList);
         if (uscTagPosition == -1) {
-            logger.warn("bitcoin coinbase transaction tail message does not contain expected RSKBLOCK:RskBlockHeaderHash. Expected: {} . Actual: {} .", Arrays.toString(expectedCoinbaseMessageBytes), Arrays.toString(bitcoinMergedMiningCoinbaseTransactionTail));
+            logger.warn("ulord coinbase transaction tail message does not contain expected USCBLOCK:UscBlockHeaderHash. Expected: {} . Actual: {} .", Arrays.toString(expectedCoinbaseMessageBytes), Arrays.toString(ulordMergedMiningCoinbaseTransactionTail));
             return false;
         }
 
@@ -170,18 +170,18 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         * another mid state with 9 blocks, 64bytes + the rsk tag, giving us two blocks with different hashes but the same spv proof.
         * */
         if (uscTagPosition >= 64) {
-            logger.warn("bitcoin coinbase transaction tag position is bigger than expected 64. Actual: {}.", Integer.toString(uscTagPosition));
+            logger.warn("ulord coinbase transaction tag position is bigger than expected 64. Actual: {}.", Integer.toString(uscTagPosition));
             return false;
         }
 
         List<Byte> uscTagAsList = Arrays.asList(ArrayUtils.toObject(UscMiningConstants.USC_TAG));
-        int lastTag = Collections.lastIndexOfSubList(bitcoinMergedMiningCoinbaseTransactionTailAsList, uscTagAsList);
+        int lastTag = Collections.lastIndexOfSubList(ulordMergedMiningCoinbaseTransactionTailAsList, uscTagAsList);
         if (uscTagPosition !=lastTag) {
-            logger.warn("The valid USC tag is not the last USC tag. Tail: {}.", Arrays.toString(bitcoinMergedMiningCoinbaseTransactionTail));
+            logger.warn("The valid USC tag is not the last USC tag. Tail: {}.", Arrays.toString(ulordMergedMiningCoinbaseTransactionTail));
             return false;
         }
 
-        int remainingByteCount = bitcoinMergedMiningCoinbaseTransactionTail.length -
+        int remainingByteCount = ulordMergedMiningCoinbaseTransactionTail.length -
                 uscTagPosition -
                 UscMiningConstants.USC_TAG.length -
                 UscMiningConstants.BLOCK_HEADER_HASH_SIZE;
@@ -191,15 +191,15 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
             return false;
         }
 
-        SHA256Digest digest = new SHA256Digest(bitcoinMergedMiningCoinbaseTransactionMidstate);
-        digest.update(bitcoinMergedMiningCoinbaseTransactionTail,0,bitcoinMergedMiningCoinbaseTransactionTail.length);
+        SHA256Digest digest = new SHA256Digest(ulordMergedMiningCoinbaseTransactionMidstate);
+        digest.update(ulordMergedMiningCoinbaseTransactionTail,0,ulordMergedMiningCoinbaseTransactionTail.length);
         byte[] bitcoinMergedMiningCoinbaseTransactionOneRoundOfHash = new byte[32];
         digest.doFinal(bitcoinMergedMiningCoinbaseTransactionOneRoundOfHash, 0);
         Sha256Hash bitcoinMergedMiningCoinbaseTransactionHash = Sha256Hash.wrapReversed(Sha256Hash.hash(bitcoinMergedMiningCoinbaseTransactionOneRoundOfHash));
 
         List<Sha256Hash> txHashesInTheMerkleBranch = new ArrayList<>();
-        Sha256Hash merkleRoot = bitcoinMergedMiningMerkleBranch.getTxnHashAndMerkleRoot(txHashesInTheMerkleBranch);
-        if (!merkleRoot.equals(bitcoinMergedMiningBlock.getMerkleRoot())) {
+        Sha256Hash merkleRoot = UlordMergedMiningMerkleBranch.getTxnHashAndMerkleRoot(txHashesInTheMerkleBranch);
+        if (!merkleRoot.equals(ulordMergedMiningBlock.getMerkleRoot())) {
             logger.warn("bitcoin merkle root of bitcoin block does not match the merkle root of merkle branch");
             return false;
         }
@@ -213,11 +213,11 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
 
     public static boolean validFallbackBlockSignature(Constants constants, BlockHeader header, byte[] signatureBytesRLP) {
 
-        if (header.getBitcoinMergedMiningCoinbaseTransaction() != null) {
+        if (header.getUlordMergedMiningCoinbaseTransaction() != null) {
             return false;
         }
 
-        if (header.getBitcoinMergedMiningMerkleProof() != null) {
+        if (header.getUlordMergedMiningMerkleProof() != null) {
             return false;
         }
 

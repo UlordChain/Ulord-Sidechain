@@ -273,7 +273,7 @@ public class MinerServerTest {
             //noinspection ConstantConditions
             UldTransaction coinbase = bitcoinMergedMiningBlock.getTransactions().get(0);
             List<String> coinbaseReversedHash = Collections.singletonList(Sha256Hash.wrap(coinbase.getHash().getReversedBytes()).toString());
-            SubmitBlockResult result = minerServer.submitBitcoinBlockPartialMerkle(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, coinbaseReversedHash, 1);
+            SubmitBlockResult result = minerServer.submitUlordBlockPartialMerkle(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, coinbaseReversedHash, 1);
 
             assertEquals("OK", result.getStatus());
             Assert.assertNotNull(result.getBlockInfo());
@@ -331,7 +331,7 @@ public class MinerServerTest {
             String coinbaseReversedHash = Sha256Hash.wrap(coinbase.getHash().getReversedBytes()).toString();
             String otherTxHashReversed = Sha256Hash.wrap(otherTxHash.getReversedBytes()).toString();
             List<String> merkleHashes = Arrays.asList(coinbaseReversedHash, otherTxHashReversed);
-            SubmitBlockResult result = minerServer.submitBitcoinBlockPartialMerkle(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, merkleHashes, 2);
+            SubmitBlockResult result = minerServer.submitUlordBlockPartialMerkle(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, merkleHashes, 2);
 
             assertEquals("OK", result.getStatus());
             Assert.assertNotNull(result.getBlockInfo());
@@ -381,7 +381,7 @@ public class MinerServerTest {
 
             //noinspection ConstantConditions
             UldTransaction coinbase = bitcoinMergedMiningBlock.getTransactions().get(0);
-            SubmitBlockResult result = minerServer.submitBitcoinBlockTransactions(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, Collections.singletonList(coinbase.getHashAsString()));
+            SubmitBlockResult result = minerServer.submitUlordBlockTransactions(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, Collections.singletonList(coinbase.getHashAsString()));
 
             assertEquals("OK", result.getStatus());
             Assert.assertNotNull(result.getBlockInfo());
@@ -437,7 +437,7 @@ public class MinerServerTest {
             //noinspection ConstantConditions
             UldTransaction coinbase = bitcoinMergedMiningBlock.getTransactions().get(0);
             List<String> txs = Arrays.asList(coinbase.getHashAsString(), otherTxHash.toString());
-            SubmitBlockResult result = minerServer.submitBitcoinBlockTransactions(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, txs);
+            SubmitBlockResult result = minerServer.submitUlordBlockTransactions(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, txs);
 
             assertEquals("OK", result.getStatus());
             Assert.assertNotNull(result.getBlockInfo());
@@ -668,7 +668,7 @@ public class MinerServerTest {
 
     private UldBlock getMergedMiningBlock(MinerWork work, List<UldTransaction> txs) {
         NetworkParameters bitcoinNetworkParameters = RegTestParams.get();
-        UldTransaction bitcoinMergedMiningCoinbaseTransaction = MinerUtils.getBitcoinMergedMiningCoinbaseTransaction(bitcoinNetworkParameters, work);
+        UldTransaction bitcoinMergedMiningCoinbaseTransaction = MinerUtils.getUlordMergedMiningCoinbaseTransaction(bitcoinNetworkParameters, work);
 
         List<UldTransaction> blockTxs = new ArrayList<>();
         blockTxs.add(bitcoinMergedMiningCoinbaseTransaction);

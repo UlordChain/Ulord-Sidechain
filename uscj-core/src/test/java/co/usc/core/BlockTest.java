@@ -23,7 +23,6 @@ import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.crypto.Keccak256;
 import co.usc.peg.PegTestUtils;
-import co.usc.blockchain.utils.BlockGenerator;
 import org.ethereum.TestUtils;
 import org.ethereum.core.*;
 import org.spongycastle.util.encoders.Hex;
@@ -176,7 +175,7 @@ public class BlockTest {
         block.seal();
 
         try {
-            block.setBitcoinMergedMiningCoinbaseTransaction(new byte[32]);
+            block.setUlordMergedMiningCoinbaseTransaction(new byte[32]);
             Assert.fail();
         }
         catch (SealedBlockException ex) {
@@ -191,7 +190,7 @@ public class BlockTest {
         block.seal();
 
         try {
-            block.setBitcoinMergedMiningHeader(new byte[32]);
+            block.setUlordMergedMiningHeader(new byte[32]);
             Assert.fail();
         }
         catch (SealedBlockException ex) {
@@ -206,7 +205,7 @@ public class BlockTest {
         block.seal();
 
         try {
-            block.setBitcoinMergedMiningMerkleProof(new byte[32]);
+            block.setUlordMergedMiningMerkleProof(new byte[32]);
             Assert.fail();
         }
         catch (SealedBlockException ex) {

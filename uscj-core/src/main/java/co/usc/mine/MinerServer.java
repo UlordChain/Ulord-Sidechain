@@ -36,7 +36,7 @@ public interface MinerServer {
 
     boolean isRunning();
 
-    SubmitBlockResult submitBitcoinBlockPartialMerkle(
+    SubmitBlockResult submitUlordBlockPartialMerkle(
             String blockHashForMergedMining,
             UldBlock blockWithOnlyHeader,
             UldTransaction coinbase,
@@ -44,14 +44,14 @@ public interface MinerServer {
             int blockTxnCount
     );
 
-    SubmitBlockResult submitBitcoinBlockTransactions(
+    SubmitBlockResult submitUlordBlockTransactions(
             String blockHashForMergedMining,
             UldBlock blockWithOnlyHeader,
             UldTransaction coinbase,
             List<String> txHashes
     );
 
-    SubmitBlockResult submitUlordBlock(String blockHashForMergedMining, UldBlock bitcoinMergedMiningBlock);
+    SubmitBlockResult submitUlordBlock(String blockHashForMergedMining, UldBlock ulordMergedMiningBlock);
 
     boolean generateFallbackBlock();
 

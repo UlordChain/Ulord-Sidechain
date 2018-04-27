@@ -542,7 +542,7 @@ public class BlockHeader {
     public byte[] getEncodedRaw() {
         return getEncoded();
     }
-    public byte[] getBitcoinMergedMiningHeader() {
+    public byte[] getUlordMergedMiningHeader() {
         return bitcoinMergedMiningHeader;
     }
 
@@ -555,7 +555,7 @@ public class BlockHeader {
         this.bitcoinMergedMiningHeader = bitcoinMergedMiningHeader;
     }
 
-    public byte[] getBitcoinMergedMiningMerkleProof() {
+    public byte[] getUlordMergedMiningMerkleProof() {
         return bitcoinMergedMiningMerkleProof;
     }
 
@@ -568,7 +568,7 @@ public class BlockHeader {
         this.bitcoinMergedMiningMerkleProof = bitcoinMergedMiningMerkleProof;
     }
 
-    public byte[] getBitcoinMergedMiningCoinbaseTransaction() {
+    public byte[] getUlordMergedMiningCoinbaseTransaction() {
         return bitcoinMergedMiningCoinbaseTransaction;
     }
 

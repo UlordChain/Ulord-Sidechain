@@ -47,11 +47,11 @@ public class MinerUtils {
 
     private static final Logger logger = LoggerFactory.getLogger("minerserver");
 
-    public static co.usc.ulordj.core.UldTransaction getBitcoinMergedMiningCoinbaseTransaction(co.usc.ulordj.core.NetworkParameters params, MinerWork work) {
-        return getBitcoinMergedMiningCoinbaseTransaction(params, TypeConverter.stringHexToByteArray(work.getBlockHashForMergedMining()));
+    public static co.usc.ulordj.core.UldTransaction getUlordMergedMiningCoinbaseTransaction(co.usc.ulordj.core.NetworkParameters params, MinerWork work) {
+        return getUlordMergedMiningCoinbaseTransaction(params, TypeConverter.stringHexToByteArray(work.getBlockHashForMergedMining()));
     }
 
-    public static co.usc.ulordj.core.UldTransaction getBitcoinMergedMiningCoinbaseTransaction(co.usc.ulordj.core.NetworkParameters params, byte[] blockHashForMergedMining) {
+    public static co.usc.ulordj.core.UldTransaction getUlordMergedMiningCoinbaseTransaction(co.usc.ulordj.core.NetworkParameters params, byte[] blockHashForMergedMining) {
         co.usc.ulordj.core.UldTransaction coinbaseTransaction = new co.usc.ulordj.core.UldTransaction(params);
         //Add a random number of random bytes before the USC tag
         SecureRandom random = new SecureRandom();

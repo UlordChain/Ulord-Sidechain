@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import java.math.BigInteger;
 
 import static co.usc.mine.MinerServerImpl.compressCoinbase;
-import static co.usc.mine.MinerServerImpl.getBitcoinMergedMerkleBranch;
+import static co.usc.mine.MinerServerImpl.getUlordMergedMerkleBranch;
 
 /**
  * Created by ajlopez on 13/09/2017.
@@ -21,7 +21,7 @@ public class BlockMiner {
         Keccak256 blockMergedMiningHash = new Keccak256(block.getHashForMergedMining());
 
         co.usc.ulordj.core.NetworkParameters bitcoinNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
-        co.usc.ulordj.core.UldTransaction bitcoinMergedMiningCoinbaseTransaction = MinerUtils.getBitcoinMergedMiningCoinbaseTransaction(bitcoinNetworkParameters, blockMergedMiningHash.getBytes());
+        co.usc.ulordj.core.UldTransaction bitcoinMergedMiningCoinbaseTransaction = MinerUtils.getUlordMergedMiningCoinbaseTransaction(bitcoinNetworkParameters, blockMergedMiningHash.getBytes());
         co.usc.ulordj.core.UldBlock bitcoinMergedMiningBlock = MinerUtils.getUlordMergedMiningBlock(bitcoinNetworkParameters, bitcoinMergedMiningCoinbaseTransaction);
 
         BigInteger targetBI = DifficultyUtils.difficultyToTarget(block.getDifficulty());
@@ -31,13 +31,13 @@ public class BlockMiner {
         // We need to clone to allow modifications
         Block newBlock = new Block(block.getEncoded()).cloneBlock();
 
-        newBlock.setBitcoinMergedMiningHeader(bitcoinMergedMiningBlock.cloneAsHeader().bitcoinSerialize());
+        newBlock.setUlordMergedMiningHeader(bitcoinMergedMiningBlock.cloneAsHeader().bitcoinSerialize());
 
         bitcoinMergedMiningCoinbaseTransaction = bitcoinMergedMiningBlock.getTransactions().get(0);
-        co.usc.ulordj.core.PartialMerkleTree bitcoinMergedMiningMerkleBranch = getBitcoinMergedMerkleBranch(bitcoinMergedMiningBlock);
+        co.usc.ulordj.core.PartialMerkleTree bitcoinMergedMiningMerkleBranch = getUlordMergedMerkleBranch(bitcoinMergedMiningBlock);
 
-        newBlock.setBitcoinMergedMiningCoinbaseTransaction(compressCoinbase(bitcoinMergedMiningCoinbaseTransaction.bitcoinSerialize()));
-        newBlock.setBitcoinMergedMiningMerkleProof(bitcoinMergedMiningMerkleBranch.bitcoinSerialize());
+        newBlock.setUlordMergedMiningCoinbaseTransaction(compressCoinbase(bitcoinMergedMiningCoinbaseTransaction.bitcoinSerialize()));
+        newBlock.setUlordMergedMiningMerkleProof(bitcoinMergedMiningMerkleBranch.bitcoinSerialize());
 
         return newBlock;
     }

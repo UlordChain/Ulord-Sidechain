@@ -134,7 +134,7 @@ public class Web3UscImpl extends Web3Impl {
 
         int txnCount = Integer.parseInt(blockTxnCountHex, 16);
 
-        SubmitBlockResult result = minerServer.submitBitcoinBlockPartialMerkle(blockHashForMergedMining, bitcoinBlockWithHeaderOnly, coinbase, merkleHashes, txnCount);
+        SubmitBlockResult result = minerServer.submitUlordBlockPartialMerkle(blockHashForMergedMining, bitcoinBlockWithHeaderOnly, coinbase, merkleHashes, txnCount);
 
         return parseResultAndReturn(result);
     }
@@ -157,7 +157,7 @@ public class Web3UscImpl extends Web3Impl {
 
         List<String> txnHashes = parseHashes(txnHashesHex);
 
-        SubmitBlockResult result = minerServer.submitBitcoinBlockTransactions(blockHashForMergedMining, bitcoinBlockWithHeaderOnly, coinbase, txnHashes);
+        SubmitBlockResult result = minerServer.submitUlordBlockTransactions(blockHashForMergedMining, bitcoinBlockWithHeaderOnly, coinbase, txnHashes);
 
         return parseResultAndReturn(result);
     }

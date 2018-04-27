@@ -107,9 +107,9 @@ public class Block {
                 header.getExtraData(),
                 null,
                 null,
-                header.getBitcoinMergedMiningHeader(),
-                header.getBitcoinMergedMiningMerkleProof(),
-                header.getBitcoinMergedMiningCoinbaseTransaction(),
+                header.getUlordMergedMiningHeader(),
+                header.getUlordMergedMiningMerkleProof(),
+                header.getUlordMergedMiningCoinbaseTransaction(),
                 header.getReceiptsRoot(),
                 header.getTxTrieRoot(),
                 header.getStateRoot(),
@@ -673,10 +673,10 @@ public class Block {
             parseRLP();
         }
 
-        return this.header.getBitcoinMergedMiningHeader();
+        return this.header.getUlordMergedMiningHeader();
     }
 
-    public void setBitcoinMergedMiningHeader(byte[] bitcoinMergedMiningHeader) {
+    public void setUlordMergedMiningHeader(byte[] bitcoinMergedMiningHeader) {
         /* A sealed block is immutable, cannot be changed */
         if (this.sealed) {
             throw new SealedBlockException("trying to alter bitcoin merged mining header");
@@ -695,10 +695,10 @@ public class Block {
             parseRLP();
         }
 
-        return this.header.getBitcoinMergedMiningMerkleProof();
+        return this.header.getUlordMergedMiningMerkleProof();
     }
 
-    public void setBitcoinMergedMiningMerkleProof(byte[] bitcoinMergedMiningMerkleProof) {
+    public void setUlordMergedMiningMerkleProof(byte[] bitcoinMergedMiningMerkleProof) {
         /* A sealed block is immutable, cannot be changed */
         if (this.sealed) {
             throw new SealedBlockException("trying to alter bitcoin merged mining Merkle proof");
@@ -713,10 +713,10 @@ public class Block {
             parseRLP();
         }
 
-        return this.header.getBitcoinMergedMiningCoinbaseTransaction();
+        return this.header.getUlordMergedMiningCoinbaseTransaction();
     }
 
-    public void setBitcoinMergedMiningCoinbaseTransaction(byte[] bitcoinMergedMiningCoinbaseTransaction) {
+    public void setUlordMergedMiningCoinbaseTransaction(byte[] bitcoinMergedMiningCoinbaseTransaction) {
         if (this.sealed) {
             throw new SealedBlockException("trying to alter bitcoin merged mining coinbase transaction");
         }

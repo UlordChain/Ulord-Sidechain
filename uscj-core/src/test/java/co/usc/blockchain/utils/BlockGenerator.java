@@ -395,7 +395,7 @@ public class BlockGenerator {
             signature[5] = (byte) (signature[5]+1);
         }
 
-        block.setBitcoinMergedMiningHeader(signature);
+        block.setUlordMergedMiningHeader(signature);
         return block;
     }
 

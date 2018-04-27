@@ -38,7 +38,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
-import static co.usc.mine.MinerServerImpl.getBitcoinMergedMerkleBranch;
+import static co.usc.mine.MinerServerImpl.getUlordMergedMerkleBranch;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -65,7 +65,7 @@ public class ProofOfWorkRuleTest {
         byte[] mergeMiningHeader = b.getBitcoinMergedMiningHeader();
         // TODO improve, the mutated block header could be still valid
         mergeMiningHeader[0]++;
-        b.setBitcoinMergedMiningHeader(mergeMiningHeader);
+        b.setUlordMergedMiningHeader(mergeMiningHeader);
         assertFalse(rule.isValid(b));
     }
 
@@ -129,7 +129,7 @@ public class ProofOfWorkRuleTest {
         Keccak256 blockMergedMiningHash = new Keccak256(block.getHashForMergedMining());
 
         co.usc.ulordj.core.NetworkParameters bitcoinNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
-        co.usc.ulordj.core.UldTransaction bitcoinMergedMiningCoinbaseTransaction = MinerUtils.getBitcoinMergedMiningCoinbaseTransaction(bitcoinNetworkParameters, blockMergedMiningHash.getBytes());
+        co.usc.ulordj.core.UldTransaction bitcoinMergedMiningCoinbaseTransaction = MinerUtils.getUlordMergedMiningCoinbaseTransaction(bitcoinNetworkParameters, blockMergedMiningHash.getBytes());
         co.usc.ulordj.core.UldBlock bitcoinMergedMiningBlock = MinerUtils.getUlordMergedMiningBlock(bitcoinNetworkParameters, bitcoinMergedMiningCoinbaseTransaction);
 
         BigInteger targetBI = DifficultyUtils.difficultyToTarget(block.getDifficulty());
@@ -139,12 +139,12 @@ public class ProofOfWorkRuleTest {
         // We need to clone to allow modifications
         Block newBlock = new Block(block.getEncoded()).cloneBlock();
 
-        newBlock.setBitcoinMergedMiningHeader(bitcoinMergedMiningBlock.cloneAsHeader().bitcoinSerialize());
+        newBlock.setUlordMergedMiningHeader(bitcoinMergedMiningBlock.cloneAsHeader().bitcoinSerialize());
 
-        co.usc.ulordj.core.PartialMerkleTree bitcoinMergedMiningMerkleBranch = getBitcoinMergedMerkleBranch(bitcoinMergedMiningBlock);
+        co.usc.ulordj.core.PartialMerkleTree bitcoinMergedMiningMerkleBranch = getUlordMergedMerkleBranch(bitcoinMergedMiningBlock);
 
-        newBlock.setBitcoinMergedMiningCoinbaseTransaction(org.spongycastle.util.Arrays.concatenate(compressed, blockMergedMiningHash.getBytes()));
-        newBlock.setBitcoinMergedMiningMerkleProof(bitcoinMergedMiningMerkleBranch.bitcoinSerialize());
+        newBlock.setUlordMergedMiningCoinbaseTransaction(org.spongycastle.util.Arrays.concatenate(compressed, blockMergedMiningHash.getBytes()));
+        newBlock.setUlordMergedMiningMerkleProof(bitcoinMergedMiningMerkleBranch.bitcoinSerialize());
 
         return newBlock;
     }
