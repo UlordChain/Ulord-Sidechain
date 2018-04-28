@@ -252,7 +252,7 @@ public class BlockTest {
         try {
             block.getHeader().setTransactionsRoot(new byte[32]);
             Assert.fail();
-        }1
+        }
         catch (SealedBlockHeaderException ex) {
             Assert.assertEquals("Sealed block header: trying to alter transactions root", ex.getMessage());
         }
