@@ -1,3 +1,5 @@
+#resources
+build-info.properties
 
 # local credentials
 credentials.properties
