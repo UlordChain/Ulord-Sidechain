@@ -122,7 +122,7 @@ public class BridgeSupportTest {
     }
 
     @Test
-    public void testInitialChainHeadWithoutBtcCheckpoints() throws Exception {
+    public void testInitialChainHeadWithoutUldCheckpoints() throws Exception {
         NetworkParameters _networkParameters = uldParams;
         Repository repository = new RepositoryImpl(config);
         Repository track = repository.startTracking();
@@ -134,7 +134,7 @@ public class BridgeSupportTest {
     }
 
     @Test
-    public void testInitialChainHeadWithBtcCheckpoints() throws Exception {
+    public void testInitialChainHeadWithUldCheckpoints() throws Exception {
         config = new TestSystemProperties();
         config.setBlockchainConfig(new TestNetConfig());
         bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
@@ -165,7 +165,7 @@ public class BridgeSupportTest {
     }
 
     @Test
-    public void testGetUldBlockChainBlockLocatorWithoutBtcCheckpoints() throws Exception {
+    public void testGetUldBlockChainBlockLocatorWithoutUldCheckpoints() throws Exception {
         NetworkParameters _networkParameters = uldParams;
 
         Repository repository = new RepositoryImpl(config);
@@ -194,7 +194,7 @@ public class BridgeSupportTest {
 
 
     @Test
-    public void testGetUldBlockChainBlockLocatorWithBtcCheckpoints() throws Exception {
+    public void testGetUldBlockChainBlockLocatorWithUldCheckpoints() throws Exception {
         NetworkParameters _networkParameters = uldParams;
 
         Repository repository = new RepositoryImpl(config);
@@ -318,7 +318,7 @@ public class BridgeSupportTest {
         provider0.getReleaseRequestQueue().add(new UldECKey().toAddress(uldParams), Coin.valueOf(10,0));
         provider0.setFeePerKb(Coin.MILLICOIN);
 
-        provider0.getNewFederationBtcUTXOs().add(new UTXO(
+        provider0.getNewFederationUldUTXOs().add(new UTXO(
                 PegTestUtils.createHash(),
                 1,
                 Coin.valueOf(12,0),
@@ -353,10 +353,10 @@ public class BridgeSupportTest {
         Assert.assertEquals(2, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(1, provider.getReleaseTransactionSet().getEntries().size());
         Assert.assertEquals(0, provider.getRskTxsWaitingForSignatures().size());
-        // Check value sent to user is 10 BTC minus fee
+        // Check value sent to user is 10 Uld minus fee
         Assert.assertEquals(Coin.valueOf(999962800l), provider.getReleaseTransactionSet().getEntries().iterator().next().getTransaction().getOutput(0).getValue());
         // Check the wallet has been emptied
-        Assert.assertTrue(provider.getNewFederationBtcUTXOs().isEmpty());
+        Assert.assertTrue(provider.getNewFederationUldUTXOs().isEmpty());
     }
 
     @Test
@@ -371,7 +371,7 @@ public class BridgeSupportTest {
 
         provider0.getReleaseRequestQueue().add(new UldECKey().toAddress(uldParams), Coin.valueOf(37500));
         provider0.setFeePerKb(Coin.MILLICOIN);
-        provider0.getNewFederationBtcUTXOs().add(new UTXO(
+        provider0.getNewFederationUldUTXOs().add(new UTXO(
                 PegTestUtils.createHash(),
                 1,
                 Coin.valueOf(1000000),
@@ -414,7 +414,7 @@ public class BridgeSupportTest {
         Assert.assertEquals(0, provider.getReleaseTransactionSet().getEntries().size());
         Assert.assertEquals(0, provider.getRskTxsWaitingForSignatures().size());
         // Check the wallet has not been emptied
-        Assert.assertFalse(provider.getNewFederationBtcUTXOs().isEmpty());
+        Assert.assertFalse(provider.getNewFederationUldUTXOs().isEmpty());
     }
 
     @Test
@@ -429,7 +429,7 @@ public class BridgeSupportTest {
 
         provider0.getReleaseRequestQueue().add(new UldECKey().toAddress(uldParams), Coin.COIN.multiply(7));
         for (int i = 0; i < 2000; i++) {
-            provider0.getNewFederationBtcUTXOs().add(new UTXO(
+            provider0.getNewFederationUldUTXOs().add(new UTXO(
                     PegTestUtils.createHash(),
                     1,
                     Coin.CENT,
@@ -474,7 +474,7 @@ public class BridgeSupportTest {
         Assert.assertEquals(0, provider.getReleaseTransactionSet().getEntries().size());
         Assert.assertEquals(0, provider.getRskTxsWaitingForSignatures().size());
         // Check the wallet has not been emptied
-        Assert.assertFalse(provider.getNewFederationBtcUTXOs().isEmpty());
+        Assert.assertFalse(provider.getNewFederationUldUTXOs().isEmpty());
     }
 
     @Test
@@ -513,7 +513,7 @@ public class BridgeSupportTest {
         // and so it won't be removed from the old federation UTXOs list for migration.
         List<UTXO> unsufficientUTXOsForMigration1 = new ArrayList<>();
         unsufficientUTXOsForMigration1.add(createUTXO(Coin.MICROCOIN, oldFederation.getAddress()));
-        when(provider.getOldFederationBtcUTXOs())
+        when(provider.getOldFederationUldUTXOs())
                 .thenReturn(unsufficientUTXOsForMigration1);
         bridgeSupport.updateCollections(tx);
         assertThat(unsufficientUTXOsForMigration1.size(), is(1));
@@ -522,7 +522,7 @@ public class BridgeSupportTest {
         // and it will be removed from the old federation UTXOs list for migration.
         List<UTXO> sufficientUTXOsForMigration1 = new ArrayList<>();
         sufficientUTXOsForMigration1.add(createUTXO(Coin.MILLICOIN, oldFederation.getAddress()));
-        when(provider.getOldFederationBtcUTXOs())
+        when(provider.getOldFederationUldUTXOs())
                 .thenReturn(sufficientUTXOsForMigration1);
 
         bridgeSupport.updateCollections(tx);
@@ -532,7 +532,7 @@ public class BridgeSupportTest {
         List<UTXO> sufficientUTXOsForMigration2 = new ArrayList<>();
         sufficientUTXOsForMigration2.add(createUTXO(Coin.MILLICOIN.divide(2), oldFederation.getAddress()));
         sufficientUTXOsForMigration2.add(createUTXO(Coin.MILLICOIN.divide(2), oldFederation.getAddress()));
-        when(provider.getOldFederationBtcUTXOs())
+        when(provider.getOldFederationUldUTXOs())
                 .thenReturn(sufficientUTXOsForMigration2);
 
         bridgeSupport.updateCollections(tx);
@@ -541,7 +541,7 @@ public class BridgeSupportTest {
         // higher fee per kb prevents funds migration
         List<UTXO> unsufficientUTXOsForMigration2 = new ArrayList<>();
         unsufficientUTXOsForMigration2.add(createUTXO(Coin.MILLICOIN, oldFederation.getAddress()));
-        when(provider.getOldFederationBtcUTXOs())
+        when(provider.getOldFederationUldUTXOs())
                 .thenReturn(unsufficientUTXOsForMigration2);
         when(provider.getFeePerKb())
                 .thenReturn(Coin.COIN);
@@ -578,7 +578,7 @@ public class BridgeSupportTest {
         BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
         provider0.getReleaseRequestQueue().add(new UldECKey().toAddress(uldParams), Coin.COIN);
-        provider0.getNewFederationBtcUTXOs().add(new UTXO(PegTestUtils.createHash(), 1, Coin.COIN.add(Coin.valueOf(100)), 0, false, ScriptBuilder.createOutputScript(federation.getAddress())));
+        provider0.getNewFederationUldUTXOs().add(new UTXO(PegTestUtils.createHash(), 1, Coin.COIN.add(Coin.valueOf(100)), 0, false, ScriptBuilder.createOutputScript(federation.getAddress())));
 
         provider0.save();
 
@@ -601,15 +601,15 @@ public class BridgeSupportTest {
         Assert.assertEquals(0, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(1, provider.getReleaseTransactionSet().getEntries().size());
         Assert.assertEquals(0, provider.getRskTxsWaitingForSignatures().size());
-        Assert.assertEquals(LIMIT_MONETARY_BASE.subtract(co.usc.core.Coin.fromBitcoin(Coin.valueOf(2600))), repository.getBalance(PrecompiledContracts.BRIDGE_ADDR));
-        Assert.assertEquals(co.usc.core.Coin.fromBitcoin(Coin.valueOf(2600)), repository.getBalance(config.getBlockchainConfig().getCommonConstants().getBurnAddress()));
+        Assert.assertEquals(LIMIT_MONETARY_BASE.subtract(co.usc.core.Coin.fromUlord(Coin.valueOf(2600))), repository.getBalance(PrecompiledContracts.BRIDGE_ADDR));
+        Assert.assertEquals(co.usc.core.Coin.fromUlord(Coin.valueOf(2600)), repository.getBalance(config.getBlockchainConfig().getCommonConstants().getBurnAddress()));
         // Check the wallet has been emptied
-        Assert.assertTrue(provider.getNewFederationBtcUTXOs().isEmpty());
+        Assert.assertTrue(provider.getNewFederationUldUTXOs().isEmpty());
     }
 
     @Test
     public void callUpdateCollectionsWithTransactionsWaitingForConfirmationWithEnoughConfirmations() throws IOException, BlockStoreException {
-        // Bridge constants and btc context
+        // Bridge constants and uld context
         BridgeConstants bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         Context context = new Context(bridgeConstants.getUldParams());
 
@@ -681,9 +681,9 @@ public class BridgeSupportTest {
         Repository track = repository.startTracking();
 
         BridgeConstants bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
-        Context btcContext = new Context(bridgeConstants.getUldParams());
+        Context uldContext = new Context(bridgeConstants.getUldParams());
         UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
-        UldBlockChain UldBlockChain = new UldBlockChain(btcContext, UldBlockStore);
+        UldBlockChain UldBlockChain = new UldBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
@@ -707,9 +707,9 @@ public class BridgeSupportTest {
         Repository track = repository.startTracking();
 
         BridgeConstants bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
-        Context btcContext = new Context(bridgeConstants.getUldParams());
+        Context uldContext = new Context(bridgeConstants.getUldParams());
         UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
-        UldBlockChain UldBlockChain = new SimpleBlockChain(btcContext, UldBlockStore);
+        UldBlockChain UldBlockChain = new SimpleBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
@@ -793,20 +793,20 @@ public class BridgeSupportTest {
         Repository track = new RepositoryImpl(config).startTracking();
         BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, bridgeConstants);
 
-        // Build prev btc tx
+        // Build prev uld tx
         UldTransaction prevTx = new UldTransaction(uldParams);
         TransactionOutput prevOut = new TransactionOutput(uldParams, prevTx, Coin.FIFTY_COINS, federation.getAddress());
         prevTx.addOutput(prevOut);
 
-        // Build btc tx to be signed
-        UldTransaction btcTx = new UldTransaction(uldParams);
-        btcTx.addInput(prevOut).setScriptSig(PegTestUtils.createBaseInputScriptThatSpendsFromTheFederation(federation));
-        TransactionOutput output = new TransactionOutput(uldParams, btcTx, Coin.COIN, new UldECKey().toAddress(uldParams));
-        btcTx.addOutput(output);
+        // Build uld tx to be signed
+        UldTransaction uldTx = new UldTransaction(uldParams);
+        uldTx.addInput(prevOut).setScriptSig(PegTestUtils.createBaseInputScriptThatSpendsFromTheFederation(federation));
+        TransactionOutput output = new TransactionOutput(uldParams, uldTx, Coin.COIN, new UldECKey().toAddress(uldParams));
+        uldTx.addOutput(output);
 
-        // Save btc tx to be signed
+        // Save uld tx to be signed
         final Keccak256 rskTxHash = PegTestUtils.createHash3();
-        provider.getRskTxsWaitingForSignatures().put(rskTxHash, btcTx);
+        provider.getRskTxsWaitingForSignatures().put(rskTxHash, uldTx);
         provider.save();
         track.commit();
 
@@ -815,12 +815,12 @@ public class BridgeSupportTest {
         BridgeEventLogger eventLogger = new BridgeEventLoggerImpl(bridgeConstants, eventLogs);
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, eventLogger, contractAddress, null);
 
-        // Create signed hash of Btc tx
-        Script inputScript = btcTx.getInputs().get(0).getScriptSig();
+        // Create signed hash of Uld tx
+        Script inputScript = uldTx.getInputs().get(0).getScriptSig();
         List<ScriptChunk> chunks = inputScript.getChunks();
         byte[] program = chunks.get(chunks.size() - 1).data;
         Script redeemScript = new Script(program);
-        Sha256Hash sigHash = btcTx.hashForSignature(0, redeemScript, UldTransaction.SigHash.ALL, false);
+        Sha256Hash sigHash = uldTx.hashForSignature(0, redeemScript, UldTransaction.SigHash.ALL, false);
         UldECKey privateKeyToSignWith = ((BridgeRegTestConstants)bridgeConstants).getFederatorPrivateKeys().get(0);
 
         UldECKey.ECDSASignature sig = privateKeyToSignWith.sign(sigHash);
@@ -845,7 +845,7 @@ public class BridgeSupportTest {
         Assert.assertEquals(1 , rlpData.size());
         RLPList dataList = (RLPList)rlpData.get(0);
         Assert.assertEquals(3, dataList.size());
-        Assert.assertArrayEquals(btcTx.getHashAsString().getBytes(), dataList.get(0).getRLPData());
+        Assert.assertArrayEquals(uldTx.getHashAsString().getBytes(), dataList.get(0).getRLPData());
         Assert.assertArrayEquals(federatorPubKey.getPubKeyHash(), dataList.get(1).getRLPData());
         Assert.assertArrayEquals(rskTxHash.getBytes(), dataList.get(2).getRLPData());
     }
@@ -963,7 +963,7 @@ public class BridgeSupportTest {
         Assert.assertThat(logs, hasSize(5));
         LogInfo releaseTxEvent = logs.get(4);
         Assert.assertThat(releaseTxEvent.getTopics(), hasSize(1));
-        Assert.assertThat(releaseTxEvent.getTopics(), hasItem(Bridge.RELEASE_BTC_TOPIC));
+        Assert.assertThat(releaseTxEvent.getTopics(), hasItem(Bridge.RELEASE_ULD_TOPIC));
         UldTransaction releaseTx = new UldTransaction(bridgeConstants.getUldParams(), ((RLPList)RLP.decode2(releaseTxEvent.getData()).get(0)).get(1).getRLPData());
         // Verify all inputs fully signed
         for (int i = 0; i < releaseTx.getInputs().size(); i++) {
@@ -1055,7 +1055,7 @@ public class BridgeSupportTest {
             Assert.assertThat(logs, hasSize(3));
             LogInfo releaseTxEvent = logs.get(2);
             Assert.assertThat(releaseTxEvent.getTopics(), hasSize(1));
-            Assert.assertThat(releaseTxEvent.getTopics(), hasItem(Bridge.RELEASE_BTC_TOPIC));
+            Assert.assertThat(releaseTxEvent.getTopics(), hasItem(Bridge.RELEASE_ULD_TOPIC));
             UldTransaction releaseTx = new UldTransaction(bridgeConstants.getUldParams(), ((RLPList)RLP.decode2(releaseTxEvent.getData()).get(0)).get(1).getRLPData());
             Script retrievedScriptSig = releaseTx.getInput(0).getScriptSig();
             Assert.assertEquals(4, retrievedScriptSig.getChunks().size());
@@ -1083,7 +1083,7 @@ public class BridgeSupportTest {
     }
 
     @Test
-    public void releaseBtcWithDustOutput() throws BlockStoreException, AddressFormatException, IOException {
+    public void releaseUldWithDustOutput() throws BlockStoreException, AddressFormatException, IOException {
         Repository repository = new RepositoryImpl(config);
         Repository track = repository.startTracking();
 
@@ -1094,7 +1094,7 @@ public class BridgeSupportTest {
         BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
-        bridgeSupport.releaseBtc(tx);
+        bridgeSupport.releaseUld(tx);
         bridgeSupport.save();
 
         track.commit();
@@ -1107,7 +1107,7 @@ public class BridgeSupportTest {
     }
 
     @Test
-    public void releaseBtc() throws BlockStoreException, AddressFormatException, IOException {
+    public void releaseUld() throws BlockStoreException, AddressFormatException, IOException {
         Repository repository = new RepositoryImpl(config);
         Repository track = repository.startTracking();
 
@@ -1118,7 +1118,7 @@ public class BridgeSupportTest {
         BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
-        bridgeSupport.releaseBtc(tx);
+        bridgeSupport.releaseUld(tx);
         bridgeSupport.save();
 
         track.commit();
@@ -1131,7 +1131,7 @@ public class BridgeSupportTest {
     }
 
     @Test
-    public void releaseBtcFromContract() throws BlockStoreException, AddressFormatException, IOException {
+    public void releaseUldFromContract() throws BlockStoreException, AddressFormatException, IOException {
         Repository repository = new RepositoryImpl(config);
         Repository track = repository.startTracking();
 
@@ -1143,7 +1143,7 @@ public class BridgeSupportTest {
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
         try {
-            bridgeSupport.releaseBtc(tx);
+            bridgeSupport.releaseUld(tx);
         } catch (Program.OutOfGasException e) {
             return;
         }
@@ -1158,7 +1158,7 @@ public class BridgeSupportTest {
         UldTransaction tx = createTransaction();
         BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        provider.getBtcTxHashesAlreadyProcessed().put(tx.getHash(), 1L);
+        provider.getUldTxHashesAlreadyProcessed().put(tx.getHash(), 1L);
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
@@ -1169,11 +1169,11 @@ public class BridgeSupportTest {
 
         BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        Assert.assertTrue(provider2.getNewFederationBtcUTXOs().isEmpty());
+        Assert.assertTrue(provider2.getNewFederationUldUTXOs().isEmpty());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
         Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
-        Assert.assertFalse(provider2.getBtcTxHashesAlreadyProcessed().isEmpty());
+        Assert.assertFalse(provider2.getUldTxHashesAlreadyProcessed().isEmpty());
     }
 
     @Test
@@ -1200,11 +1200,11 @@ public class BridgeSupportTest {
 
         BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        Assert.assertTrue(provider2.getNewFederationBtcUTXOs().isEmpty());
+        Assert.assertTrue(provider2.getNewFederationUldUTXOs().isEmpty());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
         Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
-        Assert.assertTrue(provider2.getBtcTxHashesAlreadyProcessed().isEmpty());
+        Assert.assertTrue(provider2.getUldTxHashesAlreadyProcessed().isEmpty());
     }
 
     @Test
@@ -1231,11 +1231,11 @@ public class BridgeSupportTest {
 
         BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        Assert.assertTrue(provider2.getNewFederationBtcUTXOs().isEmpty());
+        Assert.assertTrue(provider2.getNewFederationUldUTXOs().isEmpty());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
         Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
-        Assert.assertTrue(provider2.getBtcTxHashesAlreadyProcessed().isEmpty());
+        Assert.assertTrue(provider2.getUldTxHashesAlreadyProcessed().isEmpty());
     }
 
     @Test
@@ -1264,11 +1264,11 @@ public class BridgeSupportTest {
 
         BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        Assert.assertTrue(provider2.getNewFederationBtcUTXOs().isEmpty());
+        Assert.assertTrue(provider2.getNewFederationUldUTXOs().isEmpty());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
         Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
-        Assert.assertTrue(provider2.getBtcTxHashesAlreadyProcessed().isEmpty());
+        Assert.assertTrue(provider2.getUldTxHashesAlreadyProcessed().isEmpty());
     }
 
     @Test
@@ -1284,9 +1284,9 @@ public class BridgeSupportTest {
         tx.addInput(PegTestUtils.createHash(), 0, ScriptBuilder.createInputScript(null, new UldECKey()));
 
 
-        Context btcContext = new Context(bridgeConstants.getUldParams());
+        Context uldContext = new Context(bridgeConstants.getUldParams());
         UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
-        UldBlockChain UldBlockChain = new SimpleBlockChain(btcContext, UldBlockStore);
+        UldBlockChain UldBlockChain = new SimpleBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
@@ -1312,12 +1312,12 @@ public class BridgeSupportTest {
 
         BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        Assert.assertEquals(0, provider2.getNewFederationBtcUTXOs().size());
+        Assert.assertEquals(0, provider2.getNewFederationUldUTXOs().size());
 
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
         Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
-        Assert.assertTrue(provider2.getBtcTxHashesAlreadyProcessed().isEmpty());
+        Assert.assertTrue(provider2.getUldTxHashesAlreadyProcessed().isEmpty());
     }
 
     @Test
@@ -1362,9 +1362,9 @@ public class BridgeSupportTest {
         // Set scipt sign to tx input
         tx.getInput(0).setScriptSig(scriptSig);
 
-        Context btcContext = new Context(bridgeConstants.getUldParams());
+        Context uldContext = new Context(bridgeConstants.getUldParams());
         UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
-        UldBlockChain UldBlockChain = new SimpleBlockChain(btcContext, UldBlockStore);
+        UldBlockChain UldBlockChain = new SimpleBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
@@ -1394,13 +1394,13 @@ public class BridgeSupportTest {
 
         BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        Assert.assertEquals(1, provider2.getNewFederationBtcUTXOs().size());
-        Assert.assertEquals(Coin.COIN, provider2.getNewFederationBtcUTXOs().get(0).getValue());
+        Assert.assertEquals(1, provider2.getNewFederationUldUTXOs().size());
+        Assert.assertEquals(Coin.COIN, provider2.getNewFederationUldUTXOs().get(0).getValue());
 
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
         Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
-        Assert.assertEquals(1, provider2.getBtcTxHashesAlreadyProcessed().size());
+        Assert.assertEquals(1, provider2.getUldTxHashesAlreadyProcessed().size());
     }
 
     @Test
@@ -1456,9 +1456,9 @@ public class BridgeSupportTest {
         tx.getInput(0).setScriptSig(scriptSig);
 
 
-        Context btcContext = new Context(bridgeConstants.getUldParams());
+        Context uldContext = new Context(bridgeConstants.getUldParams());
         UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
-        UldBlockChain UldBlockChain = new SimpleBlockChain(btcContext, UldBlockStore);
+        UldBlockChain UldBlockChain = new SimpleBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
         provider.setNewFederation(activeFederation);
@@ -1485,10 +1485,10 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        List<UTXO> activeFederationBtcUTXOs = provider.getNewFederationBtcUTXOs();
-        List<Coin> activeFederationBtcCoins = activeFederationBtcUTXOs.stream().map(UTXO::getValue).collect(Collectors.toList());
-        assertThat(activeFederationBtcUTXOs, hasSize(1));
-        assertThat(activeFederationBtcCoins, hasItem(Coin.COIN));
+        List<UTXO> activeFederationUldUTXOs = provider.getNewFederationUldUTXOs();
+        List<Coin> activeFederationUldCoins = activeFederationUldUTXOs.stream().map(UTXO::getValue).collect(Collectors.toList());
+        assertThat(activeFederationUldUTXOs, hasSize(1));
+        assertThat(activeFederationUldCoins, hasItem(Coin.COIN));
     }
 
     @Test
@@ -1538,9 +1538,9 @@ public class BridgeSupportTest {
         UldECKey srcKey3 = new UldECKey();
         tx3.addInput(PegTestUtils.createHash(), 0, ScriptBuilder.createInputScript(null, srcKey3));
 
-        Context btcContext = new Context(bridgeConstants.getUldParams());
+        Context uldContext = new Context(bridgeConstants.getUldParams());
         UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
-        UldBlockChain UldBlockChain = new SimpleBlockChain(btcContext, UldBlockStore);
+        UldBlockChain UldBlockChain = new SimpleBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
         provider.setNewFederation(federation1);
@@ -1584,9 +1584,9 @@ public class BridgeSupportTest {
         Assert.assertThat(whitelist.isWhitelisted(address2), is(false));
         Assert.assertThat(whitelist.isWhitelisted(address3), is(false));
 
-        co.usc.core.Coin amountToHaveBeenCreditedToSrc1 = co.usc.core.Coin.fromBitcoin(Coin.valueOf(5, 0));
-        co.usc.core.Coin amountToHaveBeenCreditedToSrc2 = co.usc.core.Coin.fromBitcoin(Coin.valueOf(10, 0));
-        co.usc.core.Coin amountToHaveBeenCreditedToSrc3 = co.usc.core.Coin.fromBitcoin(Coin.valueOf(5, 0));
+        co.usc.core.Coin amountToHaveBeenCreditedToSrc1 = co.usc.core.Coin.fromUlord(Coin.valueOf(5, 0));
+        co.usc.core.Coin amountToHaveBeenCreditedToSrc2 = co.usc.core.Coin.fromUlord(Coin.valueOf(10, 0));
+        co.usc.core.Coin amountToHaveBeenCreditedToSrc3 = co.usc.core.Coin.fromUlord(Coin.valueOf(5, 0));
         co.usc.core.Coin totalAmountExpectedToHaveBeenLocked = amountToHaveBeenCreditedToSrc1
                 .add(amountToHaveBeenCreditedToSrc2)
                 .add(amountToHaveBeenCreditedToSrc3);
@@ -1601,17 +1601,17 @@ public class BridgeSupportTest {
 
         BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        Assert.assertEquals(2, provider2.getNewFederationBtcUTXOs().size());
-        Assert.assertEquals(2, provider2.getOldFederationBtcUTXOs().size());
-        Assert.assertEquals(Coin.COIN.multiply(5), provider2.getNewFederationBtcUTXOs().get(0).getValue());
-        Assert.assertEquals(Coin.COIN.multiply(2), provider2.getNewFederationBtcUTXOs().get(1).getValue());
-        Assert.assertEquals(Coin.COIN.multiply(10), provider2.getOldFederationBtcUTXOs().get(0).getValue());
-        Assert.assertEquals(Coin.COIN.multiply(3), provider2.getOldFederationBtcUTXOs().get(1).getValue());
+        Assert.assertEquals(2, provider2.getNewFederationUldUTXOs().size());
+        Assert.assertEquals(2, provider2.getOldFederationUldUTXOs().size());
+        Assert.assertEquals(Coin.COIN.multiply(5), provider2.getNewFederationUldUTXOs().get(0).getValue());
+        Assert.assertEquals(Coin.COIN.multiply(2), provider2.getNewFederationUldUTXOs().get(1).getValue());
+        Assert.assertEquals(Coin.COIN.multiply(10), provider2.getOldFederationUldUTXOs().get(0).getValue());
+        Assert.assertEquals(Coin.COIN.multiply(3), provider2.getOldFederationUldUTXOs().get(1).getValue());
 
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
         Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
-        Assert.assertEquals(3, provider2.getBtcTxHashesAlreadyProcessed().size());
+        Assert.assertEquals(3, provider2.getUldTxHashesAlreadyProcessed().size());
     }
 
     @Test
@@ -1661,9 +1661,9 @@ public class BridgeSupportTest {
         UldECKey srcKey3 = new UldECKey();
         tx3.addInput(PegTestUtils.createHash(), 0, ScriptBuilder.createInputScript(null, srcKey3));
 
-        Context btcContext = new Context(bridgeConstants.getUldParams());
+        Context uldContext = new Context(bridgeConstants.getUldParams());
         UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
-        UldBlockChain UldBlockChain = new SimpleBlockChain(btcContext, UldBlockStore);
+        UldBlockChain UldBlockChain = new SimpleBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
         provider.setNewFederation(federation1);
@@ -1710,8 +1710,8 @@ public class BridgeSupportTest {
 
         BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        Assert.assertEquals(0, provider2.getNewFederationBtcUTXOs().size());
-        Assert.assertEquals(0, provider2.getOldFederationBtcUTXOs().size());
+        Assert.assertEquals(0, provider2.getNewFederationUldUTXOs().size());
+        Assert.assertEquals(0, provider2.getOldFederationUldUTXOs().size());
 
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(3, provider2.getReleaseTransactionSet().getEntries().size());
@@ -1722,7 +1722,7 @@ public class BridgeSupportTest {
                 .sorted(Comparator.comparing(UldTransaction::getOutputSum))
                 .collect(Collectors.toList());
 
-        // First release tx should correspond to the 5 BTC lock tx
+        // First release tx should correspond to the 5 ULD lock tx
         UldTransaction releaseTx = releaseTxs.get(0);
         Assert.assertEquals(1, releaseTx.getOutputs().size());
         Assert.assertThat(Coin.COIN.multiply(5).subtract(releaseTx.getOutput(0).getValue()), is(lessThanOrEqualTo(Coin.MILLICOIN)));
@@ -1731,7 +1731,7 @@ public class BridgeSupportTest {
         Assert.assertEquals(tx1.getHash(), releaseTx.getInput(0).getOutpoint().getHash());
         Assert.assertEquals(0, releaseTx.getInput(0).getOutpoint().getIndex());
 
-        // Second release tx should correspond to the 7 (3+4) BTC lock tx
+        // Second release tx should correspond to the 7 (3+4) ULD lock tx
         releaseTx = releaseTxs.get(1);
         Assert.assertEquals(1, releaseTx.getOutputs().size());
         Assert.assertThat(Coin.COIN.multiply(7).subtract(releaseTx.getOutput(0).getValue()), is(lessThanOrEqualTo(Coin.MILLICOIN)));
@@ -1743,7 +1743,7 @@ public class BridgeSupportTest {
         Assert.assertEquals(0, releaseOutpoints.get(0).getIndex());
         Assert.assertEquals(1, releaseOutpoints.get(1).getIndex());
 
-        // Third release tx should correspond to the 10 BTC lock tx
+        // Third release tx should correspond to the 10 ULD lock tx
         releaseTx = releaseTxs.get(2);
         Assert.assertEquals(1, releaseTx.getOutputs().size());
         Assert.assertThat(Coin.COIN.multiply(10).subtract(releaseTx.getOutput(0).getValue()), is(lessThanOrEqualTo(Coin.MILLICOIN)));
@@ -1753,27 +1753,27 @@ public class BridgeSupportTest {
         Assert.assertEquals(0, releaseTx.getInput(0).getOutpoint().getIndex());
 
         Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
-        Assert.assertEquals(3, provider2.getBtcTxHashesAlreadyProcessed().size());
+        Assert.assertEquals(3, provider2.getUldTxHashesAlreadyProcessed().size());
     }
 
     @Test
-    public void isBtcTxHashAlreadyProcessed() throws IOException, BlockStoreException {
+    public void isUldTxHashAlreadyProcessed() throws IOException, BlockStoreException {
         BridgeSupport bridgeSupport = new BridgeSupport(config, null, null, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), getBridgeStorageProviderMockWithProcessedHashes(), null, null);
 
         for (int i = 0; i < 10; i++) {
-            Assert.assertTrue(bridgeSupport.isBtcTxHashAlreadyProcessed(Sha256Hash.of(("hash_" + i).getBytes())));
+            Assert.assertTrue(bridgeSupport.isUldTxHashAlreadyProcessed(Sha256Hash.of(("hash_" + i).getBytes())));
         }
-        Assert.assertFalse(bridgeSupport.isBtcTxHashAlreadyProcessed(Sha256Hash.of("anything".getBytes())));
+        Assert.assertFalse(bridgeSupport.isUldTxHashAlreadyProcessed(Sha256Hash.of("anything".getBytes())));
     }
 
     @Test
-    public void getBtcTxHashProcessedHeight() throws IOException, BlockStoreException {
+    public void getUldTxHashProcessedHeight() throws IOException, BlockStoreException {
         BridgeSupport bridgeSupport = new BridgeSupport(config, null, null, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), getBridgeStorageProviderMockWithProcessedHashes(), null, null);
 
         for (int i = 0; i < 10; i++) {
-            Assert.assertEquals((long) i, bridgeSupport.getBtcTxHashProcessedHeight(Sha256Hash.of(("hash_" + i).getBytes())).longValue());
+            Assert.assertEquals((long) i, bridgeSupport.getUldTxHashProcessedHeight(Sha256Hash.of(("hash_" + i).getBytes())).longValue());
         }
-        Assert.assertEquals(-1L, bridgeSupport.getBtcTxHashProcessedHeight(Sha256Hash.of("anything".getBytes())).longValue());
+        Assert.assertEquals(-1L, bridgeSupport.getUldTxHashProcessedHeight(Sha256Hash.of("anything".getBytes())).longValue());
     }
 
     @Test
@@ -2177,7 +2177,7 @@ public class BridgeSupportTest {
                 mocksProvider.getElection(),
                 mockedBlock
         );
-        ((BridgeStorageProvider) Whitebox.getInternalState(bridgeSupport, "provider")).getOldFederationBtcUTXOs().add(mock(UTXO.class));
+        ((BridgeStorageProvider) Whitebox.getInternalState(bridgeSupport, "provider")).getOldFederationUldUTXOs().add(mock(UTXO.class));
 
         Assert.assertNull(bridgeSupport.getPendingFederationHash());
         Assert.assertEquals(-2, mocksProvider.execute(bridgeSupport));
@@ -2218,7 +2218,7 @@ public class BridgeSupportTest {
                 mocksProvider.getElection(),
                 mockedBlock
         );
-        ((BridgeStorageProvider) Whitebox.getInternalState(bridgeSupport, "provider")).getOldFederationBtcUTXOs().add(mock(UTXO.class));
+        ((BridgeStorageProvider) Whitebox.getInternalState(bridgeSupport, "provider")).getOldFederationUldUTXOs().add(mock(UTXO.class));
 
         Assert.assertNull(bridgeSupport.getPendingFederationHash());
         Assert.assertEquals(-3, mocksProvider.execute(bridgeSupport));
@@ -2475,7 +2475,7 @@ public class BridgeSupportTest {
             UTXO utxoMock = mock(UTXO.class);
             when(utxoMock.getIndex()).thenReturn((long)i);
             when(utxoMock.getValue()).thenReturn(Coin.valueOf((i+1)*1000));
-            provider.getNewFederationBtcUTXOs().add(utxoMock);
+            provider.getNewFederationUldUTXOs().add(utxoMock);
         }
 
         // Currently active federation
@@ -2502,11 +2502,11 @@ public class BridgeSupportTest {
         Assert.assertEquals(expectedFederation, activeFederation);
         Assert.assertEquals(retiringFederation, oldActiveFederation);
 
-        Assert.assertEquals(0, provider.getNewFederationBtcUTXOs().size());
-        Assert.assertEquals(5, provider.getOldFederationBtcUTXOs().size());
+        Assert.assertEquals(0, provider.getNewFederationUldUTXOs().size());
+        Assert.assertEquals(5, provider.getOldFederationUldUTXOs().size());
         for (int i = 0; i < 5; i++) {
-            Assert.assertEquals((long) i, provider.getOldFederationBtcUTXOs().get(i).getIndex());
-            Assert.assertEquals(Coin.valueOf((i+1)*1000), provider.getOldFederationBtcUTXOs().get(i).getValue());
+            Assert.assertEquals((long) i, provider.getOldFederationUldUTXOs().get(i).getIndex());
+            Assert.assertEquals(Coin.valueOf((i+1)*1000), provider.getOldFederationUldUTXOs().get(i).getValue());
         }
         verify(mocksProvider.getElection(), times(1)).clearWinners();
         verify(mocksProvider.getElection(), times(1)).clear();
@@ -2611,9 +2611,9 @@ public class BridgeSupportTest {
                 null
         );
         Context expectedContext = mock(Context.class);
-        Whitebox.setInternalState(bridgeSupport, "btcContext", expectedContext);
+        Whitebox.setInternalState(bridgeSupport, "uldContext", expectedContext);
         BridgeStorageProvider provider = (BridgeStorageProvider) Whitebox.getInternalState(bridgeSupport, "provider");
-        Object expectedUtxos = provider.getNewFederationBtcUTXOs();
+        Object expectedUtxos = provider.getNewFederationUldUTXOs();
 
         final Wallet expectedWallet = mock(Wallet.class);
         PowerMockito.mockStatic(BridgeUtils.class);
@@ -2654,9 +2654,9 @@ public class BridgeSupportTest {
                 mockedBlock
         );
         Context expectedContext = mock(Context.class);
-        Whitebox.setInternalState(bridgeSupport, "btcContext", expectedContext);
+        Whitebox.setInternalState(bridgeSupport, "uldContext", expectedContext);
         BridgeStorageProvider provider = (BridgeStorageProvider) Whitebox.getInternalState(bridgeSupport, "provider");
-        Object expectedUtxos = provider.getOldFederationBtcUTXOs();
+        Object expectedUtxos = provider.getOldFederationUldUTXOs();
 
         final Wallet expectedWallet = mock(Wallet.class);
         PowerMockito.mockStatic(BridgeUtils.class);
@@ -2933,7 +2933,7 @@ public class BridgeSupportTest {
     private BridgeStorageProvider getBridgeStorageProviderMockWithProcessedHashes() throws IOException {
         Map<Sha256Hash, Long> mockedHashes = new HashMap<>();
         BridgeStorageProvider providerMock = mock(BridgeStorageProvider.class);
-        when(providerMock.getBtcTxHashesAlreadyProcessed()).thenReturn(mockedHashes);
+        when(providerMock.getUldTxHashesAlreadyProcessed()).thenReturn(mockedHashes);
 
         for (int i = 0; i < 10; i++) {
             mockedHashes.put(Sha256Hash.of(("hash_" + i).getBytes()), (long) i);
@@ -2997,8 +2997,8 @@ public class BridgeSupportTest {
 
         BridgeStorageProvider providerMock = mock(BridgeStorageProvider.class);
 
-        when(providerMock.getOldFederationBtcUTXOs()).then((InvocationOnMock m) -> holder.retiringUTXOs);
-        when(providerMock.getNewFederationBtcUTXOs()).then((InvocationOnMock m) -> holder.activeUTXOs);
+        when(providerMock.getOldFederationUldUTXOs()).then((InvocationOnMock m) -> holder.retiringUTXOs);
+        when(providerMock.getNewFederationUldUTXOs()).then((InvocationOnMock m) -> holder.activeUTXOs);
 
         holder.setActiveFederation(genesis ? null : mockedNewFederation);
         holder.setRetiringFederation(mockedOldFederation);
@@ -3063,10 +3063,10 @@ public class BridgeSupportTest {
     }
     
     private UldTransaction createTransaction() {
-        UldTransaction btcTx = new UldTransaction(uldParams);
-        btcTx.addInput(new TransactionInput(uldParams, btcTx, new byte[0]));
-        btcTx.addOutput(new TransactionOutput(uldParams, btcTx, Coin.COIN, new UldECKey().toAddress(uldParams)));
-        return btcTx;
+        UldTransaction uldTx = new UldTransaction(uldParams);
+        uldTx.addInput(new TransactionInput(uldParams, uldTx, new byte[0]));
+        uldTx.addOutput(new TransactionOutput(uldParams, uldTx, Coin.COIN, new UldECKey().toAddress(uldParams)));
+        return uldTx;
         //new SimpleUldTransaction(uldParams, PegTestUtils.createHash());
     }
 

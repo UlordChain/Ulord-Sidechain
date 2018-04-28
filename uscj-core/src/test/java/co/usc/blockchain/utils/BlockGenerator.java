@@ -89,14 +89,14 @@ public class BlockGenerator {
 
         long   gasLimit         = initialGasLimit;
 
-        byte[] bitcoinMergedMiningHeader = null;
-        byte[] bitcoinMergedMiningMerkleProof = null;
-        byte[] bitcoinMergedMiningCoinbaseTransaction = null;
+        byte[] ulordMergedMiningHeader = null;
+        byte[] ulordMergedMiningMerkleProof = null;
+        byte[] ulordMergedMiningCoinbaseTransaction = null;
 
         Genesis genesis = new Genesis(parentHash, EMPTY_LIST_HASH, coinbase, getZeroHash(),
                 difficulty, 0, gasLimit, 0, timestamp, extraData,
-                mixHash, nonce, bitcoinMergedMiningHeader, bitcoinMergedMiningMerkleProof,
-                bitcoinMergedMiningCoinbaseTransaction, BigInteger.valueOf(100L).toByteArray());
+                mixHash, nonce, ulordMergedMiningHeader, ulordMergedMiningMerkleProof,
+                ulordMergedMiningCoinbaseTransaction, BigInteger.valueOf(100L).toByteArray());
 
         if (preMineMap != null) {
             Map<UscAddress, InitialAddressState> preMineMap2 = generatePreMine(preMineMap);

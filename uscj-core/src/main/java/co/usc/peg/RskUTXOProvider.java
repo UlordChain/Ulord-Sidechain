@@ -23,7 +23,7 @@ import co.usc.ulordj.core.*;
 import java.util.List;
 
 /**
- * Support class for the bridge btc wallet
+ * Support class for the bridge uld wallet
  * @author Oscar Guindzberg
  */
 public class RskUTXOProvider implements UTXOProvider {

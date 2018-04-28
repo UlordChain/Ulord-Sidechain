@@ -26,10 +26,6 @@ import co.usc.config.TestSystemProperties;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageProvider;
 import co.usc.peg.RepositoryBlockStore;
-import co.usc.config.TestSystemProperties;
-import co.usc.peg.Bridge;
-import co.usc.peg.BridgeStorageProvider;
-import co.usc.peg.RepositoryBlockStore;
 import org.ethereum.core.Repository;
 import org.ethereum.vm.PrecompiledContracts;
 import org.junit.Ignore;
@@ -41,7 +37,7 @@ import java.io.IOException;
 public class UldBlockchainTest extends BridgePerformanceTestCase {
     @Test
     public void getUldBlockChainBestChainHeight() throws IOException {
-        ABIEncoder abiEncoder = (int executionIndex) -> Bridge.GET_BTC_BLOCKCHAIN_BEST_CHAIN_HEIGHT.encode();
+        ABIEncoder abiEncoder = (int executionIndex) -> Bridge.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT.encode();
         ExecutionStats stats = new ExecutionStats("getUldBlockChainBestChainHeight");
         executeAndAverage("getUldBlockChainBestChainHeight", 200, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
         BridgePerformanceTest.addStats(stats);
@@ -49,7 +45,7 @@ public class UldBlockchainTest extends BridgePerformanceTestCase {
 
     @Test
     public void getUldBlockChainBlockLocator() throws IOException {
-        ABIEncoder abiEncoder = (int executionIndex) -> Bridge.GET_BTC_BLOCKCHAIN_BLOCK_LOCATOR.encode();
+        ABIEncoder abiEncoder = (int executionIndex) -> Bridge.GET_ULD_BLOCKCHAIN_BLOCK_LOCATOR.encode();
         ExecutionStats stats = new ExecutionStats("getUldBlockChainBlockLocator");
         executeAndAverage("getUldBlockChainBlockLocator", 200, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
         BridgePerformanceTest.addStats(stats);

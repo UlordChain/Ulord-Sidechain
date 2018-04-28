@@ -27,7 +27,7 @@ import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.db.RepositoryImpl;
-import co.usc.peg.bitcoin.SimpleUldTransaction;
+import co.usc.peg.ulord.SimpleUldTransaction;
 import co.usc.test.World;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.blockchain.RegTestConfig;
@@ -227,7 +227,7 @@ public class BridgeTest {
         bridge.init(null, null, track, null, null, null);
 
 
-        byte[] data = Bridge.REGISTER_BTC_TRANSACTION.encode(new byte[3], 1, new byte[30]);
+        byte[] data = Bridge.REGISTER_ULD_TRANSACTION.encode(new byte[3], 1, new byte[30]);
 
         Assert.assertNull(bridge.execute(data));
     }
@@ -240,12 +240,12 @@ public class BridgeTest {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
         bridge.init(null, null, track, null, null, null);
 
-        NetworkParameters btcParams = RegTestParams.get();
-        UldTransaction tx = new UldTransaction(btcParams);
-        tx.addOutput(Coin.COIN, new UldECKey().toAddress(btcParams));
+        NetworkParameters uldParams = RegTestParams.get();
+        UldTransaction tx = new UldTransaction(uldParams);
+        tx.addOutput(Coin.COIN, new UldECKey().toAddress(uldParams));
         tx.addInput(PegTestUtils.createHash(), 0, ScriptBuilder.createInputScript(null, new UldECKey()));
 
-        byte[] data = Bridge.REGISTER_BTC_TRANSACTION.encode(tx.ulordSerialize(), 1, new byte[3]);
+        byte[] data = Bridge.REGISTER_ULD_TRANSACTION.encode(tx.ulordSerialize(), 1, new byte[3]);
 
         Assert.assertNull(bridge.execute(data));
     }
@@ -258,12 +258,12 @@ public class BridgeTest {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
         bridge.init(null, null, track, null, null, null);
 
-        NetworkParameters btcParams = RegTestParams.get();
-        UldTransaction tx = new UldTransaction(btcParams);
-        tx.addOutput(Coin.COIN, new UldECKey().toAddress(btcParams));
+        NetworkParameters uldParams = RegTestParams.get();
+        UldTransaction tx = new UldTransaction(uldParams);
+        tx.addOutput(Coin.COIN, new UldECKey().toAddress(uldParams));
         tx.addInput(PegTestUtils.createHash(), 0, ScriptBuilder.createInputScript(null, new UldECKey()));
 
-        byte[] data = Bridge.REGISTER_BTC_TRANSACTION.encode(tx.ulordSerialize(), 1, new byte[30]);
+        byte[] data = Bridge.REGISTER_ULD_TRANSACTION.encode(tx.ulordSerialize(), 1, new byte[30]);
 
         Assert.assertNull(bridge.execute(data));
     }
@@ -373,28 +373,28 @@ public class BridgeTest {
     }
 
     @Test
-    public void exceptionInReleaseBtc() {
+    public void exceptionInReleaseUld() {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
 
         try {
-            bridge.releaseBtc(null);
+            bridge.releaseUld(null);
             Assert.fail();
         }
         catch (RuntimeException ex) {
-            Assert.assertEquals("Exception in releaseBtc", ex.getMessage());
+            Assert.assertEquals("Exception in releaseUld", ex.getMessage());
         }
     }
 
     @Test
-    public void exceptionInGetStateForBtcReleaseClient() {
+    public void exceptionInGetStateForUldReleaseClient() {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
 
         try {
-            bridge. getStateForBtcReleaseClient(null);
+            bridge.getStateForUldReleaseClient(null);
             Assert.fail();
         }
         catch (RuntimeException ex) {
-            Assert.assertEquals("Exception in getStateForBtcReleaseClient", ex.getMessage());
+            Assert.assertEquals("Exception in getStateForUldReleaseClient", ex.getMessage());
         }
     }
 
@@ -481,12 +481,12 @@ public class BridgeTest {
 
     @Test
     public void getGasForDataRegisterUldTransaction() {
-        getGasForDataPaidTx(22000 + 228*2, Bridge.REGISTER_BTC_TRANSACTION, new byte[3], 1, new byte[3]);
+        getGasForDataPaidTx(22000 + 228*2, Bridge.REGISTER_ULD_TRANSACTION, new byte[3], 1, new byte[3]);
     }
 
     @Test
-    public void getGasForDataReleaseBtc() {
-        getGasForDataPaidTx(23000 + 8, Bridge.RELEASE_BTC);
+    public void getGasForDataReleaseUld() {
+        getGasForDataPaidTx(23000 + 8, Bridge.RELEASE_ULD);
     }
 
     @Test
@@ -495,7 +495,7 @@ public class BridgeTest {
     }
     @Test
     public void getGasForDataGSFBRC() {
-        getGasForDataPaidTx(4000 + 8, Bridge.GET_STATE_FOR_BTC_RELEASE_CLIENT);
+        getGasForDataPaidTx(4000 + 8, Bridge.GET_STATE_FOR_ULD_RELEASE_CLIENT);
     }
 
     @Test
@@ -505,12 +505,12 @@ public class BridgeTest {
 
     @Test
     public void getGasForDataGBBBCH() {
-        getGasForDataPaidTx(19000 + 8, Bridge.GET_BTC_BLOCKCHAIN_BEST_CHAIN_HEIGHT);
+        getGasForDataPaidTx(19000 + 8, Bridge.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT);
     }
 
     @Test
     public void getGasForDataGBBBL() {
-        getGasForDataPaidTx(76000 + 8, Bridge.GET_BTC_BLOCKCHAIN_BLOCK_LOCATOR);
+        getGasForDataPaidTx(76000 + 8, Bridge.GET_ULD_BLOCKCHAIN_BLOCK_LOCATOR);
     }
 
     @Test
@@ -562,13 +562,13 @@ public class BridgeTest {
     }
 
     @Test
-    public void isBtcTxHashAlreadyProcessed_normalFlow() throws IOException {
+    public void isUldTxHashAlreadyProcessed_normalFlow() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
         bridge.init(null, null, null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         Set<Sha256Hash> hashes = new HashSet<>();
-        when(bridgeSupportMock.isBtcTxHashAlreadyProcessed(any(Sha256Hash.class))).then((InvocationOnMock invocation) -> hashes.contains(invocation.getArgumentAt(0, Sha256Hash.class)));
+        when(bridgeSupportMock.isUldTxHashAlreadyProcessed(any(Sha256Hash.class))).then((InvocationOnMock invocation) -> hashes.contains(invocation.getArgumentAt(0, Sha256Hash.class)));
 
         hashes.add(Sha256Hash.of("hash_1".getBytes()));
         hashes.add(Sha256Hash.of("hash_2".getBytes()));
@@ -576,15 +576,15 @@ public class BridgeTest {
         hashes.add(Sha256Hash.of("hash_4".getBytes()));
 
         for (Sha256Hash hash : hashes) {
-            Assert.assertTrue(bridge.isBtcTxHashAlreadyProcessed(new Object[]{hash.toString()}));
-            verify(bridgeSupportMock).isBtcTxHashAlreadyProcessed(hash);
+            Assert.assertTrue(bridge.isUldTxHashAlreadyProcessed(new Object[]{hash.toString()}));
+            verify(bridgeSupportMock).isUldTxHashAlreadyProcessed(hash);
         }
-        Assert.assertFalse(bridge.isBtcTxHashAlreadyProcessed(new Object[]{Sha256Hash.of("anything".getBytes()).toString()}));
-        Assert.assertFalse(bridge.isBtcTxHashAlreadyProcessed(new Object[]{Sha256Hash.of("yetanotheranything".getBytes()).toString()}));
+        Assert.assertFalse(bridge.isUldTxHashAlreadyProcessed(new Object[]{Sha256Hash.of("anything".getBytes()).toString()}));
+        Assert.assertFalse(bridge.isUldTxHashAlreadyProcessed(new Object[]{Sha256Hash.of("yetanotheranything".getBytes()).toString()}));
     }
 
     @Test
-    public void isBtcTxHashAlreadyProcessed_exception() throws IOException {
+    public void isUldTxHashAlreadyProcessed_exception() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
         bridge.init(null, null, null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
@@ -592,22 +592,22 @@ public class BridgeTest {
 
         boolean thrown = false;
         try {
-            bridge.isBtcTxHashAlreadyProcessed(new Object[]{"notahash"});
+            bridge.isUldTxHashAlreadyProcessed(new Object[]{"notahash"});
         } catch (RuntimeException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown);
-        verify(bridgeSupportMock, never()).isBtcTxHashAlreadyProcessed(any());
+        verify(bridgeSupportMock, never()).isUldTxHashAlreadyProcessed(any());
     }
 
     @Test
-    public void getBtcTxHashProcessedHeight_normalFlow() throws IOException {
+    public void getUldTxHashProcessedHeight_normalFlow() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
         bridge.init(null, null, null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         Map<Sha256Hash, Long> hashes = new HashMap<>();
-        when(bridgeSupportMock.getBtcTxHashProcessedHeight(any(Sha256Hash.class))).then((InvocationOnMock invocation) -> hashes.get(invocation.getArgumentAt(0, Sha256Hash.class)));
+        when(bridgeSupportMock.getUldTxHashProcessedHeight(any(Sha256Hash.class))).then((InvocationOnMock invocation) -> hashes.get(invocation.getArgumentAt(0, Sha256Hash.class)));
 
         hashes.put(Sha256Hash.of("hash_1".getBytes()), 1L);
         hashes.put(Sha256Hash.of("hash_2".getBytes()), 2L);
@@ -615,14 +615,14 @@ public class BridgeTest {
         hashes.put(Sha256Hash.of("hash_4".getBytes()), 4L);
 
         for (Map.Entry<Sha256Hash, Long> entry : hashes.entrySet()) {
-            Assert.assertEquals(entry.getValue(), bridge.getBtcTxHashProcessedHeight(new Object[]{entry.getKey().toString()}));
-            verify(bridgeSupportMock).getBtcTxHashProcessedHeight(entry.getKey());
+            Assert.assertEquals(entry.getValue(), bridge.getUldTxHashProcessedHeight(new Object[]{entry.getKey().toString()}));
+            verify(bridgeSupportMock).getUldTxHashProcessedHeight(entry.getKey());
         }
-        Assert.assertNull(bridge.getBtcTxHashProcessedHeight(new Object[]{Sha256Hash.of("anything".getBytes()).toString()}));
+        Assert.assertNull(bridge.getUldTxHashProcessedHeight(new Object[]{Sha256Hash.of("anything".getBytes()).toString()}));
     }
 
     @Test
-    public void getBtcTxHashProcessedHeight_exception() throws IOException {
+    public void getUldTxHashProcessedHeight_exception() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
         bridge.init(null, null, null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
@@ -630,12 +630,12 @@ public class BridgeTest {
 
         boolean thrown = false;
         try {
-            bridge.getBtcTxHashProcessedHeight(new Object[]{"notahash"});
+            bridge.getUldTxHashProcessedHeight(new Object[]{"notahash"});
         } catch (RuntimeException e) {
             thrown = true;
         }
         Assert.assertTrue(thrown);
-        verify(bridgeSupportMock, never()).getBtcTxHashProcessedHeight(any());
+        verify(bridgeSupportMock, never()).getUldTxHashProcessedHeight(any());
     }
 
     @Test

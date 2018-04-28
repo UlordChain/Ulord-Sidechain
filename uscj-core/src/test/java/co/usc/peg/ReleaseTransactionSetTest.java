@@ -26,7 +26,6 @@ import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.spongycastle.util.encoders.Hex;
 
-import javax.swing.text.html.Option;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -79,10 +78,10 @@ public class ReleaseTransactionSetTest {
         ReleaseTransactionSet.Entry e4 = new ReleaseTransactionSet.Entry(mockTxSerialize("bb"), 7L);
         ReleaseTransactionSet.Entry e5 = new ReleaseTransactionSet.Entry(mockTxSerialize("99"), 7L);
 
-        Assert.assertTrue(ReleaseTransactionSet.Entry.BTC_TX_COMPARATOR.compare(e1, e2) == 0);
-        Assert.assertTrue(ReleaseTransactionSet.Entry.BTC_TX_COMPARATOR.compare(e1, e3) == 0);
-        Assert.assertTrue(ReleaseTransactionSet.Entry.BTC_TX_COMPARATOR.compare(e1, e4) < 0);
-        Assert.assertTrue(ReleaseTransactionSet.Entry.BTC_TX_COMPARATOR.compare(e1, e5) > 0);
+        Assert.assertTrue(ReleaseTransactionSet.Entry.ULD_TX_COMPARATOR.compare(e1, e2) == 0);
+        Assert.assertTrue(ReleaseTransactionSet.Entry.ULD_TX_COMPARATOR.compare(e1, e3) == 0);
+        Assert.assertTrue(ReleaseTransactionSet.Entry.ULD_TX_COMPARATOR.compare(e1, e4) < 0);
+        Assert.assertTrue(ReleaseTransactionSet.Entry.ULD_TX_COMPARATOR.compare(e1, e5) > 0);
     }
 
     @Test

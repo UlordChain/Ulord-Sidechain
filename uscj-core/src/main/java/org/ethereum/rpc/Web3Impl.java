@@ -626,7 +626,7 @@ public class Web3Impl implements Web3 {
             return null;
         }
 
-        byte[] mergeHeader = b.getBitcoinMergedMiningHeader();
+        byte[] mergeHeader = b.getUlordMergedMiningHeader();
 
         boolean isPending = (mergeHeader == null || mergeHeader.length == 0) && !b.isGenesis();
 

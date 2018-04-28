@@ -21,7 +21,7 @@ package co.usc.metrics;
 import co.usc.core.UscAddress;
 import co.usc.core.BlockDifficulty;
 import co.usc.crypto.Keccak256;
-import co.usc.util.RskCustomCache;
+import co.usc.util.UscCustomCache;
 import org.ethereum.TestUtils;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
@@ -86,7 +86,7 @@ public class HashRateCalculatorTest {
 
         Mockito.when(block.getCumulativeDifficulty()).thenReturn(TEST_DIFFICULTY);
 
-        HashRateCalculator hashRateCalculator = new HashRateCalculatorMining(blockStore, new RskCustomCache<>(1000L), FAKE_COINBASE);
+        HashRateCalculator hashRateCalculator = new HashRateCalculatorMining(blockStore, new UscCustomCache<>(1000L), FAKE_COINBASE);
         BigInteger hashRate = hashRateCalculator.calculateNodeHashRate(Duration.ofHours(1));
 
         Assert.assertEquals(new BigInteger("+2"), hashRate);
@@ -105,7 +105,7 @@ public class HashRateCalculatorTest {
 
         Mockito.when(block.getCumulativeDifficulty()).thenReturn(TEST_DIFFICULTY);
 
-        HashRateCalculator hashRateCalculator = new HashRateCalculatorNonMining(blockStore, new RskCustomCache<>(1000L));
+        HashRateCalculator hashRateCalculator = new HashRateCalculatorNonMining(blockStore, new UscCustomCache<>(1000L));
         BigInteger hashRate = hashRateCalculator.calculateNodeHashRate(Duration.ofHours(1));
 
         Assert.assertEquals(BigInteger.ZERO, hashRate);
@@ -121,7 +121,7 @@ public class HashRateCalculatorTest {
 
         Mockito.when(block.getCumulativeDifficulty()).thenReturn(TEST_DIFFICULTY);
 
-        HashRateCalculator hashRateCalculator = new HashRateCalculatorMining(blockStore, new RskCustomCache<>(1000L), FAKE_COINBASE);
+        HashRateCalculator hashRateCalculator = new HashRateCalculatorMining(blockStore, new UscCustomCache<>(1000L), FAKE_COINBASE);
         BigInteger hashRate = hashRateCalculator.calculateNodeHashRate(Duration.ofHours(1));
 
         Assert.assertEquals(hashRate, BigInteger.ZERO);
@@ -140,7 +140,7 @@ public class HashRateCalculatorTest {
 
         Mockito.when(block.getCumulativeDifficulty()).thenReturn(TEST_DIFFICULTY);
 
-        HashRateCalculator hashRateCalculator = new HashRateCalculatorMining(blockStore, new RskCustomCache<>(1000L), FAKE_COINBASE);
+        HashRateCalculator hashRateCalculator = new HashRateCalculatorMining(blockStore, new UscCustomCache<>(1000L), FAKE_COINBASE);
         BigInteger hashRate = hashRateCalculator.calculateNetHashRate(Duration.ofHours(1));
 
         Assert.assertEquals(hashRate, new BigInteger("+4"));
@@ -156,7 +156,7 @@ public class HashRateCalculatorTest {
 
         Mockito.when(block.getCumulativeDifficulty()).thenReturn(TEST_DIFFICULTY);
 
-        HashRateCalculator hashRateCalculator = new HashRateCalculatorMining(blockStore, new RskCustomCache<>(1000L), FAKE_COINBASE);
+        HashRateCalculator hashRateCalculator = new HashRateCalculatorMining(blockStore, new UscCustomCache<>(1000L), FAKE_COINBASE);
         BigInteger hashRate = hashRateCalculator.calculateNetHashRate(Duration.ofHours(1));
 
         Assert.assertEquals(hashRate, BigInteger.ZERO);

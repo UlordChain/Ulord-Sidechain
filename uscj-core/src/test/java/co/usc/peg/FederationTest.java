@@ -73,7 +73,7 @@ public class FederationTest {
                 UldECKey.fromPrivate(BigInteger.valueOf(600)),
         }).stream().sorted(UldECKey.PUBKEY_COMPARATOR).collect(Collectors.toList());
         rskAddresses = sortedPublicKeys.stream()
-                .map(FederationTest::getRskAddressFromBtcKey)
+                .map(FederationTest::getRskAddressFromUldKey)
                 .collect(Collectors.toList());
     }
 
@@ -308,7 +308,7 @@ public class FederationTest {
         }
 
         UldECKey nonFederateKey = UldECKey.fromPrivate(BigInteger.valueOf(1234));
-        byte[] nonFederateRskAddress = getRskAddressFromBtcKey(nonFederateKey);
+        byte[] nonFederateRskAddress = getRskAddressFromUldKey(nonFederateKey);
         Assert.assertFalse(federation.hasMemberWithRskAddress(nonFederateRskAddress));
     }
 
@@ -317,7 +317,7 @@ public class FederationTest {
         Assert.assertEquals("4 of 6 signatures federation", federation.toString());
     }
 
-    private static byte[] getRskAddressFromBtcKey(UldECKey UldECKey) {
+    private static byte[] getRskAddressFromUldKey(UldECKey UldECKey) {
         return ECKey.fromPublicOnly(UldECKey.getPubKey()).getAddress();
     }
 }

@@ -1,15 +1,15 @@
 {
   "alloc": {
     "0000000000000000000000000000000001000006": {
-      "balance": "21000000000000000000000000"
+      "balance": "100000000000000000000000000"
     }
   },
 
   "nonce": "0xcafecafecafecafe",
   "mixhash": "0x00",
-  "bitcoinMergedMiningHeader": "0x00",
-  "bitcoinMergedMiningMerkleProof": "0x00",
-  "bitcoinMergedMiningCoinbaseTransaction": "0x00",
+  "ulordMergedMiningHeader": "0x00",
+  "ulordMergedMiningMerkleProof": "0x00",
+  "ulordMergedMiningCoinbaseTransaction": "0x00",
   "timestamp": "0x00",
   "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
   "extraData": "0x434d272841",

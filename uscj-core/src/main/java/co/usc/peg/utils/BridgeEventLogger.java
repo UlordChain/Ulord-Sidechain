@@ -36,9 +36,9 @@ public interface BridgeEventLogger {
 
     void logUpdateCollections(Transaction rskTx);
 
-    void logAddSignature(UldECKey federatorPublicKey, UldTransaction btcTx, byte[] rskTxHash);
+    void logAddSignature(UldECKey federatorPublicKey, UldTransaction uldTx, byte[] rskTxHash);
 
-    void logReleaseBtc(UldTransaction btcTx);
+    void logReleaseUld(UldTransaction uldTx);
 
     void logCommitFederation(Block executionBlock, Federation oldFederation, Federation newFederation);
 }

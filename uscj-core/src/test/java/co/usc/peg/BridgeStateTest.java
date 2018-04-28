@@ -22,8 +22,6 @@ import co.usc.config.BridgeConstants;
 import co.usc.config.TestSystemProperties;
 import co.usc.db.RepositoryImpl;
 import co.usc.trie.TrieStoreImpl;
-import co.usc.config.TestSystemProperties;
-import co.usc.db.RepositoryImpl;
 import org.ethereum.core.Repository;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.vm.PrecompiledContracts;
@@ -49,8 +47,8 @@ public class BridgeStateTest {
 
         Assert.assertNotNull(clone);
         Assert.assertEquals(42, clone.getUldBlockChainBestChainHeight());
-        Assert.assertTrue(clone.getBtcTxHashesAlreadyProcessed().isEmpty());
-        Assert.assertTrue(clone.getActiveFederationBtcUTXOs().isEmpty());
+        Assert.assertTrue(clone.getUldTxHashesAlreadyProcessed().isEmpty());
+        Assert.assertTrue(clone.getActiveFederationUldUTXOs().isEmpty());
         Assert.assertTrue(clone.getRskTxsWaitingForSignatures().isEmpty());
     }
 }

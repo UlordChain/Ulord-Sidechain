@@ -39,12 +39,12 @@ public class UscCustomCacheTest {
 
     @Test
     public void createBlockHeaderCache() {
-        Assert.assertNotNull(new RskCustomCache(TIME_TO_LIVE));
+        Assert.assertNotNull(new UscCustomCache(TIME_TO_LIVE));
     }
 
     @Test
     public void addElement() {
-        RskCustomCache cache = new RskCustomCache(TIME_TO_LIVE);
+        UscCustomCache cache = new UscCustomCache(TIME_TO_LIVE);
 
         BlockHeader header1 = Mockito.mock(BlockHeader.class);
         cache.put(KEY, header1);
@@ -55,7 +55,7 @@ public class UscCustomCacheTest {
 
     @Test
     public void getElement() {
-        RskCustomCache cache = new RskCustomCache(TIME_TO_LIVE);
+        UscCustomCache cache = new UscCustomCache(TIME_TO_LIVE);
 
         BlockHeader header1 = Mockito.mock(BlockHeader.class);
         cache.put(KEY, header1);
@@ -67,7 +67,7 @@ public class UscCustomCacheTest {
     @Test
     @Ignore
     public void elementExpiration() throws InterruptedException{
-        RskCustomCache cache = new RskCustomCache(800L);
+        UscCustomCache cache = new UscCustomCache(800L);
 
         BlockHeader header1 = Mockito.mock(BlockHeader.class);
         cache.put(KEY, header1);

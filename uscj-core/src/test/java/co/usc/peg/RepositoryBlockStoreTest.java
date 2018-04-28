@@ -56,7 +56,7 @@ public class RepositoryBlockStoreTest {
 
     @Test
     public void test() throws Exception {
-//        This Is how I produced RepositoryBlockStore_data.ser. I had a bitcoind in regtest with 613 blocks + genesis block
+//        This Is how I produced RepositoryBlockStore_data.ser. I had a ulordd in regtest with 613 blocks + genesis block
 //        NetworkParameters params = RegTestParams.get();
 //        Context context = new Context(params);
 //        Wallet wallet = new Wallet(context);

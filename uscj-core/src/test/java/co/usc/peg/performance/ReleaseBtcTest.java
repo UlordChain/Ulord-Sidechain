@@ -24,9 +24,6 @@ import co.usc.ulordj.core.NetworkParameters;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageProvider;
 import co.usc.peg.ReleaseRequestQueue;
-import co.usc.peg.Bridge;
-import co.usc.peg.BridgeStorageProvider;
-import co.usc.peg.ReleaseRequestQueue;
 import org.ethereum.core.Denomination;
 import org.ethereum.core.Repository;
 import org.ethereum.crypto.ECKey;
@@ -40,8 +37,8 @@ import java.math.BigInteger;
 public class ReleaseBtcTest extends BridgePerformanceTestCase {
     @Test
     public void releaseBtc() throws IOException {
-        int minCentsBtc = 5;
-        int maxCentsBtc = 100;
+        int minCentsUld = 5;
+        int maxCentsUld = 100;
 
         final NetworkParameters parameters = NetworkParameters.fromID(NetworkParameters.ID_REGTEST);
         BridgeStorageProviderInitializer storageInitializer = (BridgeStorageProvider provider, Repository repository, int executionIndex) -> {
@@ -54,24 +51,24 @@ public class ReleaseBtcTest extends BridgePerformanceTestCase {
             }
 
             for (int i = 0; i < Helper.randomInRange(10, 100); i++) {
-                Coin value = Coin.CENT.multiply(Helper.randomInRange(minCentsBtc, maxCentsBtc));
+                Coin value = Coin.CENT.multiply(Helper.randomInRange(minCentsUld, maxCentsUld));
                 queue.add(new UldECKey().toAddress(parameters), value);
             }
         };
 
-        final byte[] releaseBtcEncoded = Bridge.RELEASE_BTC.encode();
-        ABIEncoder abiEncoder = (int executionIndex) -> releaseBtcEncoded;
+        final byte[] releaseUldEncoded = Bridge.RELEASE_ULD.encode();
+        ABIEncoder abiEncoder = (int executionIndex) -> releaseUldEncoded;
 
         TxBuilder txBuilder = (int executionIndex) -> {
-            long satoshis = Coin.CENT.multiply(Helper.randomInRange(minCentsBtc, maxCentsBtc)).getValue();
+            long satoshis = Coin.CENT.multiply(Helper.randomInRange(minCentsUld, maxCentsUld)).getValue();
             BigInteger weis = Denomination.satoshisToWeis(BigInteger.valueOf(satoshis));
             ECKey sender = new ECKey();
 
             return Helper.buildSendValueTx(sender, weis);
         };
 
-        ExecutionStats stats = new ExecutionStats("releaseBtc");
-        executeAndAverage("releaseBtc", 1000, abiEncoder, storageInitializer, txBuilder, Helper.getRandomHeightProvider(10), stats);
+        ExecutionStats stats = new ExecutionStats("releaseUld");
+        executeAndAverage("releaseUld", 1000, abiEncoder, storageInitializer, txBuilder, Helper.getRandomHeightProvider(10), stats);
 
         BridgePerformanceTest.addStats(stats);
     }

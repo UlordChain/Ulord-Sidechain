@@ -137,9 +137,10 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         PartialMerkleTree UlordMergedMiningMerkleBranch  = new PartialMerkleTree(ulordNetworkParameters, header.getUlordMergedMiningMerkleProof(), 0);
 
         BigInteger target = DifficultyUtils.difficultyToTarget(header.getDifficulty());
-
         BigInteger ulordMergedMiningBlockHashBI = ulordMergedMiningBlock.getHash().toBigInteger();
 
+        logger.info("ulordMergedMiningBlockHashBI: " + ulordMergedMiningBlockHashBI.toString(16));
+        logger.info("PoW Target:                   " + target.toString(16));
         if (ulordMergedMiningBlockHashBI.compareTo(target) > 0) {
             logger.warn("Hash {} is higher than target {}", ulordMergedMiningBlockHashBI.toString(16), target.toString(16));
             return false;
@@ -193,18 +194,18 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
 
         SHA256Digest digest = new SHA256Digest(ulordMergedMiningCoinbaseTransactionMidstate);
         digest.update(ulordMergedMiningCoinbaseTransactionTail,0,ulordMergedMiningCoinbaseTransactionTail.length);
-        byte[] bitcoinMergedMiningCoinbaseTransactionOneRoundOfHash = new byte[32];
-        digest.doFinal(bitcoinMergedMiningCoinbaseTransactionOneRoundOfHash, 0);
-        Sha256Hash bitcoinMergedMiningCoinbaseTransactionHash = Sha256Hash.wrapReversed(Sha256Hash.hash(bitcoinMergedMiningCoinbaseTransactionOneRoundOfHash));
+        byte[] ulordMergedMiningCoinbaseTransactionOneRoundOfHash = new byte[32];
+        digest.doFinal(ulordMergedMiningCoinbaseTransactionOneRoundOfHash, 0);
+        Sha256Hash ulordMergedMiningCoinbaseTransactionHash = Sha256Hash.wrapReversed(Sha256Hash.hash(ulordMergedMiningCoinbaseTransactionOneRoundOfHash));
 
         List<Sha256Hash> txHashesInTheMerkleBranch = new ArrayList<>();
         Sha256Hash merkleRoot = UlordMergedMiningMerkleBranch.getTxnHashAndMerkleRoot(txHashesInTheMerkleBranch);
         if (!merkleRoot.equals(ulordMergedMiningBlock.getMerkleRoot())) {
-            logger.warn("bitcoin merkle root of bitcoin block does not match the merkle root of merkle branch");
+            logger.warn("ulord merkle root of ulord block does not match the merkle root of merkle branch");
             return false;
         }
-        if (!txHashesInTheMerkleBranch.contains(bitcoinMergedMiningCoinbaseTransactionHash)) {
-            logger.warn("bitcoin coinbase transaction {} not included in merkle branch", bitcoinMergedMiningCoinbaseTransactionHash);
+        if (!txHashesInTheMerkleBranch.contains(ulordMergedMiningCoinbaseTransactionHash)) {
+            logger.warn("ulord coinbase transaction {} not included in merkle branch", ulordMergedMiningCoinbaseTransactionHash);
             return false;
         }
 

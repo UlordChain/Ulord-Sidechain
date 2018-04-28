@@ -122,8 +122,8 @@ public class Block {
                  byte[] difficulty, long number, byte[] gasLimit,
                  long gasUsed, long timestamp, byte[] extraData,
                  byte[] mixHash,
-                 byte[] nonce, byte[] bitcoinMergedMiningHeader, byte[] bitcoinMergedMiningMerkleProof,
-                 byte[] bitcoinMergedMiningCoinbaseTransaction, byte[] receiptsRoot,
+                 byte[] nonce, byte[] ulordMergedMiningHeader, byte[] ulordMergedMiningMerkleProof,
+                 byte[] ulordMergedMiningCoinbaseTransaction, byte[] receiptsRoot,
                  byte[] transactionsRoot, byte[] stateRoot,
                  List<Transaction> transactionsList, List<BlockHeader> uncleList, byte[] minimumGasPrice) {
 
@@ -131,9 +131,9 @@ public class Block {
                 gasUsed, timestamp, extraData, mixHash, nonce, receiptsRoot, transactionsRoot,
                 stateRoot, transactionsList, uncleList, minimumGasPrice, Coin.ZERO);
 
-        this.header.setBitcoinMergedMiningCoinbaseTransaction(bitcoinMergedMiningCoinbaseTransaction);
-        this.header.setBitcoinMergedMiningHeader(bitcoinMergedMiningHeader);
-        this.header.setBitcoinMergedMiningMerkleProof(bitcoinMergedMiningMerkleProof);
+        this.header.setUlordMergedMiningCoinbaseTransaction(ulordMergedMiningCoinbaseTransaction);
+        this.header.setUlordMergedMiningHeader(ulordMergedMiningHeader);
+        this.header.setUlordMergedMiningMerkleProof(ulordMergedMiningMerkleProof);
 
         this.flushRLP();
     }
@@ -668,7 +668,7 @@ public class Block {
         return getParentHash().toJsonString();
     }
 
-    public byte[] getBitcoinMergedMiningHeader() {
+    public byte[] getUlordMergedMiningHeader() {
         if (!parsed) {
             parseRLP();
         }
@@ -676,21 +676,21 @@ public class Block {
         return this.header.getUlordMergedMiningHeader();
     }
 
-    public void setUlordMergedMiningHeader(byte[] bitcoinMergedMiningHeader) {
+    public void setUlordMergedMiningHeader(byte[] ulordMergedMiningHeader) {
         /* A sealed block is immutable, cannot be changed */
         if (this.sealed) {
-            throw new SealedBlockException("trying to alter bitcoin merged mining header");
+            throw new SealedBlockException("trying to alter ulord merged mining header");
         }
 
         if (!parsed) {
             parseRLP();
         }
 
-        this.header.setBitcoinMergedMiningHeader(bitcoinMergedMiningHeader);
+        this.header.setUlordMergedMiningHeader(ulordMergedMiningHeader);
         rlpEncoded = null;
     }
 
-    public byte[] getBitcoinMergedMiningMerkleProof() {
+    public byte[] getUlordMergedMiningMerkleProof() {
         if (!parsed) {
             parseRLP();
         }
@@ -698,17 +698,17 @@ public class Block {
         return this.header.getUlordMergedMiningMerkleProof();
     }
 
-    public void setUlordMergedMiningMerkleProof(byte[] bitcoinMergedMiningMerkleProof) {
+    public void setUlordMergedMiningMerkleProof(byte[] ulordMergedMiningMerkleProof) {
         /* A sealed block is immutable, cannot be changed */
         if (this.sealed) {
-            throw new SealedBlockException("trying to alter bitcoin merged mining Merkle proof");
+            throw new SealedBlockException("trying to alter ulord merged mining Merkle proof");
         }
 
-        this.header.setBitcoinMergedMiningMerkleProof(bitcoinMergedMiningMerkleProof);
+        this.header.setUlordMergedMiningMerkleProof(ulordMergedMiningMerkleProof);
         rlpEncoded = null;
     }
 
-    public byte[] getBitcoinMergedMiningCoinbaseTransaction() {
+    public byte[] getUlordMergedMiningCoinbaseTransaction() {
         if (!parsed) {
             parseRLP();
         }
@@ -716,12 +716,12 @@ public class Block {
         return this.header.getUlordMergedMiningCoinbaseTransaction();
     }
 
-    public void setUlordMergedMiningCoinbaseTransaction(byte[] bitcoinMergedMiningCoinbaseTransaction) {
+    public void setUlordMergedMiningCoinbaseTransaction(byte[] ulordMergedMiningCoinbaseTransaction) {
         if (this.sealed) {
-            throw new SealedBlockException("trying to alter bitcoin merged mining coinbase transaction");
+            throw new SealedBlockException("trying to alter ulord merged mining coinbase transaction");
         }
 
-        this.header.setBitcoinMergedMiningCoinbaseTransaction(bitcoinMergedMiningCoinbaseTransaction);
+        this.header.setUlordMergedMiningCoinbaseTransaction(ulordMergedMiningCoinbaseTransaction);
         rlpEncoded = null;
     }
 

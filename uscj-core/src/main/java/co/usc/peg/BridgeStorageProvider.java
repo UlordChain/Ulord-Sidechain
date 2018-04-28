@@ -39,12 +39,12 @@ import java.util.SortedMap;
  * @author Oscar Guindzberg
  */
 public class BridgeStorageProvider {
-    private static final DataWord NEW_FEDERATION_BTC_UTXOS_KEY = new DataWord(TypeConverter.stringToByteArray("newFederationBtcUTXOs"));
-    private static final DataWord OLD_FEDERATION_BTC_UTXOS_KEY = new DataWord(TypeConverter.stringToByteArray("oldFederationBtcUTXOs"));
-    private static final DataWord BTC_TX_HASHES_ALREADY_PROCESSED_KEY = new DataWord(TypeConverter.stringToByteArray("btcTxHashesAP"));
+    private static final DataWord NEW_FEDERATION_ULD_UTXOS_KEY = new DataWord(TypeConverter.stringToByteArray("newFederationUldUTXOs"));
+    private static final DataWord OLD_FEDERATION_ULD_UTXOS_KEY = new DataWord(TypeConverter.stringToByteArray("oldFederationUldUTXOs"));
+    private static final DataWord ULD_TX_HASHES_ALREADY_PROCESSED_KEY = new DataWord(TypeConverter.stringToByteArray("uldTxHashesAP"));
     private static final DataWord RELEASE_REQUEST_QUEUE = new DataWord(TypeConverter.stringToByteArray("releaseRequestQueue"));
     private static final DataWord RELEASE_TX_SET = new DataWord(TypeConverter.stringToByteArray("releaseTransactionSet"));
-    private static final DataWord RSK_TXS_WAITING_FOR_SIGNATURES_KEY = new DataWord(TypeConverter.stringToByteArray("rskTxsWaitingFS"));
+    private static final DataWord USC_TXS_WAITING_FOR_SIGNATURES_KEY = new DataWord(TypeConverter.stringToByteArray("rskTxsWaitingFS"));
     private static final DataWord NEW_FEDERATION_KEY = new DataWord(TypeConverter.stringToByteArray("newFederation"));
     private static final DataWord OLD_FEDERATION_KEY = new DataWord(TypeConverter.stringToByteArray("oldFederation"));
     private static final DataWord PENDING_FEDERATION_KEY = new DataWord(TypeConverter.stringToByteArray("pendingFederation"));
@@ -56,22 +56,22 @@ public class BridgeStorageProvider {
     private final Repository repository;
     private final UscAddress contractAddress;
     private final NetworkParameters networkParameters;
-    private final Context btcContext;
+    private final Context uldContext;
 
-    private Map<Sha256Hash, Long> btcTxHashesAlreadyProcessed;
+    private Map<Sha256Hash, Long> uldTxHashesAlreadyProcessed;
 
     // USC release txs follow these steps: First, they are waiting for coin selection (releaseRequestQueue),
     // then they are waiting for enough confirmations on the USC network (releaseTransactionSet),
     // then they are waiting for federators' signatures (rskTxsWaitingForSignatures),
-    // then they are logged into the block that has them as completely signed for btc release
+    // then they are logged into the block that has them as completely signed for uld release
     // and are removed from rskTxsWaitingForSignatures.
-    // key = rsk tx hash, value = btc tx
+    // key = usc tx hash, value = uld tx
     private ReleaseRequestQueue releaseRequestQueue;
     private ReleaseTransactionSet releaseTransactionSet;
     private SortedMap<Keccak256, UldTransaction> rskTxsWaitingForSignatures;
 
-    private List<UTXO> newFederationBtcUTXOs;
-    private List<UTXO> oldFederationBtcUTXOs;
+    private List<UTXO> newFederationUldUTXOs;
+    private List<UTXO> oldFederationUldUTXOs;
 
     private Federation newFederation;
     private Federation oldFederation;
@@ -90,58 +90,58 @@ public class BridgeStorageProvider {
         this.repository = repository;
         this.contractAddress = contractAddress;
         this.networkParameters = bridgeConstants.getUldParams();
-        this.btcContext = new Context(networkParameters);
+        this.uldContext = new Context(networkParameters);
     }
 
-    public List<UTXO> getNewFederationBtcUTXOs() throws IOException {
-        if (newFederationBtcUTXOs != null) {
-            return newFederationBtcUTXOs;
+    public List<UTXO> getNewFederationUldUTXOs() throws IOException {
+        if (newFederationUldUTXOs != null) {
+            return newFederationUldUTXOs;
         }
 
-        newFederationBtcUTXOs = getFromRepository(NEW_FEDERATION_BTC_UTXOS_KEY, BridgeSerializationUtils::deserializeUTXOList);
-        return newFederationBtcUTXOs;
+        newFederationUldUTXOs = getFromRepository(NEW_FEDERATION_ULD_UTXOS_KEY, BridgeSerializationUtils::deserializeUTXOList);
+        return newFederationUldUTXOs;
     }
 
-    public void saveNewFederationBtcUTXOs() throws IOException {
-        if (newFederationBtcUTXOs == null) {
+    public void saveNewFederationUldUTXOs() throws IOException {
+        if (newFederationUldUTXOs == null) {
             return;
         }
 
-        saveToRepository(NEW_FEDERATION_BTC_UTXOS_KEY, newFederationBtcUTXOs, BridgeSerializationUtils::serializeUTXOList);
+        saveToRepository(NEW_FEDERATION_ULD_UTXOS_KEY, newFederationUldUTXOs, BridgeSerializationUtils::serializeUTXOList);
     }
 
-    public List<UTXO> getOldFederationBtcUTXOs() throws IOException {
-        if (oldFederationBtcUTXOs != null) {
-            return oldFederationBtcUTXOs;
+    public List<UTXO> getOldFederationUldUTXOs() throws IOException {
+        if (oldFederationUldUTXOs != null) {
+            return oldFederationUldUTXOs;
         }
 
-        oldFederationBtcUTXOs = getFromRepository(OLD_FEDERATION_BTC_UTXOS_KEY, BridgeSerializationUtils::deserializeUTXOList);
-        return oldFederationBtcUTXOs;
+        oldFederationUldUTXOs = getFromRepository(OLD_FEDERATION_ULD_UTXOS_KEY, BridgeSerializationUtils::deserializeUTXOList);
+        return oldFederationUldUTXOs;
     }
 
-    public void saveOldFederationBtcUTXOs() throws IOException {
-        if (oldFederationBtcUTXOs == null) {
+    public void saveOldFederationUldUTXOs() throws IOException {
+        if (oldFederationUldUTXOs == null) {
             return;
         }
 
-        saveToRepository(OLD_FEDERATION_BTC_UTXOS_KEY, oldFederationBtcUTXOs, BridgeSerializationUtils::serializeUTXOList);
+        saveToRepository(OLD_FEDERATION_ULD_UTXOS_KEY, oldFederationUldUTXOs, BridgeSerializationUtils::serializeUTXOList);
     }
 
-    public Map<Sha256Hash, Long> getBtcTxHashesAlreadyProcessed() throws IOException {
-        if (btcTxHashesAlreadyProcessed != null) {
-            return btcTxHashesAlreadyProcessed;
+    public Map<Sha256Hash, Long> getUldTxHashesAlreadyProcessed() throws IOException {
+        if (uldTxHashesAlreadyProcessed != null) {
+            return uldTxHashesAlreadyProcessed;
         }
 
-        btcTxHashesAlreadyProcessed = getFromRepository(BTC_TX_HASHES_ALREADY_PROCESSED_KEY, BridgeSerializationUtils::deserializeMapOfHashesToLong);
-        return btcTxHashesAlreadyProcessed;
+        uldTxHashesAlreadyProcessed = getFromRepository(ULD_TX_HASHES_ALREADY_PROCESSED_KEY, BridgeSerializationUtils::deserializeMapOfHashesToLong);
+        return uldTxHashesAlreadyProcessed;
     }
 
-    public void saveBtcTxHashesAlreadyProcessed() {
-        if (btcTxHashesAlreadyProcessed == null) {
+    public void saveUldTxHashesAlreadyProcessed() {
+        if (uldTxHashesAlreadyProcessed == null) {
             return;
         }
 
-        safeSaveToRepository(BTC_TX_HASHES_ALREADY_PROCESSED_KEY, btcTxHashesAlreadyProcessed, BridgeSerializationUtils::serializeMapOfHashesToLong);
+        safeSaveToRepository(ULD_TX_HASHES_ALREADY_PROCESSED_KEY, uldTxHashesAlreadyProcessed, BridgeSerializationUtils::serializeMapOfHashesToLong);
     }
 
     public ReleaseRequestQueue getReleaseRequestQueue() throws IOException {
@@ -192,18 +192,18 @@ public class BridgeStorageProvider {
         }
 
         rskTxsWaitingForSignatures = getFromRepository(
-                RSK_TXS_WAITING_FOR_SIGNATURES_KEY,
+                USC_TXS_WAITING_FOR_SIGNATURES_KEY,
                 data -> BridgeSerializationUtils.deserializeMap(data, networkParameters, false)
         );
         return rskTxsWaitingForSignatures;
     }
 
-    public void saveRskTxsWaitingForSignatures() {
+    public void saveUscTxsWaitingForSignatures() {
         if (rskTxsWaitingForSignatures == null) {
             return;
         }
 
-        safeSaveToRepository(RSK_TXS_WAITING_FOR_SIGNATURES_KEY, rskTxsWaitingForSignatures, BridgeSerializationUtils::serializeMap);
+        safeSaveToRepository(USC_TXS_WAITING_FOR_SIGNATURES_KEY, rskTxsWaitingForSignatures, BridgeSerializationUtils::serializeMap);
     }
 
     public Federation getNewFederation() {
@@ -215,7 +215,7 @@ public class BridgeStorageProvider {
                 data ->
                         data == null
                         ? null
-                        : BridgeSerializationUtils.deserializeFederation(data, btcContext)
+                        : BridgeSerializationUtils.deserializeFederation(data, uldContext)
         );
         return newFederation;
     }
@@ -244,7 +244,7 @@ public class BridgeStorageProvider {
         oldFederation = safeGetFromRepository(OLD_FEDERATION_KEY,
                 data -> data == null
                         ? null
-                        : BridgeSerializationUtils.deserializeFederation(data, btcContext)
+                        : BridgeSerializationUtils.deserializeFederation(data, uldContext)
         );
         return oldFederation;
     }
@@ -329,7 +329,7 @@ public class BridgeStorageProvider {
         lockWhitelist = safeGetFromRepository(LOCK_WHITELIST_KEY,
             data -> (data == null)?
                 new LockWhitelist(new HashMap<>()) :
-                BridgeSerializationUtils.deserializeLockWhitelist(data, btcContext.getParams())
+                BridgeSerializationUtils.deserializeLockWhitelist(data, uldContext.getParams())
         );
 
         return lockWhitelist;
@@ -378,17 +378,17 @@ public class BridgeStorageProvider {
     }
 
     public void save() throws IOException {
-        saveBtcTxHashesAlreadyProcessed();
+        saveUldTxHashesAlreadyProcessed();
 
         saveReleaseRequestQueue();
         saveReleaseTransactionSet();
-        saveRskTxsWaitingForSignatures();
+        saveUscTxsWaitingForSignatures();
 
         saveNewFederation();
-        saveNewFederationBtcUTXOs();
+        saveNewFederationUldUTXOs();
 
         saveOldFederation();
-        saveOldFederationBtcUTXOs();
+        saveOldFederationUldUTXOs();
 
         savePendingFederation();
 

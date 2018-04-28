@@ -19,8 +19,6 @@
 
 package org.ethereum.core.genesis;
 
-import com.google.common.io.ByteStreams;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JavaType;
@@ -41,9 +39,9 @@ public class GenesisJsonTest {
             "}}," +
             "\"nonce\": \"0xffffffffffffffff\"," +
             "\"mixhash\": \"0x00\"," +
-            "\"bitcoinMergedMiningHeader\": \"0x00\"," +
-            "\"bitcoinMergedMiningMerkleProof\": \"0x00\"," +
-            "\"bitcoinMergedMiningCoinbaseTransaction\": \"0x00\"," +
+            "\"ulordMergedMiningHeader\": \"0x00\"," +
+            "\"ulordMergedMiningMerkleProof\": \"0x00\"," +
+            "\"ulordMergedMiningCoinbaseTransaction\": \"0x00\"," +
             "\"timestamp\": \"0x00\"," +
             "\"parentHash\": \"0x0000000000000000000000000000000000000000000000000000000000000000\"," +
             "\"extraData\": \"0x686f727365\"," +
@@ -63,9 +61,9 @@ public class GenesisJsonTest {
         Assert.assertTrue(StringUtils.isNotBlank(genesisJson.getMinimumGasPrice()));
         Assert.assertTrue(StringUtils.isNotBlank(genesisJson.getParentHash()));
         Assert.assertTrue(genesisJson.getAlloc().size() > 0);
-        Assert.assertTrue(StringUtils.isNotBlank(genesisJson.getBitcoinMergedMiningCoinbaseTransaction()));
-        Assert.assertTrue(StringUtils.isNotBlank(genesisJson.getBitcoinMergedMiningHeader()));
-        Assert.assertTrue(StringUtils.isNotBlank(genesisJson.getBitcoinMergedMiningMerkleProof()));
+        Assert.assertTrue(StringUtils.isNotBlank(genesisJson.getUlordMergedMiningCoinbaseTransaction()));
+        Assert.assertTrue(StringUtils.isNotBlank(genesisJson.getUlordMergedMiningHeader()));
+        Assert.assertTrue(StringUtils.isNotBlank(genesisJson.getUlordMergedMiningMerkleProof()));
         Assert.assertTrue(StringUtils.isNotBlank(genesisJson.getCoinbase()));
         Assert.assertTrue(StringUtils.isNotBlank(genesisJson.getDifficulty()));
         Assert.assertTrue(StringUtils.isNotBlank(genesisJson.getExtraData()));

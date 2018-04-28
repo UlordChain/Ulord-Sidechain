@@ -73,17 +73,17 @@ public class MinerUtils {
         return coinbaseTransaction;
     }
 
-    public static co.usc.ulordj.core.UldTransaction getBitcoinMergedMiningCoinbaseTransactionWithTwoTags(
+    public static co.usc.ulordj.core.UldTransaction getUlordMergedMiningCoinbaseTransactionWithTwoTags(
             co.usc.ulordj.core.NetworkParameters params,
             MinerWork work,
             MinerWork work2) {
-        return getBitcoinMergedMiningCoinbaseTransactionWithTwoTags(
+        return getUlordMergedMiningCoinbaseTransactionWithTwoTags(
                 params,
                 TypeConverter.stringHexToByteArray(work.getBlockHashForMergedMining()),
                 TypeConverter.stringHexToByteArray(work2.getBlockHashForMergedMining()));
     }
 
-    public static co.usc.ulordj.core.UldTransaction getBitcoinMergedMiningCoinbaseTransactionWithTwoTags(
+    public static co.usc.ulordj.core.UldTransaction getUlordMergedMiningCoinbaseTransactionWithTwoTags(
             co.usc.ulordj.core.NetworkParameters params,
             byte[] blockHashForMergedMining1,
             byte[] blockHashForMergedMining2) {

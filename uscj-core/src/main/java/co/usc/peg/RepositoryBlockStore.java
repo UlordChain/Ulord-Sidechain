@@ -30,7 +30,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Implementation of a bitcoinj blockstore that persists to USC's Repository
+ * Implementation of a ulordj blockstore that persists to USC's Repository
  * @author Oscar Guindzberg
  */
 public class RepositoryBlockStore implements UldBlockStore{

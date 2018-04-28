@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package co.usc.peg.bitcoin;
+package co.usc.peg.ulord;
 
 import com.google.common.annotations.VisibleForTesting;
 import co.usc.ulordj.core.Coin;

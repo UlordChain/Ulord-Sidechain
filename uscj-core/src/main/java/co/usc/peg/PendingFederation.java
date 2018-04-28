@@ -70,10 +70,10 @@ public final class PendingFederation {
     /**
      * Builds a Federation from this PendingFederation
      * @param creationTime the creation time for the new Federation
-     * @param btcParams the bitcoin parameters for the new Federation
+     * @param uldParams the ulord parameters for the new Federation
      * @return a Federation
      */
-    public Federation buildFederation(Instant creationTime, long blockNumber, NetworkParameters btcParams) {
+    public Federation buildFederation(Instant creationTime, long blockNumber, NetworkParameters uldParams) {
         if (!this.isComplete()) {
             throw new IllegalStateException("PendingFederation is incomplete");
         }
@@ -82,7 +82,7 @@ public final class PendingFederation {
                 publicKeys,
                 creationTime,
                 blockNumber,
-                btcParams
+                uldParams
         );
     }
 

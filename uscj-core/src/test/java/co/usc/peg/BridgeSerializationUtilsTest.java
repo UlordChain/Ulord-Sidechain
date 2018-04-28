@@ -188,7 +188,7 @@ public class BridgeSerializationUtilsTest {
         for (int i = 0; i < 6; i++) {
             Assert.assertTrue(Arrays.equals(publicKeyBytes[i], deserializedFederation.getPublicKeys().get(i).getPubKey()));
         }
-        Assert.assertEquals(NetworkParameters.fromID(NetworkParameters.ID_REGTEST), deserializedFederation.getBtcParams());
+        Assert.assertEquals(NetworkParameters.fromID(NetworkParameters.ID_REGTEST), deserializedFederation.getUldParams());
     }
 
     @Test
@@ -564,12 +564,12 @@ public class BridgeSerializationUtilsTest {
 
     @Test
     public void serializeDeserializeLockWhitelist() {
-        NetworkParameters btcParams = NetworkParameters.fromID(NetworkParameters.ID_REGTEST);
+        NetworkParameters uldParams = NetworkParameters.fromID(NetworkParameters.ID_REGTEST);
         Map<Address, Coin> whitelist = new HashMap<>();
-        whitelist.put(UldECKey.fromPrivate(BigInteger.valueOf(100L)).toAddress(btcParams), Coin.COIN);
+        whitelist.put(UldECKey.fromPrivate(BigInteger.valueOf(100L)).toAddress(uldParams), Coin.COIN);
 
         LockWhitelist originalLockWhitelist = new LockWhitelist(whitelist, 0);
-        LockWhitelist deserializedLockWhitelist = BridgeSerializationUtils.deserializeLockWhitelist(BridgeSerializationUtils.serializeLockWhitelist(originalLockWhitelist), btcParams);
+        LockWhitelist deserializedLockWhitelist = BridgeSerializationUtils.deserializeLockWhitelist(BridgeSerializationUtils.serializeLockWhitelist(originalLockWhitelist), uldParams);
 
         List<Address> originalAddresses = originalLockWhitelist.getAddresses();
         List<Address> deserializedAddresses = deserializedLockWhitelist.getAddresses();

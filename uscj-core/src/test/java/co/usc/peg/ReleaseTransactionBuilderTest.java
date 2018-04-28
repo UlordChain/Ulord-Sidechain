@@ -61,7 +61,7 @@ public class ReleaseTransactionBuilderTest {
 
     @Test
     public void buildAmountTo_ok() throws InsufficientMoneyException, UTXOProviderException {
-        Context btcContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
+        Context uldContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
         Address to = mockAddress(123);
         Coin amount = Coin.CENT.multiply(3);
 
@@ -108,7 +108,7 @@ public class ReleaseTransactionBuilderTest {
 
         Assert.assertTrue(result.isPresent());
 
-        UldTransaction tx = result.get().getBtcTx();
+        UldTransaction tx = result.get().getUldTx();
         List<UTXO> selectedUTXOs = result.get().getSelectedUTXOs();
 
         Assert.assertEquals(1, tx.getOutputs().size());
@@ -130,7 +130,7 @@ public class ReleaseTransactionBuilderTest {
 
     @Test
     public void buildAmountTo_insufficientMoneyException() throws InsufficientMoneyException, UTXOProviderException {
-        Context btcContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
+        Context uldContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
         Address to = mockAddress(123);
         Coin amount = Coin.CENT.multiply(3);
 
@@ -145,7 +145,7 @@ public class ReleaseTransactionBuilderTest {
 
     @Test
     public void buildAmountTo_walletCouldNotAdjustDownwards() throws InsufficientMoneyException, UTXOProviderException {
-        Context btcContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
+        Context uldContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
         Address to = mockAddress(123);
         Coin amount = Coin.CENT.multiply(3);
 
@@ -160,7 +160,7 @@ public class ReleaseTransactionBuilderTest {
 
     @Test
     public void buildAmountTo_walletExceededMaxTransactionSize() throws InsufficientMoneyException, UTXOProviderException {
-        Context btcContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
+        Context uldContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
         Address to = mockAddress(123);
         Coin amount = Coin.CENT.multiply(3);
 
@@ -175,7 +175,7 @@ public class ReleaseTransactionBuilderTest {
 
     @Test
     public void buildAmountTo_utxoProviderException() throws InsufficientMoneyException, UTXOProviderException {
-        Context btcContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
+        Context uldContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
         Address to = mockAddress(123);
         Coin amount = Coin.CENT.multiply(3);
 
@@ -226,7 +226,7 @@ public class ReleaseTransactionBuilderTest {
 
     @Test
     public void buildEmptyWalletTo_ok() throws InsufficientMoneyException, UTXOProviderException {
-        Context btcContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
+        Context uldContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
         Address to = mockAddress(123);
 
         List<UTXO> availableUTXOs = Arrays.asList(
@@ -274,7 +274,7 @@ public class ReleaseTransactionBuilderTest {
 
         Assert.assertTrue(result.isPresent());
 
-        UldTransaction tx = result.get().getBtcTx();
+        UldTransaction tx = result.get().getUldTx();
         List<UTXO> selectedUTXOs = result.get().getSelectedUTXOs();
 
         Assert.assertEquals(1, tx.getOutputs().size());
@@ -304,7 +304,7 @@ public class ReleaseTransactionBuilderTest {
 
     @Test
     public void buildEmptyWalletTo_insufficientMoneyException() throws InsufficientMoneyException, UTXOProviderException {
-        Context btcContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
+        Context uldContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
         Address to = mockAddress(123);
 
         mockCompleteTxWithThrowForEmptying(wallet, to, new InsufficientMoneyException(Coin.valueOf(1234)));
@@ -318,7 +318,7 @@ public class ReleaseTransactionBuilderTest {
 
     @Test
     public void buildEmptyWalletTo_walletCouldNotAdjustDownwards() throws InsufficientMoneyException, UTXOProviderException {
-        Context btcContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
+        Context uldContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
         Address to = mockAddress(123);
 
         mockCompleteTxWithThrowForEmptying(wallet, to, new Wallet.CouldNotAdjustDownwards());
@@ -332,7 +332,7 @@ public class ReleaseTransactionBuilderTest {
 
     @Test
     public void buildEmptyWalletTo_walletExceededMaxTransactionSize() throws InsufficientMoneyException, UTXOProviderException {
-        Context btcContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
+        Context uldContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
         Address to = mockAddress(123);
 
         mockCompleteTxWithThrowForEmptying(wallet, to, new Wallet.ExceededMaxTransactionSize());
@@ -346,7 +346,7 @@ public class ReleaseTransactionBuilderTest {
 
     @Test
     public void buildEmptyWalletTo_utxoProviderException() throws InsufficientMoneyException, UTXOProviderException {
-        Context btcContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
+        Context uldContext = new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
         Address to = mockAddress(123);
 
         List<UTXO> availableUTXOs = Arrays.asList(

@@ -215,7 +215,7 @@ public class BridgeSerializationUtils {
     }
 
     // For the serialization format, see BridgeSerializationUtils::serializeFederation
-    public static Federation deserializeFederation(byte[] data, Context btcContext) {
+    public static Federation deserializeFederation(byte[] data, Context uldContext) {
         RLPList rlpList = (RLPList)RLP.decode2(data).get(0);
 
         if (rlpList.size() != FEDERATION_RLP_LIST_SIZE) {
@@ -232,20 +232,20 @@ public class BridgeSerializationUtils {
         byte[] creationBlockNumberBytes = rlpList.get(FEDERATION_CREATION_BLOCK_NUMBER_INDEX).getRLPData();
         long creationBlockNumber = BigIntegers.fromUnsignedByteArray(creationBlockNumberBytes).longValue();
 
-        return new Federation(pubKeys, creationTime, creationBlockNumber, btcContext.getParams());
+        return new Federation(pubKeys, creationTime, creationBlockNumber, uldContext.getParams());
     }
 
     // A pending federation is serialized as the
     // public keys conforming it.
     // See BridgeSerializationUtils::serializePublicKeys
     public static byte[] serializePendingFederation(PendingFederation pendingFederation) {
-        return serializeBtcPublicKeys(pendingFederation.getPublicKeys());
+        return serializeUldPublicKeys(pendingFederation.getPublicKeys());
     }
 
     // For the serialization format, see BridgeSerializationUtils::serializePendingFederation
     // and serializePublicKeys::deserializePublicKeys
     public static PendingFederation deserializePendingFederation(byte[] data) {
-        return new PendingFederation(deserializeBtcPublicKeys(data));
+        return new PendingFederation(deserializeUldPublicKeys(data));
     }
 
     // An ABI call election is serialized as a list of the votes, like so:
@@ -347,7 +347,7 @@ public class BridgeSerializationUtils {
 
     // A ReleaseRequestQueue is serialized as follows:
     // [address_1, amount_1, ..., address_n, amount_n]
-    // with address_i being the encoded bytes of each btc address
+    // with address_i being the encoded bytes of each uld address
     // and amount_i the RLP-encoded biginteger corresponding to each amount
     // Order of entries in serialized output is order of the request queue entries
     // so that we enforce a FIFO policy on release requests.
@@ -394,16 +394,16 @@ public class BridgeSerializationUtils {
     }
 
     // A ReleaseTransactionSet is serialized as follows:
-    // [btctx_1, height_1, ..., btctx_n, height_n]
-    // with btctx_i being the bitcoin serialization of each btc tx
+    // [uldtx_1, height_1, ..., uldtx_n, height_n]
+    // with uldtx_i being the ulord serialization of each uld tx
     // and height_i the RLP-encoded biginteger corresponding to each height
     // To preserve order amongst different implementations of sets,
     // entries are first sorted on the lexicographical order of the
-    // serialized btc transaction bytes
-    // (see ReleaseTransactionSet.Entry.BTC_TX_COMPARATOR)
+    // serialized uld transaction bytes
+    // (see ReleaseTransactionSet.Entry.ULD_TX_COMPARATOR)
     public static byte[] serializeReleaseTransactionSet(ReleaseTransactionSet set) {
         List<ReleaseTransactionSet.Entry> entries = set.getEntries().stream().collect(Collectors.toList());
-        entries.sort(ReleaseTransactionSet.Entry.BTC_TX_COMPARATOR);
+        entries.sort(ReleaseTransactionSet.Entry.ULD_TX_COMPARATOR);
 
         byte[][] bytes = new byte[entries.size() * 2][];
         int n = 0;
@@ -472,11 +472,11 @@ public class BridgeSerializationUtils {
         return new ABICallSpec(function, arguments);
     }
 
-    // A list of btc public keys is serialized as
+    // A list of uld public keys is serialized as
     // [pubkey1, pubkey2, ..., pubkeyn], sorted
     // using the lexicographical order of the public keys
     // (see UldECKey.PUBKEY_COMPARATOR).
-    private static byte[] serializeBtcPublicKeys(List<UldECKey> keys) {
+    private static byte[] serializeUldPublicKeys(List<UldECKey> keys) {
         List<byte[]> encodedKeys = keys.stream()
                 .sorted(UldECKey.PUBKEY_COMPARATOR)
                 .map(key -> RLP.encodeElement(key.getPubKey()))
@@ -485,7 +485,7 @@ public class BridgeSerializationUtils {
     }
 
     // For the serialization format, see BridgeSerializationUtils::serializePublicKeys
-    private static List<UldECKey> deserializeBtcPublicKeys(byte[] data) {
+    private static List<UldECKey> deserializeUldPublicKeys(byte[] data) {
         RLPList rlpList = (RLPList)RLP.decode2(data).get(0);
 
         return rlpList.stream()

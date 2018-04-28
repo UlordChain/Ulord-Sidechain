@@ -27,7 +27,7 @@ import java.util.ListIterator;
 import java.util.Objects;
 
 /**
- * Representation of a queue of btc release
+ * Representation of a queue of uld release
  * requests waiting to be processed by the bridge.
  *
  * @author Ariel Mendelzon

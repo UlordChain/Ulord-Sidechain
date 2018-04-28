@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 /**
  * Immutable representation of an USC Federation in the context of
- * a specific BTC network.
+ * a specific ULD network.
  *
  * @author Ariel Mendelzon
  */
@@ -44,13 +44,13 @@ public final class Federation {
     private final List<ECKey> rskPublicKeys;
     private final Instant creationTime;
     private final long creationBlockNumber;
-    private final NetworkParameters btcParams;
+    private final NetworkParameters uldParams;
 
     private Script redeemScript;
     private Script p2shScript;
     private Address address;
 
-    public Federation(List<UldECKey> publicKeys, Instant creationTime, long creationBlockNumber,  NetworkParameters btcParams) {
+    public Federation(List<UldECKey> publicKeys, Instant creationTime, long creationBlockNumber,  NetworkParameters uldParams) {
         // Sorting public keys ensures same order of federators for same public keys
         // Immutability provides protection unless unwanted modification, thus making the Federation instance
         // effectively immutable
@@ -62,7 +62,7 @@ public final class Federation {
                 .collect(Collectors.toList()));
         this.creationTime = creationTime;
         this.creationBlockNumber = creationBlockNumber;
-        this.btcParams = btcParams;
+        this.uldParams = uldParams;
         // Calculated once on-demand
         this.redeemScript = null;
         this.p2shScript = null;
@@ -81,8 +81,8 @@ public final class Federation {
         return creationTime;
     }
 
-    public NetworkParameters getBtcParams() {
-        return btcParams;
+    public NetworkParameters getUldParams() {
+        return uldParams;
     }
 
     public long getCreationBlockNumber() {
@@ -107,7 +107,7 @@ public final class Federation {
 
     public Address getAddress() {
         if (address == null) {
-            address = Address.fromP2SHScript(btcParams, getP2SHScript());
+            address = Address.fromP2SHScript(uldParams, getP2SHScript());
         }
 
         return address;
@@ -168,7 +168,7 @@ public final class Federation {
                 this.getSize() == otherFederation.getSize() &&
                 this.getCreationTime().equals(otherFederation.getCreationTime()) &&
                 this.creationBlockNumber == otherFederation.creationBlockNumber &&
-                this.btcParams.equals(otherFederation.btcParams) &&
+                this.uldParams.equals(otherFederation.uldParams) &&
                 Arrays.equals(thisPublicKeys, otherPublicKeys);
     }
 

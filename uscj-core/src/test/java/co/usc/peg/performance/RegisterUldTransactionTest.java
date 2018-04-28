@@ -26,10 +26,6 @@ import co.usc.config.TestSystemProperties;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageProvider;
 import co.usc.peg.RepositoryBlockStore;
-import co.usc.config.TestSystemProperties;
-import co.usc.peg.Bridge;
-import co.usc.peg.BridgeStorageProvider;
-import co.usc.peg.RepositoryBlockStore;
 import org.ethereum.core.Repository;
 import org.ethereum.vm.PrecompiledContracts;
 import org.junit.Ignore;
@@ -92,7 +88,7 @@ public class RegisterUldTransactionTest extends BridgePerformanceTestCase {
 
     private ABIEncoder getABIEncoder() {
         return (int executionIndex) ->
-                Bridge.REGISTER_BTC_TRANSACTION.encode(new Object[]{
+                Bridge.REGISTER_ULD_TRANSACTION.encode(new Object[]{
                         txToLock.ulordSerialize(),
                         blockWithTxHeight,
                         pmtOfLockTx.ulordSerialize()
@@ -151,7 +147,7 @@ public class RegisterUldTransactionTest extends BridgePerformanceTestCase {
             // Marking as already processed
             if (markAsAlreadyProcessed) {
                 try {
-                    provider.getBtcTxHashesAlreadyProcessed().put(txToLock.getHash(), (long) blockWithTxHeight - 10);
+                    provider.getUldTxHashesAlreadyProcessed().put(txToLock.getHash(), (long) blockWithTxHeight - 10);
                 } catch (IOException e) {
                     throw new RuntimeException("Exception while trying to mark tx as already processed for test");
                 }

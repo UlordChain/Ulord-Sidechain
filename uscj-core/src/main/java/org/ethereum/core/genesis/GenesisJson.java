@@ -32,9 +32,9 @@ public class GenesisJson {
     String gasLimit;
     String nonce;
     String difficulty;
-    String bitcoinMergedMiningHeader;
-    String bitcoinMergedMiningMerkleProof;
-    String bitcoinMergedMiningCoinbaseTransaction;
+    String ulordMergedMiningHeader;
+    String ulordMergedMiningMerkleProof;
+    String ulordMergedMiningCoinbaseTransaction;
     String minimumGasPrice;
 
     Map<String, AllocatedAccount> alloc;
@@ -115,17 +115,17 @@ public class GenesisJson {
         this.alloc = alloc;
     }
 
-    public String getBitcoinMergedMiningHeader() {return bitcoinMergedMiningHeader;}
+    public String getUlordMergedMiningHeader() {return ulordMergedMiningHeader;}
 
-    public void setBitcoinMergedMiningHeader(String bitcoinMergedMiningHeader) {this.bitcoinMergedMiningHeader = bitcoinMergedMiningHeader;}
+    public void setUlordMergedMiningHeader(String ulordMergedMiningHeader) {this.ulordMergedMiningHeader = ulordMergedMiningHeader;}
 
-    public String getBitcoinMergedMiningMerkleProof() {return bitcoinMergedMiningMerkleProof;}
+    public String getUlordMergedMiningMerkleProof() {return ulordMergedMiningMerkleProof;}
 
-    public void setBitcoinMergedMiningMerkleProof(String bitcoinMergedMiningMerkleProof) {this.bitcoinMergedMiningMerkleProof = bitcoinMergedMiningMerkleProof;}
+    public void setUlordMergedMiningMerkleProof(String ulordMergedMiningMerkleProof) {this.ulordMergedMiningMerkleProof = ulordMergedMiningMerkleProof;}
 
-    public String getBitcoinMergedMiningCoinbaseTransaction() {return bitcoinMergedMiningCoinbaseTransaction;}
+    public String getUlordMergedMiningCoinbaseTransaction() {return ulordMergedMiningCoinbaseTransaction;}
 
-    public void setBitcoinMergedMiningCoinbaseTransaction(String bitcoinMergedMiningCoinbaseTransaction) {this.bitcoinMergedMiningCoinbaseTransaction = bitcoinMergedMiningCoinbaseTransaction;}
+    public void setUlordMergedMiningCoinbaseTransaction(String ulordMergedMiningCoinbaseTransaction) {this.ulordMergedMiningCoinbaseTransaction = ulordMergedMiningCoinbaseTransaction;}
 
     public String getMinimumGasPrice() {
         return minimumGasPrice;

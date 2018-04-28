@@ -26,10 +26,6 @@ import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageProvider;
 import co.usc.peg.ReleaseRequestQueue;
 import co.usc.peg.ReleaseTransactionSet;
-import co.usc.peg.Bridge;
-import co.usc.peg.BridgeStorageProvider;
-import co.usc.peg.ReleaseRequestQueue;
-import co.usc.peg.ReleaseTransactionSet;
 import org.ethereum.core.Repository;
 import org.ethereum.crypto.HashUtil;
 import org.junit.Ignore;
@@ -87,7 +83,7 @@ public class UpdateCollectionsTest extends BridgePerformanceTestCase {
             ReleaseRequestQueue queue;
 
             try {
-                utxos = provider.getNewFederationBtcUTXOs();
+                utxos = provider.getNewFederationUldUTXOs();
             } catch (Exception e) {
                 throw new RuntimeException("Unable to gather active federation btc utxos");
             }

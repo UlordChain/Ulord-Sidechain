@@ -31,7 +31,7 @@ public class BridgeConstants {
     protected int uld2UscMinimumAcceptableConfirmations;
     protected int uld2UscMinimumAcceptableConfirmationsOnUsc;
     protected int usc2UldMinimumAcceptableConfirmations;
-    protected int btcBroadcastingMinimumAcceptableBlocks;
+    protected int uldBroadcastingMinimumAcceptableBlocks;
 
     protected int updateBridgeExecutionPeriod;
 

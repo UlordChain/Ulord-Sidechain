@@ -68,7 +68,7 @@ public class BridgeStorageProviderTest {
         Repository repository = new RepositoryImpl(config);
         BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        Map<Sha256Hash, Long> processed = provider.getBtcTxHashesAlreadyProcessed();
+        Map<Sha256Hash, Long> processed = provider.getUldTxHashesAlreadyProcessed();
 
         Assert.assertNotNull(processed);
         Assert.assertTrue(processed.isEmpty());
@@ -88,7 +88,7 @@ public class BridgeStorageProviderTest {
         Assert.assertNotNull(signatures);
         Assert.assertTrue(signatures.isEmpty());
 
-        List<UTXO> utxos = provider.getNewFederationBtcUTXOs();
+        List<UTXO> utxos = provider.getNewFederationUldUTXOs();
 
         Assert.assertNotNull(utxos);
         Assert.assertTrue(utxos.isEmpty());
@@ -100,12 +100,12 @@ public class BridgeStorageProviderTest {
         Repository track = repository.startTracking();
 
         BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
-        provider0.getBtcTxHashesAlreadyProcessed();
+        provider0.getUldTxHashesAlreadyProcessed();
         provider0.getReleaseRequestQueue();
         provider0.getReleaseTransactionSet();
         provider0.getRskTxsWaitingForSignatures();
-        provider0.getNewFederationBtcUTXOs();
-        provider0.getOldFederationBtcUTXOs();
+        provider0.getNewFederationUldUTXOs();
+        provider0.getOldFederationUldUTXOs();
         provider0.save();
         track.commit();
 
@@ -114,16 +114,16 @@ public class BridgeStorageProviderTest {
         UscAddress contractAddress = PrecompiledContracts.BRIDGE_ADDR;
 
         Assert.assertNotNull(repository.getContractDetails(contractAddress));
-        Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("btcTxHashesAP".getBytes())));
+        Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("uldTxHashesAP".getBytes())));
         Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("releaseRequestQueue".getBytes())));
         Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("releaseTransactionSet".getBytes())));
         Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("rskTxsWaitingFS".getBytes())));
-        Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("newFederationBtcUTXOs".getBytes())));
-        Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("oldFederationBtcUTXOs".getBytes())));
+        Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("newFederationUldUTXOs".getBytes())));
+        Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("oldFederationUldUTXOs".getBytes())));
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        Map<Sha256Hash, Long> processed = provider.getBtcTxHashesAlreadyProcessed();
+        Map<Sha256Hash, Long> processed = provider.getUldTxHashesAlreadyProcessed();
 
         Assert.assertNotNull(processed);
         Assert.assertTrue(processed.isEmpty());
@@ -143,12 +143,12 @@ public class BridgeStorageProviderTest {
         Assert.assertNotNull(signatures);
         Assert.assertTrue(signatures.isEmpty());
 
-        List<UTXO> newUtxos = provider.getNewFederationBtcUTXOs();
+        List<UTXO> newUtxos = provider.getNewFederationUldUTXOs();
 
         Assert.assertNotNull(newUtxos);
         Assert.assertTrue(newUtxos.isEmpty());
 
-        List<UTXO> oldUtxos = provider.getOldFederationBtcUTXOs();
+        List<UTXO> oldUtxos = provider.getOldFederationUldUTXOs();
 
         Assert.assertNotNull(oldUtxos);
         Assert.assertTrue(oldUtxos.isEmpty());
@@ -163,8 +163,8 @@ public class BridgeStorageProviderTest {
         Repository track = repository.startTracking();
 
         BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
-        provider0.getBtcTxHashesAlreadyProcessed().put(hash1, 1L);
-        provider0.getBtcTxHashesAlreadyProcessed().put(hash2, 1L);
+        provider0.getUldTxHashesAlreadyProcessed().put(hash1, 1L);
+        provider0.getUldTxHashesAlreadyProcessed().put(hash2, 1L);
         provider0.save();
         track.commit();
 
@@ -172,7 +172,7 @@ public class BridgeStorageProviderTest {
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        Map<Sha256Hash, Long> processed = provider.getBtcTxHashesAlreadyProcessed();
+        Map<Sha256Hash, Long> processed = provider.getUldTxHashesAlreadyProcessed();
         Set<Sha256Hash> processedHashes = processed.keySet();
 
         Assert.assertTrue(processedHashes.contains(hash1));
@@ -229,8 +229,8 @@ public class BridgeStorageProviderTest {
         Federation federation = bridgeConstants.getGenesisFederation();
 
         BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
-        provider0.getNewFederationBtcUTXOs().add(new UTXO(hash1, 1, Coin.COIN, 0, false, ScriptBuilder.createOutputScript(federation.getAddress())));
-        provider0.getNewFederationBtcUTXOs().add(new UTXO(hash2, 2, Coin.FIFTY_COINS, 0, false, ScriptBuilder.createOutputScript(federation.getAddress())));
+        provider0.getNewFederationUldUTXOs().add(new UTXO(hash1, 1, Coin.COIN, 0, false, ScriptBuilder.createOutputScript(federation.getAddress())));
+        provider0.getNewFederationUldUTXOs().add(new UTXO(hash2, 2, Coin.FIFTY_COINS, 0, false, ScriptBuilder.createOutputScript(federation.getAddress())));
         provider0.save();
         track.commit();
 
@@ -238,7 +238,7 @@ public class BridgeStorageProviderTest {
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        List<UTXO> utxos = provider.getNewFederationBtcUTXOs();
+        List<UTXO> utxos = provider.getNewFederationUldUTXOs();
 
         Assert.assertTrue(utxos.get(0).getHash().equals(hash1));
         Assert.assertTrue(utxos.get(1).getHash().equals(hash2));
@@ -252,7 +252,7 @@ public class BridgeStorageProviderTest {
         PowerMockito.mockStatic(BridgeSerializationUtils.class);
         Repository repositoryMock = mock(Repository.class);
         BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
-        Whitebox.setInternalState(storageProvider, "btcContext", contextMock);
+        Whitebox.setInternalState(storageProvider, "uldContext", contextMock);
 
         when(repositoryMock.getStorageBytes(any(UscAddress.class), any(DataWord.class))).then((InvocationOnMock invocation) -> {
             calls.add(0);
@@ -266,10 +266,10 @@ public class BridgeStorageProviderTest {
         PowerMockito.when(BridgeSerializationUtils.deserializeFederation(any(byte[].class), any(Context.class))).then((InvocationOnMock invocation) -> {
             calls.add(0);
             byte[] data = invocation.getArgumentAt(0, byte[].class);
-            Context btcContext = invocation.getArgumentAt(1, Context.class);
-            // Make sure we're deserializing what just came from the repo with the correct BTC context
+            Context uldContext = invocation.getArgumentAt(1, Context.class);
+            // Make sure we're deserializing what just came from the repo with the correct ULD context
             Assert.assertTrue(Arrays.equals(new byte[]{(byte)0xaa}, data));
-            Assert.assertEquals(contextMock, btcContext);
+            Assert.assertEquals(contextMock, uldContext);
             return newFederation;
         });
 
@@ -286,7 +286,7 @@ public class BridgeStorageProviderTest {
         PowerMockito.mockStatic(BridgeSerializationUtils.class);
         Repository repositoryMock = mock(Repository.class);
         BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
-        Whitebox.setInternalState(storageProvider, "btcContext", contextMock);
+        Whitebox.setInternalState(storageProvider, "uldContext", contextMock);
 
         when(repositoryMock.getStorageBytes(any(UscAddress.class), any(DataWord.class))).then((InvocationOnMock invocation) -> {
             storageBytesCalls.add(0);
@@ -452,7 +452,7 @@ public class BridgeStorageProviderTest {
         BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
         Context contextMock = mock(Context.class);
         when(contextMock.getParams()).thenReturn(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
-        Whitebox.setInternalState(storageProvider, "btcContext", contextMock);
+        Whitebox.setInternalState(storageProvider, "uldContext", contextMock);
 
         when(repositoryMock.getStorageBytes(any(UscAddress.class), any(DataWord.class))).then((InvocationOnMock invocation) -> {
             calls.add(0);
@@ -485,7 +485,7 @@ public class BridgeStorageProviderTest {
         BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
         Context contextMock = mock(Context.class);
         when(contextMock.getParams()).thenReturn(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
-        Whitebox.setInternalState(storageProvider, "btcContext", contextMock);
+        Whitebox.setInternalState(storageProvider, "uldContext", contextMock);
 
         when(repositoryMock.getStorageBytes(any(UscAddress.class), any(DataWord.class))).then((InvocationOnMock invocation) -> {
             calls.add(0);

@@ -169,7 +169,7 @@ public class BlockTest {
     }
 
     @Test
-    public void sealedBlockSetBitcoinMergedMiningCoinbaseTransaction() {
+    public void sealedBlockSetUlordMergedMiningCoinbaseTransaction() {
         Block block = new BlockGenerator().createBlock(10, 0);
 
         block.seal();
@@ -179,12 +179,12 @@ public class BlockTest {
             Assert.fail();
         }
         catch (SealedBlockException ex) {
-            Assert.assertEquals("Sealed block: trying to alter bitcoin merged mining coinbase transaction", ex.getMessage());
+            Assert.assertEquals("Sealed block: trying to alter ulord merged mining coinbase transaction", ex.getMessage());
         }
     }
 
     @Test
-    public void sealedBlockSetBitcoinMergedMiningHeader() {
+    public void sealedBlockSetUlordMergedMiningHeader() {
         Block block = new BlockGenerator().createBlock(10, 0);
 
         block.seal();
@@ -194,12 +194,12 @@ public class BlockTest {
             Assert.fail();
         }
         catch (SealedBlockException ex) {
-            Assert.assertEquals("Sealed block: trying to alter bitcoin merged mining header", ex.getMessage());
+            Assert.assertEquals("Sealed block: trying to alter ulord merged mining header", ex.getMessage());
         }
     }
 
     @Test
-    public void sealedBlockSetBitcoinMergedMiningMerkleProof() {
+    public void sealedBlockSetUlordMergedMiningMerkleProof() {
         Block block = new BlockGenerator().createBlock(10, 0);
 
         block.seal();
@@ -209,7 +209,7 @@ public class BlockTest {
             Assert.fail();
         }
         catch (SealedBlockException ex) {
-            Assert.assertEquals("Sealed block: trying to alter bitcoin merged mining Merkle proof", ex.getMessage());
+            Assert.assertEquals("Sealed block: trying to alter ulord merged mining Merkle proof", ex.getMessage());
         }
     }
 
@@ -252,7 +252,7 @@ public class BlockTest {
         try {
             block.getHeader().setTransactionsRoot(new byte[32]);
             Assert.fail();
-        }
+        }1
         catch (SealedBlockHeaderException ex) {
             Assert.assertEquals("Sealed block header: trying to alter transactions root", ex.getMessage());
         }
@@ -379,47 +379,47 @@ public class BlockTest {
     }
 
     @Test
-    public void sealedBlockHeaderSetBitcoinMergedMiningHeader() {
+    public void sealedBlockHeaderSetUlordMergedMiningHeader() {
         Block block = new BlockGenerator().createBlock(10, 0);
 
         block.seal();
 
         try {
-            block.getHeader().setBitcoinMergedMiningHeader(new byte[32]);
+            block.getHeader().setUlordMergedMiningHeader(new byte[32]);
             Assert.fail();
         }
         catch (SealedBlockHeaderException ex) {
-            Assert.assertEquals("Sealed block header: trying to alter bitcoin merged mining header", ex.getMessage());
+            Assert.assertEquals("Sealed block header: trying to alter ulord merged mining header", ex.getMessage());
         }
     }
 
     @Test
-    public void sealedBlockHeaderSetBitcoinMergedMiningMerkleProof() {
+    public void sealedBlockHeaderSetUlordMergedMiningMerkleProof() {
         Block block = new BlockGenerator().createBlock(10, 0);
 
         block.seal();
 
         try {
-            block.getHeader().setBitcoinMergedMiningMerkleProof(new byte[32]);
+            block.getHeader().setUlordMergedMiningMerkleProof(new byte[32]);
             Assert.fail();
         }
         catch (SealedBlockHeaderException ex) {
-            Assert.assertEquals("Sealed block header: trying to alter bitcoin merged mining merkle proof", ex.getMessage());
+            Assert.assertEquals("Sealed block header: trying to alter ulord merged mining merkle proof", ex.getMessage());
         }
     }
 
     @Test
-    public void sealedBlockHeaderSetBitcoinMergedMiningCoinbaseTransaction() {
+    public void sealedBlockHeaderSetUlordMergedMiningCoinbaseTransaction() {
         Block block = new BlockGenerator().createBlock(10, 0);
 
         block.seal();
 
         try {
-            block.getHeader().setBitcoinMergedMiningCoinbaseTransaction(new byte[32]);
+            block.getHeader().setUlordMergedMiningCoinbaseTransaction(new byte[32]);
             Assert.fail();
         }
         catch (SealedBlockHeaderException ex) {
-            Assert.assertEquals("Sealed block header: trying to alter bitcoin merged mining coinbase transaction", ex.getMessage());
+            Assert.assertEquals("Sealed block header: trying to alter ulord merged mining coinbase transaction", ex.getMessage());
         }
     }
 

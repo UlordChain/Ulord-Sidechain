@@ -406,10 +406,10 @@ public class MinerServerImpl implements MinerServer {
 
     @Override
     public SubmitBlockResult submitUlordBlock(String blockHashForMergedMining, UldBlock ulordMergedMiningBlock) {
-        return submitBitcoinBlock(blockHashForMergedMining, ulordMergedMiningBlock, true);
+        return submitUlordBlock(blockHashForMergedMining, ulordMergedMiningBlock, true);
     }
 
-    SubmitBlockResult submitBitcoinBlock(String blockHashForMergedMining, UldBlock ulordMergedMiningBlock, boolean lastTag) {
+    SubmitBlockResult submitUlordBlock(String blockHashForMergedMining, UldBlock ulordMergedMiningBlock, boolean lastTag) {
         logger.debug("Received block with hash {} for merged mining", blockHashForMergedMining);
 
         //noinspection ConstantConditions

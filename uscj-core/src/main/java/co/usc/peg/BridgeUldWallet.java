@@ -31,14 +31,14 @@ import java.util.Optional;
  * @author ajlopez
  * @author Oscar Guindzberg
  */
-public class BridgeBtcWallet extends Wallet {
+public class BridgeUldWallet extends Wallet {
     private List<Federation> federations;
-    private Context btcContext;
+    private Context uldContext;
 
-    public BridgeBtcWallet(Context btcContext, List<Federation> federations) {
-        super(btcContext);
+    public BridgeUldWallet(Context uldContext, List<Federation> federations) {
+        super(uldContext);
         this.federations = federations;
-        this.btcContext = btcContext;
+        this.uldContext = uldContext;
     }
 
     /*
@@ -47,7 +47,7 @@ public class BridgeBtcWallet extends Wallet {
     @Nullable
     @Override
     public RedeemData findRedeemDataFromScriptHash(byte[] payToScriptHash) {
-        Context.propagate(this.btcContext);
+        Context.propagate(this.uldContext);
         Optional<Federation> destinationFederation = federations.stream().filter(federation -> Arrays.equals(federation.getP2SHScript().getPubKeyHash(), payToScriptHash)).findFirst();
         if (!destinationFederation.isPresent()) {
             return null;

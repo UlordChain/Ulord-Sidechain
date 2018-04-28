@@ -20,47 +20,47 @@ public class BlockMiner {
     public static Block mineBlock(Block block) {
         Keccak256 blockMergedMiningHash = new Keccak256(block.getHashForMergedMining());
 
-        co.usc.ulordj.core.NetworkParameters bitcoinNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
-        co.usc.ulordj.core.UldTransaction bitcoinMergedMiningCoinbaseTransaction = MinerUtils.getUlordMergedMiningCoinbaseTransaction(bitcoinNetworkParameters, blockMergedMiningHash.getBytes());
-        co.usc.ulordj.core.UldBlock bitcoinMergedMiningBlock = MinerUtils.getUlordMergedMiningBlock(bitcoinNetworkParameters, bitcoinMergedMiningCoinbaseTransaction);
+        co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
+        co.usc.ulordj.core.UldTransaction ulordMergedMiningCoinbaseTransaction = MinerUtils.getUlordMergedMiningCoinbaseTransaction(ulordNetworkParameters, blockMergedMiningHash.getBytes());
+        co.usc.ulordj.core.UldBlock ulordMergedMiningBlock = MinerUtils.getUlordMergedMiningBlock(ulordNetworkParameters, ulordMergedMiningCoinbaseTransaction);
 
         BigInteger targetBI = DifficultyUtils.difficultyToTarget(block.getDifficulty());
 
-        findNonce(bitcoinMergedMiningBlock, targetBI);
+        findNonce(ulordMergedMiningBlock, targetBI);
 
         // We need to clone to allow modifications
         Block newBlock = new Block(block.getEncoded()).cloneBlock();
 
-        newBlock.setUlordMergedMiningHeader(bitcoinMergedMiningBlock.cloneAsHeader().ulordSerialize());
+        newBlock.setUlordMergedMiningHeader(ulordMergedMiningBlock.cloneAsHeader().ulordSerialize());
 
-        bitcoinMergedMiningCoinbaseTransaction = bitcoinMergedMiningBlock.getTransactions().get(0);
-        co.usc.ulordj.core.PartialMerkleTree bitcoinMergedMiningMerkleBranch = getUlordMergedMerkleBranch(bitcoinMergedMiningBlock);
+        ulordMergedMiningCoinbaseTransaction = ulordMergedMiningBlock.getTransactions().get(0);
+        co.usc.ulordj.core.PartialMerkleTree ulordMergedMiningMerkleBranch = getUlordMergedMerkleBranch(ulordMergedMiningBlock);
 
-        newBlock.setUlordMergedMiningCoinbaseTransaction(compressCoinbase(bitcoinMergedMiningCoinbaseTransaction.ulordSerialize()));
-        newBlock.setUlordMergedMiningMerkleProof(bitcoinMergedMiningMerkleBranch.ulordSerialize());
+        newBlock.setUlordMergedMiningCoinbaseTransaction(compressCoinbase(ulordMergedMiningCoinbaseTransaction.ulordSerialize()));
+        newBlock.setUlordMergedMiningMerkleProof(ulordMergedMiningMerkleBranch.ulordSerialize());
 
         return newBlock;
     }
 
     /**
-     * findNonce will try to find a valid nonce for bitcoinMergedMiningBlock, that satisfies the given target difficulty.
+     * findNonce will try to find a valid nonce for ulordMergedMiningBlock, that satisfies the given target difficulty.
      *
-     * @param bitcoinMergedMiningBlock bitcoinBlock to find nonce for. This block's nonce will be modified.
+     * @param ulordMergedMiningBlock ulordBlock to find nonce for. This block's nonce will be modified.
      * @param target                   target difficulty. Block's hash should be lower than this number.
      */
-    public static void findNonce(@Nonnull final co.usc.ulordj.core.UldBlock bitcoinMergedMiningBlock,
+    public static void findNonce(@Nonnull final co.usc.ulordj.core.UldBlock ulordMergedMiningBlock,
                               @Nonnull final BigInteger target) {
-        bitcoinMergedMiningBlock.setNonce(nextNonceToUse.add(BigInteger.ONE));
+        ulordMergedMiningBlock.setNonce(nextNonceToUse.add(BigInteger.ONE));
 
         while (true) {
             // Is our proof of work valid yet?
-            BigInteger blockHashBI = bitcoinMergedMiningBlock.getHash().toBigInteger();
+            BigInteger blockHashBI = ulordMergedMiningBlock.getHash().toBigInteger();
 
             if (blockHashBI.compareTo(target) <= 0)
                 return;
 
             // No, so increment the nonce and try again.
-            bitcoinMergedMiningBlock.setNonce(nextNonceToUse.add(BigInteger.ONE));
+            ulordMergedMiningBlock.setNonce(nextNonceToUse.add(BigInteger.ONE));
         }
    }
 }

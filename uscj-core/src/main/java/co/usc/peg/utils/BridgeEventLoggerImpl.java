@@ -61,18 +61,18 @@ public class BridgeEventLoggerImpl implements BridgeEventLogger {
         );
     }
 
-    public void logAddSignature(UldECKey federatorPublicKey, UldTransaction btcTx, byte[] rskTxHash) {
+    public void logAddSignature(UldECKey federatorPublicKey, UldTransaction uldTx, byte[] rskTxHash) {
         List<DataWord> topics = Collections.singletonList(Bridge.ADD_SIGNATURE_TOPIC);
-        byte[] data = RLP.encodeList(RLP.encodeString(btcTx.getHashAsString()),
+        byte[] data = RLP.encodeList(RLP.encodeString(uldTx.getHashAsString()),
                                     RLP.encodeElement(federatorPublicKey.getPubKeyHash()),
                                     RLP.encodeElement(rskTxHash));
 
         this.logs.add(new LogInfo(BRIDGE_CONTRACT_ADDRESS, topics, data));
     }
 
-    public void logReleaseBtc(UldTransaction btcTx) {
-        List<DataWord> topics = Collections.singletonList(Bridge.RELEASE_BTC_TOPIC);
-        byte[] data = RLP.encodeList(RLP.encodeString(btcTx.getHashAsString()), RLP.encodeElement(btcTx.ulordSerialize()));
+    public void logReleaseUld(UldTransaction uldTx) {
+        List<DataWord> topics = Collections.singletonList(Bridge.RELEASE_ULD_TOPIC);
+        byte[] data = RLP.encodeList(RLP.encodeString(uldTx.getHashAsString()), RLP.encodeElement(uldTx.ulordSerialize()));
 
         this.logs.add(new LogInfo(BRIDGE_CONTRACT_ADDRESS, topics, data));
     }

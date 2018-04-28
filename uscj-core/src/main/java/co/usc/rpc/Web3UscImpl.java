@@ -97,35 +97,35 @@ public class Web3UscImpl extends Web3Impl {
         return minerServer.getWork();
     }
 
-    public SubmittedBlockInfo mnr_submitBitcoinBlock(String bitcoinBlockHex) {
-        logger.debug("mnr_submitBitcoinBlock(): {}", bitcoinBlockHex.length());
+    public SubmittedBlockInfo mnr_submitUlordBlock(String ulordBlockHex) {
+        logger.debug("mnr_submitUlordBlock(): {}", ulordBlockHex.length());
 
         NetworkParameters params = RegTestParams.get();
         new Context(params);
 
-        UldBlock bitcoinBlock = getUldBlock(bitcoinBlockHex, params);
-        UldTransaction coinbase = bitcoinBlock.getTransactions().get(0);
+        UldBlock ulordBlock = getUldBlock(ulordBlockHex, params);
+        UldTransaction coinbase = ulordBlock.getTransactions().get(0);
 
         String blockHashForMergedMining = extractBlockHashForMergedMining(coinbase);
 
-        SubmitBlockResult result = minerServer.submitUlordBlock(blockHashForMergedMining, bitcoinBlock);
+        SubmitBlockResult result = minerServer.submitUlordBlock(blockHashForMergedMining, ulordBlock);
 
         return parseResultAndReturn(result);
     }
 
-    public SubmittedBlockInfo mnr_submitBitcoinBlockPartialMerkle(
+    public SubmittedBlockInfo mnr_submitUlordBlockPartialMerkle(
             String blockHashHex,
             String blockHeaderHex,
             String coinbaseHex,
             String merkleHashesHex,
             String blockTxnCountHex
     ) {
-        logger.debug("mnr_submitBitcoinBlockPartialMerkle(): {}, {}, {}, {}, {}", blockHashHex, blockHeaderHex, coinbaseHex, merkleHashesHex, blockTxnCountHex);
+        logger.debug("mnr_submitUlordBlockPartialMerkle(): {}, {}, {}, {}, {}", blockHashHex, blockHeaderHex, coinbaseHex, merkleHashesHex, blockTxnCountHex);
 
         NetworkParameters params = RegTestParams.get();
         new Context(params);
 
-        UldBlock bitcoinBlockWithHeaderOnly = getUldBlock(blockHeaderHex, params);
+        UldBlock ulordBlockWithHeaderOnly = getUldBlock(blockHeaderHex, params);
         UldTransaction coinbase = new UldTransaction(params, Hex.decode(coinbaseHex));
 
         String blockHashForMergedMining = extractBlockHashForMergedMining(coinbase);
@@ -134,37 +134,37 @@ public class Web3UscImpl extends Web3Impl {
 
         int txnCount = Integer.parseInt(blockTxnCountHex, 16);
 
-        SubmitBlockResult result = minerServer.submitUlordBlockPartialMerkle(blockHashForMergedMining, bitcoinBlockWithHeaderOnly, coinbase, merkleHashes, txnCount);
+        SubmitBlockResult result = minerServer.submitUlordBlockPartialMerkle(blockHashForMergedMining, ulordBlockWithHeaderOnly, coinbase, merkleHashes, txnCount);
 
         return parseResultAndReturn(result);
     }
 
-    public SubmittedBlockInfo mnr_submitBitcoinBlockTransactions(
+    public SubmittedBlockInfo mnr_submitUlordBlockTransactions(
             String blockHashHex,
             String blockHeaderHex,
             String coinbaseHex,
             String txnHashesHex
     ) {
-        logger.debug("mnr_submitBitcoinBlockTransactions(): {}, {}, {}, {}", blockHashHex, blockHeaderHex, coinbaseHex, txnHashesHex);
+        logger.debug("mnr_submitUlordBlockTransactions(): {}, {}, {}, {}", blockHashHex, blockHeaderHex, coinbaseHex, txnHashesHex);
 
         NetworkParameters params = RegTestParams.get();
         new Context(params);
 
-        UldBlock bitcoinBlockWithHeaderOnly = getUldBlock(blockHeaderHex, params);
+        UldBlock ulordBlockWithHeaderOnly = getUldBlock(blockHeaderHex, params);
         UldTransaction coinbase = new UldTransaction(params, Hex.decode(coinbaseHex));
 
         String blockHashForMergedMining = extractBlockHashForMergedMining(coinbase);
 
         List<String> txnHashes = parseHashes(txnHashesHex);
 
-        SubmitBlockResult result = minerServer.submitUlordBlockTransactions(blockHashForMergedMining, bitcoinBlockWithHeaderOnly, coinbase, txnHashes);
+        SubmitBlockResult result = minerServer.submitUlordBlockTransactions(blockHashForMergedMining, ulordBlockWithHeaderOnly, coinbase, txnHashes);
 
         return parseResultAndReturn(result);
     }
 
     public void ext_dumpState() {
-        Block bestBlcock = blockStore.getBestBlock();
-        logger.info("Dumping state for block hash {}, block number {}", bestBlcock.getHash(), bestBlcock.getNumber());
+        Block bestBlock = blockStore.getBestBlock();
+        logger.info("Dumping state for block hash {}, block number {}", bestBlock.getHash(), bestBlock.getNumber());
         networkStateExporter.exportStatus(System.getProperty("user.dir") + "/" + "uscdump.json");
     }
 
@@ -219,8 +219,8 @@ public class Web3UscImpl extends Web3Impl {
     }
 
     private UldBlock getUldBlock(String blockHeaderHex, NetworkParameters params) {
-        byte[] bitcoinBlockByteArray = Hex.decode(blockHeaderHex);
-        return params.getDefaultSerializer().makeBlock(bitcoinBlockByteArray);
+        byte[] ulordBlockByteArray = Hex.decode(blockHeaderHex);
+        return params.getDefaultSerializer().makeBlock(ulordBlockByteArray);
     }
 
     private String extractBlockHashForMergedMining(UldTransaction coinbase) {

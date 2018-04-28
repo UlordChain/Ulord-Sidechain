@@ -38,16 +38,16 @@ import java.util.stream.Collectors;
  */
 public class ReleaseTransactionBuilder {
     public class BuildResult {
-        private final UldTransaction btcTx;
+        private final UldTransaction uldTx;
         private final List<UTXO> selectedUTXOs;
 
-        public BuildResult(UldTransaction btcTx, List<UTXO> selectedUTXOs) {
-            this.btcTx = btcTx;
+        public BuildResult(UldTransaction uldTx, List<UTXO> selectedUTXOs) {
+            this.uldTx = uldTx;
             this.selectedUTXOs = selectedUTXOs;
         }
 
-        public UldTransaction getBtcTx() {
-            return btcTx;
+        public UldTransaction getUldTx() {
+            return uldTx;
         }
 
         public List<UTXO> getSelectedUTXOs() {
@@ -105,8 +105,8 @@ public class ReleaseTransactionBuilder {
             String operationDescription) {
 
         // Build a tx and send request and configure it
-        UldTransaction btcTx = new UldTransaction(params);
-        SendRequest sr = SendRequest.forTx(btcTx);
+        UldTransaction uldTx = new UldTransaction(params);
+        SendRequest sr = SendRequest.forTx(uldTx);
         // Default settings
         defaultSettingsConfigurator.configure(sr);
         // Specific settings
@@ -116,40 +116,40 @@ public class ReleaseTransactionBuilder {
             wallet.completeTx(sr);
 
             // Disconnect input from output because we don't need the reference and it interferes serialization
-            for (TransactionInput transactionInput : btcTx.getInputs()) {
+            for (TransactionInput transactionInput : uldTx.getInputs()) {
                 transactionInput.disconnect();
             }
 
             List<UTXO> selectedUTXOs = wallet
                 .getUTXOProvider().getOpenTransactionOutputs(wallet.getWatchedAddresses()).stream()
                 .filter(utxo ->
-                    btcTx.getInputs().stream().anyMatch(input ->
+                    uldTx.getInputs().stream().anyMatch(input ->
                         input.getOutpoint().getHash().equals(utxo.getHash()) &&
                         input.getOutpoint().getIndex() == utxo.getIndex()
                     )
                 )
                 .collect(Collectors.toList());
 
-            return Optional.of(new BuildResult(btcTx, selectedUTXOs));
+            return Optional.of(new BuildResult(uldTx, selectedUTXOs));
         } catch (InsufficientMoneyException e) {
-            logger.warn(String.format("Not enough BTC in the wallet to complete %s", operationDescription), e);
+            logger.warn(String.format("Not enough ULD in the wallet to complete %s", operationDescription), e);
             // Comment out panic logging for now
-            // panicProcessor.panic("nomoney", "Not enough confirmed BTC in the federation wallet to complete " + rskTxHash + " " + btcTx);
+            // panicProcessor.panic("nomoney", "Not enough confirmed ULD in the federation wallet to complete " + rskTxHash + " " + uldTx);
             return Optional.empty();
         } catch (Wallet.CouldNotAdjustDownwards e) {
             logger.warn(String.format("A user output could not be adjusted downwards to pay tx fees %s", operationDescription), e);
             // Comment out panic logging for now
-            // panicProcessor.panic("couldnotadjustdownwards", "A user output could not be adjusted downwards to pay tx fees " + rskTxHash + " " + btcTx);
+            // panicProcessor.panic("couldnotadjustdownwards", "A user output could not be adjusted downwards to pay tx fees " + rskTxHash + " " + uldTx);
             return Optional.empty();
         } catch (Wallet.ExceededMaxTransactionSize e) {
             logger.warn(String.format("Tx size too big %s", operationDescription), e);
             // Comment out panic logging for now
-            // panicProcessor.panic("exceededmaxtransactionsize", "Tx size too big " + rskTxHash + " " + btcTx);
+            // panicProcessor.panic("exceededmaxtransactionsize", "Tx size too big " + rskTxHash + " " + uldTx);
             return Optional.empty();
         } catch (UTXOProviderException e) {
             logger.warn(String.format("UTXO provider exception sending %s", operationDescription), e);
             // Comment out panic logging for now
-            // panicProcessor.panic("utxoprovider", "UTXO provider exception " + rskTxHash + " " + btcTx);
+            // panicProcessor.panic("utxoprovider", "UTXO provider exception " + rskTxHash + " " + uldTx);
             return Optional.empty();
         }
     }

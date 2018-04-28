@@ -24,9 +24,6 @@ import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageProvider;
 import co.usc.peg.Federation;
 import co.usc.peg.PegTestUtils;
-import co.usc.peg.Bridge;
-import co.usc.peg.BridgeStorageProvider;
-import co.usc.peg.Federation;
 import org.ethereum.core.Repository;
 import org.ethereum.crypto.HashUtil;
 import org.junit.Ignore;
@@ -37,15 +34,15 @@ import java.math.BigInteger;
 import java.util.*;
 
 @Ignore
-public class StateForBtcReleaseClientTest extends BridgePerformanceTestCase {
+public class StateForUldReleaseClientTest extends BridgePerformanceTestCase {
     @Test
     public void getStateForBtcReleaseClient() {
-        ExecutionStats stats = new ExecutionStats("getStateForBtcReleaseClient");
+        ExecutionStats stats = new ExecutionStats("getStateForUldReleaseClient");
 
         executeAndAverage(
-                "getStateForBtcReleaseClient",
+                "getStateForUldReleaseClient",
                 200,
-                (int executionIndex) -> Bridge.GET_STATE_FOR_BTC_RELEASE_CLIENT.encode(),
+                (int executionIndex) -> Bridge.GET_STATE_FOR_ULD_RELEASE_CLIENT.encode(),
                 getInitializer(),
                 Helper.getZeroValueRandomSenderTxBuilder(),
                 Helper.getRandomHeightProvider(10),

@@ -203,7 +203,7 @@ public class NodeMessageHandlerTest {
                 null, scoring,
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
         Block block = BlockChainBuilder.ofSize(1, true).getBestBlock();
-        byte[] mergedMiningHeader = block.getBitcoinMergedMiningHeader();
+        byte[] mergedMiningHeader = block.getUlordMergedMiningHeader();
         mergedMiningHeader[76] += 3; //change merged mining nonce.
         Message message = new BlockMessage(block);
 

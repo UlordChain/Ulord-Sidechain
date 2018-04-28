@@ -92,12 +92,12 @@ public class BlockHeader {
      * With the exception of the genesis block, this must be 32 bytes or fewer */
     private byte[] extraData;
 
-    /* The 81-byte bitcoin block header for merged mining */
-    private byte[] bitcoinMergedMiningHeader;
-    /* The bitcoin merkle proof of coinbase tx for merged mining */
-    private byte[] bitcoinMergedMiningMerkleProof;
-    /* The bitcoin protobuf serialized coinbase tx for merged mining */
-    private byte[] bitcoinMergedMiningCoinbaseTransaction;
+    /* The 81-byte ulord block header for merged mining */
+    private byte[] ulordMergedMiningHeader;
+    /* The ulord merkle proof of coinbase tx for merged mining */
+    private byte[] ulordMergedMiningMerkleProof;
+    /* The ulord protobuf serialized coinbase tx for merged mining */
+    private byte[] ulordMergedMiningCoinbaseTransaction;
     /**
      * The mgp for a tx to be included in the block.
      * Note that minimumGasPriceRaw is saved to perform {@link #getEncoded()},
@@ -162,9 +162,9 @@ public class BlockHeader {
         }
 
         if (rlpHeader.size() > r) {
-            this.bitcoinMergedMiningHeader = rlpHeader.get(r++).getRLPData();
-            this.bitcoinMergedMiningMerkleProof = rlpHeader.get(r++).getRLPData();
-            this.bitcoinMergedMiningCoinbaseTransaction = rlpHeader.get(r++).getRLPData();
+            this.ulordMergedMiningHeader = rlpHeader.get(r++).getRLPData();
+            this.ulordMergedMiningMerkleProof = rlpHeader.get(r++).getRLPData();
+            this.ulordMergedMiningCoinbaseTransaction = rlpHeader.get(r++).getRLPData();
 
         }
 
@@ -185,8 +185,8 @@ public class BlockHeader {
                        byte[] logsBloom, byte[] difficulty, long number,
                        byte[] gasLimit, long gasUsed, long timestamp,
                        byte[] extraData,
-                       byte[] bitcoinMergedMiningHeader, byte[] bitcoinMergedMiningMerkleProof,
-                       byte[] bitcoinMergedMiningCoinbaseTransaction,
+                       byte[] ulordMergedMiningHeader, byte[] ulordMergedMiningMerkleProof,
+                       byte[] ulordMergedMiningCoinbaseTransaction,
                        byte[] minimumGasPrice,
                        int uncleCount) {
         this.parentHash = parentHash;
@@ -206,9 +206,9 @@ public class BlockHeader {
         this.receiptTrieRoot = ByteUtils.clone(EMPTY_TRIE_HASH);
         this.uncleCount = uncleCount;
         this.paidFees = Coin.ZERO;
-        this.bitcoinMergedMiningHeader = bitcoinMergedMiningHeader;
-        this.bitcoinMergedMiningMerkleProof = bitcoinMergedMiningMerkleProof;
-        this.bitcoinMergedMiningCoinbaseTransaction = bitcoinMergedMiningCoinbaseTransaction;
+        this.ulordMergedMiningHeader = ulordMergedMiningHeader;
+        this.ulordMergedMiningMerkleProof = ulordMergedMiningMerkleProof;
+        this.ulordMergedMiningCoinbaseTransaction = ulordMergedMiningCoinbaseTransaction;
     }
 
     @VisibleForTesting
@@ -451,12 +451,12 @@ public class BlockHeader {
         fieldToEncodeList.add(uncleCount);
 
         if (withMergedMiningFields && hasMiningFields()) {
-            byte[] bitcoinMergedMiningHeader = RLP.encodeElement(this.bitcoinMergedMiningHeader);
-            fieldToEncodeList.add(bitcoinMergedMiningHeader);
-            byte[] bitcoinMergedMiningMerkleProof = RLP.encodeElement(this.bitcoinMergedMiningMerkleProof);
-            fieldToEncodeList.add(bitcoinMergedMiningMerkleProof);
-            byte[] bitcoinMergedMiningCoinbaseTransaction = RLP.encodeElement(this.bitcoinMergedMiningCoinbaseTransaction);
-            fieldToEncodeList.add(bitcoinMergedMiningCoinbaseTransaction);
+            byte[] ulordMergedMiningHeader = RLP.encodeElement(this.ulordMergedMiningHeader);
+            fieldToEncodeList.add(ulordMergedMiningHeader);
+            byte[] ulordMergedMiningMerkleProof = RLP.encodeElement(this.ulordMergedMiningMerkleProof);
+            fieldToEncodeList.add(ulordMergedMiningMerkleProof);
+            byte[] ulordMergedMiningCoinbaseTransaction = RLP.encodeElement(this.ulordMergedMiningCoinbaseTransaction);
+            fieldToEncodeList.add(ulordMergedMiningCoinbaseTransaction);
         }
 
 
@@ -475,15 +475,15 @@ public class BlockHeader {
     }
 
     public boolean hasMiningFields() {
-        if (this.bitcoinMergedMiningCoinbaseTransaction != null && this.bitcoinMergedMiningCoinbaseTransaction.length > 0) {
+        if (this.ulordMergedMiningCoinbaseTransaction != null && this.ulordMergedMiningCoinbaseTransaction.length > 0) {
             return true;
         }
 
-        if (this.bitcoinMergedMiningHeader != null && this.bitcoinMergedMiningHeader.length > 0) {
+        if (this.ulordMergedMiningHeader != null && this.ulordMergedMiningHeader.length > 0) {
             return true;
         }
 
-        if (this.bitcoinMergedMiningMerkleProof != null && this.bitcoinMergedMiningMerkleProof.length > 0) {
+        if (this.ulordMergedMiningMerkleProof != null && this.ulordMergedMiningMerkleProof.length > 0) {
             return true;
         }
 
@@ -543,42 +543,42 @@ public class BlockHeader {
         return getEncoded();
     }
     public byte[] getUlordMergedMiningHeader() {
-        return bitcoinMergedMiningHeader;
+        return ulordMergedMiningHeader;
     }
 
-    public void setBitcoinMergedMiningHeader(byte[] bitcoinMergedMiningHeader) {
+    public void setUlordMergedMiningHeader(byte[] ulordMergedMiningHeader) {
         /* A sealed block header is immutable, cannot be changed */
         if (this.sealed) {
-            throw new SealedBlockHeaderException("trying to alter bitcoin merged mining header");
+            throw new SealedBlockHeaderException("trying to alter ulord merged mining header");
         }
 
-        this.bitcoinMergedMiningHeader = bitcoinMergedMiningHeader;
+        this.ulordMergedMiningHeader = ulordMergedMiningHeader;
     }
 
     public byte[] getUlordMergedMiningMerkleProof() {
-        return bitcoinMergedMiningMerkleProof;
+        return ulordMergedMiningMerkleProof;
     }
 
-    public void setBitcoinMergedMiningMerkleProof(byte[] bitcoinMergedMiningMerkleProof) {
+    public void setUlordMergedMiningMerkleProof(byte[] ulordMergedMiningMerkleProof) {
         /* A sealed block header is immutable, cannot be changed */
         if (this.sealed) {
-            throw new SealedBlockHeaderException("trying to alter bitcoin merged mining merkle proof");
+            throw new SealedBlockHeaderException("trying to alter ulord merged mining merkle proof");
         }
 
-        this.bitcoinMergedMiningMerkleProof = bitcoinMergedMiningMerkleProof;
+        this.ulordMergedMiningMerkleProof = ulordMergedMiningMerkleProof;
     }
 
     public byte[] getUlordMergedMiningCoinbaseTransaction() {
-        return bitcoinMergedMiningCoinbaseTransaction;
+        return ulordMergedMiningCoinbaseTransaction;
     }
 
-    public void setBitcoinMergedMiningCoinbaseTransaction(byte[] bitcoinMergedMiningCoinbaseTransaction) {
+    public void setUlordMergedMiningCoinbaseTransaction(byte[] ulordMergedMiningCoinbaseTransaction) {
         /* A sealed block header is immutable, cannot be changed */
         if (this.sealed) {
-            throw new SealedBlockHeaderException("trying to alter bitcoin merged mining coinbase transaction");
+            throw new SealedBlockHeaderException("trying to alter ulord merged mining coinbase transaction");
         }
 
-        this.bitcoinMergedMiningCoinbaseTransaction = bitcoinMergedMiningCoinbaseTransaction;
+        this.ulordMergedMiningCoinbaseTransaction = ulordMergedMiningCoinbaseTransaction;
     }
 
     public String getShortHashForMergedMining() {

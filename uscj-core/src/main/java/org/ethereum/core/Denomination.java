@@ -27,7 +27,7 @@ public enum Denomination {
     SATOSHI(newBigInt(10)),
     SZABO(newBigInt(12)),
     FINNEY(newBigInt(15)),
-    SBTC(newBigInt(18));
+    SULD(newBigInt(18));
 
     private BigInteger amount;
 
@@ -48,8 +48,8 @@ public enum Denomination {
     }
 
     public static String toFriendlyString(BigInteger value) {
-        if (value.compareTo(SBTC.value()) == 1 || value.compareTo(SBTC.value()) == 0) {
-            return Float.toString(value.divide(SBTC.value()).floatValue()) +  " SBTC";
+        if (value.compareTo(SULD.value()) == 1 || value.compareTo(SULD.value()) == 0) {
+            return Float.toString(value.divide(SULD.value()).floatValue()) +  " SULD";
         }
         else if(value.compareTo(FINNEY.value()) == 1 || value.compareTo(FINNEY.value()) == 0) {
             return Float.toString(value.divide(FINNEY.value()).floatValue()) +  " FINNEY";

@@ -64,12 +64,12 @@ public class Genesis extends Block {
                    byte[] difficulty, long number, long gasLimit,
                    long gasUsed, long timestamp,
                    byte[] extraData, byte[] mixHash, byte[] nonce,
-                   byte[] bitcoinMergedMiningHeader, byte[] bitcoinMergedMiningMerkleProof,
-                   byte[] bitcoinMergedMiningCoinbaseTransaction, byte[] minimumGasPrice){
+                   byte[] ulordMergedMiningHeader, byte[] ulordMergedMiningMerkleProof,
+                   byte[] ulordMergedMiningCoinbaseTransaction, byte[] minimumGasPrice){
         super(parentHash, unclesHash, coinbase, logsBloom, difficulty,
                 number, ByteUtil.longToBytesNoLeadZeroes(gasLimit), gasUsed, timestamp, extraData,
-                mixHash, nonce, bitcoinMergedMiningHeader, bitcoinMergedMiningMerkleProof,
-                bitcoinMergedMiningCoinbaseTransaction, EMPTY_TRIE_HASH, EMPTY_TRIE_HASH, EMPTY_TRIE_HASH, null, null, minimumGasPrice);
+                mixHash, nonce, ulordMergedMiningHeader, ulordMergedMiningMerkleProof,
+                ulordMergedMiningCoinbaseTransaction, EMPTY_TRIE_HASH, EMPTY_TRIE_HASH, EMPTY_TRIE_HASH, null, null, minimumGasPrice);
     }
 
     public static Block getInstance(UscSystemProperties config) {

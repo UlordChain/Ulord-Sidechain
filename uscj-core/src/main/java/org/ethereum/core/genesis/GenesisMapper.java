@@ -46,21 +46,21 @@ public class GenesisMapper {
         byte[] gasLimitBytes = Utils.parseData(json.gasLimit);
         long gasLimit = ByteUtil.byteArrayToLong(gasLimitBytes);
 
-        byte[] bitcoinMergedMiningHeader = null;
-        byte[] bitcoinMergedMiningMerkleProof = null;
-        byte[] bitcoinMergedMiningCoinbaseTransaction = null;
+        byte[] ulordMergedMiningHeader = null;
+        byte[] ulordMergedMiningMerkleProof = null;
+        byte[] ulordMergedMiningCoinbaseTransaction = null;
         byte[] minGasPrice = null;
 
         if (uscFormat) {
-            bitcoinMergedMiningHeader = Utils.parseData(json.bitcoinMergedMiningHeader);
-            bitcoinMergedMiningMerkleProof = Utils.parseData(json.bitcoinMergedMiningMerkleProof);
-            bitcoinMergedMiningCoinbaseTransaction = Utils.parseData(json.bitcoinMergedMiningCoinbaseTransaction);
+            ulordMergedMiningHeader = Utils.parseData(json.ulordMergedMiningHeader);
+            ulordMergedMiningMerkleProof = Utils.parseData(json.ulordMergedMiningMerkleProof);
+            ulordMergedMiningCoinbaseTransaction = Utils.parseData(json.ulordMergedMiningCoinbaseTransaction);
             minGasPrice = Utils.parseData(json.getMinimumGasPrice());
         }
 
         return new Genesis(parentHash, EMPTY_LIST_HASH, coinbase, Genesis.getZeroHash(),
                 difficulty, 0, gasLimit, 0, timestamp, extraData,
-                mixHash, nonce, bitcoinMergedMiningHeader, bitcoinMergedMiningMerkleProof,
-                bitcoinMergedMiningCoinbaseTransaction, minGasPrice);
+                mixHash, nonce, ulordMergedMiningHeader, ulordMergedMiningMerkleProof,
+                ulordMergedMiningCoinbaseTransaction, minGasPrice);
     }
 }

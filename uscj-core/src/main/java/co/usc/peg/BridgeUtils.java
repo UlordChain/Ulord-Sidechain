@@ -25,7 +25,7 @@ import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.wallet.Wallet;
 import co.usc.config.BridgeConstants;
 import co.usc.core.UscAddress;
-import co.usc.peg.bitcoin.RskAllowUnconfirmedCoinSelector;
+import co.usc.peg.ulord.RskAllowUnconfirmedCoinSelector;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Transaction;
@@ -67,24 +67,24 @@ public class BridgeUtils {
         }
     }
 
-    public static Wallet getFederationNoSpendWallet(Context btcContext, Federation federation) {
-        return getFederationsNoSpendWallet(btcContext, Arrays.asList(federation));
+    public static Wallet getFederationNoSpendWallet(Context uldContext, Federation federation) {
+        return getFederationsNoSpendWallet(uldContext, Arrays.asList(federation));
     }
 
-    public static Wallet getFederationsNoSpendWallet(Context btcContext, List<Federation> federations) {
-        Wallet wallet = new BridgeBtcWallet(btcContext, federations);
+    public static Wallet getFederationsNoSpendWallet(Context uldContext, List<Federation> federations) {
+        Wallet wallet = new BridgeUldWallet(uldContext, federations);
         federations.forEach(federation -> wallet.addWatchedAddress(federation.getAddress(), federation.getCreationTime().toEpochMilli()));
         return wallet;
     }
 
-    public static Wallet getFederationSpendWallet(Context btcContext, Federation federation, List<UTXO> utxos) {
-        return getFederationsSpendWallet(btcContext, Arrays.asList(federation), utxos);
+    public static Wallet getFederationSpendWallet(Context uldContext, Federation federation, List<UTXO> utxos) {
+        return getFederationsSpendWallet(uldContext, Arrays.asList(federation), utxos);
     }
 
-    public static Wallet getFederationsSpendWallet(Context btcContext, List<Federation> federations, List<UTXO> utxos) {
-        Wallet wallet = new BridgeBtcWallet(btcContext, federations);
+    public static Wallet getFederationsSpendWallet(Context uldContext, List<Federation> federations, List<UTXO> utxos) {
+        Wallet wallet = new BridgeUldWallet(uldContext, federations);
 
-        RskUTXOProvider utxoProvider = new RskUTXOProvider(btcContext.getParams(), utxos);
+        RskUTXOProvider utxoProvider = new RskUTXOProvider(uldContext.getParams(), utxos);
         wallet.setUTXOProvider(utxoProvider);
         federations.stream().forEach(federation -> {
             wallet.addWatchedAddress(federation.getAddress(), federation.getCreationTime().toEpochMilli());
@@ -103,7 +103,7 @@ public class BridgeUtils {
         }
     }
 
-    public static boolean isLockTx(UldTransaction tx, List<Federation> federations, Context btcContext, BridgeConstants bridgeConstants) {
+    public static boolean isLockTx(UldTransaction tx, List<Federation> federations, Context uldContext, BridgeConstants bridgeConstants) {
         // First, check tx is not a typical release tx (tx spending from the any of the federation addresses and
         // optionally sending some change to any of the federation addresses)
         for (int i = 0; i < tx.getInputs().size(); i++) {
@@ -113,7 +113,7 @@ public class BridgeUtils {
             }
         }
 
-        Wallet federationsWallet = BridgeUtils.getFederationsNoSpendWallet(btcContext, federations);
+        Wallet federationsWallet = BridgeUtils.getFederationsNoSpendWallet(uldContext, federations);
         Coin valueSentToMe = tx.getValueSentToMe(federationsWallet);
 
         int valueSentToMeSignum = valueSentToMe.signum();
@@ -123,8 +123,8 @@ public class BridgeUtils {
         return (valueSentToMeSignum > 0 && !valueSentToMe.isLessThan(bridgeConstants.getMinimumLockTxValue()));
     }
 
-    public static boolean isLockTx(UldTransaction tx, Federation federation, Context btcContext, BridgeConstants bridgeConstants) {
-        return isLockTx(tx, Arrays.asList(federation), btcContext, bridgeConstants);
+    public static boolean isLockTx(UldTransaction tx, Federation federation, Context uldContext, BridgeConstants bridgeConstants) {
+        return isLockTx(tx, Arrays.asList(federation), uldContext, bridgeConstants);
     }
 
     public static boolean isReleaseTx(UldTransaction tx, Federation federation, BridgeConstants bridgeConstants) {
@@ -142,17 +142,17 @@ public class BridgeUtils {
         return false;
     }
 
-    public static boolean isMigrationTx(UldTransaction btcTx, Federation activeFederation, Federation retiringFederation, Context btcContext, BridgeConstants bridgeConstants) {
+    public static boolean isMigrationTx(UldTransaction uldTx, Federation activeFederation, Federation retiringFederation, Context uldContext, BridgeConstants bridgeConstants) {
         if (retiringFederation == null) {
             return false;
         }
-        boolean moveFromRetiring = isReleaseTx(btcTx, retiringFederation, bridgeConstants);
-        boolean moveToActive = isLockTx(btcTx, activeFederation, btcContext, bridgeConstants);
+        boolean moveFromRetiring = isReleaseTx(uldTx, retiringFederation, bridgeConstants);
+        boolean moveToActive = isLockTx(uldTx, activeFederation, uldContext, bridgeConstants);
 
         return moveFromRetiring && moveToActive;
     }
 
-    public static Address recoverBtcAddressFromEthTransaction(org.ethereum.core.Transaction tx, NetworkParameters networkParameters) {
+    public static Address recoverUldAddressFromEthTransaction(org.ethereum.core.Transaction tx, NetworkParameters networkParameters) {
         org.ethereum.crypto.ECKey key = tx.getKey();
         byte[] pubKey = key.getPubKey(true);
         return UldECKey.fromPublicOnly(pubKey).toAddress(networkParameters);

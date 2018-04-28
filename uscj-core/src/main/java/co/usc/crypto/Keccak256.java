@@ -67,7 +67,7 @@ public class Keccak256 implements Serializable, Comparable<Keccak256> {
      */
     @Override
     public int hashCode() {
-        // Use the last 4 bytes, not the first 4 which are often zeros in Bitcoin.
+        // Use the last 4 bytes, not the first 4 which are often zeros in Ulord.
         return Ints.fromBytes(bytes[28], bytes[29], bytes[30], bytes[31]);
     }
 

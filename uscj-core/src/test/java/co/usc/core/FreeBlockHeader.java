@@ -67,12 +67,12 @@ public class FreeBlockHeader {
     * With the exception of the genesis block, this must be 32 bytes or fewer */
     private byte[] extraData;
 
-    /* The 81-byte bitcoin block header for merged mining */
-    private byte[] bitcoinMergedMiningHeader;
-    /* The bitcoin merkle proof of coinbase tx for merged mining */
-    private byte[] bitcoinMergedMiningMerkleProof;
-    /* The bitcoin protobuf serialized coinbase tx for merged mining */
-    private byte[] bitcoinMergedMiningCoinbaseTransaction;
+    /* The 81-byte ulord block header for merged mining */
+    private byte[] ulordMergedMiningHeader;
+    /* The ulord merkle proof of coinbase tx for merged mining */
+    private byte[] ulordMergedMiningMerkleProof;
+    /* The ulord protobuf serialized coinbase tx for merged mining */
+    private byte[] ulordMergedMiningCoinbaseTransaction;
     /*The mgp for a tx to be included in the block*/
     private byte[] minimumGasPrice;
     private byte[] uncleCount;
@@ -125,9 +125,9 @@ public class FreeBlockHeader {
         }
 
         if (rlpHeader.size() > r) {
-            this.bitcoinMergedMiningHeader = rlpHeader.get(r++).getRLPData();
-            this.bitcoinMergedMiningMerkleProof = rlpHeader.get(r++).getRLPData();
-            this.bitcoinMergedMiningCoinbaseTransaction = rlpHeader.get(r++).getRLPData();
+            this.ulordMergedMiningHeader = rlpHeader.get(r++).getRLPData();
+            this.ulordMergedMiningMerkleProof = rlpHeader.get(r++).getRLPData();
+            this.ulordMergedMiningCoinbaseTransaction = rlpHeader.get(r++).getRLPData();
 
         }
 
@@ -170,12 +170,12 @@ public class FreeBlockHeader {
     }
 
     public FreeBlockHeader(byte[] parentHash, byte[] unclesHash, byte[] coinbase,
-                       byte[] logsBloom, byte[] difficulty, byte[] number,
-                       byte[] gasLimit, byte[] gasUsed, byte[] timestamp,
-                       byte[] extraData,
-                       byte[] bitcoinMergedMiningHeader, byte[] bitcoinMergedMiningMerkleProof,
-                       byte[] bitcoinMergedMiningCoinbaseTransaction,
-                       byte[] minimumGasPrice,
+                           byte[] logsBloom, byte[] difficulty, byte[] number,
+                           byte[] gasLimit, byte[] gasUsed, byte[] timestamp,
+                           byte[] extraData,
+                           byte[] ulordMergedMiningHeader, byte[] ulordMergedMiningMerkleProof,
+                           byte[] ulordMergedMiningCoinbaseTransaction,
+                           byte[] minimumGasPrice,
                            byte[] uncleCount) {
         this.parentHash = parentHash;
         this.unclesHash = unclesHash;
@@ -188,9 +188,9 @@ public class FreeBlockHeader {
         this.timestamp = timestamp;
         this.extraData = extraData;
         this.stateRoot = ByteUtils.clone(EMPTY_TRIE_HASH);
-        this.bitcoinMergedMiningHeader = bitcoinMergedMiningHeader;
-        this.bitcoinMergedMiningMerkleProof = bitcoinMergedMiningMerkleProof;
-        this.bitcoinMergedMiningCoinbaseTransaction = bitcoinMergedMiningCoinbaseTransaction;
+        this.ulordMergedMiningHeader = ulordMergedMiningHeader;
+        this.ulordMergedMiningMerkleProof = ulordMergedMiningMerkleProof;
+        this.ulordMergedMiningCoinbaseTransaction = ulordMergedMiningCoinbaseTransaction;
         this.minimumGasPrice = minimumGasPrice;
         this.receiptTrieRoot = ByteUtils.clone(EMPTY_TRIE_HASH);
         this.uncleCount = uncleCount;
@@ -385,12 +385,12 @@ public class FreeBlockHeader {
         fieldToEncodeList.add(uncleCount);
 
         if (withMergedMiningFields && hasMiningFields()) {
-            byte[] bitcoinMergedMiningHeader = RLP.encodeElement(this.bitcoinMergedMiningHeader);
-            fieldToEncodeList.add(bitcoinMergedMiningHeader);
-            byte[] bitcoinMergedMiningMerkleProof = RLP.encodeElement(this.bitcoinMergedMiningMerkleProof);
-            fieldToEncodeList.add(bitcoinMergedMiningMerkleProof);
-            byte[] bitcoinMergedMiningCoinbaseTransaction = RLP.encodeElement(this.bitcoinMergedMiningCoinbaseTransaction);
-            fieldToEncodeList.add(bitcoinMergedMiningCoinbaseTransaction);
+            byte[] ulordMergedMiningHeader = RLP.encodeElement(this.ulordMergedMiningHeader);
+            fieldToEncodeList.add(ulordMergedMiningHeader);
+            byte[] ulordMergedMiningMerkleProof = RLP.encodeElement(this.ulordMergedMiningMerkleProof);
+            fieldToEncodeList.add(ulordMergedMiningMerkleProof);
+            byte[] ulordMergedMiningCoinbaseTransaction = RLP.encodeElement(this.ulordMergedMiningCoinbaseTransaction);
+            fieldToEncodeList.add(ulordMergedMiningCoinbaseTransaction);
         }
 
 
@@ -410,13 +410,13 @@ public class FreeBlockHeader {
     }
 
     public boolean hasMiningFields() {
-        if (this.bitcoinMergedMiningCoinbaseTransaction != null && this.bitcoinMergedMiningCoinbaseTransaction.length > 0)
+        if (this.ulordMergedMiningCoinbaseTransaction != null && this.ulordMergedMiningCoinbaseTransaction.length > 0)
             return true;
 
-        if (this.bitcoinMergedMiningHeader != null && this.bitcoinMergedMiningHeader.length > 0)
+        if (this.ulordMergedMiningHeader != null && this.ulordMergedMiningHeader.length > 0)
             return true;
 
-        if (this.bitcoinMergedMiningMerkleProof != null && this.bitcoinMergedMiningMerkleProof.length > 0)
+        if (this.ulordMergedMiningMerkleProof != null && this.ulordMergedMiningMerkleProof.length > 0)
             return true;
 
         return false;
@@ -468,28 +468,28 @@ public class FreeBlockHeader {
         return getEncoded();
     }
 
-    public byte[] getBitcoinMergedMiningHeader() {
-        return bitcoinMergedMiningHeader;
+    public byte[] getUlordMergedMiningHeader() {
+        return ulordMergedMiningHeader;
     }
 
-    public void setBitcoinMergedMiningHeader(byte[] bitcoinMergedMiningHeader) {
-        this.bitcoinMergedMiningHeader = bitcoinMergedMiningHeader;
+    public void setUlordMergedMiningHeader(byte[] ulordMergedMiningHeader) {
+        this.ulordMergedMiningHeader = ulordMergedMiningHeader;
     }
 
-    public byte[] getBitcoinMergedMiningMerkleProof() {
-        return bitcoinMergedMiningMerkleProof;
+    public byte[] getUlordMergedMiningMerkleProof() {
+        return ulordMergedMiningMerkleProof;
     }
 
-    public void setBitcoinMergedMiningMerkleProof(byte[] bitcoinMergedMiningMerkleProof) {
-        this.bitcoinMergedMiningMerkleProof = bitcoinMergedMiningMerkleProof;
+    public void setUlordMergedMiningMerkleProof(byte[] ulordMergedMiningMerkleProof) {
+        this.ulordMergedMiningMerkleProof = ulordMergedMiningMerkleProof;
     }
 
-    public byte[] getBitcoinMergedMiningCoinbaseTransaction() {
-        return bitcoinMergedMiningCoinbaseTransaction;
+    public byte[] getUlordMergedMiningCoinbaseTransaction() {
+        return ulordMergedMiningCoinbaseTransaction;
     }
 
-    public void setBitcoinMergedMiningCoinbaseTransaction(byte[] bitcoinMergedMiningCoinbaseTransaction) {
-        this.bitcoinMergedMiningCoinbaseTransaction = bitcoinMergedMiningCoinbaseTransaction;
+    public void setUlordMergedMiningCoinbaseTransaction(byte[] ulordMergedMiningCoinbaseTransaction) {
+        this.ulordMergedMiningCoinbaseTransaction = ulordMergedMiningCoinbaseTransaction;
     }
 
     public String getShortHashForMergedMining() {

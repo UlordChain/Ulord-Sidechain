@@ -26,8 +26,8 @@ import java.util.*;
 
 /**
  * Represents a lock whitelist
- * for btc lock transactions.
- * It's basically a list of btc addresses
+ * for uld lock transactions.
+ * It's basically a list of uld addresses
  * with operations to manipulate and query it.
  *
  * @author Ariel Mendelzon

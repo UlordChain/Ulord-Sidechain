@@ -125,7 +125,7 @@ public class MinerServerTest {
     }
 
     @Test
-    public void submitBitcoinBlockTwoTags() {
+    public void submitUlordBlockTwoTags() {
         EthereumImpl ethereumImpl = Mockito.mock(EthereumImpl.class);
         Mockito.when(ethereumImpl.addNewMinedBlock(Mockito.any())).thenReturn(ImportResult.IMPORTED_BEST);
 
@@ -164,11 +164,11 @@ public class MinerServerTest {
         MinerWork work2 = minerServer.getWork(); // only the tag is used
         assertNotEquals(work2.getBlockHashForMergedMining(),work.getBlockHashForMergedMining());
 
-        UldBlock bitcoinMergedMiningBlock = getMergedMiningBlockWithTwoTags(work,work2);
+        UldBlock ulordMergedMiningBlock = getMergedMiningBlockWithTwoTags(work,work2);
 
-        findNonce(work, bitcoinMergedMiningBlock);
+        findNonce(work, ulordMergedMiningBlock);
         SubmitBlockResult result;
-        result = ((MinerServerImpl) minerServer).submitBitcoinBlock(work2.getBlockHashForMergedMining(), bitcoinMergedMiningBlock,true);
+        result = ((MinerServerImpl) minerServer).submitUlordBlock(work2.getBlockHashForMergedMining(), ulordMergedMiningBlock,true);
 
 
         assertEquals("OK", result.getStatus());
@@ -177,7 +177,7 @@ public class MinerServerTest {
         assertEquals("0x494d504f525445445f42455354", result.getBlockInfo().getBlockImportedResult());
 
         // Submit again the save PoW for a different header
-        result = ((MinerServerImpl) minerServer).submitBitcoinBlock(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock,false);
+        result = ((MinerServerImpl) minerServer).submitUlordBlock(work.getBlockHashForMergedMining(), ulordMergedMiningBlock,false);
 
         assertEquals("ERROR", result.getStatus());
 
@@ -188,7 +188,7 @@ public class MinerServerTest {
     }
 
     @Test
-    public void submitBitcoinBlock() {
+    public void submitUlordBlock() {
         EthereumImpl ethereumImpl = Mockito.mock(EthereumImpl.class);
         Mockito.when(ethereumImpl.addNewMinedBlock(Mockito.any())).thenReturn(ImportResult.IMPORTED_BEST);
 
@@ -218,11 +218,11 @@ public class MinerServerTest {
             minerServer.start();
             MinerWork work = minerServer.getWork();
 
-            UldBlock bitcoinMergedMiningBlock = getMergedMiningBlockWithOnlyCoinbase(work);
+            UldBlock ulordMergedMiningBlock = getMergedMiningBlockWithOnlyCoinbase(work);
 
-            findNonce(work, bitcoinMergedMiningBlock);
+            findNonce(work, ulordMergedMiningBlock);
 
-            SubmitBlockResult result = minerServer.submitUlordBlock(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock);
+            SubmitBlockResult result = minerServer.submitUlordBlock(work.getBlockHashForMergedMining(), ulordMergedMiningBlock);
 
             assertEquals("OK", result.getStatus());
             Assert.assertNotNull(result.getBlockInfo());
@@ -236,7 +236,7 @@ public class MinerServerTest {
     }
 
     @Test
-    public void submitBitcoinBlockPartialMerkleWhenBlockIsEmpty() {
+    public void submitUlordBlockPartialMerkleWhenBlockIsEmpty() {
         EthereumImpl ethereumImpl = Mockito.mock(EthereumImpl.class);
         Mockito.when(ethereumImpl.addNewMinedBlock(Mockito.any())).thenReturn(ImportResult.IMPORTED_BEST);
 
@@ -266,14 +266,14 @@ public class MinerServerTest {
             minerServer.start();
             MinerWork work = minerServer.getWork();
 
-            UldBlock bitcoinMergedMiningBlock = getMergedMiningBlockWithOnlyCoinbase(work);
+            UldBlock ulordMergedMiningBlock = getMergedMiningBlockWithOnlyCoinbase(work);
 
-            findNonce(work, bitcoinMergedMiningBlock);
+            findNonce(work, ulordMergedMiningBlock);
 
             //noinspection ConstantConditions
-            UldTransaction coinbase = bitcoinMergedMiningBlock.getTransactions().get(0);
+            UldTransaction coinbase = ulordMergedMiningBlock.getTransactions().get(0);
             List<String> coinbaseReversedHash = Collections.singletonList(Sha256Hash.wrap(coinbase.getHash().getReversedBytes()).toString());
-            SubmitBlockResult result = minerServer.submitUlordBlockPartialMerkle(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, coinbaseReversedHash, 1);
+            SubmitBlockResult result = minerServer.submitUlordBlockPartialMerkle(work.getBlockHashForMergedMining(), ulordMergedMiningBlock, coinbase, coinbaseReversedHash, 1);
 
             assertEquals("OK", result.getStatus());
             Assert.assertNotNull(result.getBlockInfo());
@@ -287,7 +287,7 @@ public class MinerServerTest {
     }
 
     @Test
-    public void submitBitcoinBlockPartialMerkleWhenBlockHasTransactions() {
+    public void submitUlordBlockPartialMerkleWhenBlockHasTransactions() {
         EthereumImpl ethereumImpl = Mockito.mock(EthereumImpl.class);
         Mockito.when(ethereumImpl.addNewMinedBlock(Mockito.any())).thenReturn(ImportResult.IMPORTED_BEST);
 
@@ -322,16 +322,16 @@ public class MinerServerTest {
             Mockito.when(otherTx.getHash()).thenReturn(otherTxHash);
             Mockito.when(otherTx.getHashAsString()).thenReturn(otherTxHash.toString());
 
-            UldBlock bitcoinMergedMiningBlock = getMergedMiningBlock(work, Collections.singletonList(otherTx));
+            UldBlock ulordMergedMiningBlock = getMergedMiningBlock(work, Collections.singletonList(otherTx));
 
-            findNonce(work, bitcoinMergedMiningBlock);
+            findNonce(work, ulordMergedMiningBlock);
 
             //noinspection ConstantConditions
-            UldTransaction coinbase = bitcoinMergedMiningBlock.getTransactions().get(0);
+            UldTransaction coinbase = ulordMergedMiningBlock.getTransactions().get(0);
             String coinbaseReversedHash = Sha256Hash.wrap(coinbase.getHash().getReversedBytes()).toString();
             String otherTxHashReversed = Sha256Hash.wrap(otherTxHash.getReversedBytes()).toString();
             List<String> merkleHashes = Arrays.asList(coinbaseReversedHash, otherTxHashReversed);
-            SubmitBlockResult result = minerServer.submitUlordBlockPartialMerkle(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, merkleHashes, 2);
+            SubmitBlockResult result = minerServer.submitUlordBlockPartialMerkle(work.getBlockHashForMergedMining(), ulordMergedMiningBlock, coinbase, merkleHashes, 2);
 
             assertEquals("OK", result.getStatus());
             Assert.assertNotNull(result.getBlockInfo());
@@ -345,7 +345,7 @@ public class MinerServerTest {
     }
 
     @Test
-    public void submitBitcoinBlockTransactionsWhenBlockIsEmpty() {
+    public void submitUlordBlockTransactionsWhenBlockIsEmpty() {
         EthereumImpl ethereumImpl = Mockito.mock(EthereumImpl.class);
         Mockito.when(ethereumImpl.addNewMinedBlock(Mockito.any())).thenReturn(ImportResult.IMPORTED_BEST);
 
@@ -375,13 +375,13 @@ public class MinerServerTest {
             minerServer.start();
             MinerWork work = minerServer.getWork();
 
-            UldBlock bitcoinMergedMiningBlock = getMergedMiningBlockWithOnlyCoinbase(work);
+            UldBlock ulordMergedMiningBlock = getMergedMiningBlockWithOnlyCoinbase(work);
 
-            findNonce(work, bitcoinMergedMiningBlock);
+            findNonce(work, ulordMergedMiningBlock);
 
             //noinspection ConstantConditions
-            UldTransaction coinbase = bitcoinMergedMiningBlock.getTransactions().get(0);
-            SubmitBlockResult result = minerServer.submitUlordBlockTransactions(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, Collections.singletonList(coinbase.getHashAsString()));
+            UldTransaction coinbase = ulordMergedMiningBlock.getTransactions().get(0);
+            SubmitBlockResult result = minerServer.submitUlordBlockTransactions(work.getBlockHashForMergedMining(), ulordMergedMiningBlock, coinbase, Collections.singletonList(coinbase.getHashAsString()));
 
             assertEquals("OK", result.getStatus());
             Assert.assertNotNull(result.getBlockInfo());
@@ -395,7 +395,7 @@ public class MinerServerTest {
     }
 
     @Test
-    public void submitBitcoinBlockTransactionsWhenBlockHasTransactions() {
+    public void submitUlordBlockTransactionsWhenBlockHasTransactions() {
         EthereumImpl ethereumImpl = Mockito.mock(EthereumImpl.class);
         Mockito.when(ethereumImpl.addNewMinedBlock(Mockito.any())).thenReturn(ImportResult.IMPORTED_BEST);
 
@@ -430,14 +430,14 @@ public class MinerServerTest {
             Mockito.when(otherTx.getHash()).thenReturn(otherTxHash);
             Mockito.when(otherTx.getHashAsString()).thenReturn(otherTxHash.toString());
 
-            UldBlock bitcoinMergedMiningBlock = getMergedMiningBlock(work, Collections.singletonList(otherTx));
+            UldBlock ulordMergedMiningBlock = getMergedMiningBlock(work, Collections.singletonList(otherTx));
 
-            findNonce(work, bitcoinMergedMiningBlock);
+            findNonce(work, ulordMergedMiningBlock);
 
             //noinspection ConstantConditions
-            UldTransaction coinbase = bitcoinMergedMiningBlock.getTransactions().get(0);
+            UldTransaction coinbase = ulordMergedMiningBlock.getTransactions().get(0);
             List<String> txs = Arrays.asList(coinbase.getHashAsString(), otherTxHash.toString());
-            SubmitBlockResult result = minerServer.submitUlordBlockTransactions(work.getBlockHashForMergedMining(), bitcoinMergedMiningBlock, coinbase, txs);
+            SubmitBlockResult result = minerServer.submitUlordBlockTransactions(work.getBlockHashForMergedMining(), ulordMergedMiningBlock, coinbase, txs);
 
             assertEquals("OK", result.getStatus());
             Assert.assertNotNull(result.getBlockInfo());
@@ -667,35 +667,35 @@ public class MinerServerTest {
     }
 
     private UldBlock getMergedMiningBlock(MinerWork work, List<UldTransaction> txs) {
-        NetworkParameters bitcoinNetworkParameters = RegTestParams.get();
-        UldTransaction bitcoinMergedMiningCoinbaseTransaction = MinerUtils.getUlordMergedMiningCoinbaseTransaction(bitcoinNetworkParameters, work);
+        NetworkParameters ulordNetworkParameters = RegTestParams.get();
+        UldTransaction ulordMergedMiningCoinbaseTransaction = MinerUtils.getUlordMergedMiningCoinbaseTransaction(ulordNetworkParameters, work);
 
         List<UldTransaction> blockTxs = new ArrayList<>();
-        blockTxs.add(bitcoinMergedMiningCoinbaseTransaction);
+        blockTxs.add(ulordMergedMiningCoinbaseTransaction);
         blockTxs.addAll(txs);
 
-        return MinerUtils.getUlordMergedMiningBlock(bitcoinNetworkParameters, blockTxs);
+        return MinerUtils.getUlordMergedMiningBlock(ulordNetworkParameters, blockTxs);
     }
 
     private UldBlock getMergedMiningBlockWithTwoTags(MinerWork work, MinerWork work2) {
-        NetworkParameters bitcoinNetworkParameters = RegTestParams.get();
-        UldTransaction bitcoinMergedMiningCoinbaseTransaction =
-                MinerUtils.getBitcoinMergedMiningCoinbaseTransactionWithTwoTags(bitcoinNetworkParameters, work, work2);
-        return MinerUtils.getUlordMergedMiningBlock(bitcoinNetworkParameters, bitcoinMergedMiningCoinbaseTransaction);
+        NetworkParameters ulordNetworkParameters = RegTestParams.get();
+        UldTransaction ulordMergedMiningCoinbaseTransaction =
+                MinerUtils.getUlordMergedMiningCoinbaseTransactionWithTwoTags(ulordNetworkParameters, work, work2);
+        return MinerUtils.getUlordMergedMiningBlock(ulordNetworkParameters, ulordMergedMiningCoinbaseTransaction);
     }
 
-    private void findNonce(MinerWork work, UldBlock bitcoinMergedMiningBlock) {
+    private void findNonce(MinerWork work, UldBlock ulordMergedMiningBlock) {
         BigInteger target = new BigInteger(TypeConverter.stringHexToByteArray(work.getTarget()));
 
         while (true) {
             try {
                 // Is our proof of work valid yet?
-                BigInteger blockHashBI = bitcoinMergedMiningBlock.getHash().toBigInteger();
+                BigInteger blockHashBI = ulordMergedMiningBlock.getHash().toBigInteger();
                 if (blockHashBI.compareTo(target) <= 0) {
                     break;
                 }
                 // No, so increment the nonce and try again.
-                bitcoinMergedMiningBlock.setNonce(bitcoinMergedMiningBlock.getNonce().add(BigInteger.ONE));
+                ulordMergedMiningBlock.setNonce(ulordMergedMiningBlock.getNonce().add(BigInteger.ONE));
             } catch (VerificationException e) {
                 throw new RuntimeException(e); // Cannot happen.
             }

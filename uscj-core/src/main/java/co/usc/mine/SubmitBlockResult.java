@@ -19,7 +19,7 @@
 package co.usc.mine;
 
 /**
- * Wraps the result of a MinerServer.SubmitBitcoinBlock() method call.
+ * Wraps the result of a MinerServer.SubmitUlordBlock() method call.
  *
  * @author martin.medina
  */

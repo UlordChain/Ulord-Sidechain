@@ -143,8 +143,8 @@ public class LLLTest {
                 compileTest("(IF 0x01 0x02 0x03)");
                 compileTest("(IF 0x01 (REVERT) 0x03)"); // if REVERT code-size optimization
 
-                compileTest("(SEND 0x01 100)"); // Sends 100 wit-sbtc to account 0x01
-                compileTest("(UNLESS (SEND 0x01 100) (REVERT))"); // Sends 100 wit-sbtc to account 0x01
+                compileTest("(SEND 0x01 100)"); // Sends 100 wit-suld to account 0x01
+                compileTest("(UNLESS (SEND 0x01 100) (REVERT))"); // Sends 100 wit-suld to account 0x01
 
 
                 compileTest("(ASM 0x01 0x02 ADD)");

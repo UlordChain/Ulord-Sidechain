@@ -273,7 +273,7 @@ public class UscForksBridgeTest {
         BigInteger gasLimit = BigInteger.valueOf(100000);
         Transaction rskTx = CallTransaction.createCallTransaction(config, nonce, gasPrice.longValue(),
                 gasLimit.longValue(), PrecompiledContracts.BRIDGE_ADDR, value,
-                Bridge.REGISTER_BTC_TRANSACTION, txSerialized, blockHeight, pmtSerialized);
+                Bridge.REGISTER_ULD_TRANSACTION, txSerialized, blockHeight, pmtSerialized);
         rskTx.sign(keyHoldingRSKs.getPrivKeyBytes());
         return rskTx;
 
@@ -289,7 +289,7 @@ public class UscForksBridgeTest {
         BigInteger gasLimit = BigInteger.valueOf(100000);
         Transaction rskTx = CallTransaction.createCallTransaction(config, nonce, gasPrice.longValue(),
                 gasLimit.longValue(), PrecompiledContracts.BRIDGE_ADDR, value,
-                Bridge.RELEASE_BTC);
+                Bridge.RELEASE_ULD);
         rskTx.sign(keyHoldingRSKs.getPrivKeyBytes());
         return rskTx;
     }

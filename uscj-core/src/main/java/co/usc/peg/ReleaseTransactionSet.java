@@ -24,7 +24,7 @@ import com.google.common.primitives.UnsignedBytes;
 import java.util.*;
 
 /**
- * Representation of a queue of BTC release
+ * Representation of a queue of ULD release
  * transactions waiting for confirmations
  * on the rsk network.
  *
@@ -32,8 +32,8 @@ import java.util.*;
  */
 public class ReleaseTransactionSet {
     public static class Entry {
-        // Compares entries using the lexicographical order of the btc tx's serialized bytes
-        public static final Comparator<Entry> BTC_TX_COMPARATOR = new Comparator<Entry>() {
+        // Compares entries using the lexicographical order of the uld tx's serialized bytes
+        public static final Comparator<Entry> ULD_TX_COMPARATOR = new Comparator<Entry>() {
             private Comparator<byte[]> comparator = UnsignedBytes.lexicographicalComparator();
 
             @Override
@@ -102,7 +102,7 @@ public class ReleaseTransactionSet {
      * @param currentBlockNumber the current execution block number (height).
      * @param minimumConfirmations the minimum desired confirmations for the slice elements.
      * @param maximumSliceSize (optional) the maximum number of elements in the slice.
-     * @return the slice of btc transactions.
+     * @return the slice of uld transactions.
      */
     public Set<UldTransaction> sliceWithConfirmations(Long currentBlockNumber, Integer minimumConfirmations, Optional<Integer> maximumSliceSize) {
         Set<UldTransaction> output = new HashSet<>();

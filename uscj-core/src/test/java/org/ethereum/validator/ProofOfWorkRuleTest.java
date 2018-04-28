@@ -62,7 +62,7 @@ public class ProofOfWorkRuleTest {
     public void test_2() {
         // mined block
         Block b = BlockMiner.mineBlock(new BlockGenerator().getBlock(1));
-        byte[] mergeMiningHeader = b.getBitcoinMergedMiningHeader();
+        byte[] mergeMiningHeader = b.getUlordMergedMiningHeader();
         // TODO improve, the mutated block header could be still valid
         mergeMiningHeader[0]++;
         b.setUlordMergedMiningHeader(mergeMiningHeader);
@@ -74,11 +74,11 @@ public class ProofOfWorkRuleTest {
     public void test_RLPEncoding() {
         // mined block
         Block b = BlockMiner.mineBlock(new BlockGenerator().getBlock(1));
-        byte[] lastField = b.getBitcoinMergedMiningCoinbaseTransaction(); // last field
+        byte[] lastField = b.getUlordMergedMiningCoinbaseTransaction(); // last field
         b.flushRLP();// force re-encode
         byte[] encoded = b.getEncoded();
         Block b2 = new Block(encoded);
-        byte[] lastField2 = b2.getBitcoinMergedMiningCoinbaseTransaction(); // last field
+        byte[] lastField2 = b2.getUlordMergedMiningCoinbaseTransaction(); // last field
         b2.flushRLP();// force re-encode
         byte[] encoded2 = b2.getEncoded();
         Assert.assertTrue(Arrays.equals(encoded,encoded2));
@@ -149,7 +149,7 @@ public class ProofOfWorkRuleTest {
         return newBlock;
     }
 
-    private static co.usc.ulordj.core.UldTransaction getBitcoinMergedMiningCoinbaseTransactionWithoutRSKTag(co.usc.ulordj.core.NetworkParameters params, byte[] blockHashForMergedMining) {
+    private static co.usc.ulordj.core.UldTransaction getUlordMergedMiningCoinbaseTransactionWithoutRSKTag(co.usc.ulordj.core.NetworkParameters params, byte[] blockHashForMergedMining) {
         co.usc.ulordj.core.UldTransaction coinbaseTransaction = new co.usc.ulordj.core.UldTransaction(params);
         //Add a random number of random bytes before the USC tag
         SecureRandom random = new SecureRandom();

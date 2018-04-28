@@ -128,7 +128,7 @@ public class HashUtil {
 
     /**
      * Calculates the SHA-256 hash of the given byte range, and then hashes the resulting hash again. This is
-     * standard procedure in Bitcoin. The resulting hash is in big endian form.
+     * standard procedure in Ulord. The resulting hash is in big endian form.
      *
      * @param input -
      * @param offset -

@@ -29,7 +29,7 @@ import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.UscAddress;
-import co.usc.peg.bitcoin.RskAllowUnconfirmedCoinSelector;
+import co.usc.peg.ulord.RskAllowUnconfirmedCoinSelector;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.core.Block;
 import org.ethereum.core.CallTransaction;
@@ -78,45 +78,45 @@ public class BridgeUtilsTest {
     public void testIsLock() throws Exception {
         // Lock is for the genesis federation ATM
         NetworkParameters params = RegTestParams.get();
-        Context btcContext = new Context(params);
+        Context uldContext = new Context(params);
         BridgeRegTestConstants bridgeConstants = BridgeRegTestConstants.getInstance();
         Federation federation = bridgeConstants.getGenesisFederation();
-        Wallet wallet = new BridgeBtcWallet(btcContext, Arrays.asList(federation));
+        Wallet wallet = new BridgeUldWallet(uldContext, Arrays.asList(federation));
         wallet.addWatchedAddress(federation.getAddress(), federation.getCreationTime().toEpochMilli());
         Address address = federation.getAddress();
 
-        // Tx sending less than 1 btc to the federation, not a lock tx
+        // Tx sending less than 1 uld to the federation, not a lock tx
         UldTransaction tx = new UldTransaction(params);
         tx.addOutput(Coin.CENT, address);
         tx.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
-        assertFalse(BridgeUtils.isLockTx(tx, federation, btcContext, bridgeConstants));
+        assertFalse(BridgeUtils.isLockTx(tx, federation, uldContext, bridgeConstants));
 
-        // Tx sending 1 btc to the federation, but also spending from the federation addres, the typical release tx, not a lock tx.
+        // Tx sending 1 uld to the federation, but also spending from the federation addres, the typical release tx, not a lock tx.
         UldTransaction tx2 = new UldTransaction(params);
         tx2.addOutput(Coin.COIN, address);
         TransactionInput txIn = new TransactionInput(params, tx2, new byte[]{}, new TransactionOutPoint(params, 0, Sha256Hash.ZERO_HASH));
         tx2.addInput(txIn);
         signWithNecessaryKeys(bridgeConstants.getGenesisFederation(), bridgeConstants.getFederatorPrivateKeys(), txIn, tx2, bridgeConstants);
-        assertFalse(BridgeUtils.isLockTx(tx2, federation, btcContext, bridgeConstants));
+        assertFalse(BridgeUtils.isLockTx(tx2, federation, uldContext, bridgeConstants));
 
-        // Tx sending 1 btc to the federation, is a lock tx
+        // Tx sending 1 uld to the federation, is a lock tx
         UldTransaction tx3 = new UldTransaction(params);
         tx3.addOutput(Coin.COIN, address);
         tx3.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
-        assertTrue(BridgeUtils.isLockTx(tx3, federation, btcContext, bridgeConstants));
+        assertTrue(BridgeUtils.isLockTx(tx3, federation, uldContext, bridgeConstants));
 
-        // Tx sending 50 btc to the federation, is a lock tx
+        // Tx sending 50 uld to the federation, is a lock tx
         UldTransaction tx4 = new UldTransaction(params);
         tx4.addOutput(Coin.FIFTY_COINS, address);
         tx4.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
-        assertTrue(BridgeUtils.isLockTx(tx4, federation, btcContext, bridgeConstants));
+        assertTrue(BridgeUtils.isLockTx(tx4, federation, uldContext, bridgeConstants));
     }
 
     @Test
     public void testIsLockForTwoFederations() throws Exception {
         BridgeRegTestConstants bridgeConstants = BridgeRegTestConstants.getInstance();
         NetworkParameters parameters = bridgeConstants.getUldParams();
-        Context btcContext = new Context(parameters);
+        Context uldContext = new Context(parameters);
 
         List<UldECKey> federation1Keys = Arrays.asList(new UldECKey[]{
                 UldECKey.fromPrivate(Hex.decode("fa01")),
@@ -139,103 +139,103 @@ public class BridgeUtilsTest {
         List<Federation> federations = Arrays.asList(federation1, federation2);
         List<Address> addresses = Arrays.asList(address1, address2);
 
-        // Tx sending less than 1 btc to the first federation, not a lock tx
+        // Tx sending less than 1 uld to the first federation, not a lock tx
         UldTransaction tx = new UldTransaction(parameters);
         tx.addOutput(Coin.CENT, address1);
         tx.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
-        assertFalse(BridgeUtils.isLockTx(tx, federations, btcContext, bridgeConstants));
+        assertFalse(BridgeUtils.isLockTx(tx, federations, uldContext, bridgeConstants));
 
-        // Tx sending less than 1 btc to the second federation, not a lock tx
+        // Tx sending less than 1 uld to the second federation, not a lock tx
         tx = new UldTransaction(parameters);
         tx.addOutput(Coin.CENT, address2);
         tx.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
-        assertFalse(BridgeUtils.isLockTx(tx, federations, btcContext, bridgeConstants));
+        assertFalse(BridgeUtils.isLockTx(tx, federations, uldContext, bridgeConstants));
 
-        // Tx sending less than 1 btc to both federations, not a lock tx
+        // Tx sending less than 1 uld to both federations, not a lock tx
         tx = new UldTransaction(parameters);
         tx.addOutput(Coin.CENT, address1);
         tx.addOutput(Coin.CENT, address2);
         tx.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
-        assertFalse(BridgeUtils.isLockTx(tx, federations, btcContext, bridgeConstants));
+        assertFalse(BridgeUtils.isLockTx(tx, federations, uldContext, bridgeConstants));
 
-        // Tx sending 1 btc to the first federation, but also spending from the first federation address, the typical release tx, not a lock tx.
+        // Tx sending 1 uld to the first federation, but also spending from the first federation address, the typical release tx, not a lock tx.
         UldTransaction tx2 = new UldTransaction(parameters);
         tx2.addOutput(Coin.COIN, address1);
         TransactionInput txIn = new TransactionInput(parameters, tx2, new byte[]{}, new TransactionOutPoint(parameters, 0, Sha256Hash.ZERO_HASH));
         tx2.addInput(txIn);
         signWithNecessaryKeys(federation1, federation1Keys, txIn, tx2, bridgeConstants);
-        assertFalse(BridgeUtils.isLockTx(tx2, federations, btcContext, bridgeConstants));
+        assertFalse(BridgeUtils.isLockTx(tx2, federations, uldContext, bridgeConstants));
 
-        // Tx sending 1 btc to the second federation, but also spending from the second federation address, the typical release tx, not a lock tx.
+        // Tx sending 1 uld to the second federation, but also spending from the second federation address, the typical release tx, not a lock tx.
         tx2 = new UldTransaction(parameters);
         tx2.addOutput(Coin.COIN, address2);
         txIn = new TransactionInput(parameters, tx2, new byte[]{}, new TransactionOutPoint(parameters, 0, Sha256Hash.ZERO_HASH));
         tx2.addInput(txIn);
         signWithNecessaryKeys(federation2, federation2Keys, txIn, tx2, bridgeConstants);
-        assertFalse(BridgeUtils.isLockTx(tx2, federations, btcContext, bridgeConstants));
+        assertFalse(BridgeUtils.isLockTx(tx2, federations, uldContext, bridgeConstants));
 
-        // Tx sending 1 btc to both federations, but also spending from the first federation address, the typical release tx, not a lock tx.
+        // Tx sending 1 uld to both federations, but also spending from the first federation address, the typical release tx, not a lock tx.
         tx2 = new UldTransaction(parameters);
         tx2.addOutput(Coin.COIN, address1);
         tx2.addOutput(Coin.COIN, address2);
         txIn = new TransactionInput(parameters, tx2, new byte[]{}, new TransactionOutPoint(parameters, 0, Sha256Hash.ZERO_HASH));
         tx2.addInput(txIn);
         signWithNecessaryKeys(federation1, federation1Keys, txIn, tx2, bridgeConstants);
-        assertFalse(BridgeUtils.isLockTx(tx2, federations, btcContext, bridgeConstants));
+        assertFalse(BridgeUtils.isLockTx(tx2, federations, uldContext, bridgeConstants));
 
-        // Tx sending 1 btc to both federations, but also spending from the second federation address, the typical release tx, not a lock tx.
+        // Tx sending 1 uld to both federations, but also spending from the second federation address, the typical release tx, not a lock tx.
         tx2 = new UldTransaction(parameters);
         tx2.addOutput(Coin.COIN, address1);
         tx2.addOutput(Coin.COIN, address2);
         txIn = new TransactionInput(parameters, tx2, new byte[]{}, new TransactionOutPoint(parameters, 0, Sha256Hash.ZERO_HASH));
         tx2.addInput(txIn);
         signWithNecessaryKeys(federation2, federation2Keys, txIn, tx2, bridgeConstants);
-        assertFalse(BridgeUtils.isLockTx(tx2, federations, btcContext, bridgeConstants));
+        assertFalse(BridgeUtils.isLockTx(tx2, federations, uldContext, bridgeConstants));
 
-        // Tx sending 1 btc to the first federation, is a lock tx
+        // Tx sending 1 uld to the first federation, is a lock tx
         UldTransaction tx3 = new UldTransaction(parameters);
         tx3.addOutput(Coin.COIN, address1);
         tx3.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
-        assertTrue(BridgeUtils.isLockTx(tx3, federations, btcContext, bridgeConstants));
+        assertTrue(BridgeUtils.isLockTx(tx3, federations, uldContext, bridgeConstants));
 
-        // Tx sending 1 btc to the second federation, is a lock tx
+        // Tx sending 1 uld to the second federation, is a lock tx
         tx3 = new UldTransaction(parameters);
         tx3.addOutput(Coin.COIN, address2);
         tx3.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
-        assertTrue(BridgeUtils.isLockTx(tx3, federations, btcContext, bridgeConstants));
+        assertTrue(BridgeUtils.isLockTx(tx3, federations, uldContext, bridgeConstants));
 
-        // Tx sending 1 btc to the both federations, is a lock tx
+        // Tx sending 1 uld to the both federations, is a lock tx
         tx3 = new UldTransaction(parameters);
         tx3.addOutput(Coin.COIN, address1);
         tx3.addOutput(Coin.COIN, address2);
         tx3.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
-        assertTrue(BridgeUtils.isLockTx(tx3, federations, btcContext, bridgeConstants));
+        assertTrue(BridgeUtils.isLockTx(tx3, federations, uldContext, bridgeConstants));
 
-        // Tx sending 50 btc to the first federation, is a lock tx
+        // Tx sending 50 uld to the first federation, is a lock tx
         UldTransaction tx4 = new UldTransaction(parameters);
         tx4.addOutput(Coin.FIFTY_COINS, address1);
         tx4.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
-        assertTrue(BridgeUtils.isLockTx(tx4, federations, btcContext, bridgeConstants));
+        assertTrue(BridgeUtils.isLockTx(tx4, federations, uldContext, bridgeConstants));
 
-        // Tx sending 50 btc to the second federation, is a lock tx
+        // Tx sending 50 uld to the second federation, is a lock tx
         tx4 = new UldTransaction(parameters);
         tx4.addOutput(Coin.FIFTY_COINS, address2);
         tx4.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
-        assertTrue(BridgeUtils.isLockTx(tx4, federations, btcContext, bridgeConstants));
+        assertTrue(BridgeUtils.isLockTx(tx4, federations, uldContext, bridgeConstants));
 
-        // Tx sending 50 btc to the both federations, is a lock tx
+        // Tx sending 50 uld to the both federations, is a lock tx
         tx4 = new UldTransaction(parameters);
         tx4.addOutput(Coin.FIFTY_COINS, address1);
         tx4.addOutput(Coin.FIFTY_COINS, address2);
         tx4.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
-        assertTrue(BridgeUtils.isLockTx(tx4, federations, btcContext, bridgeConstants));
+        assertTrue(BridgeUtils.isLockTx(tx4, federations, uldContext, bridgeConstants));
     }
 
     @Test
     public void testIsMigrationTx() {
         BridgeRegTestConstants bridgeConstants = BridgeRegTestConstants.getInstance();
         NetworkParameters parameters = bridgeConstants.getUldParams();
-        Context btcContext = new Context(parameters);
+        Context uldContext = new Context(parameters);
 
         List<UldECKey> activeFederationKeys = Stream.of(
             UldECKey.fromPrivate(Hex.decode("fa01")),
@@ -257,12 +257,12 @@ public class BridgeUtilsTest {
         TransactionInput migrationTxInput = new TransactionInput(parameters, migrationTx, new byte[]{}, new TransactionOutPoint(parameters, 0, Sha256Hash.ZERO_HASH));
         migrationTx.addInput(migrationTxInput);
         signWithNecessaryKeys(retiringFederation, retiringFederationKeys, migrationTxInput, migrationTx, bridgeConstants);
-        assertThat(BridgeUtils.isMigrationTx(migrationTx, activeFederation, retiringFederation, btcContext, bridgeConstants), is(true));
+        assertThat(BridgeUtils.isMigrationTx(migrationTx, activeFederation, retiringFederation, uldContext, bridgeConstants), is(true));
 
         UldTransaction toActiveFederationTx = new UldTransaction(parameters);
         toActiveFederationTx.addOutput(Coin.COIN, activeFederationAddress);
         toActiveFederationTx.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
-        assertThat(BridgeUtils.isMigrationTx(toActiveFederationTx, activeFederation, retiringFederation, btcContext, bridgeConstants), is(false));
+        assertThat(BridgeUtils.isMigrationTx(toActiveFederationTx, activeFederation, retiringFederation, uldContext, bridgeConstants), is(false));
 
         Address randomAddress = Address.fromBase58(
             NetworkParameters.fromID(NetworkParameters.ID_REGTEST),
@@ -273,9 +273,9 @@ public class BridgeUtilsTest {
         TransactionInput fromRetiringFederationTxInput = new TransactionInput(parameters, fromRetiringFederationTx, new byte[]{}, new TransactionOutPoint(parameters, 0, Sha256Hash.ZERO_HASH));
         fromRetiringFederationTx.addInput(fromRetiringFederationTxInput);
         signWithNecessaryKeys(retiringFederation, retiringFederationKeys, fromRetiringFederationTxInput, fromRetiringFederationTx, bridgeConstants);
-        assertThat(BridgeUtils.isMigrationTx(fromRetiringFederationTx, activeFederation, retiringFederation, btcContext, bridgeConstants), is(false));
+        assertThat(BridgeUtils.isMigrationTx(fromRetiringFederationTx, activeFederation, retiringFederation, uldContext, bridgeConstants), is(false));
 
-        assertThat(BridgeUtils.isMigrationTx(migrationTx, activeFederation, null, btcContext, bridgeConstants), is(false));
+        assertThat(BridgeUtils.isMigrationTx(migrationTx, activeFederation, null, uldContext, bridgeConstants), is(false));
     }
 
     @Test
@@ -285,7 +285,7 @@ public class BridgeUtilsTest {
         tx.sign(privKey);
 
         Address expectedAddress = UldECKey.fromPrivate(privKey).toAddress(RegTestParams.get());
-        Address result = BridgeUtils.recoverBtcAddressFromEthTransaction(tx, RegTestParams.get());
+        Address result = BridgeUtils.recoverUldAddressFromEthTransaction(tx, RegTestParams.get());
 
         assertEquals(expectedAddress, result);
     }
@@ -293,7 +293,7 @@ public class BridgeUtilsTest {
     @Test(expected = Exception.class)
     public void getAddressFromEthNotSignTransaction() {
         org.ethereum.core.Transaction tx = org.ethereum.core.Transaction.create(config, TO_ADDRESS, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
-        BridgeUtils.recoverBtcAddressFromEthTransaction(tx, RegTestParams.get());
+        BridgeUtils.recoverUldAddressFromEthTransaction(tx, RegTestParams.get());
     }
 
     private byte[] generatePrivKey() {
@@ -364,11 +364,11 @@ public class BridgeUtilsTest {
                 UldECKey.fromPublicOnly(Hex.decode("036bb9eab797eadc8b697f0e82a01d01cabbfaaca37e5bafc06fdc6fdd38af894a")),
                 UldECKey.fromPublicOnly(Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5"))
         }), Instant.ofEpochMilli(5005L), 0L, regTestParameters);
-        Context mockedBtcContext = mock(Context.class);
-        when(mockedBtcContext.getParams()).thenReturn(regTestParameters);
+        Context mockedUldContext = mock(Context.class);
+        when(mockedUldContext.getParams()).thenReturn(regTestParameters);
 
-        Wallet wallet = BridgeUtils.getFederationNoSpendWallet(mockedBtcContext, federation);
-        Assert.assertEquals(BridgeBtcWallet.class, wallet.getClass());
+        Wallet wallet = BridgeUtils.getFederationNoSpendWallet(mockedUldContext, federation);
+        Assert.assertEquals(BridgeUldWallet.class, wallet.getClass());
         assertIsWatching(federation.getAddress(), wallet, regTestParameters);
     }
 
@@ -379,16 +379,16 @@ public class BridgeUtilsTest {
                 UldECKey.fromPublicOnly(Hex.decode("036bb9eab797eadc8b697f0e82a01d01cabbfaaca37e5bafc06fdc6fdd38af894a")),
                 UldECKey.fromPublicOnly(Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5"))
         }), Instant.ofEpochMilli(5005L), 0L, regTestParameters);
-        Context mockedBtcContext = mock(Context.class);
-        when(mockedBtcContext.getParams()).thenReturn(regTestParameters);
+        Context mockedUldContext = mock(Context.class);
+        when(mockedUldContext.getParams()).thenReturn(regTestParameters);
 
         List<UTXO> mockedUtxos = new ArrayList<>();
         mockedUtxos.add(mock(UTXO.class));
         mockedUtxos.add(mock(UTXO.class));
         mockedUtxos.add(mock(UTXO.class));
 
-        Wallet wallet = BridgeUtils.getFederationSpendWallet(mockedBtcContext, federation, mockedUtxos);
-        Assert.assertEquals(BridgeBtcWallet.class, wallet.getClass());
+        Wallet wallet = BridgeUtils.getFederationSpendWallet(mockedUldContext, federation, mockedUtxos);
+        Assert.assertEquals(BridgeUldWallet.class, wallet.getClass());
         assertIsWatching(federation.getAddress(), wallet, regTestParameters);
         CoinSelector selector = wallet.getCoinSelector();
         Assert.assertEquals(RskAllowUnconfirmedCoinSelector.class, selector.getClass());

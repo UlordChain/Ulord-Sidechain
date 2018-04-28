@@ -49,11 +49,11 @@ import java.util.List;
 /**
  * Original comment:
  *
- * The Ethereum blockchain is in many ways similar to the Bitcoin blockchain,
+ * The Ethereum blockchain is in many ways similar to the Ulord blockchain,
  * although it does have some differences.
  * <p>
- * The main difference between Ethereum and Bitcoin with regard to the blockchain architecture
- * is that, unlike Bitcoin, Ethereum blocks contain a copy of both the transaction list
+ * The main difference between Ethereum and Ulord with regard to the blockchain architecture
+ * is that, unlike Ulord, Ethereum blocks contain a copy of both the transaction list
  * and the most recent state. Aside from that, two other values, the block number and
  * the difficulty, are also stored in the block.
  * </p>

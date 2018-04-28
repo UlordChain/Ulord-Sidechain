@@ -147,6 +147,8 @@ public class MinerClientImpl implements MinerClient {
         co.usc.ulordj.core.UldBlock ulordMergedMiningBlock = MinerUtils.getUlordMergedMiningBlock(ulordNetworkParameters, ulordMergedMiningCoinbaseTransaction);
 
         BigInteger target = new BigInteger(1, TypeConverter.stringHexToByteArray(work.getTarget()));
+        logger.info("Miner Client Target : " + target);
+
         boolean foundNonce = findNonce(ulordMergedMiningBlock, target);
 
         if (newBestBlockArrivedFromAnotherNode) {
@@ -199,18 +201,22 @@ public class MinerClientImpl implements MinerClient {
     /**
      * findNonce will try to find a valid nonce for ulordMergedMiningBlock, that satisfies the given target difficulty.
      *
-     * @param ulordMergedMiningBlock bitcoinBlock to find nonce for. This block's nonce will be modified.
+     * @param ulordMergedMiningBlock ulordBlock to find nonce for. This block's nonce will be modified.
      * @param target                   target difficulty. Block's hash should be lower than this number.
      * @return true if a nonce was found, false otherwise.
      * @remarks This method will return if the stop or newBetBlockArrivedFromAnotherNode intance variables are set to true.
      */
     private boolean findNonce(@Nonnull final co.usc.ulordj.core.UldBlock ulordMergedMiningBlock,
                               @Nonnull final BigInteger target) {
+
+
         ulordMergedMiningBlock.setNonce(nextNonceToUse);
 
         while (!stop && !newBestBlockArrivedFromAnotherNode) {
             // Is our proof of work valid yet?
             BigInteger blockHashBI = ulordMergedMiningBlock.getHash().toBigInteger();
+            logger.info("BlockHashBI: " + blockHashBI.toString(16));
+            logger.info("Target:      " + target.toString(16));
             if (blockHashBI.compareTo(target) <= 0) {
                 return true;
             }

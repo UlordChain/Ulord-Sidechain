@@ -44,14 +44,14 @@ public class Constants {
     private int gasLimitBoundDivisor = 1024;
 
     // Private mining is allowed if difficulty is lower or equal than this value
-    private final BlockDifficulty fallbackMiningDifficulty = new BlockDifficulty(BigInteger.valueOf((long) 14E15)); // 14 peta evert 14 secs = 1 peta/s.
+    private final BlockDifficulty fallbackMiningDifficulty = new BlockDifficulty(BigInteger.valueOf((long) 14E4)); // 14 peta evert 14 secs = 1 peta/s.
 
     private static long blockPerDay = 24*3600 / 14;
 
     private long endOfFallbackMiningBlockNumber = blockPerDay*30*6; // Approximately 6 months of private mining fallback, then you're free my child. Fly, fly away.
 
     // 0.5 peta/s. This means that on reset difficulty will allow private mining.
-    private final BlockDifficulty minimumDifficulty = new BlockDifficulty(BigInteger.valueOf((long) 14E15 / 2 )); // 0.5 peta/s.
+    private final BlockDifficulty minimumDifficulty = new BlockDifficulty(BigInteger.valueOf((long) 14E4 / 2 )); // 0.5 peta/s.
 
     // Use this to test CPU-mining by Java client:
     // private BigInteger minimumDifficulty = BigInteger.valueOf((long) 14E4 / 2 ); // 0.005 mega/s.

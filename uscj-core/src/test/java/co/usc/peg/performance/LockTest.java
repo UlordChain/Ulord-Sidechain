@@ -18,18 +18,10 @@
 
 package co.usc.peg.performance;
 
-import co.usc.ulordj.core.UldBlockChain;
-import co.usc.ulordj.core.Context;
 import co.usc.ulordj.core.Sha256Hash;
-import co.usc.ulordj.store.BlockStoreException;
-import co.usc.ulordj.store.UldBlockStore;
-import co.usc.peg.Bridge;
-import co.usc.peg.BridgeStorageProvider;
-import co.usc.peg.RepositoryBlockStore;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageProvider;
 import org.ethereum.core.Repository;
-import org.ethereum.vm.PrecompiledContracts;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.spongycastle.util.encoders.Hex;
@@ -56,40 +48,40 @@ public class LockTest extends BridgePerformanceTestCase {
 
     @Test
     public void isBtcTxHashAlreadyProcessed() throws IOException {
-        ExecutionStats stats = new ExecutionStats("isBtcTxHashAlreadyProcessed");
+        ExecutionStats stats = new ExecutionStats("isUldTxHashAlreadyProcessed");
         isBtcTxHashAlreadyProcessed_yes(100, stats);
         isBtcTxHashAlreadyProcessed_no(100, stats);
         BridgePerformanceTest.addStats(stats);
     }
 
     private void isBtcTxHashAlreadyProcessed_yes(int times, ExecutionStats stats) {
-        ABIEncoder abiEncoder = (int executionIndex) -> Bridge.IS_BTC_TX_HASH_ALREADY_PROCESSED.encode(new Object[]{Hex.toHexString(randomHashInMap.getBytes())});
-        executeAndAverage("isBtcTxHashAlreadyProcessed-yes", times, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
+        ABIEncoder abiEncoder = (int executionIndex) -> Bridge.IS_ULD_TX_HASH_ALREADY_PROCESSED.encode(new Object[]{Hex.toHexString(randomHashInMap.getBytes())});
+        executeAndAverage("isUldTxHashAlreadyProcessed-yes", times, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
     }
 
     private void isBtcTxHashAlreadyProcessed_no(int times, ExecutionStats stats) {
         Sha256Hash hash = Sha256Hash.of(BigInteger.valueOf(new Random().nextLong()).toByteArray());
-        ABIEncoder abiEncoder = (int executionIndex) -> Bridge.IS_BTC_TX_HASH_ALREADY_PROCESSED.encode(new Object[]{Hex.toHexString(hash.getBytes())});
-        executeAndAverage("isBtcTxHashAlreadyProcessed-no", times, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
+        ABIEncoder abiEncoder = (int executionIndex) -> Bridge.IS_ULD_TX_HASH_ALREADY_PROCESSED.encode(new Object[]{Hex.toHexString(hash.getBytes())});
+        executeAndAverage("isUldTxHashAlreadyProcessed-no", times, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
     }
 
     @Test
     public void getBtcTxHashProcessedHeight() throws IOException {
-        ExecutionStats stats = new ExecutionStats("getBtcTxHashProcessedHeight");
+        ExecutionStats stats = new ExecutionStats("getUldTxHashProcessedHeight");
         getBtcTxHashProcessedHeight_processed(100, stats);
         getBtcTxHashProcessedHeight_notProcessed(100, stats);
         BridgePerformanceTest.addStats(stats);
     }
 
     private void getBtcTxHashProcessedHeight_processed(int times, ExecutionStats stats) {
-        ABIEncoder abiEncoder = (int executionIndex) -> Bridge.GET_BTC_TX_HASH_PROCESSED_HEIGHT.encode(new Object[]{Hex.toHexString(randomHashInMap.getBytes())});
-        executeAndAverage("getBtcTxHashProcessedHeight-processed", times, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
+        ABIEncoder abiEncoder = (int executionIndex) -> Bridge.GET_ULD_TX_HASH_PROCESSED_HEIGHT.encode(new Object[]{Hex.toHexString(randomHashInMap.getBytes())});
+        executeAndAverage("getUldTxHashProcessedHeight-processed", times, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
     }
 
     private void getBtcTxHashProcessedHeight_notProcessed(int times, ExecutionStats stats) {
         Sha256Hash hash = Sha256Hash.of(BigInteger.valueOf(new Random().nextLong()).toByteArray());
-        ABIEncoder abiEncoder = (int executionIndex) -> Bridge.GET_BTC_TX_HASH_PROCESSED_HEIGHT.encode(new Object[]{Hex.toHexString(hash.getBytes())});
-        executeAndAverage("getBtcTxHashProcessedHeight-notProcessed", times, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
+        ABIEncoder abiEncoder = (int executionIndex) -> Bridge.GET_ULD_TX_HASH_PROCESSED_HEIGHT.encode(new Object[]{Hex.toHexString(hash.getBytes())});
+        executeAndAverage("getUldTxHashProcessedHeight-notProcessed", times, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
     }
 
     private BridgeStorageProviderInitializer buildInitializer() {
@@ -104,7 +96,7 @@ public class LockTest extends BridgePerformanceTestCase {
             Random rnd = new Random();
             Map<Sha256Hash, Long> hashesAlreadyProcessed;
             try {
-                hashesAlreadyProcessed = provider.getBtcTxHashesAlreadyProcessed();
+                hashesAlreadyProcessed = provider.getUldTxHashesAlreadyProcessed();
             } catch (IOException e) {
                 throw new RuntimeException("Exception trying to gather hashes already processed for benchmarking");
             }
