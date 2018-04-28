@@ -215,8 +215,6 @@ public class MinerClientImpl implements MinerClient {
         while (!stop && !newBestBlockArrivedFromAnotherNode) {
             // Is our proof of work valid yet?
             BigInteger blockHashBI = ulordMergedMiningBlock.getHash().toBigInteger();
-            logger.info("BlockHashBI: " + blockHashBI.toString(16));
-            logger.info("Target:      " + target.toString(16));
             if (blockHashBI.compareTo(target) <= 0) {
                 return true;
             }

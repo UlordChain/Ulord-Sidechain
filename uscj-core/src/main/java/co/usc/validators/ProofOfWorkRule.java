@@ -139,8 +139,8 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         BigInteger target = DifficultyUtils.difficultyToTarget(header.getDifficulty());
         BigInteger ulordMergedMiningBlockHashBI = ulordMergedMiningBlock.getHash().toBigInteger();
 
-        logger.info("ulordMergedMiningBlockHashBI: " + ulordMergedMiningBlockHashBI.toString(16));
-        logger.info("PoW Target:                   " + target.toString(16));
+        //logger.info("ulordMergedMiningBlockHashBI: " + ulordMergedMiningBlockHashBI.toString(16));
+        //logger.info("PoW Target:                   " + target.toString(16));
         if (ulordMergedMiningBlockHashBI.compareTo(target) > 0) {
             logger.warn("Hash {} is higher than target {}", ulordMergedMiningBlockHashBI.toString(16), target.toString(16));
             return false;
