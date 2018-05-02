@@ -69,7 +69,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     // - The ulord block height that contains the tx
     // - A merkle tree that shows the tx is included in that block, serialized with the ulord wire protocol format.
     public static final CallTransaction.Function REGISTER_ULD_TRANSACTION = CallTransaction.Function.fromSignature("registerUldTransaction", new String[]{"bytes", "int", "bytes"}, new String[]{});
-    // No parameters, the current rsk tx is used as input.
+    // No parameters, the current usc tx is used as input.
     public static final CallTransaction.Function RELEASE_ULD = CallTransaction.Function.fromSignature("releaseUld", new String[]{}, new String[]{});
     // Parameters:
     // Federator public key.
@@ -164,8 +164,8 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     private final UscSystemProperties config;
     private final BridgeConstants bridgeConstants;
 
-    private org.ethereum.core.Transaction rskTx;
-    private org.ethereum.core.Block rskExecutionBlock;
+    private org.ethereum.core.Transaction uscTx;
+    private org.ethereum.core.Block uscExecutionBlock;
     private Repository repository;
     private List<LogInfo> logs;
 
@@ -226,7 +226,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
 
     @Override
     public long getGasForData(byte[] data) {
-        if (BridgeUtils.isFreeBridgeTx(config, rskTx, rskExecutionBlock.getNumber())) {
+        if (BridgeUtils.isFreeBridgeTx(config, uscTx, uscExecutionBlock.getNumber())) {
             return 0;
         }
 
@@ -281,16 +281,16 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         return bridgeParsedData;
     }
 
-    // Parsed rsk transaction data field
+    // Parsed usc transaction data field
     private static class BridgeParsedData {
         CallTransaction.Function function;
         Object[] args;
     }
 
     @Override
-    public void init(Transaction rskTx, Block rskExecutionBlock, Repository repository, BlockStore rskBlockStore, ReceiptStore rskReceiptStore, List<LogInfo> logs) {
-        this.rskTx = rskTx;
-        this.rskExecutionBlock = rskExecutionBlock;
+    public void init(Transaction uscTx, Block uscExecutionBlock, Repository repository, BlockStore uscBlockStore, ReceiptStore uscReceiptStore, List<LogInfo> logs) {
+        this.uscTx = uscTx;
+        this.uscExecutionBlock = uscExecutionBlock;
         this.repository = repository;
         this.logs = logs;
     }
@@ -341,7 +341,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
 
     private BridgeSupport setup() throws Exception {
         BridgeEventLogger eventLogger = new BridgeEventLoggerImpl(this.bridgeConstants, this.logs);
-        return new BridgeSupport(this.config, repository, eventLogger, contractAddress, rskExecutionBlock);
+        return new BridgeSupport(this.config, repository, eventLogger, contractAddress, uscExecutionBlock);
     }
 
     private void teardown() throws IOException {
@@ -353,7 +353,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         logger.trace("updateCollections");
 
         try {
-            bridgeSupport.updateCollections(rskTx);
+            bridgeSupport.updateCollections(uscTx);
         } catch (Exception e) {
             logger.warn("Exception onBlock", e);
             throw new RuntimeException("Exception onBlock", e);
@@ -409,7 +409,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             throw new BridgeIllegalArgumentException("PartialMerkleTree could not be parsed " + Hex.toHexString(pmtSerialized), e);
         }
         try {
-            bridgeSupport.registerUldTransaction(rskTx, uldTx, height, pmt);
+            bridgeSupport.registerUldTransaction(uscTx, uldTx, height, pmt);
         } catch (Exception e) {
             logger.warn("Exception in registerUldTransaction", e);
             throw new RuntimeException("Exception in registerUldTransaction", e);
@@ -421,7 +421,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         logger.trace("releaseUld");
 
         try {
-            bridgeSupport.releaseUld(rskTx);
+            bridgeSupport.releaseUld(uscTx);
         } catch (Program.OutOfGasException e) {
             throw e;
         } catch (Exception e) {
@@ -455,12 +455,12 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             }
             signatures.add(signatureByteArray);
         }
-        byte[] rskTxHash = (byte[]) args[2];
-        if (rskTxHash.length!=32) {
-            throw new BridgeIllegalArgumentException("Invalid rsk tx hash " + Hex.toHexString(rskTxHash));
+        byte[] uscTxHash = (byte[]) args[2];
+        if (uscTxHash.length!=32) {
+            throw new BridgeIllegalArgumentException("Invalid usc tx hash " + Hex.toHexString(uscTxHash));
         }
         try {
-            bridgeSupport.addSignature(rskExecutionBlock.getNumber(), federatorPublicKey, signatures, rskTxHash);
+            bridgeSupport.addSignature(uscExecutionBlock.getNumber(), federatorPublicKey, signatures, uscTxHash);
         } catch (BridgeIllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
@@ -666,7 +666,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         logger.trace("createFederation");
 
         return bridgeSupport.voteFederationChange(
-                rskTx,
+                uscTx,
                 new ABICallSpec("create", new byte[][]{})
         );
     }
@@ -684,7 +684,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         }
 
         return bridgeSupport.voteFederationChange(
-                rskTx,
+                uscTx,
                 new ABICallSpec("add", new byte[][]{ publicKeyBytes })
         );
     }
@@ -702,7 +702,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         }
 
         return bridgeSupport.voteFederationChange(
-                rskTx,
+                uscTx,
                 new ABICallSpec("commit", new byte[][]{ hash })
         );
     }
@@ -712,7 +712,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         logger.trace("rollbackFederation");
 
         return bridgeSupport.voteFederationChange(
-                rskTx,
+                uscTx,
                 new ABICallSpec("rollback", new byte[][]{})
         );
     }
@@ -789,7 +789,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             return 0;
         }
 
-        return bridgeSupport.addLockWhitelistAddress(rskTx, addressBase58, maxTransferValue);
+        return bridgeSupport.addLockWhitelistAddress(uscTx, addressBase58, maxTransferValue);
     }
 
     public Integer removeLockWhitelistAddress(Object[] args)
@@ -804,13 +804,13 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             return 0;
         }
 
-        return bridgeSupport.removeLockWhitelistAddress(rskTx, addressBase58);
+        return bridgeSupport.removeLockWhitelistAddress(uscTx, addressBase58);
     }
 
     public Integer setLockWhitelistDisableBlockDelay(Object[] args) {
         logger.trace("setLockWhitelistDisableBlockDelay");
         BigInteger lockWhitelistDisableBlockDelay = (BigInteger) args[0];
-        return bridgeSupport.setLockWhitelistDisableBlockDelay(rskTx, lockWhitelistDisableBlockDelay);
+        return bridgeSupport.setLockWhitelistDisableBlockDelay(uscTx, lockWhitelistDisableBlockDelay);
     }
 
     public Integer voteFeePerKbChange(Object[] args)
@@ -825,7 +825,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             return -10;
         }
 
-        return bridgeSupport.voteFeePerKbChange(rskTx, feePerKb);
+        return bridgeSupport.voteFeePerKbChange(uscTx, feePerKb);
     }
 
     public long getFeePerKb(Object[] args)

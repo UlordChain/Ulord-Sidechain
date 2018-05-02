@@ -25,7 +25,7 @@ import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.wallet.Wallet;
 import co.usc.config.BridgeConstants;
 import co.usc.core.UscAddress;
-import co.usc.peg.ulord.RskAllowUnconfirmedCoinSelector;
+import co.usc.peg.ulord.UscAllowUnconfirmedCoinSelector;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Transaction;
@@ -89,7 +89,7 @@ public class BridgeUtils {
         federations.stream().forEach(federation -> {
             wallet.addWatchedAddress(federation.getAddress(), federation.getCreationTime().toEpochMilli());
         });
-        wallet.setCoinSelector(new RskAllowUnconfirmedCoinSelector());
+        wallet.setCoinSelector(new UscAllowUnconfirmedCoinSelector());
         return wallet;
     }
 
@@ -158,9 +158,9 @@ public class BridgeUtils {
         return UldECKey.fromPublicOnly(pubKey).toAddress(networkParameters);
     }
 
-    public static boolean isFreeBridgeTx(SystemProperties config, Transaction rskTx, long blockNumber) {
+    public static boolean isFreeBridgeTx(SystemProperties config, Transaction uscTx, long blockNumber) {
         BlockchainNetConfig blockchainConfig = config.getBlockchainConfig();
-        UscAddress receiveAddress = rskTx.getReceiveAddress();
+        UscAddress receiveAddress = uscTx.getReceiveAddress();
         if (receiveAddress.equals(UscAddress.nullAddress())) {
             return false;
         }
@@ -172,31 +172,31 @@ public class BridgeUtils {
         // Once the original federation changes, txs are always paid.
         return PrecompiledContracts.BRIDGE_ADDR.equals(receiveAddress) &&
                blockchainConfig.getConfigForBlock(blockNumber).areBridgeTxsFree() &&
-               rskTx.acceptTransactionSignature(config.getBlockchainConfig().getCommonConstants().getChainId()) &&
+               uscTx.acceptTransactionSignature(config.getBlockchainConfig().getCommonConstants().getChainId()) &&
                (
-                       isFromFederateMember(rskTx, bridgeConstants.getGenesisFederation()) ||
-                       isFromFederationChangeAuthorizedSender(rskTx, bridgeConstants) ||
-                       isFromLockWhitelistChangeAuthorizedSender(rskTx, bridgeConstants) ||
-                       isFromFeePerKbChangeAuthorizedSender(rskTx, bridgeConstants)
+                       isFromFederateMember(uscTx, bridgeConstants.getGenesisFederation()) ||
+                       isFromFederationChangeAuthorizedSender(uscTx, bridgeConstants) ||
+                       isFromLockWhitelistChangeAuthorizedSender(uscTx, bridgeConstants) ||
+                       isFromFeePerKbChangeAuthorizedSender(uscTx, bridgeConstants)
                );
     }
 
-    private static boolean isFromFederateMember(org.ethereum.core.Transaction rskTx, Federation federation) {
-        return federation.hasMemberWithRskAddress(rskTx.getSender().getBytes());
+    private static boolean isFromFederateMember(org.ethereum.core.Transaction uscTx, Federation federation) {
+        return federation.hasMemberWithUscAddress(uscTx.getSender().getBytes());
     }
 
-    private static boolean isFromFederationChangeAuthorizedSender(org.ethereum.core.Transaction rskTx, BridgeConstants bridgeConfiguration) {
+    private static boolean isFromFederationChangeAuthorizedSender(org.ethereum.core.Transaction uscTx, BridgeConstants bridgeConfiguration) {
         AddressBasedAuthorizer authorizer = bridgeConfiguration.getFederationChangeAuthorizer();
-        return authorizer.isAuthorized(rskTx);
+        return authorizer.isAuthorized(uscTx);
     }
 
-    private static boolean isFromLockWhitelistChangeAuthorizedSender(org.ethereum.core.Transaction rskTx, BridgeConstants bridgeConfiguration) {
+    private static boolean isFromLockWhitelistChangeAuthorizedSender(org.ethereum.core.Transaction uscTx, BridgeConstants bridgeConfiguration) {
         AddressBasedAuthorizer authorizer = bridgeConfiguration.getLockWhitelistChangeAuthorizer();
-        return authorizer.isAuthorized(rskTx);
+        return authorizer.isAuthorized(uscTx);
     }
 
-    private static boolean isFromFeePerKbChangeAuthorizedSender(org.ethereum.core.Transaction rskTx, BridgeConstants bridgeConfiguration) {
+    private static boolean isFromFeePerKbChangeAuthorizedSender(org.ethereum.core.Transaction uscTx, BridgeConstants bridgeConfiguration) {
         AddressBasedAuthorizer authorizer = bridgeConfiguration.getFeePerKbChangeAuthorizer();
-        return authorizer.isAuthorized(rskTx);
+        return authorizer.isAuthorized(uscTx);
     }
 }

@@ -107,7 +107,7 @@ public class BridgeTest {
         BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
         Assert.assertEquals(3, provider.getReleaseTransactionSet().getEntries().size());
-        Assert.assertEquals(0, provider.getRskTxsWaitingForSignatures().size());
+        Assert.assertEquals(0, provider.getUscTxsWaitingForSignatures().size());
     }
 
     @Test
@@ -149,7 +149,7 @@ public class BridgeTest {
         BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
         Assert.assertEquals(2, provider.getReleaseTransactionSet().getEntries().size());
-        Assert.assertEquals(1, provider.getRskTxsWaitingForSignatures().size());
+        Assert.assertEquals(1, provider.getUscTxsWaitingForSignatures().size());
     }
 
     @Test

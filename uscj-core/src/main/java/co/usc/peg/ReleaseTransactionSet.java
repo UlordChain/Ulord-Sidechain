@@ -26,7 +26,7 @@ import java.util.*;
 /**
  * Representation of a queue of ULD release
  * transactions waiting for confirmations
- * on the rsk network.
+ * on the usc network.
  *
  * @author Ariel Mendelzon
  */
@@ -43,19 +43,19 @@ public class ReleaseTransactionSet {
         };
 
         private UldTransaction transaction;
-        private Long rskBlockNumber;
+        private Long uscBlockNumber;
 
-        public Entry(UldTransaction transaction, Long rskBlockNumber) {
+        public Entry(UldTransaction transaction, Long uscBlockNumber) {
             this.transaction = transaction;
-            this.rskBlockNumber = rskBlockNumber;
+            this.uscBlockNumber = uscBlockNumber;
         }
 
         public UldTransaction getTransaction() {
             return transaction;
         }
 
-        public Long getRskBlockNumber() {
-            return rskBlockNumber;
+        public Long getUscBlockNumber() {
+            return uscBlockNumber;
         }
 
         @Override
@@ -66,12 +66,12 @@ public class ReleaseTransactionSet {
 
             Entry otherEntry = (Entry) o;
             return otherEntry.getTransaction().equals(getTransaction()) &&
-                    otherEntry.getRskBlockNumber().equals(getRskBlockNumber());
+                    otherEntry.getUscBlockNumber().equals(getUscBlockNumber());
          }
 
         @Override
         public int hashCode() {
-            return Objects.hash(getTransaction(), getRskBlockNumber());
+            return Objects.hash(getTransaction(), getUscBlockNumber());
         }
     }
 
@@ -125,6 +125,6 @@ public class ReleaseTransactionSet {
     }
 
     private boolean hasEnoughConfirmations(Entry entry, Long currentBlockNumber, Integer minimumConfirmations) {
-        return (currentBlockNumber - entry.getRskBlockNumber()) >= minimumConfirmations;
+        return (currentBlockNumber - entry.getUscBlockNumber()) >= minimumConfirmations;
     }
 }

@@ -145,7 +145,7 @@ public class UpdateCollectionsTest extends BridgePerformanceTestCase {
             ReleaseTransactionSet txSet;
 
             try {
-                txsWaitingForSignatures = provider.getRskTxsWaitingForSignatures();
+                txsWaitingForSignatures = provider.getUscTxsWaitingForSignatures();
             } catch (Exception e) {
                 throw new RuntimeException("Unable to gather txs waiting for signatures");
             }

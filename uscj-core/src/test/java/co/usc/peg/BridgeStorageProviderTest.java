@@ -83,7 +83,7 @@ public class BridgeStorageProviderTest {
         Assert.assertNotNull(releaseTransactionSet);
         Assert.assertEquals(0, releaseTransactionSet.getEntries().size());
 
-        SortedMap<Keccak256, UldTransaction> signatures = provider.getRskTxsWaitingForSignatures();
+        SortedMap<Keccak256, UldTransaction> signatures = provider.getUscTxsWaitingForSignatures();
 
         Assert.assertNotNull(signatures);
         Assert.assertTrue(signatures.isEmpty());
@@ -103,7 +103,7 @@ public class BridgeStorageProviderTest {
         provider0.getUldTxHashesAlreadyProcessed();
         provider0.getReleaseRequestQueue();
         provider0.getReleaseTransactionSet();
-        provider0.getRskTxsWaitingForSignatures();
+        provider0.getUscTxsWaitingForSignatures();
         provider0.getNewFederationUldUTXOs();
         provider0.getOldFederationUldUTXOs();
         provider0.save();
@@ -138,7 +138,7 @@ public class BridgeStorageProviderTest {
         Assert.assertNotNull(releaseTransactionSet);
         Assert.assertEquals(0, releaseTransactionSet.getEntries().size());
 
-        SortedMap<Keccak256, UldTransaction> signatures = provider.getRskTxsWaitingForSignatures();
+        SortedMap<Keccak256, UldTransaction> signatures = provider.getUscTxsWaitingForSignatures();
 
         Assert.assertNotNull(signatures);
         Assert.assertTrue(signatures.isEmpty());
@@ -192,9 +192,9 @@ public class BridgeStorageProviderTest {
         Repository track = repository.startTracking();
 
         BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
-        provider0.getRskTxsWaitingForSignatures().put(hash1, tx1);
-        provider0.getRskTxsWaitingForSignatures().put(hash2, tx2);
-        provider0.getRskTxsWaitingForSignatures().put(hash3, tx3);
+        provider0.getUscTxsWaitingForSignatures().put(hash1, tx1);
+        provider0.getUscTxsWaitingForSignatures().put(hash2, tx2);
+        provider0.getUscTxsWaitingForSignatures().put(hash3, tx3);
 
         provider0.save();
         track.commit();
@@ -203,7 +203,7 @@ public class BridgeStorageProviderTest {
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        SortedMap<Keccak256, UldTransaction> signatures = provider.getRskTxsWaitingForSignatures();
+        SortedMap<Keccak256, UldTransaction> signatures = provider.getUscTxsWaitingForSignatures();
 
         Assert.assertNotNull(signatures);
 

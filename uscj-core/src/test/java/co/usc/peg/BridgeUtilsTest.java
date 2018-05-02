@@ -29,7 +29,7 @@ import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.UscAddress;
-import co.usc.peg.ulord.RskAllowUnconfirmedCoinSelector;
+import co.usc.peg.ulord.UscAllowUnconfirmedCoinSelector;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.core.Block;
 import org.ethereum.core.CallTransaction;
@@ -391,7 +391,7 @@ public class BridgeUtilsTest {
         Assert.assertEquals(BridgeUldWallet.class, wallet.getClass());
         assertIsWatching(federation.getAddress(), wallet, regTestParameters);
         CoinSelector selector = wallet.getCoinSelector();
-        Assert.assertEquals(RskAllowUnconfirmedCoinSelector.class, selector.getClass());
+        Assert.assertEquals(UscAllowUnconfirmedCoinSelector.class, selector.getClass());
         UTXOProvider utxoProvider = wallet.getUTXOProvider();
         Assert.assertEquals(UscUTXOProvider.class, utxoProvider.getClass());
         Assert.assertEquals(mockedUtxos, utxoProvider.getOpenTransactionOutputs(Collections.emptyList()));

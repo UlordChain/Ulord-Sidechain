@@ -40,7 +40,7 @@ import java.util.List;
 public class SamplePrecompiledContract extends PrecompiledContracts.PrecompiledContract {
 
     private Block currentBlock;
-    private Transaction rskTx;
+    private Transaction uscTx;
     private Repository repository;
     private BlockStore blockStore;
     private ReceiptStore receiptStore;
@@ -61,8 +61,8 @@ public class SamplePrecompiledContract extends PrecompiledContracts.PrecompiledC
     }
 
     @Override
-    public void init(Transaction rskTx, Block currentBlock, Repository repository, BlockStore blockStore, ReceiptStore receiptStore, List<LogInfo> logs) {
-        this.rskTx = rskTx;
+    public void init(Transaction uscTx, Block currentBlock, Repository repository, BlockStore blockStore, ReceiptStore receiptStore, List<LogInfo> logs) {
+        this.uscTx = uscTx;
         this.currentBlock = currentBlock;
         this.repository = repository;
         this.blockStore = blockStore;

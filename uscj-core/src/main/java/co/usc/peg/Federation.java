@@ -133,7 +133,7 @@ public final class Federation {
         return getPublicKeyIndex(key) != null;
     }
 
-    public boolean hasMemberWithRskAddress(byte[] address) {
+    public boolean hasMemberWithUscAddress(byte[] address) {
         return uscPublicKeys.stream()
                 .anyMatch(k -> Arrays.equals(k.getAddress(), address));
     }

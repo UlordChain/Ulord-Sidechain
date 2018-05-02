@@ -59,7 +59,7 @@ public class BridgeState {
         this(UldBlockChainBestChainHeight,
                 provider.getUldTxHashesAlreadyProcessed(),
                 provider.getNewFederationUldUTXOs(),
-                provider.getRskTxsWaitingForSignatures(),
+                provider.getUscTxsWaitingForSignatures(),
                 provider.getReleaseRequestQueue(),
                 provider.getReleaseTransactionSet());
     }

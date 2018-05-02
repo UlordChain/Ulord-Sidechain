@@ -134,22 +134,22 @@ public class ReleaseTransactionBuilder {
         } catch (InsufficientMoneyException e) {
             logger.warn(String.format("Not enough ULD in the wallet to complete %s", operationDescription), e);
             // Comment out panic logging for now
-            // panicProcessor.panic("nomoney", "Not enough confirmed ULD in the federation wallet to complete " + rskTxHash + " " + uldTx);
+            // panicProcessor.panic("nomoney", "Not enough confirmed ULD in the federation wallet to complete " + uscTxHash + " " + uldTx);
             return Optional.empty();
         } catch (Wallet.CouldNotAdjustDownwards e) {
             logger.warn(String.format("A user output could not be adjusted downwards to pay tx fees %s", operationDescription), e);
             // Comment out panic logging for now
-            // panicProcessor.panic("couldnotadjustdownwards", "A user output could not be adjusted downwards to pay tx fees " + rskTxHash + " " + uldTx);
+            // panicProcessor.panic("couldnotadjustdownwards", "A user output could not be adjusted downwards to pay tx fees " + uscTxHash + " " + uldTx);
             return Optional.empty();
         } catch (Wallet.ExceededMaxTransactionSize e) {
             logger.warn(String.format("Tx size too big %s", operationDescription), e);
             // Comment out panic logging for now
-            // panicProcessor.panic("exceededmaxtransactionsize", "Tx size too big " + rskTxHash + " " + uldTx);
+            // panicProcessor.panic("exceededmaxtransactionsize", "Tx size too big " + uscTxHash + " " + uldTx);
             return Optional.empty();
         } catch (UTXOProviderException e) {
             logger.warn(String.format("UTXO provider exception sending %s", operationDescription), e);
             // Comment out panic logging for now
-            // panicProcessor.panic("utxoprovider", "UTXO provider exception " + rskTxHash + " " + uldTx);
+            // panicProcessor.panic("utxoprovider", "UTXO provider exception " + uscTxHash + " " + uldTx);
             return Optional.empty();
         }
     }

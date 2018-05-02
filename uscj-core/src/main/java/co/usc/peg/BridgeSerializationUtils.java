@@ -410,7 +410,7 @@ public class BridgeSerializationUtils {
 
         for (ReleaseTransactionSet.Entry entry : entries) {
             bytes[n++] = RLP.encodeElement(entry.getTransaction().ulordSerialize());
-            bytes[n++] = RLP.encodeBigInteger(BigInteger.valueOf(entry.getRskBlockNumber()));
+            bytes[n++] = RLP.encodeBigInteger(BigInteger.valueOf(entry.getUscBlockNumber()));
         }
 
         return RLP.encodeList(bytes);

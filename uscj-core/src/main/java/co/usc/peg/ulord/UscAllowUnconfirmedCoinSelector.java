@@ -37,7 +37,7 @@ import java.util.List;
  * Sorts outputs just by hash number (ignores output value and number of confirmation) which produces a pseudo random order.
  * Created by mario on 05/10/2016.
  */
-public class RskAllowUnconfirmedCoinSelector implements CoinSelector{
+public class UscAllowUnconfirmedCoinSelector implements CoinSelector{
 
     @Override
     public CoinSelection select(Coin target, List<TransactionOutput> candidates) {

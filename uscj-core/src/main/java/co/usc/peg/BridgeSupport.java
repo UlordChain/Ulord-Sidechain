@@ -79,23 +79,23 @@ public class BridgeSupport {
     private final UldBlockStore UldBlockStore;
     private final UldBlockChain UldBlockChain;
     private final BridgeStorageProvider provider;
-    private final Repository rskRepository;
+    private final Repository uscRepository;
     private final UscSystemProperties config;
 
     private final BridgeEventLogger eventLogger;
-    private org.ethereum.core.Block rskExecutionBlock;
+    private org.ethereum.core.Block uscExecutionBlock;
     private StoredBlock initialUldStoredBlock;
 
     // Used by bridge
-    public BridgeSupport(UscSystemProperties config, Repository repository, BridgeEventLogger eventLogger, UscAddress contractAddress, Block rskExecutionBlock) throws IOException, BlockStoreException {
-        this(config, repository, eventLogger, new BridgeStorageProvider(repository, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants()), rskExecutionBlock);
+    public BridgeSupport(UscSystemProperties config, Repository repository, BridgeEventLogger eventLogger, UscAddress contractAddress, Block uscExecutionBlock) throws IOException, BlockStoreException {
+        this(config, repository, eventLogger, new BridgeStorageProvider(repository, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants()), uscExecutionBlock);
     }
 
     // Used by unit tests
-    public BridgeSupport(UscSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeStorageProvider provider, Block rskExecutionBlock) throws IOException, BlockStoreException {
-        this.rskRepository = repository;
+    public BridgeSupport(UscSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeStorageProvider provider, Block uscExecutionBlock) throws IOException, BlockStoreException {
+        this.uscRepository = repository;
         this.provider = provider;
-        this.rskExecutionBlock = rskExecutionBlock;
+        this.uscExecutionBlock = uscExecutionBlock;
         this.config = config;
         this.bridgeConstants = this.config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         this.eventLogger = eventLogger;
@@ -125,7 +125,7 @@ public class BridgeSupport {
         this.uldContext = new Context(this.bridgeConstants.getUldParams());
         this.UldBlockStore = UldBlockStore;
         this.UldBlockChain = UldBlockChain;
-        this.rskRepository = repository;
+        this.uscRepository = repository;
         this.eventLogger = eventLogger;
     }
 
@@ -228,7 +228,7 @@ public class BridgeSupport {
      * @throws BlockStoreException
      * @throws IOException
      */
-    public void registerUldTransaction(Transaction rskTx, UldTransaction uldTx, int height, PartialMerkleTree pmt) throws BlockStoreException, IOException {
+    public void registerUldTransaction(Transaction uscTx, UldTransaction uldTx, int height, PartialMerkleTree pmt) throws BlockStoreException, IOException {
         Context.propagate(uldContext);
 
         Federation federation = getActiveFederation();
@@ -338,17 +338,17 @@ public class BridgeSupport {
                 );
                 Optional<ReleaseTransactionBuilder.BuildResult> buildReturnResult = txBuilder.buildEmptyWalletTo(senderuldAddress);
                 if (buildReturnResult.isPresent()) {
-                    provider.getReleaseTransactionSet().add(buildReturnResult.get().getUldTx(), rskExecutionBlock.getNumber());
-                    logger.info("whitelist money return tx build successful to {}. Tx {}. Value {}.", senderuldAddress, rskTx, totalAmount);
+                    provider.getReleaseTransactionSet().add(buildReturnResult.get().getUldTx(), uscExecutionBlock.getNumber());
+                    logger.info("whitelist money return tx build successful to {}. Tx {}. Value {}.", senderuldAddress, uscTx, totalAmount);
                 } else {
-                    logger.warn("whitelist money return tx build for uld tx {} error. Return was to {}. Tx {}. Value {}", uldTx.getHash(), senderuldAddress, rskTx, totalAmount);
-                    panicProcessor.panic("whitelist-return-funds", String.format("whitelist money return tx build for uld tx {} error. Return was to {}. Tx {}. Value {}", uldTx.getHash(), senderuldAddress, rskTx, totalAmount));
+                    logger.warn("whitelist money return tx build for uld tx {} error. Return was to {}. Tx {}. Value {}", uldTx.getHash(), senderuldAddress, uscTx, totalAmount);
+                    panicProcessor.panic("whitelist-return-funds", String.format("whitelist money return tx build for uld tx {} error. Return was to {}. Tx {}. Value {}", uldTx.getHash(), senderuldAddress, uscTx, totalAmount));
                 }
             } else {
                 org.ethereum.crypto.ECKey key = org.ethereum.crypto.ECKey.fromPublicOnly(data);
                 UscAddress sender = new UscAddress(key.getAddress());
 
-                rskRepository.transfer(
+                uscRepository.transfer(
                         PrecompiledContracts.BRIDGE_ADDR,
                         sender,
                         co.usc.core.Coin.fromUlord(totalAmount)
@@ -378,7 +378,7 @@ public class BridgeSupport {
         Sha256Hash uldTxHash = uldTx.getHash();
 
         // Mark tx as processed on this block
-        provider.getUldTxHashesAlreadyProcessed().put(uldTxHash, rskExecutionBlock.getNumber());
+        provider.getUldTxHashesAlreadyProcessed().put(uldTxHash, uscExecutionBlock.getNumber());
 
         // Save UTXOs from the federation(s) only if we actually
         // locked the funds.
@@ -413,30 +413,30 @@ public class BridgeSupport {
     /**
      * Initiates the process of sending coins back to ULD.
      * This is the default contract method.
-     * The funds will be sent to the ulord address controlled by the private key that signed the rsk tx.
+     * The funds will be sent to the ulord address controlled by the private key that signed the usc tx.
      * The amount sent to the bridge in this tx will be the amount sent in the uld network minus fees.
-     * @param rskTx The rsk tx being executed.
+     * @param uscTx The usc tx being executed.
      * @throws IOException
      */
-    public void releaseUld(Transaction rskTx) throws IOException {
-        byte[] senderCode = rskRepository.getCode(rskTx.getSender());
+    public void releaseUld(Transaction uscTx) throws IOException {
+        byte[] senderCode = uscRepository.getCode(uscTx.getSender());
 
         //as we can't send uld from contracts we want to send them back to the sender
         if (senderCode != null && senderCode.length > 0) {
-            logger.trace("Contract {} tried to release funds. Release is just allowed from standard accounts.", rskTx);
+            logger.trace("Contract {} tried to release funds. Release is just allowed from standard accounts.", uscTx);
             throw new Program.OutOfGasException("Contract calling releaseULD");
         }
 
         Context.propagate(uldContext);
         NetworkParameters uldParams = bridgeConstants.getUldParams();
-        Address uldDestinationAddress = BridgeUtils.recoverUldAddressFromEthTransaction(rskTx, uldParams);
-        Coin value = rskTx.getValue().toUlord();
+        Address uldDestinationAddress = BridgeUtils.recoverUldAddressFromEthTransaction(uscTx, uldParams);
+        Coin value = uscTx.getValue().toUlord();
         boolean addResult = requestRelease(uldDestinationAddress, value);
 
         if (addResult) {
-            logger.info("releaseUld succesful to {}. Tx {}. Value {}.", uldDestinationAddress, rskTx, value);
+            logger.info("releaseUld succesful to {}. Tx {}. Value {}.", uldDestinationAddress, uscTx, value);
         } else {
-            logger.warn("releaseUld ignored because value is considered dust. To {}. Tx {}. Value {}.", uldDestinationAddress, rskTx, value);
+            logger.warn("releaseUld ignored because value is considered dust. To {}. Tx {}. Value {}.", uldDestinationAddress, uscTx, value);
         }
     }
 
@@ -481,22 +481,22 @@ public class BridgeSupport {
      * processing of any outstanding uld release requests; and
      * processing of any outstanding release uld transactions.
      * @throws IOException
-     * @param rskTx current USC transaction
+     * @param uscTx current USC transaction
      */
-    public void updateCollections(Transaction rskTx) throws IOException {
+    public void updateCollections(Transaction uscTx) throws IOException {
         Context.propagate(uldContext);
 
-        eventLogger.logUpdateCollections(rskTx);
+        eventLogger.logUpdateCollections(uscTx);
 
         processFundsMigration();
 
         processReleaseRequests();
 
-        processReleaseTransactions(rskTx);
+        processReleaseTransactions(uscTx);
     }
 
     private boolean federationIsInMigrationAge(Federation federation) {
-        long federationAge = rskExecutionBlock.getNumber() - federation.getCreationBlockNumber();
+        long federationAge = uscExecutionBlock.getNumber() - federation.getCreationBlockNumber();
         long ageBegin = bridgeConstants.getFederationActivationAge() + bridgeConstants.getFundsMigrationAgeSinceActivationBegin();
         long ageEnd = bridgeConstants.getFederationActivationAge() + bridgeConstants.getFundsMigrationAgeSinceActivationEnd();
 
@@ -504,7 +504,7 @@ public class BridgeSupport {
     }
 
     private boolean federationIsPastMigrationAge(Federation federation) {
-        long federationAge = rskExecutionBlock.getNumber() - federation.getCreationBlockNumber();
+        long federationAge = uscExecutionBlock.getNumber() - federation.getCreationBlockNumber();
         long ageEnd = bridgeConstants.getFederationActivationAge() + bridgeConstants.getFundsMigrationAgeSinceActivationEnd();
 
         return federationAge >= ageEnd;
@@ -526,7 +526,7 @@ public class BridgeSupport {
         if (federationIsInMigrationAge(activeFederation)
                 && hasMinimumFundsToMigrate(retiringFederationWallet)) {
             logger.info("Active federation (age={}) is in migration age and retiring federation has funds to migrate: {}.",
-                    rskExecutionBlock.getNumber() - activeFederation.getCreationBlockNumber(),
+                    uscExecutionBlock.getNumber() - activeFederation.getCreationBlockNumber(),
                     retiringFederationWallet.getBalance().toFriendlyString());
 
             Pair<UldTransaction, List<UTXO>> createResult = createMigrationTransaction(retiringFederationWallet, activeFederation.getAddress());
@@ -534,7 +534,7 @@ public class BridgeSupport {
             List<UTXO> selectedUTXOs = createResult.getRight();
 
             // Add the TX to the release set
-            releaseTransactionSet.add(uldTx, rskExecutionBlock.getNumber());
+            releaseTransactionSet.add(uldTx, uscExecutionBlock.getNumber());
 
             // Mark UTXOs as spent
             availableUTXOs.removeIf(utxo -> selectedUTXOs.stream().anyMatch(selectedUtxo ->
@@ -554,7 +554,7 @@ public class BridgeSupport {
                     List<UTXO> selectedUTXOs = createResult.getRight();
 
                     // Add the TX to the release set
-                    releaseTransactionSet.add(uldTx, rskExecutionBlock.getNumber());
+                    releaseTransactionSet.add(uldTx, uscExecutionBlock.getNumber());
 
                     // Mark UTXOs as spent
                     availableUTXOs.removeIf(utxo -> selectedUTXOs.stream().anyMatch(selectedUtxo ->
@@ -651,7 +651,7 @@ public class BridgeSupport {
             }
 
             // Add the TX
-            releaseTransactionSet.add(generatedTransaction, rskExecutionBlock.getNumber());
+            releaseTransactionSet.add(generatedTransaction, uscExecutionBlock.getNumber());
 
             // Mark UTXOs as spent
             availableUTXOs.removeAll(selectedUTXOs);
@@ -672,14 +672,14 @@ public class BridgeSupport {
      * It basically looks for transactions with enough confirmations
      * and marks them as ready for signing as well as removes them
      * from the set.
-     * @param rskTx the USC transaction that is causing this processing.
+     * @param uscTx the USC transaction that is causing this processing.
      */
-    private void processReleaseTransactions(Transaction rskTx) {
+    private void processReleaseTransactions(Transaction uscTx) {
         final Map<Keccak256, UldTransaction> txsWaitingForSignatures;
         final ReleaseTransactionSet releaseTransactionSet;
 
         try {
-            txsWaitingForSignatures = provider.getRskTxsWaitingForSignatures();
+            txsWaitingForSignatures = provider.getUscTxsWaitingForSignatures();
             releaseTransactionSet = provider.getReleaseTransactionSet();
         } catch (IOException e) {
             logger.error("Unexpected error accessing storage while attempting to process release uld transactions", e);
@@ -688,7 +688,7 @@ public class BridgeSupport {
 
         // TODO: (Ariel Mendelzon - 07/12/2017)
         // TODO: at the moment, there can only be one uld transaction
-        // TODO: per rsk transaction in the txsWaitingForSignatures
+        // TODO: per usc transaction in the txsWaitingForSignatures
         // TODO: map, and the rest of the processing logic is
         // TODO: dependant upon this. That is the reason we
         // TODO: add only one uld transaction at a time
@@ -696,14 +696,14 @@ public class BridgeSupport {
 
         // IMPORTANT: sliceWithEnoughConfirmations also modifies the transaction set in place
         Set<UldTransaction> txsWithEnoughConfirmations = releaseTransactionSet.sliceWithConfirmations(
-                rskExecutionBlock.getNumber(),
+                uscExecutionBlock.getNumber(),
                 bridgeConstants.getUsc2UldMinimumAcceptableConfirmations(),
                 Optional.of(1)
         );
 
         // Add the uld transaction to the 'awaiting signatures' list
         if (txsWithEnoughConfirmations.size() > 0) {
-            txsWaitingForSignatures.put(rskTx.getHash(), txsWithEnoughConfirmations.iterator().next());
+            txsWaitingForSignatures.put(uscTx.getHash(), txsWithEnoughConfirmations.iterator().next());
         }
     }
 
@@ -728,7 +728,7 @@ public class BridgeSupport {
         if (spentByFederation.isLessThan(sentByUser)) {
             Coin coinsToBurn = sentByUser.subtract(spentByFederation);
             UscAddress burnAddress = config.getBlockchainConfig().getCommonConstants().getBurnAddress();
-            rskRepository.transfer(PrecompiledContracts.BRIDGE_ADDR, burnAddress, co.usc.core.Coin.fromUlord(coinsToBurn));
+            uscRepository.transfer(PrecompiledContracts.BRIDGE_ADDR, burnAddress, co.usc.core.Coin.fromUlord(coinsToBurn));
         }
     }
 
@@ -740,29 +740,29 @@ public class BridgeSupport {
      * @param executionBlockNumber The block number of the block that is currently being procesed
      * @param federatorPublicKey   Federator who is signing
      * @param signatures           1 signature per uld tx input
-     * @param rskTxHash            The id of the rsk tx
+     * @param uscTxHash            The id of the usc tx
      */
-    public void addSignature(long executionBlockNumber, UldECKey federatorPublicKey, List<byte[]> signatures, byte[] rskTxHash) throws Exception {
+    public void addSignature(long executionBlockNumber, UldECKey federatorPublicKey, List<byte[]> signatures, byte[] uscTxHash) throws Exception {
         Context.propagate(uldContext);
         Federation retiringFederation = getRetiringFederation();
         if (!getActiveFederation().getPublicKeys().contains(federatorPublicKey) && (retiringFederation == null || !retiringFederation.getPublicKeys().contains(federatorPublicKey))) {
             logger.warn("Supplied federator public key {} does not belong to any of the federators.", federatorPublicKey);
             return;
         }
-        UldTransaction uldTx = provider.getRskTxsWaitingForSignatures().get(new Keccak256(rskTxHash));
+        UldTransaction uldTx = provider.getUscTxsWaitingForSignatures().get(new Keccak256(uscTxHash));
         if (uldTx == null) {
-            logger.warn("No tx waiting for signature for hash {}. Probably fully signed already.", new Keccak256(rskTxHash));
+            logger.warn("No tx waiting for signature for hash {}. Probably fully signed already.", new Keccak256(uscTxHash));
             return;
         }
         if (uldTx.getInputs().size() != signatures.size()) {
             logger.warn("Expected {} signatures but received {}.", uldTx.getInputs().size(), signatures.size());
             return;
         }
-        eventLogger.logAddSignature(federatorPublicKey, uldTx, rskTxHash);
-        processSigning(executionBlockNumber, federatorPublicKey, signatures, rskTxHash, uldTx);
+        eventLogger.logAddSignature(federatorPublicKey, uldTx, uscTxHash);
+        processSigning(executionBlockNumber, federatorPublicKey, signatures, uscTxHash, uldTx);
     }
 
-    private void processSigning(long executionBlockNumber, UldECKey federatorPublicKey, List<byte[]> signatures, byte[] rskTxHash, UldTransaction uldTx) throws IOException {
+    private void processSigning(long executionBlockNumber, UldECKey federatorPublicKey, List<byte[]> signatures, byte[] uscTxHash, UldTransaction uldTx) throws IOException {
         // Build input hashes for signatures
         int numInputs = uldTx.getInputs().size();
 
@@ -783,7 +783,7 @@ public class BridgeSupport {
             try {
                 sig = UldECKey.ECDSASignature.decodeFromDER(signatures.get(i));
             } catch (RuntimeException e) {
-                logger.warn("Malformed signature for input {} of tx {}: {}", i, new Keccak256(rskTxHash), Hex.toHexString(signatures.get(i)));
+                logger.warn("Malformed signature for input {} of tx {}: {}", i, new Keccak256(uscTxHash), Hex.toHexString(signatures.get(i)));
                 return;
             }
 
@@ -819,7 +819,7 @@ public class BridgeSupport {
                     int sigIndex = inputScript.getSigInsertionIndex(sighash, federatorPublicKey);
                     inputScript = ScriptBuilder.updateScriptWithSignature(inputScript, txSigs.get(i).encodeToUlord(), sigIndex, 1, 1);
                     input.setScriptSig(inputScript);
-                    logger.debug("Tx input {} for tx {} signed.", i, new Keccak256(rskTxHash));
+                    logger.debug("Tx input {} for tx {} signed.", i, new Keccak256(uscTxHash));
                 } catch (IllegalStateException e) {
                     Federation retiringFederation = getRetiringFederation();
                     if (getActiveFederation().hasPublicKey(federatorPublicKey)) {
@@ -832,7 +832,7 @@ public class BridgeSupport {
                     throw e;
                 }
             } else {
-                logger.warn("Input {} of tx {} already signed by this federator.", i, new Keccak256(rskTxHash));
+                logger.warn("Input {} of tx {} already signed by this federator.", i, new Keccak256(uscTxHash));
                 break;
             }
         }
@@ -840,10 +840,10 @@ public class BridgeSupport {
         // If tx fully signed
         if (hasEnoughSignatures(uldTx)) {
             logger.info("Tx fully signed {}. Hex: {}", uldTx, Hex.toHexString(uldTx.ulordSerialize()));
-            provider.getRskTxsWaitingForSignatures().remove(new Keccak256(rskTxHash));
+            provider.getUscTxsWaitingForSignatures().remove(new Keccak256(uscTxHash));
             eventLogger.logReleaseUld(uldTx);
         } else {
-            logger.debug("Tx not yet fully signed {}.", new Keccak256(rskTxHash));
+            logger.debug("Tx not yet fully signed {}.", new Keccak256(uscTxHash));
         }
     }
 
@@ -899,7 +899,7 @@ public class BridgeSupport {
      * @return a StateForFederator serialized in RLP
      */
     public byte[] getStateForUldReleaseClient() throws IOException {
-        StateForFederator stateForFederator = new StateForFederator(provider.getRskTxsWaitingForSignatures());
+        StateForFederator stateForFederator = new StateForFederator(provider.getUscTxsWaitingForSignatures());
         return stateForFederator.getEncoded();
     }
 
@@ -1071,7 +1071,7 @@ public class BridgeSupport {
     }
 
     private boolean shouldFederationBeActive(Federation federation) {
-        long federationAge = rskExecutionBlock.getNumber() - federation.getCreationBlockNumber();
+        long federationAge = uscExecutionBlock.getNumber() - federation.getCreationBlockNumber();
         return federationAge >= bridgeConstants.getFederationActivationAge();
     }
 
@@ -1403,15 +1403,15 @@ public class BridgeSupport {
 
         // Network parameters for the new federation are taken from the bridge constants.
         // Creation time is the block's timestamp.
-        Instant creationTime = Instant.ofEpochMilli(rskExecutionBlock.getTimestamp());
+        Instant creationTime = Instant.ofEpochMilli(uscExecutionBlock.getTimestamp());
         provider.setOldFederation(getActiveFederation());
-        provider.setNewFederation(currentPendingFederation.buildFederation(creationTime, rskExecutionBlock.getNumber(), bridgeConstants.getUldParams()));
+        provider.setNewFederation(currentPendingFederation.buildFederation(creationTime, uscExecutionBlock.getNumber(), bridgeConstants.getUldParams()));
         provider.setPendingFederation(null);
 
         // Clear votes on election
         provider.getFederationElection(bridgeConstants.getFederationChangeAuthorizer()).clear();
 
-        eventLogger.logCommitFederation(rskExecutionBlock, provider.getOldFederation(), provider.getNewFederation());
+        eventLogger.logCommitFederation(uscExecutionBlock, provider.getOldFederation(), provider.getNewFederation());
 
         return 1;
     }

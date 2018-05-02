@@ -186,7 +186,7 @@ public class BridgeStorageProvider {
         safeSaveToRepository(RELEASE_TX_SET, releaseTransactionSet, BridgeSerializationUtils::serializeReleaseTransactionSet);
     }
 
-    public SortedMap<Keccak256, UldTransaction> getRskTxsWaitingForSignatures() throws IOException {
+    public SortedMap<Keccak256, UldTransaction> getUscTxsWaitingForSignatures() throws IOException {
         if (rskTxsWaitingForSignatures != null) {
             return rskTxsWaitingForSignatures;
         }

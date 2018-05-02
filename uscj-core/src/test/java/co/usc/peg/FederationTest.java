@@ -304,12 +304,12 @@ public class FederationTest {
     @Test
     public void hasMemberWithRskAddress() {
         for (int i = 0; i < federation.getPublicKeys().size(); i++) {
-            Assert.assertTrue(federation.hasMemberWithRskAddress(rskAddresses.get(i)));
+            Assert.assertTrue(federation.hasMemberWithUscAddress(rskAddresses.get(i)));
         }
 
         UldECKey nonFederateKey = UldECKey.fromPrivate(BigInteger.valueOf(1234));
         byte[] nonFederateRskAddress = getRskAddressFromUldKey(nonFederateKey);
-        Assert.assertFalse(federation.hasMemberWithRskAddress(nonFederateRskAddress));
+        Assert.assertFalse(federation.hasMemberWithUscAddress(nonFederateRskAddress));
     }
 
     @Test

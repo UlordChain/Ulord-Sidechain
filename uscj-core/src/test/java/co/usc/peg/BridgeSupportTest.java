@@ -352,7 +352,7 @@ public class BridgeSupportTest {
 
         Assert.assertEquals(2, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(1, provider.getReleaseTransactionSet().getEntries().size());
-        Assert.assertEquals(0, provider.getRskTxsWaitingForSignatures().size());
+        Assert.assertEquals(0, provider.getUscTxsWaitingForSignatures().size());
         // Check value sent to user is 10 Uld minus fee
         Assert.assertEquals(Coin.valueOf(999962800l), provider.getReleaseTransactionSet().getEntries().iterator().next().getTransaction().getOutput(0).getValue());
         // Check the wallet has been emptied
@@ -412,7 +412,7 @@ public class BridgeSupportTest {
 
         Assert.assertEquals(1, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider.getReleaseTransactionSet().getEntries().size());
-        Assert.assertEquals(0, provider.getRskTxsWaitingForSignatures().size());
+        Assert.assertEquals(0, provider.getUscTxsWaitingForSignatures().size());
         // Check the wallet has not been emptied
         Assert.assertFalse(provider.getNewFederationUldUTXOs().isEmpty());
     }
@@ -472,7 +472,7 @@ public class BridgeSupportTest {
 
         Assert.assertEquals(1, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider.getReleaseTransactionSet().getEntries().size());
-        Assert.assertEquals(0, provider.getRskTxsWaitingForSignatures().size());
+        Assert.assertEquals(0, provider.getUscTxsWaitingForSignatures().size());
         // Check the wallet has not been emptied
         Assert.assertFalse(provider.getNewFederationUldUTXOs().isEmpty());
     }
@@ -600,7 +600,7 @@ public class BridgeSupportTest {
 
         Assert.assertEquals(0, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(1, provider.getReleaseTransactionSet().getEntries().size());
-        Assert.assertEquals(0, provider.getRskTxsWaitingForSignatures().size());
+        Assert.assertEquals(0, provider.getUscTxsWaitingForSignatures().size());
         Assert.assertEquals(LIMIT_MONETARY_BASE.subtract(co.usc.core.Coin.fromUlord(Coin.valueOf(2600))), repository.getBalance(PrecompiledContracts.BRIDGE_ADDR));
         Assert.assertEquals(co.usc.core.Coin.fromUlord(Coin.valueOf(2600)), repository.getBalance(config.getBlockchainConfig().getCommonConstants().getBurnAddress()));
         // Check the wallet has been emptied
@@ -672,7 +672,7 @@ public class BridgeSupportTest {
 
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(2, provider2.getReleaseTransactionSet().getEntries().size());
-        Assert.assertEquals(1, provider2.getRskTxsWaitingForSignatures().size());
+        Assert.assertEquals(1, provider2.getUscTxsWaitingForSignatures().size());
     }
 
     @Test
@@ -743,7 +743,7 @@ public class BridgeSupportTest {
 
         BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        Assert.assertTrue(provider.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(provider.getUscTxsWaitingForSignatures().isEmpty());
     }
 
     @Test
@@ -760,7 +760,7 @@ public class BridgeSupportTest {
 
         BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
-        Assert.assertTrue(provider.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(provider.getUscTxsWaitingForSignatures().isEmpty());
     }
 
     @Test
@@ -806,7 +806,7 @@ public class BridgeSupportTest {
 
         // Save uld tx to be signed
         final Keccak256 rskTxHash = PegTestUtils.createHash3();
-        provider.getRskTxsWaitingForSignatures().put(rskTxHash, uldTx);
+        provider.getUscTxsWaitingForSignatures().put(rskTxHash, uldTx);
         provider.save();
         track.commit();
 
@@ -896,7 +896,7 @@ public class BridgeSupportTest {
         t.addInput(prevOut1).setScriptSig(PegTestUtils.createBaseInputScriptThatSpendsFromTheFederation(federation));
         t.addInput(prevOut2).setScriptSig(PegTestUtils.createBaseInputScriptThatSpendsFromTheFederation(federation));
         t.addInput(prevOut3).setScriptSig(PegTestUtils.createBaseInputScriptThatSpendsFromTheFederation(federation));
-        provider.getRskTxsWaitingForSignatures().put(keccak256, t);
+        provider.getUscTxsWaitingForSignatures().put(keccak256, t);
         provider.save();
         track.commit();
 
@@ -958,7 +958,7 @@ public class BridgeSupportTest {
 
         provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, bridgeConstants);
 
-        Assert.assertTrue(provider.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(provider.getUscTxsWaitingForSignatures().isEmpty());
         Assert.assertThat(logs, is(not(empty())));
         Assert.assertThat(logs, hasSize(5));
         LogInfo releaseTxEvent = logs.get(4);
@@ -1000,7 +1000,7 @@ public class BridgeSupportTest {
         TransactionOutput output = new TransactionOutput(uldParams, t, Coin.COIN, new UldECKey().toAddress(uldParams));
         t.addOutput(output);
         t.addInput(prevOut).setScriptSig(PegTestUtils.createBaseInputScriptThatSpendsFromTheFederation(federation));
-        provider.getRskTxsWaitingForSignatures().put(keccak256, t);
+        provider.getUscTxsWaitingForSignatures().put(keccak256, t);
         provider.save();
         track.commit();
 
@@ -1050,7 +1050,7 @@ public class BridgeSupportTest {
         provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
         if ("FullySigned".equals(expectedResult)) {
-            Assert.assertTrue(provider.getRskTxsWaitingForSignatures().isEmpty());
+            Assert.assertTrue(provider.getUscTxsWaitingForSignatures().isEmpty());
             Assert.assertThat(logs, is(not(empty())));
             Assert.assertThat(logs, hasSize(3));
             LogInfo releaseTxEvent = logs.get(2);
@@ -1062,7 +1062,7 @@ public class BridgeSupportTest {
             Assert.assertEquals(true, retrievedScriptSig.getChunks().get(1).data.length > 0);
             Assert.assertEquals(true, retrievedScriptSig.getChunks().get(2).data.length > 0);
         } else {
-            Script retrievedScriptSig = provider.getRskTxsWaitingForSignatures().get(keccak256).getInput(0).getScriptSig();
+            Script retrievedScriptSig = provider.getUscTxsWaitingForSignatures().get(keccak256).getInput(0).getScriptSig();
             Assert.assertEquals(4, retrievedScriptSig.getChunks().size());
             boolean expectSignatureToBePersisted = false; // for "InvalidParameters"
             if ("PartiallySigned".equals(expectedResult)) {
@@ -1103,7 +1103,7 @@ public class BridgeSupportTest {
 
         Assert.assertEquals(0, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
-        Assert.assertTrue(provider.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(provider.getUscTxsWaitingForSignatures().isEmpty());
     }
 
     @Test
@@ -1127,7 +1127,7 @@ public class BridgeSupportTest {
 
         Assert.assertEquals(1, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(1, provider2.getReleaseRequestQueue().getEntries().size());
-        Assert.assertTrue(provider.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(provider.getUscTxsWaitingForSignatures().isEmpty());
     }
 
     @Test
@@ -1172,7 +1172,7 @@ public class BridgeSupportTest {
         Assert.assertTrue(provider2.getNewFederationUldUTXOs().isEmpty());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
-        Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(provider2.getUscTxsWaitingForSignatures().isEmpty());
         Assert.assertFalse(provider2.getUldTxHashesAlreadyProcessed().isEmpty());
     }
 
@@ -1203,7 +1203,7 @@ public class BridgeSupportTest {
         Assert.assertTrue(provider2.getNewFederationUldUTXOs().isEmpty());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
-        Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(provider2.getUscTxsWaitingForSignatures().isEmpty());
         Assert.assertTrue(provider2.getUldTxHashesAlreadyProcessed().isEmpty());
     }
 
@@ -1234,7 +1234,7 @@ public class BridgeSupportTest {
         Assert.assertTrue(provider2.getNewFederationUldUTXOs().isEmpty());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
-        Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(provider2.getUscTxsWaitingForSignatures().isEmpty());
         Assert.assertTrue(provider2.getUldTxHashesAlreadyProcessed().isEmpty());
     }
 
@@ -1267,7 +1267,7 @@ public class BridgeSupportTest {
         Assert.assertTrue(provider2.getNewFederationUldUTXOs().isEmpty());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
-        Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(provider2.getUscTxsWaitingForSignatures().isEmpty());
         Assert.assertTrue(provider2.getUldTxHashesAlreadyProcessed().isEmpty());
     }
 
@@ -1316,7 +1316,7 @@ public class BridgeSupportTest {
 
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
-        Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(provider2.getUscTxsWaitingForSignatures().isEmpty());
         Assert.assertTrue(provider2.getUldTxHashesAlreadyProcessed().isEmpty());
     }
 
@@ -1399,7 +1399,7 @@ public class BridgeSupportTest {
 
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
-        Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(provider2.getUscTxsWaitingForSignatures().isEmpty());
         Assert.assertEquals(1, provider2.getUldTxHashesAlreadyProcessed().size());
     }
 
@@ -1610,7 +1610,7 @@ public class BridgeSupportTest {
 
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseTransactionSet().getEntries().size());
-        Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(provider2.getUscTxsWaitingForSignatures().isEmpty());
         Assert.assertEquals(3, provider2.getUldTxHashesAlreadyProcessed().size());
     }
 
@@ -1752,7 +1752,7 @@ public class BridgeSupportTest {
         Assert.assertEquals(tx2.getHash(), releaseTx.getInput(0).getOutpoint().getHash());
         Assert.assertEquals(0, releaseTx.getInput(0).getOutpoint().getIndex());
 
-        Assert.assertTrue(provider2.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(provider2.getUscTxsWaitingForSignatures().isEmpty());
         Assert.assertEquals(3, provider2.getUldTxHashesAlreadyProcessed().size());
     }
 

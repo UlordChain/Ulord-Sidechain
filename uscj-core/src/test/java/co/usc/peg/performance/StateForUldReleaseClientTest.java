@@ -62,7 +62,7 @@ public class StateForUldReleaseClientTest extends BridgePerformanceTestCase {
         return (BridgeStorageProvider provider, Repository repository, int executionIndex) -> {
             Map<Keccak256, UldTransaction> txsWaitingForSignatures;
             try {
-                txsWaitingForSignatures = provider.getRskTxsWaitingForSignatures();
+                txsWaitingForSignatures = provider.getUscTxsWaitingForSignatures();
             } catch (IOException e) {
                 throw new RuntimeException("Exception while trying to gather txs waiting for signatures for storage initialization");
             }

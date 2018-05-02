@@ -66,7 +66,7 @@ public class ReleaseTransactionSetTest {
         ReleaseTransactionSet.Entry entry = new ReleaseTransactionSet.Entry(createTransaction(5, Coin.valueOf(100)), 7L);
 
         Assert.assertEquals(createTransaction(5, Coin.valueOf(100)), entry.getTransaction());
-        Assert.assertEquals(7L, entry.getRskBlockNumber().longValue());
+        Assert.assertEquals(7L, entry.getUscBlockNumber().longValue());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class ReleaseTransactionSetTest {
         while (resultIterator.hasNext()) {
             UldTransaction itemTx = resultIterator.next();
             ReleaseTransactionSet.Entry item = setEntries.stream().filter(e -> e.getTransaction().equals(itemTx)).findFirst().get();
-            Assert.assertTrue(15L - item.getRskBlockNumber() >= 5);
+            Assert.assertTrue(15L - item.getUscBlockNumber() >= 5);
             setEntries.remove(item);
         }
         Assert.assertEquals(3, set.getEntries().size());
@@ -160,7 +160,7 @@ public class ReleaseTransactionSetTest {
         while (resultIterator.hasNext()) {
             UldTransaction itemTx = resultIterator.next();
             ReleaseTransactionSet.Entry item = setEntries.stream().filter(e -> e.getTransaction().equals(itemTx)).findFirst().get();
-            Assert.assertTrue(15L - item.getRskBlockNumber() >= 5);
+            Assert.assertTrue(15L - item.getUscBlockNumber() >= 5);
             setEntries.remove(item);
         }
         Assert.assertEquals(2, set.getEntries().size());
