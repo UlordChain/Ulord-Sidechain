@@ -68,9 +68,9 @@ public class BridgeTestNetConstants extends BridgeConstants {
 
         // Passphrases are kept private
         List<ECKey> federationChangeAuthorizedKeys = Arrays.stream(new String[]{
-            "04d9052c2022f6f35da53f04f02856ff5e59f9836eec03daad0328d12c5c66140205da540498e46cd05bf63c1201382dd84c100f0d52a10654159965aea452c3f2",
-            "04bf889f2035c8c441d7d1054b6a449742edd04d202f44a29348b4140b34e2a81ce66e388f40046636fd012bd7e3cecd9b951ffe28422334722d20a1cf6c7926fb",
-            "047e707e4f67655c40c539363fb435d89574b8fe400971ba0290de9c2adbb2bd4e1e5b35a2188b9409ff2cc102292616efc113623483056bb8d8a02bf7695670ea"
+            "0465018e290308764ba2463928a25e0951c942df584cfdd951b195d2b73e8bdf43b52d4a1673e6ac84d0ffe12c9d91e8ccfdcaf7d3e743b221ab34704c903cc01f",
+            "041035e6579118189d447ffc02d527a5faee59463116cd04401822809b604249ac7729b3744523034a9956edf20647b8fa6ed4cf437e9f9f0c40ecff70bb9db0af",
+            "04e13d7a740942213965943409ec8125f83fad1b539b77724cb2853cba7d0596d618de9adf5a995a9d7b0c6b7729abfb0b25a35f3e47b7d02332ae6bfbe24504dc"
         }).map(hex -> ECKey.fromPublicOnly(Hex.decode(hex))).collect(Collectors.toList());
 
         federationChangeAuthorizer = new AddressBasedAuthorizer(
@@ -80,7 +80,7 @@ public class BridgeTestNetConstants extends BridgeConstants {
 
         // Passphrases are kept private
         List<ECKey> lockWhitelistAuthorizedKeys = Arrays.stream(new String[]{
-            "04bf7e3bca7f7c58326382ed9c2516a8773c21f1b806984bb1c5c33bd18046502d97b28c0ea5b16433fbb2b23f14e95b36209f304841e814017f1ede1ecbdcfce3"
+            "04d461bd5518f0720bfdcb41a520a30a6f6cba03d26e387394cdc6cd2d2859c0731661d673a296aaaa8437d6828c44a165a4ed9b4f10ab17ba429a0c5677971874"
         }).map(hex -> ECKey.fromPublicOnly(Hex.decode(hex))).collect(Collectors.toList());
 
         lockWhitelistChangeAuthorizer = new AddressBasedAuthorizer(
@@ -94,9 +94,9 @@ public class BridgeTestNetConstants extends BridgeConstants {
         fundsMigrationAgeSinceActivationEnd = 900L;
 
         List<ECKey> feePerKbAuthorizedKeys = Arrays.stream(new String[]{
-            "04701d1d27f8c2ae97912d96fb1f82f10c2395fd320e7a869049268c6b53d2060dfb2e22e3248955332d88cd2ae29a398f8f3858e48dd6d8ffbc37dfd6d1aa4934",
-            "045ef89e4a5645dc68895dbc33b4c966c3a0a52bb837ecdd2ba448604c4f47266456d1191420e1d32bbe8741f8315fde4d1440908d400e5998dbed6549d499559b",
-            "0455db9b3867c14e84a6f58bd2165f13bfdba0703cb84ea85788373a6a109f3717e40483aa1f8ef947f435ccdf10e530dd8b3025aa2d4a7014f12180ee3a301d27"
+            "04d42e09ff5c4188545ce6e87fc4f014c60d59f3bea125a9854509de8a4df4a883451ceb91bce47834666030f90593063f172338b980af39d2c29519715371ef42",
+            "047664a07e5aa7f985bc72543cf532de25b28344abce12a39218128033b2615a32dd61ce03fee83c141950591c9b4507f936eec86d05cfbd67aafc221465f83e64",
+            "04e943913af64bf4e993c58a6b346fcc69c13c058bd7c147b2276048ba83f3ed1462b04aaf5a44808c9e04392a1b20e5bdc43bcb0bae481c74d454c4fce59b4558"
         }).map(hex -> ECKey.fromPublicOnly(Hex.decode(hex))).collect(Collectors.toList());
 
         feePerKbChangeAuthorizer = new AddressBasedAuthorizer(
