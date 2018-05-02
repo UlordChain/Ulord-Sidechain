@@ -26,12 +26,12 @@ import java.util.List;
  * Support class for the bridge uld wallet
  * @author Oscar Guindzberg
  */
-public class RskUTXOProvider implements UTXOProvider {
+public class UscUTXOProvider implements UTXOProvider {
 
     private final NetworkParameters params;
     private final List<UTXO> utxos;
 
-    public RskUTXOProvider(NetworkParameters params, List<UTXO> utxos) {
+    public UscUTXOProvider(NetworkParameters params, List<UTXO> utxos) {
         this.params = params;
         this.utxos = utxos;
     }

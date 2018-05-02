@@ -393,7 +393,7 @@ public class BridgeUtilsTest {
         CoinSelector selector = wallet.getCoinSelector();
         Assert.assertEquals(RskAllowUnconfirmedCoinSelector.class, selector.getClass());
         UTXOProvider utxoProvider = wallet.getUTXOProvider();
-        Assert.assertEquals(RskUTXOProvider.class, utxoProvider.getClass());
+        Assert.assertEquals(UscUTXOProvider.class, utxoProvider.getClass());
         Assert.assertEquals(mockedUtxos, utxoProvider.getOpenTransactionOutputs(Collections.emptyList()));
     }
 

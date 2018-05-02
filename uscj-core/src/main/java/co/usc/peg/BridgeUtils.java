@@ -84,7 +84,7 @@ public class BridgeUtils {
     public static Wallet getFederationsSpendWallet(Context uldContext, List<Federation> federations, List<UTXO> utxos) {
         Wallet wallet = new BridgeUldWallet(uldContext, federations);
 
-        RskUTXOProvider utxoProvider = new RskUTXOProvider(uldContext.getParams(), utxos);
+        UscUTXOProvider utxoProvider = new UscUTXOProvider(uldContext.getParams(), utxos);
         wallet.setUTXOProvider(utxoProvider);
         federations.stream().forEach(federation -> {
             wallet.addWatchedAddress(federation.getAddress(), federation.getCreationTime().toEpochMilli());
