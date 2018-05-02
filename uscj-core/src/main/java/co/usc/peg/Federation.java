@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  */
 public final class Federation {
     private final List<UldECKey> publicKeys;
-    private final List<ECKey> rskPublicKeys;
+    private final List<ECKey> uscPublicKeys;
     private final Instant creationTime;
     private final long creationBlockNumber;
     private final NetworkParameters uldParams;
@@ -55,8 +55,8 @@ public final class Federation {
         // Immutability provides protection unless unwanted modification, thus making the Federation instance
         // effectively immutable
         this.publicKeys = Collections.unmodifiableList(publicKeys.stream().sorted(UldECKey.PUBKEY_COMPARATOR).collect(Collectors.toList()));
-        // using this.publicKeys ensures order in rskPublicKeys
-        this.rskPublicKeys = Collections.unmodifiableList(this.publicKeys.stream()
+        // using this.publicKeys ensures order in uscPublicKeys
+        this.uscPublicKeys = Collections.unmodifiableList(this.publicKeys.stream()
                 .map(UldECKey::getPubKey)
                 .map(ECKey::fromPublicOnly)
                 .collect(Collectors.toList()));
@@ -134,7 +134,7 @@ public final class Federation {
     }
 
     public boolean hasMemberWithRskAddress(byte[] address) {
-        return rskPublicKeys.stream()
+        return uscPublicKeys.stream()
                 .anyMatch(k -> Arrays.equals(k.getAddress(), address));
     }
 
