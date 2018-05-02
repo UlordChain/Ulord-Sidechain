@@ -1,4 +1,7 @@
-#resources
+# .conf files
+ulord-testnet.conf
+
+# resources
 build-info.properties
 
 # local credentials

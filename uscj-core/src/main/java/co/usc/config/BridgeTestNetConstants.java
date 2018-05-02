@@ -38,23 +38,15 @@ public class BridgeTestNetConstants extends BridgeConstants {
     BridgeTestNetConstants() {
         uldParamsString = NetworkParameters.ID_TESTNET;
 
-         UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("039a060badbeb24bee49eb2063f616c0f0f0765d4ca646b20a88ce828f259fcdb9"));
-         UldECKey federator1PublicKey = UldECKey.fromPublicOnly(Hex.decode("02afc230c2d355b1a577682b07bc2646041b5d0177af0f98395a46018da699b6da"));
-         UldECKey federator2PublicKey = UldECKey.fromPublicOnly(Hex.decode("0344a3c38cd59afcba3edcebe143e025574594b001700dec41e59409bdbd0f2a09"));
-         UldECKey federator3PublicKey = UldECKey.fromPublicOnly(Hex.decode("03bb42b0d32e781b88319dbc3aadc43c7a032c1931b641f5ae8340b8891bfdedbd"));
-         UldECKey federator4PublicKey = UldECKey.fromPublicOnly(Hex.decode("03dece3c5f5b7df1ae3f4542c38dd25932e332d9e960c2c1f24712657626498705"));
-         UldECKey federator5PublicKey = UldECKey.fromPublicOnly(Hex.decode("033965f98e9ec741fdd3281f5cf2a2a0ae89958f4bf4f6862ee73ac9bf2b49e0c7"));
-         UldECKey federator6PublicKey = UldECKey.fromPublicOnly(Hex.decode("0297d72f4c58b62495adbd49398b39d8fca69c6714ecaec49bd09e9dfcd9dc35cf"));
+        UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6"));
 
         List<UldECKey> genesisFederationPublicKeys = Lists.newArrayList(
-                federator0PublicKey, federator1PublicKey, federator2PublicKey,
-                federator3PublicKey, federator4PublicKey, federator5PublicKey,
-                federator6PublicKey
+            federator0PublicKey
         );
 
         // Currently set to:
-        // Wednesday, January 3, 2018 12:00:00 AM GMT-03:00
-        Instant genesisFederationAddressCreatedAt = Instant.ofEpochMilli(1514948400l);
+        // Wednesday, May 2, 2018 12:00:00 AM GMT-03:00
+        Instant genesisFederationAddressCreatedAt = Instant.ofEpochMilli(1525219200l);
 
         genesisFederation = new Federation(
                 genesisFederationPublicKeys,
