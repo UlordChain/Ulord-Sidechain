@@ -52,20 +52,20 @@ public class BridgeEventLoggerImpl implements BridgeEventLogger {
         this.logs = logs;
     }
 
-    public void logUpdateCollections(Transaction rskTx) {
+    public void logUpdateCollections(Transaction uscTx) {
         this.logs.add(
                 new LogInfo(BRIDGE_CONTRACT_ADDRESS,
                             Collections.singletonList(Bridge.UPDATE_COLLECTIONS_TOPIC),
-                            RLP.encodeElement(rskTx.getSender().getBytes())
+                            RLP.encodeElement(uscTx.getSender().getBytes())
                 )
         );
     }
 
-    public void logAddSignature(UldECKey federatorPublicKey, UldTransaction uldTx, byte[] rskTxHash) {
+    public void logAddSignature(UldECKey federatorPublicKey, UldTransaction uldTx, byte[] uscTxHash) {
         List<DataWord> topics = Collections.singletonList(Bridge.ADD_SIGNATURE_TOPIC);
         byte[] data = RLP.encodeList(RLP.encodeString(uldTx.getHashAsString()),
                                     RLP.encodeElement(federatorPublicKey.getPubKeyHash()),
-                                    RLP.encodeElement(rskTxHash));
+                                    RLP.encodeElement(uscTxHash));
 
         this.logs.add(new LogInfo(BRIDGE_CONTRACT_ADDRESS, topics, data));
     }

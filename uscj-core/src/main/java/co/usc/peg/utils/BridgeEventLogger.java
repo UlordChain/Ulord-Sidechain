@@ -34,9 +34,9 @@ import java.util.List;
  */
 public interface BridgeEventLogger {
 
-    void logUpdateCollections(Transaction rskTx);
+    void logUpdateCollections(Transaction uscTx);
 
-    void logAddSignature(UldECKey federatorPublicKey, UldTransaction uldTx, byte[] rskTxHash);
+    void logAddSignature(UldECKey federatorPublicKey, UldTransaction uldTx, byte[] uscTxHash);
 
     void logReleaseUld(UldTransaction uldTx);
 
