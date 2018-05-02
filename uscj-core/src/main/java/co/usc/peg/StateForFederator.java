@@ -30,25 +30,25 @@ import java.util.SortedMap;
  * Created by mario on 20/04/17.
  */
 public class StateForFederator {
-    private SortedMap<Keccak256, UldTransaction> rskTxsWaitingForSignatures;
+    private SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures;
 
-    public StateForFederator(SortedMap<Keccak256, UldTransaction> rskTxsWaitingForSignatures) {
-        this.rskTxsWaitingForSignatures = rskTxsWaitingForSignatures;
+    public StateForFederator(SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures) {
+        this.uscTxsWaitingForSignatures = uscTxsWaitingForSignatures;
     }
 
     public StateForFederator(byte[] rlpData, NetworkParameters parameters) {
         RLPList rlpList = (RLPList) RLP.decode2(rlpData).get(0);
         byte[] encodedWaitingForSign = rlpList.get(0).getRLPData();
 
-        this.rskTxsWaitingForSignatures = BridgeSerializationUtils.deserializeMap(encodedWaitingForSign, parameters, false);
+        this.uscTxsWaitingForSignatures = BridgeSerializationUtils.deserializeMap(encodedWaitingForSign, parameters, false);
     }
 
-    public SortedMap<Keccak256, UldTransaction> getRskTxsWaitingForSignatures() {
-        return rskTxsWaitingForSignatures;
+    public SortedMap<Keccak256, UldTransaction> getUscTxsWaitingForSignatures() {
+        return uscTxsWaitingForSignatures;
     }
 
     public byte[] getEncoded() {
-        byte[] encodedWaitingForSign = BridgeSerializationUtils.serializeMap(this.rskTxsWaitingForSignatures);
+        byte[] encodedWaitingForSign = BridgeSerializationUtils.serializeMap(this.uscTxsWaitingForSignatures);
         return RLP.encodeList(encodedWaitingForSign);
     }
 }

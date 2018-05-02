@@ -71,12 +71,12 @@ public class StateForFederatorTest {
         StateForFederator reverseResult = new StateForFederator(encoded, NETWORK_PARAMETERS);
 
         Assert.assertNotNull(reverseResult);
-        Assert.assertEquals(2, reverseResult.getRskTxsWaitingForSignatures().size());
+        Assert.assertEquals(2, reverseResult.getUscTxsWaitingForSignatures().size());
 
-        Assert.assertEquals(tx1, reverseResult.getRskTxsWaitingForSignatures().get(hash1));
-        Assert.assertEquals(tx2, reverseResult.getRskTxsWaitingForSignatures().get(hash2));
+        Assert.assertEquals(tx1, reverseResult.getUscTxsWaitingForSignatures().get(hash1));
+        Assert.assertEquals(tx2, reverseResult.getUscTxsWaitingForSignatures().get(hash2));
 
-        Assert.assertTrue(checkKeys(reverseResult.getRskTxsWaitingForSignatures().keySet(), hash1, hash2));
+        Assert.assertTrue(checkKeys(reverseResult.getUscTxsWaitingForSignatures().keySet(), hash1, hash2));
     }
 
     private boolean checkKeys(Set<Keccak256> keccak256s, Keccak256... keys) {
