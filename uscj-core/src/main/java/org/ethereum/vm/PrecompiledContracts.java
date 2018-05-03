@@ -1,7 +1,7 @@
 package org.ethereum.vm;
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of UscJ
+ * Copyright (C) 2017 Usc Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -62,7 +62,7 @@ public class PrecompiledContracts {
     public static final UscAddress REMASC_ADDR = new UscAddress(REMASC_ADDR_STR);
     public static final UscAddress SAMPLE_ADDR = new UscAddress(SAMPLE_ADDR_STR);
 
-    private static final String RSK_NATIVECONTRACT_REQUIREDPREFIX = "000000000000000000000000";
+    private static final String USC_NATIVECONTRACT_REQUIREDPREFIX = "000000000000000000000000";
     private static ECRecover ecRecover = new ECRecover();
     private static Sha256 sha256 = new Sha256();
     private static Ripempd160 ripempd160 = new Ripempd160();
@@ -81,28 +81,28 @@ public class PrecompiledContracts {
         if (address == null) {
             return identity;
         }
-        if (address.isHex(RSK_NATIVECONTRACT_REQUIREDPREFIX + ECRECOVER_ADDR)) {
+        if (address.isHex(USC_NATIVECONTRACT_REQUIREDPREFIX + ECRECOVER_ADDR)) {
             return ecRecover;
         }
-        if (address.isHex(RSK_NATIVECONTRACT_REQUIREDPREFIX + SHA256_ADDR)) {
+        if (address.isHex(USC_NATIVECONTRACT_REQUIREDPREFIX + SHA256_ADDR)) {
             return sha256;
         }
-        if (address.isHex(RSK_NATIVECONTRACT_REQUIREDPREFIX + RIPEMPD160_ADDR)) {
+        if (address.isHex(USC_NATIVECONTRACT_REQUIREDPREFIX + RIPEMPD160_ADDR)) {
             return ripempd160;
         }
-        if (address.isHex(RSK_NATIVECONTRACT_REQUIREDPREFIX + IDENTITY_ADDR_STR)) {
+        if (address.isHex(USC_NATIVECONTRACT_REQUIREDPREFIX + IDENTITY_ADDR_STR)) {
             return identity;
         }
-        if (address.isHex(RSK_NATIVECONTRACT_REQUIREDPREFIX + SAMPLE_ADDR_STR)) {
+        if (address.isHex(USC_NATIVECONTRACT_REQUIREDPREFIX + SAMPLE_ADDR_STR)) {
             return sample;
         }
-        if (address.isHex(BRIDGE_ADDR_STR) || address.isHex(RSK_NATIVECONTRACT_REQUIREDPREFIX + BRIDGE_ADDR_STR)) {
+        if (address.isHex(BRIDGE_ADDR_STR) || address.isHex(USC_NATIVECONTRACT_REQUIREDPREFIX + BRIDGE_ADDR_STR)) {
             return new Bridge(config, BRIDGE_ADDR);
         }
-        if (address.isHex(RSK_NATIVECONTRACT_REQUIREDPREFIX + BIG_INT_MODEXP_ADDR)) {
+        if (address.isHex(USC_NATIVECONTRACT_REQUIREDPREFIX + BIG_INT_MODEXP_ADDR)) {
             return bigIntegerModexp;
         }
-        if (address.isHex(REMASC_ADDR_STR) || address.isHex(RSK_NATIVECONTRACT_REQUIREDPREFIX + REMASC_ADDR_STR)) {
+        if (address.isHex(REMASC_ADDR_STR) || address.isHex(USC_NATIVECONTRACT_REQUIREDPREFIX + REMASC_ADDR_STR)) {
             return new RemascContract(config, new RemascConfigFactory(RemascContract.REMASC_CONFIG).createRemascConfig(config.netName()), REMASC_ADDR);
         }
 
