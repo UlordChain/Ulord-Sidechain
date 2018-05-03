@@ -66,7 +66,7 @@ public class BridgeSupport {
     private static final Logger logger = LoggerFactory.getLogger("BridgeSupport");
     private static final PanicProcessor panicProcessor = new PanicProcessor();
 
-    private enum StorageFederationReference { NONE, NEW, OLD, GENESIS;}
+    private enum StorageFederationReference { NONE, NEW, OLD, GENESIS }
 
     private final List<String> FEDERATION_CHANGE_FUNCTIONS = Collections.unmodifiableList(Arrays.asList(
             "create",
