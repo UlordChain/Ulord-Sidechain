@@ -49,6 +49,6 @@ public class BridgeStateTest {
         Assert.assertEquals(42, clone.getUldBlockChainBestChainHeight());
         Assert.assertTrue(clone.getUldTxHashesAlreadyProcessed().isEmpty());
         Assert.assertTrue(clone.getActiveFederationUldUTXOs().isEmpty());
-        Assert.assertTrue(clone.getRskTxsWaitingForSignatures().isEmpty());
+        Assert.assertTrue(clone.getUscTxsWaitingForSignatures().isEmpty());
     }
 }

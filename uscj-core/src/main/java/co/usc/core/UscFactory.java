@@ -260,7 +260,7 @@ public class UscFactory {
     }
 
     @Bean
-    public EthHandlerFactoryImpl.RskWireProtocolFactory getRskWireProtocolFactory(PeerScoringManager peerScoringManager,
+    public EthHandlerFactoryImpl.UscWireProtocolFactory getRskWireProtocolFactory(PeerScoringManager peerScoringManager,
                                                                                   MessageHandler messageHandler,
                                                                                   Blockchain blockchain,
                                                                                   UscSystemProperties config,

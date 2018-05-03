@@ -41,16 +41,16 @@ public class BridgeState {
     private final int UldBlockChainBestChainHeight;
     private final Map<Sha256Hash, Long> uldTxHashesAlreadyProcessed;
     private final List<UTXO> activeFederationUldUTXOs;
-    private final SortedMap<Keccak256, UldTransaction> rskTxsWaitingForSignatures;
+    private final SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures;
     private final ReleaseRequestQueue releaseRequestQueue;
     private final ReleaseTransactionSet releaseTransactionSet;
 
     private BridgeState(int UldBlockChainBestChainHeight, Map<Sha256Hash, Long> uldTxHashesAlreadyProcessed, List<UTXO> activeFederationUldUTXOs,
-                        SortedMap<Keccak256, UldTransaction> rskTxsWaitingForSignatures, ReleaseRequestQueue releaseRequestQueue, ReleaseTransactionSet releaseTransactionSet) {
+                        SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures, ReleaseRequestQueue releaseRequestQueue, ReleaseTransactionSet releaseTransactionSet) {
         this.UldBlockChainBestChainHeight = UldBlockChainBestChainHeight;
         this.uldTxHashesAlreadyProcessed = uldTxHashesAlreadyProcessed;
         this.activeFederationUldUTXOs = activeFederationUldUTXOs;
-        this.rskTxsWaitingForSignatures = rskTxsWaitingForSignatures;
+        this.uscTxsWaitingForSignatures = uscTxsWaitingForSignatures;
         this.releaseRequestQueue = releaseRequestQueue;
         this.releaseTransactionSet = releaseTransactionSet;
     }
@@ -76,8 +76,8 @@ public class BridgeState {
         return activeFederationUldUTXOs;
     }
 
-    public SortedMap<Keccak256, UldTransaction> getRskTxsWaitingForSignatures() {
-        return rskTxsWaitingForSignatures;
+    public SortedMap<Keccak256, UldTransaction> getUscTxsWaitingForSignatures() {
+        return uscTxsWaitingForSignatures;
     }
 
     public ReleaseRequestQueue getReleaseRequestQueue() {
@@ -94,7 +94,7 @@ public class BridgeState {
                 "UldBlockChainBestChainHeight=" + UldBlockChainBestChainHeight + "\n" +
                 ", uldTxHashesAlreadyProcessed=" + uldTxHashesAlreadyProcessed + "\n" +
                 ", activeFederationUldUTXOs=" + activeFederationUldUTXOs + "\n" +
-                ", rskTxsWaitingForSignatures=" + rskTxsWaitingForSignatures + "\n" +
+                ", uscTxsWaitingForSignatures=" + uscTxsWaitingForSignatures + "\n" +
                 ", releaseRequestQueue=" + releaseRequestQueue + "\n" +
                 ", releaseTransactionSet=" + releaseTransactionSet + "\n" +
                 '}';
@@ -111,7 +111,7 @@ public class BridgeState {
     public Map<String, Object> stateToMap() {
         Map<String, Object> result = new HashedMap<>();
         result.put("uldTxHashesAlreadyProcessed", this.formatedAlreadyProcessedHashes());
-        result.put("rskTxsWaitingForSignatures", this.toStringList(rskTxsWaitingForSignatures.keySet()));
+        result.put("uscTxsWaitingForSignatures", this.toStringList(uscTxsWaitingForSignatures.keySet()));
         result.put("UldBlockChainBestChainHeight", this.UldBlockChainBestChainHeight);
         return result;
     }
@@ -120,11 +120,11 @@ public class BridgeState {
         byte[] rlpUldBlockChainBestChainHeight = RLP.encodeBigInteger(BigInteger.valueOf(this.UldBlockChainBestChainHeight));
         byte[] rlpUldTxHashesAlreadyProcessed = RLP.encodeElement(BridgeSerializationUtils.serializeMapOfHashesToLong(uldTxHashesAlreadyProcessed));
         byte[] rlpActiveFederationUldUTXOs = RLP.encodeElement(BridgeSerializationUtils.serializeUTXOList(activeFederationUldUTXOs));
-        byte[] rlpRskTxsWaitingForSignatures = RLP.encodeElement(BridgeSerializationUtils.serializeMap(rskTxsWaitingForSignatures));
+        byte[] rlpUscTxsWaitingForSignatures = RLP.encodeElement(BridgeSerializationUtils.serializeMap(uscTxsWaitingForSignatures));
         byte[] rlpReleaseRequestQueue = RLP.encodeElement(BridgeSerializationUtils.serializeReleaseRequestQueue(releaseRequestQueue));
         byte[] rlpReleaseTransactionSet = RLP.encodeElement(BridgeSerializationUtils.serializeReleaseTransactionSet(releaseTransactionSet));
 
-        return RLP.encodeList(rlpUldBlockChainBestChainHeight, rlpUldTxHashesAlreadyProcessed, rlpActiveFederationUldUTXOs, rlpRskTxsWaitingForSignatures, rlpReleaseRequestQueue, rlpReleaseTransactionSet);
+        return RLP.encodeList(rlpUldBlockChainBestChainHeight, rlpUldTxHashesAlreadyProcessed, rlpActiveFederationUldUTXOs, rlpUscTxsWaitingForSignatures, rlpReleaseRequestQueue, rlpReleaseTransactionSet);
     }
 
     public static BridgeState create(BridgeConstants bridgeConstants, byte[] data) throws IOException {
@@ -136,8 +136,8 @@ public class BridgeState {
         Map<Sha256Hash, Long> uldTxHashesAlreadyProcessed = BridgeSerializationUtils.deserializeMapOfHashesToLong(UldTxHashesAlreadyProcessedBytes);
         byte[] uldUTXOsBytes = rlpList.get(2).getRLPData();
         List<UTXO> uldUTXOs = BridgeSerializationUtils.deserializeUTXOList(uldUTXOsBytes);
-        byte[] rskTxsWaitingForSignaturesBytes = rlpList.get(3).getRLPData();
-        SortedMap<Keccak256, UldTransaction> rskTxsWaitingForSignatures = BridgeSerializationUtils.deserializeMap(rskTxsWaitingForSignaturesBytes, bridgeConstants.getUldParams(), false);
+        byte[] uscTxsWaitingForSignaturesBytes = rlpList.get(3).getRLPData();
+        SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures = BridgeSerializationUtils.deserializeMap(uscTxsWaitingForSignaturesBytes, bridgeConstants.getUldParams(), false);
         byte[] releaseRequestQueueBytes = rlpList.get(4).getRLPData();
         ReleaseRequestQueue releaseRequestQueue = BridgeSerializationUtils.deserializeReleaseRequestQueue(releaseRequestQueueBytes, bridgeConstants.getUldParams());
         byte[] releaseTransactionSetBytes = rlpList.get(5).getRLPData();
@@ -147,7 +147,7 @@ public class BridgeState {
                 UldBlockChainBestChainHeight,
                 uldTxHashesAlreadyProcessed,
                 uldUTXOs,
-                rskTxsWaitingForSignatures,
+                uscTxsWaitingForSignatures,
                 releaseRequestQueue,
                 releaseTransactionSet
         );

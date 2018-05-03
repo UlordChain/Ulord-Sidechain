@@ -312,19 +312,19 @@ public class UscForksBridgeTest {
         if (ReleaseTransactionState.WAITING_FOR_SELECTION.equals(state)) {
             Assert.assertEquals(1, stateForDebugging.getReleaseRequestQueue().getEntries().size());
             Assert.assertEquals(0, stateForDebugging.getReleaseTransactionSet().getEntries().size());
-            Assert.assertEquals(0, stateForDebugging.getRskTxsWaitingForSignatures().size());
+            Assert.assertEquals(0, stateForDebugging.getUscTxsWaitingForSignatures().size());
         } else if (ReleaseTransactionState.WAITING_FOR_SIGNATURES.equals(state)) {
             Assert.assertEquals(0, stateForDebugging.getReleaseRequestQueue().getEntries().size());
             Assert.assertEquals(0, stateForDebugging.getReleaseTransactionSet().getEntries().size());
-            Assert.assertEquals(1, stateForDebugging.getRskTxsWaitingForSignatures().size());
+            Assert.assertEquals(1, stateForDebugging.getUscTxsWaitingForSignatures().size());
         } else if (ReleaseTransactionState.WAITING_FOR_CONFIRMATIONS.equals(state)) {
             Assert.assertEquals(0, stateForDebugging.getReleaseRequestQueue().getEntries().size());
             Assert.assertEquals(1, stateForDebugging.getReleaseTransactionSet().getEntries().size());
-            Assert.assertEquals(0, stateForDebugging.getRskTxsWaitingForSignatures().size());
+            Assert.assertEquals(0, stateForDebugging.getUscTxsWaitingForSignatures().size());
         } else if (ReleaseTransactionState.NO_TX.equals(state)) {
             Assert.assertEquals(0, stateForDebugging.getReleaseRequestQueue().getEntries().size());
             Assert.assertEquals(0, stateForDebugging.getReleaseTransactionSet().getEntries().size());
-            Assert.assertEquals(0, stateForDebugging.getRskTxsWaitingForSignatures().size());
+            Assert.assertEquals(0, stateForDebugging.getUscTxsWaitingForSignatures().size());
         }
     }
 
