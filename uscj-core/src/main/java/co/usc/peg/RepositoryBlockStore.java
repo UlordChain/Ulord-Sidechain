@@ -106,7 +106,7 @@ public class RepositoryBlockStore implements UldBlockStore{
     }
 
     private byte[] storedBlockToByteArray(StoredBlock block) {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(128);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(188);
         block.serializeCompact(byteBuffer);
         byte[] ba = new byte[byteBuffer.position()];
         byteBuffer.flip();
