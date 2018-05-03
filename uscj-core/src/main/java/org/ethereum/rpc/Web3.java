@@ -135,7 +135,7 @@ public interface Web3 extends Web3TxPoolModule, Web3EthModule {
     String net_peerCount();
     boolean net_listening();
     String[] net_peerList();
-    String rsk_protocolVersion();
+    String usc_protocolVersion();
 
     // methods required by dev environments
     Map<String, String> rpc_modules();

@@ -62,13 +62,13 @@ public class BridgeStorageProvider {
 
     // USC release txs follow these steps: First, they are waiting for coin selection (releaseRequestQueue),
     // then they are waiting for enough confirmations on the USC network (releaseTransactionSet),
-    // then they are waiting for federators' signatures (rskTxsWaitingForSignatures),
+    // then they are waiting for federators' signatures (uscTxsWaitingForSignatures),
     // then they are logged into the block that has them as completely signed for uld release
-    // and are removed from rskTxsWaitingForSignatures.
+    // and are removed from uscTxsWaitingForSignatures.
     // key = usc tx hash, value = uld tx
     private ReleaseRequestQueue releaseRequestQueue;
     private ReleaseTransactionSet releaseTransactionSet;
-    private SortedMap<Keccak256, UldTransaction> rskTxsWaitingForSignatures;
+    private SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures;
 
     private List<UTXO> newFederationUldUTXOs;
     private List<UTXO> oldFederationUldUTXOs;
@@ -187,23 +187,23 @@ public class BridgeStorageProvider {
     }
 
     public SortedMap<Keccak256, UldTransaction> getUscTxsWaitingForSignatures() throws IOException {
-        if (rskTxsWaitingForSignatures != null) {
-            return rskTxsWaitingForSignatures;
+        if (uscTxsWaitingForSignatures != null) {
+            return uscTxsWaitingForSignatures;
         }
 
-        rskTxsWaitingForSignatures = getFromRepository(
+        uscTxsWaitingForSignatures = getFromRepository(
                 USC_TXS_WAITING_FOR_SIGNATURES_KEY,
                 data -> BridgeSerializationUtils.deserializeMap(data, networkParameters, false)
         );
-        return rskTxsWaitingForSignatures;
+        return uscTxsWaitingForSignatures;
     }
 
     public void saveUscTxsWaitingForSignatures() {
-        if (rskTxsWaitingForSignatures == null) {
+        if (uscTxsWaitingForSignatures == null) {
             return;
         }
 
-        safeSaveToRepository(USC_TXS_WAITING_FOR_SIGNATURES_KEY, rskTxsWaitingForSignatures, BridgeSerializationUtils::serializeMap);
+        safeSaveToRepository(USC_TXS_WAITING_FOR_SIGNATURES_KEY, uscTxsWaitingForSignatures, BridgeSerializationUtils::serializeMap);
     }
 
     public Federation getNewFederation() {

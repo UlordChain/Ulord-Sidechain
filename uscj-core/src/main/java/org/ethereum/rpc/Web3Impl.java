@@ -266,7 +266,7 @@ public class Web3Impl implements Web3 {
     }
 
     @Override
-    public String rsk_protocolVersion() {
+    public String usc_protocolVersion() {
         String s = null;
         try {
             int version = 0;
@@ -280,14 +280,14 @@ public class Web3Impl implements Web3 {
             return s = Integer.toString(version);
         } finally {
             if (logger.isDebugEnabled()) {
-                logger.debug("rsk_protocolVersion(): " + s);
+                logger.debug("usc_protocolVersion(): " + s);
             }
         }
     }
 
     @Override
     public String eth_protocolVersion() {
-        return rsk_protocolVersion();
+        return usc_protocolVersion();
     }
 
     @Override

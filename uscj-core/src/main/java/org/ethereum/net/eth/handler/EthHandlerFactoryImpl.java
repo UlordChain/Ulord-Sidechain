@@ -33,24 +33,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class EthHandlerFactoryImpl implements EthHandlerFactory {
 
-    private final RskWireProtocolFactory rskWireProtocolFactory;
+    private final UscWireProtocolFactory uscWireProtocolFactory;
 
     @Autowired
-    public EthHandlerFactoryImpl(RskWireProtocolFactory rskWireProtocolFactory) {
-        this.rskWireProtocolFactory = rskWireProtocolFactory;
+    public EthHandlerFactoryImpl(UscWireProtocolFactory uscWireProtocolFactory) {
+        this.uscWireProtocolFactory = uscWireProtocolFactory;
     }
 
     @Override
     public EthHandler create(EthVersion version) {
         switch (version) {
             case V62:
-                return rskWireProtocolFactory.newInstance();
+                return uscWireProtocolFactory.newInstance();
 
             default:    throw new IllegalArgumentException("Eth " + version + " is not supported");
         }
     }
 
-    public interface RskWireProtocolFactory {
+    public interface UscWireProtocolFactory {
         UscWireProtocol newInstance();
     }
 }
