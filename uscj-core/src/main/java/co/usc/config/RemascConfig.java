@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of UscJ
+ * Copyright (C) 2017 USC Labs Ltd.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,15 +30,15 @@ public class RemascConfig {
     // Number of blocks block reward is split into
     private long syntheticSpan;
 
-    // RSK Labs address.
+    // USC Labs address.
     // Note that his has to be a basic type (such as String) because RemascConfig
     // is deserialized automatically from JSON.
     private String uscLabsAddress;
 
-    // RSK Labs cut. Available reward / uscLabsDivisor is what USC gets.
+    // USC Labs cut. Available reward / uscLabsDivisor is what USC gets.
     private long uscLabsDivisor = 5;
 
-    // Federation cut. Available reward / rskFederationDivisor is what Federation gets.
+    // Federation cut. Available reward / uscFederationDivisor is what Federation gets.
     private long federationDivisor = 100;
 
     // Punishment in case of broken selection rule. The punishment applied is available reward / punishmentDivisor.
