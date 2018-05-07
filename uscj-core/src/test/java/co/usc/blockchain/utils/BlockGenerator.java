@@ -27,7 +27,7 @@ import co.usc.core.bc.BlockChainImpl;
 import co.usc.mine.MinimumGasPriceCalculator;
 import co.usc.peg.PegTestUtils;
 import co.usc.peg.simples.SimpleBlock;
-import co.usc.peg.simples.SimpleRskTransaction;
+import co.usc.peg.simples.SimpleUldTransaction;
 import co.usc.trie.Trie;
 import co.usc.trie.TrieImpl;
 import org.apache.commons.collections4.CollectionUtils;
@@ -225,7 +225,7 @@ public class BlockGenerator {
         List<Transaction> txs = new ArrayList<>();
 
         for (int ntx = 0; ntx < ntxs; ntx++) {
-            txs.add(new SimpleRskTransaction(null));
+            txs.add(new SimpleUldTransaction(null));
         }
 
         List<BlockHeader> uncles = new ArrayList<>();
@@ -294,7 +294,7 @@ public class BlockGenerator {
         List<Transaction> txs = new ArrayList<>();
 
         for (int ntx = 0; ntx < ntxs; ntx++) {
-            txs.add(new SimpleRskTransaction(null));
+            txs.add(new SimpleUldTransaction(null));
         }
 
         Coin previousMGP = parent.getMinimumGasPrice() != null ? parent.getMinimumGasPrice() : Coin.valueOf(10L);
@@ -329,7 +329,7 @@ public class BlockGenerator {
         List<Transaction> txs = new ArrayList<>();
 
         for (int ntx = 0; ntx < ntxs; ntx++) {
-            txs.add(new SimpleRskTransaction(PegTestUtils.createHash3().getBytes()));
+            txs.add(new SimpleUldTransaction(PegTestUtils.createHash3().getBytes()));
         }
 
         return new SimpleBlock(
@@ -454,7 +454,7 @@ public class BlockGenerator {
             List<Transaction> txs = new ArrayList<>();
 
             for (int ntx = 0; ntx < ntxs; ntx++) {
-                txs.add(new SimpleRskTransaction(null));
+                txs.add(new SimpleUldTransaction(null));
             }
 
             if (difficulty == null) {

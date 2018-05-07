@@ -35,7 +35,7 @@ import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.db.RepositoryImpl;
 import co.usc.peg.simples.SimpleBlockChain;
-import co.usc.peg.simples.SimpleRskTransaction;
+import co.usc.peg.simples.SimpleUldTransaction;
 import co.usc.peg.simples.SimpleWallet;
 import co.usc.peg.utils.BridgeEventLogger;
 import co.usc.peg.utils.BridgeEventLoggerImpl;
@@ -3072,7 +3072,7 @@ public class BridgeSupportTest {
 
     private Transaction getMockedRskTxWithHash(String s) {
         byte[] hash = Keccak256Helper.keccak256(s);
-        return new SimpleRskTransaction(hash);
+        return new SimpleUldTransaction(hash);
     }
 
     private UTXO createUTXO(Coin value, Address address) {
