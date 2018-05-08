@@ -21,7 +21,7 @@ package co.usc.blocks;
 import org.ethereum.core.Block;
 
 /**
- * Created by ajlopez on 5/8/2016.changed.
+ * Created by ajlopez on 5/8/2016.
  */
 public interface BlockPlayer {
     Block readBlock();
