@@ -33,7 +33,7 @@ public class SimpleConfigCapabilities implements ConfigCapabilities {
     public List<Capability> getConfigCapabilities() {
         List<Capability> capabilities = new ArrayList<>();
 
-        capabilities.add(new Capability("rsk", (byte)1));
+        capabilities.add(new Capability("usc", (byte)1));
 
         return capabilities;
     }

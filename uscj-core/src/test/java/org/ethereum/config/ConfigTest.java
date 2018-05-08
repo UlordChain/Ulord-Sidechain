@@ -34,7 +34,7 @@ public class ConfigTest {
 
     @Test
     public void simpleTest() {
-        Config config = ConfigFactory.parseResources("test-rskj.conf");
+        Config config = ConfigFactory.parseResources("test-uscj.conf");
         System.out.println(config.root().render(ConfigRenderOptions.defaults().setComments(false)));
 
         System.out.println("peer.port: " + config.getInt("peer.port"));
@@ -57,7 +57,7 @@ public class ConfigTest {
     @Test
     public void fallbackTest() {
         System.setProperty("blocks.loader", "bla-bla");
-        Config config = ConfigFactory.load("rskj.conf");
+        Config config = ConfigFactory.load("uscj.conf");
         // Ignore this assertion since the SystemProperties are loaded by the static initializer
         // so if the ConfigFactory was used prior to this test the setProperty() has no effect
 //        Assert.assertEquals("bla-bla", config.getString("blocks.loader"));

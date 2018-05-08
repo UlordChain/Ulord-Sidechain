@@ -26,8 +26,8 @@ public class TestSystemProperties extends UscSystemProperties {
         /**
          * Cache configurations that don't change so we don't read files multiple times.
          */
-        private final Config TEST_CONFIG = ConfigFactory.parseResources("test-rskj.conf")
-                .withFallback(ConfigFactory.parseResources("rskj.conf"))
+        private final Config TEST_CONFIG = ConfigFactory.parseResources("test-uscj.conf")
+                .withFallback(ConfigFactory.parseResources("uscj.conf"))
                 .withFallback(ConfigFactory.load("config/regtest"));
 
         @Override

@@ -51,14 +51,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * Utility class to retrieve property values from the rskj.conf files
+ * Utility class to retrieve property values from the uscj.conf files
  *
  * The properties are taken from different sources and merged in the following order
  * (the config option from the next source overrides option from previous):
- * - resource rskj.conf : normally used as a reference config with default values
+ * - resource uscj.conf : normally used as a reference config with default values
  *          and shouldn't be changed
  * - system property : each config entry might be altered via -D VM option
- * - [user dir]/config/rskj.conf
+ * - [user dir]/config/uscj.conf
  * - config specified with the -Dusc.conf.file=[file.conf] VM option
  * - CLI options
  *
@@ -445,7 +445,7 @@ public abstract class SystemProperties {
 
     @ValidateMe
     public List<String> peerCapabilities() {
-        return configFromFiles.hasPath("peer.capabilities") ?  configFromFiles.getStringList("peer.capabilities") : new ArrayList<>(Arrays.asList("rsk"));
+        return configFromFiles.hasPath("peer.capabilities") ?  configFromFiles.getStringList("peer.capabilities") : new ArrayList<>(Arrays.asList("usc"));
     }
 
     @ValidateMe
