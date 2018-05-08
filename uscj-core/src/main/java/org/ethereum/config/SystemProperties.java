@@ -67,7 +67,7 @@ import java.util.stream.Collectors;
  */
 public abstract class SystemProperties {
     private static final String DEFAULT_BIND_ADDRESS = "::";
-    private static final int DEFAULT_RPC_PORT = 4444;
+    private static final int DEFAULT_RPC_PORT = 44444;
     private static Logger logger = LoggerFactory.getLogger("general");
 
     public static final String PROPERTY_DB_DIR = "database.dir";
