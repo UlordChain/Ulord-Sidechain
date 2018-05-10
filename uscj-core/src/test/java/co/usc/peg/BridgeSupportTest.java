@@ -623,7 +623,7 @@ public class BridgeSupportTest {
         BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
         UldTransaction txs = new UldTransaction(uldParams);
-        txs.addOutput(Coin.FIFTY_COINS, new UldECKey());
+        txs.addOutput(Coin.ONE_COIN, new UldECKey());
 
         UldTransaction tx1 = new UldTransaction(uldParams);
         tx1.addInput(txs.getOutput(0));
@@ -795,7 +795,7 @@ public class BridgeSupportTest {
 
         // Build prev uld tx
         UldTransaction prevTx = new UldTransaction(uldParams);
-        TransactionOutput prevOut = new TransactionOutput(uldParams, prevTx, Coin.FIFTY_COINS, federation.getAddress());
+        TransactionOutput prevOut = new TransactionOutput(uldParams, prevTx, Coin.ONE_COIN, federation.getAddress());
         prevTx.addOutput(prevOut);
 
         // Build uld tx to be signed
@@ -881,13 +881,13 @@ public class BridgeSupportTest {
         BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, bridgeConstants);
 
         UldTransaction prevTx1 = new UldTransaction(uldParams);
-        TransactionOutput prevOut1 = new TransactionOutput(uldParams, prevTx1, Coin.FIFTY_COINS, federation.getAddress());
+        TransactionOutput prevOut1 = new TransactionOutput(uldParams, prevTx1, Coin.ONE_COIN, federation.getAddress());
         prevTx1.addOutput(prevOut1);
         UldTransaction prevTx2 = new UldTransaction(uldParams);
-        TransactionOutput prevOut2 = new TransactionOutput(uldParams, prevTx1, Coin.FIFTY_COINS, federation.getAddress());
+        TransactionOutput prevOut2 = new TransactionOutput(uldParams, prevTx1, Coin.ONE_COIN, federation.getAddress());
         prevTx2.addOutput(prevOut2);
         UldTransaction prevTx3 = new UldTransaction(uldParams);
-        TransactionOutput prevOut3 = new TransactionOutput(uldParams, prevTx1, Coin.FIFTY_COINS, federation.getAddress());
+        TransactionOutput prevOut3 = new TransactionOutput(uldParams, prevTx1, Coin.ONE_COIN, federation.getAddress());
         prevTx3.addOutput(prevOut3);
 
         UldTransaction t = new UldTransaction(uldParams);
@@ -993,7 +993,7 @@ public class BridgeSupportTest {
         BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
         UldTransaction prevTx = new UldTransaction(uldParams);
-        TransactionOutput prevOut = new TransactionOutput(uldParams, prevTx, Coin.FIFTY_COINS, federation.getAddress());
+        TransactionOutput prevOut = new TransactionOutput(uldParams, prevTx, Coin.ONE_COIN, federation.getAddress());
         prevTx.addOutput(prevOut);
 
         UldTransaction t = new UldTransaction(uldParams);
@@ -1340,7 +1340,7 @@ public class BridgeSupportTest {
 
         // Create previous tx
         UldTransaction prevTx = new UldTransaction(uldParams);
-        TransactionOutput prevOut = new TransactionOutput(uldParams, prevTx, Coin.FIFTY_COINS, federation.getAddress());
+        TransactionOutput prevOut = new TransactionOutput(uldParams, prevTx, Coin.ONE_COIN, federation.getAddress());
         prevTx.addOutput(prevOut);
         // Create tx input
         tx.addInput(prevOut);
@@ -1369,7 +1369,7 @@ public class BridgeSupportTest {
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, null, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), provider, UldBlockStore, UldBlockChain);
-        Whitebox.setInternalState(bridgeSupport, "rskExecutionBlock", executionBlock);
+        Whitebox.setInternalState(bridgeSupport, "uscExecutionBlock", executionBlock);
 
         byte[] bits = new byte[1];
         bits[0] = 0x01;
@@ -1433,7 +1433,7 @@ public class BridgeSupportTest {
 
         // Create previous tx
         UldTransaction prevTx = new UldTransaction(uldParams);
-        TransactionOutput prevOut = new TransactionOutput(uldParams, prevTx, Coin.FIFTY_COINS, retiringFederation.getAddress());
+        TransactionOutput prevOut = new TransactionOutput(uldParams, prevTx, Coin.ONE_COIN, retiringFederation.getAddress());
         prevTx.addOutput(prevOut);
         // Create tx input
         tx.addInput(prevOut);
@@ -1464,7 +1464,7 @@ public class BridgeSupportTest {
         provider.setNewFederation(activeFederation);
         provider.setOldFederation(retiringFederation);
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, null, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), provider, UldBlockStore, UldBlockChain);
-        Whitebox.setInternalState(bridgeSupport, "rskExecutionBlock", executionBlock);
+        Whitebox.setInternalState(bridgeSupport, "uscExecutionBlock", executionBlock);
 
         byte[] bits = new byte[1];
         bits[0] = 0x3f;
@@ -1556,7 +1556,7 @@ public class BridgeSupportTest {
         whitelist.put(address3, Coin.COIN.multiply(2).add(Coin.COIN.multiply(3)));
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, null, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), provider, UldBlockStore, UldBlockChain);
-        Whitebox.setInternalState(bridgeSupport, "rskExecutionBlock", executionBlock);
+        Whitebox.setInternalState(bridgeSupport, "uscExecutionBlock", executionBlock);
         byte[] bits = new byte[1];
         bits[0] = 0x3f;
 
@@ -1670,7 +1670,7 @@ public class BridgeSupportTest {
         provider.setOldFederation(federation2);
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, null, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), provider, UldBlockStore, UldBlockChain);
-        Whitebox.setInternalState(bridgeSupport, "rskExecutionBlock", executionBlock);
+        Whitebox.setInternalState(bridgeSupport, "uscExecutionBlock", executionBlock);
         byte[] bits = new byte[1];
         bits[0] = 0x3f;
 
@@ -2231,7 +2231,7 @@ public class BridgeSupportTest {
     @Test
     public void addFederatorPublicKey_okNoKeys() throws IOException {
         VotingMocksProvider mocksProvider = new VotingMocksProvider("add", new byte[][]{
-            Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5")
+            Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6")
         }, true);
 
         PendingFederation pendingFederation = new PendingFederation(Collections.emptyList());
@@ -2256,7 +2256,7 @@ public class BridgeSupportTest {
         mocksProvider.setWinner(mocksProvider.getSpec());
         Assert.assertEquals(1, mocksProvider.execute(bridgeSupport));
         Assert.assertEquals(1, bridgeSupport.getPendingFederationSize().intValue());
-        Assert.assertTrue(Arrays.equals(Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5"), bridgeSupport.getPendingFederatorPublicKey(0)));
+        Assert.assertTrue(Arrays.equals(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6"), bridgeSupport.getPendingFederatorPublicKey(0)));
         verify(mocksProvider.getElection(), times(1)).clearWinners();
         verify(mocksProvider.getElection(), never()).clear();
     }
@@ -2268,7 +2268,7 @@ public class BridgeSupportTest {
         }, true);
 
         PendingFederation pendingFederation = new PendingFederation(Arrays.asList(new UldECKey[]{
-                UldECKey.fromPublicOnly(Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5"))
+                UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6"))
         }));
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForFederationTests(
                 false,
@@ -2291,7 +2291,7 @@ public class BridgeSupportTest {
         mocksProvider.setWinner(mocksProvider.getSpec());
         Assert.assertEquals(1, mocksProvider.execute(bridgeSupport));
         Assert.assertEquals(2, bridgeSupport.getPendingFederationSize().intValue());
-        Assert.assertTrue(Arrays.equals(Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5"), bridgeSupport.getPendingFederatorPublicKey(0)));
+        Assert.assertTrue(Arrays.equals(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6"), bridgeSupport.getPendingFederatorPublicKey(0)));
         Assert.assertTrue(Arrays.equals(Hex.decode("036bb9eab797eadc8b697f0e82a01d01cabbfaaca37e5bafc06fdc6fdd38af894a"), bridgeSupport.getPendingFederatorPublicKey(1)));
         verify(mocksProvider.getElection(), times(1)).clearWinners();
         verify(mocksProvider.getElection(), never()).clear();
@@ -2324,11 +2324,11 @@ public class BridgeSupportTest {
     @Test
     public void addFederatorPublicKey_keyExists() throws IOException {
         VotingMocksProvider mocksProvider = new VotingMocksProvider("add", new byte[][]{
-                Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5")
+                Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6")
         }, false);
 
         PendingFederation pendingFederation = new PendingFederation(Arrays.asList(new UldECKey[]{
-            UldECKey.fromPublicOnly(Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5"))
+            UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6"))
         }));
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForFederationTests(
                 false,
@@ -2378,7 +2378,7 @@ public class BridgeSupportTest {
 
         PendingFederation pendingFederation = new PendingFederation(Arrays.asList(new UldECKey[]{
                 UldECKey.fromPublicOnly(Hex.decode("036bb9eab797eadc8b697f0e82a01d01cabbfaaca37e5bafc06fdc6fdd38af894a")),
-                UldECKey.fromPublicOnly(Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5"))
+                UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6"))
         }));
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForFederationTests(
                 false,
@@ -2431,7 +2431,7 @@ public class BridgeSupportTest {
     public void commitFederation_ok() throws IOException {
         PendingFederation pendingFederation = new PendingFederation(Arrays.asList(
                 UldECKey.fromPublicOnly(Hex.decode("036bb9eab797eadc8b697f0e82a01d01cabbfaaca37e5bafc06fdc6fdd38af894a")),
-                UldECKey.fromPublicOnly(Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5")),
+                UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6")),
                 UldECKey.fromPublicOnly(Hex.decode("025eefeeeed5cdc40822880c7db1d0a88b7b986945ed3fc05a0b45fe166fe85e12")),
                 UldECKey.fromPublicOnly(Hex.decode("03c67ad63527012fd4776ae892b5dc8c56f80f1be002dc65cd520a2efb64e37b49"))));
 
@@ -2445,7 +2445,7 @@ public class BridgeSupportTest {
 
         Federation expectedFederation = new Federation(Arrays.asList(
                 UldECKey.fromPublicOnly(Hex.decode("036bb9eab797eadc8b697f0e82a01d01cabbfaaca37e5bafc06fdc6fdd38af894a")),
-                UldECKey.fromPublicOnly(Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5")),
+                UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6")),
                 UldECKey.fromPublicOnly(Hex.decode("025eefeeeed5cdc40822880c7db1d0a88b7b986945ed3fc05a0b45fe166fe85e12")),
                 UldECKey.fromPublicOnly(Hex.decode("03c67ad63527012fd4776ae892b5dc8c56f80f1be002dc65cd520a2efb64e37b49"))),
                 Instant.ofEpochMilli(15005L), 15L, NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
@@ -2541,7 +2541,7 @@ public class BridgeSupportTest {
     @Test
     public void commitFederation_incompleteFederation() throws IOException {
         PendingFederation pendingFederation = new PendingFederation(Arrays.asList(new UldECKey[]{
-                UldECKey.fromPublicOnly(Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5"))
+                UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6"))
         }));
 
         VotingMocksProvider mocksProvider = new VotingMocksProvider("commit", new byte[][]{
@@ -2569,7 +2569,7 @@ public class BridgeSupportTest {
     @Test
     public void commitFederation_hashMismatch() throws IOException {
         PendingFederation pendingFederation = new PendingFederation(Arrays.asList(new UldECKey[]{
-                UldECKey.fromPublicOnly(Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5")),
+                UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6")),
                 UldECKey.fromPublicOnly(Hex.decode("025eefeeeed5cdc40822880c7db1d0a88b7b986945ed3fc05a0b45fe166fe85e12"))
         }));
 
@@ -2599,7 +2599,7 @@ public class BridgeSupportTest {
     public void getActiveFederationWallet() throws IOException {
         Federation expectedFederation = new Federation(Arrays.asList(new UldECKey[]{
                 UldECKey.fromPublicOnly(Hex.decode("036bb9eab797eadc8b697f0e82a01d01cabbfaaca37e5bafc06fdc6fdd38af894a")),
-                UldECKey.fromPublicOnly(Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5"))
+                UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6"))
         }), Instant.ofEpochMilli(5005L), 0L, NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForFederationTests(
                 false,
@@ -2638,7 +2638,7 @@ public class BridgeSupportTest {
 
         Federation expectedFederation = new Federation(Arrays.asList(new UldECKey[]{
                 UldECKey.fromPublicOnly(Hex.decode("036bb9eab797eadc8b697f0e82a01d01cabbfaaca37e5bafc06fdc6fdd38af894a")),
-                UldECKey.fromPublicOnly(Hex.decode("031da807c71c2f303b7f409dd2605b297ac494a563be3b9ca5f52d95a43d183cc5"))
+                UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6"))
         }), Instant.ofEpochMilli(5005L), 0L, NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
 
         Block mockedBlock = mock(Block.class);
