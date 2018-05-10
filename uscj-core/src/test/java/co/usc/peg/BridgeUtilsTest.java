@@ -107,7 +107,7 @@ public class BridgeUtilsTest {
 
         // Tx sending 50 uld to the federation, is a lock tx
         UldTransaction tx4 = new UldTransaction(params);
-        tx4.addOutput(Coin.FIFTY_COINS, address);
+        tx4.addOutput(Coin.ONE_COIN, address);
         tx4.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
         assertTrue(BridgeUtils.isLockTx(tx4, federation, uldContext, bridgeConstants));
     }
@@ -213,20 +213,20 @@ public class BridgeUtilsTest {
 
         // Tx sending 50 uld to the first federation, is a lock tx
         UldTransaction tx4 = new UldTransaction(parameters);
-        tx4.addOutput(Coin.FIFTY_COINS, address1);
+        tx4.addOutput(Coin.ONE_COIN, address1);
         tx4.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
         assertTrue(BridgeUtils.isLockTx(tx4, federations, uldContext, bridgeConstants));
 
         // Tx sending 50 uld to the second federation, is a lock tx
         tx4 = new UldTransaction(parameters);
-        tx4.addOutput(Coin.FIFTY_COINS, address2);
+        tx4.addOutput(Coin.ONE_COIN, address2);
         tx4.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
         assertTrue(BridgeUtils.isLockTx(tx4, federations, uldContext, bridgeConstants));
 
         // Tx sending 50 uld to the both federations, is a lock tx
         tx4 = new UldTransaction(parameters);
-        tx4.addOutput(Coin.FIFTY_COINS, address1);
-        tx4.addOutput(Coin.FIFTY_COINS, address2);
+        tx4.addOutput(Coin.ONE_COIN, address1);
+        tx4.addOutput(Coin.ONE_COIN, address2);
         tx4.addInput(Sha256Hash.ZERO_HASH, 0, new Script(new byte[]{}));
         assertTrue(BridgeUtils.isLockTx(tx4, federations, uldContext, bridgeConstants));
     }

@@ -69,7 +69,7 @@ public class ReleaseTransactionBuilderTest {
             mockUTXO("one", 0, Coin.COIN),
             mockUTXO("one", 1, Coin.COIN.multiply(2)),
             mockUTXO("two", 1, Coin.COIN.divide(2)),
-            mockUTXO("two", 2, Coin.FIFTY_COINS),
+            mockUTXO("two", 2, Coin.ONE_COIN),
             mockUTXO("two", 0, Coin.MILLICOIN.times(7)),
             mockUTXO("three", 0, Coin.CENT.times(3))
         );
@@ -183,7 +183,7 @@ public class ReleaseTransactionBuilderTest {
                 mockUTXO("one", 0, Coin.COIN),
                 mockUTXO("one", 1, Coin.COIN.multiply(2)),
                 mockUTXO("two", 1, Coin.COIN.divide(2)),
-                mockUTXO("two", 2, Coin.FIFTY_COINS),
+                mockUTXO("two", 2, Coin.ONE_COIN),
                 mockUTXO("two", 0, Coin.MILLICOIN.times(7)),
                 mockUTXO("three", 0, Coin.CENT.times(3))
         );
@@ -231,7 +231,7 @@ public class ReleaseTransactionBuilderTest {
 
         List<UTXO> availableUTXOs = Arrays.asList(
                 mockUTXO("one", 0, Coin.COIN),
-                mockUTXO("two", 2, Coin.FIFTY_COINS),
+                mockUTXO("two", 2, Coin.ONE_COIN),
                 mockUTXO("two", 0, Coin.COIN.times(7)),
                 mockUTXO("three", 0, Coin.CENT.times(3))
         );
@@ -265,7 +265,7 @@ public class ReleaseTransactionBuilderTest {
             tx.addInput(mockUTXOHash("two"), 2, mock(Script.class));
             tx.addInput(mockUTXOHash("two"), 0, mock(Script.class));
             tx.addInput(mockUTXOHash("three"), 0, mock(Script.class));
-            tx.getOutput(0).setValue(Coin.FIFTY_COINS);
+            tx.getOutput(0).setValue(Coin.ONE_COIN);
 
             return null;
         }).when(wallet).completeTx(any(SendRequest.class));
@@ -278,7 +278,7 @@ public class ReleaseTransactionBuilderTest {
         List<UTXO> selectedUTXOs = result.get().getSelectedUTXOs();
 
         Assert.assertEquals(1, tx.getOutputs().size());
-        Assert.assertEquals(Coin.FIFTY_COINS, tx.getOutput(0).getValue());
+        Assert.assertEquals(Coin.ONE_COIN, tx.getOutput(0).getValue());
         Assert.assertEquals(to, tx.getOutput(0).getAddressFromP2PKHScript(NetworkParameters.fromID(NetworkParameters.ID_REGTEST)));
 
         Assert.assertEquals(4, tx.getInputs().size());
@@ -350,7 +350,7 @@ public class ReleaseTransactionBuilderTest {
         Address to = mockAddress(123);
 
         List<UTXO> availableUTXOs = Arrays.asList(
-                mockUTXO("two", 2, Coin.FIFTY_COINS),
+                mockUTXO("two", 2, Coin.ONE_COIN),
                 mockUTXO("three", 0, Coin.CENT.times(3))
         );
 
@@ -381,7 +381,7 @@ public class ReleaseTransactionBuilderTest {
 
             tx.addInput(mockUTXOHash("two"), 2, mock(Script.class));
             tx.addInput(mockUTXOHash("three"), 0, mock(Script.class));
-            tx.getOutput(0).setValue(Coin.FIFTY_COINS);
+            tx.getOutput(0).setValue(Coin.ONE_COIN);
 
             return null;
         }).when(wallet).completeTx(any(SendRequest.class));

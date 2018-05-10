@@ -42,7 +42,7 @@ public class ReleaseTransactionSetTest {
         setEntries = new HashSet<>(Arrays.asList(
             new ReleaseTransactionSet.Entry(createTransaction(2, Coin.valueOf(150)), 32L),
             new ReleaseTransactionSet.Entry(createTransaction(5, Coin.COIN), 100L),
-            new ReleaseTransactionSet.Entry(createTransaction(4, Coin.FIFTY_COINS), 7L),
+            new ReleaseTransactionSet.Entry(createTransaction(4, Coin.ONE_COIN), 7L),
             new ReleaseTransactionSet.Entry(createTransaction(3, Coin.MILLICOIN), 10L),
             new ReleaseTransactionSet.Entry(createTransaction(8, Coin.CENT.times(5)), 5L)
         ));
@@ -170,7 +170,7 @@ public class ReleaseTransactionSetTest {
     private UldTransaction createTransaction(int toPk, Coin value) {
         NetworkParameters params = NetworkParameters.fromID(NetworkParameters.ID_REGTEST);
         UldTransaction input = new UldTransaction(params);
-        input.addOutput(Coin.FIFTY_COINS, UldECKey.fromPrivate(BigInteger.valueOf(123456)).toAddress(params));
+        input.addOutput(Coin.ONE_COIN, UldECKey.fromPrivate(BigInteger.valueOf(123456)).toAddress(params));
 
         Address to = UldECKey.fromPrivate(BigInteger.valueOf(toPk)).toAddress(params);
 

@@ -39,7 +39,7 @@ public class ReleaseRequestQueueTest {
         queueEntries = Arrays.asList(
             new ReleaseRequestQueue.Entry(mockAddress(2), Coin.valueOf(150)),
             new ReleaseRequestQueue.Entry(mockAddress(5), Coin.COIN),
-            new ReleaseRequestQueue.Entry(mockAddress(4), Coin.FIFTY_COINS),
+            new ReleaseRequestQueue.Entry(mockAddress(4), Coin.ONE_COIN),
             new ReleaseRequestQueue.Entry(mockAddress(3), Coin.MILLICOIN),
             new ReleaseRequestQueue.Entry(mockAddress(8), Coin.CENT.times(5))
         );

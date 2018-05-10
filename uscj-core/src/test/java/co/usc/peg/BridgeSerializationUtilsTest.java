@@ -732,7 +732,7 @@ public class BridgeSerializationUtilsTest {
         NetworkParameters params = NetworkParameters.fromID(NetworkParameters.ID_REGTEST);
 
         UldTransaction input = new UldTransaction(params);
-        input.addOutput(Coin.FIFTY_COINS, Address.fromBase58(params, "mvc8mwDcdLEq2jGqrL43Ub3sxTR13tB8LL"));
+        input.addOutput(Coin.ONE_COIN, Address.fromBase58(params, "mvc8mwDcdLEq2jGqrL43Ub3sxTR13tB8LL"));
 
         UldTransaction t1 = new UldTransaction(params);
         t1.addInput(input.getOutput(0));

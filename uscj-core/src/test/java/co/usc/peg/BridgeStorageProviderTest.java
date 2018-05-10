@@ -230,7 +230,7 @@ public class BridgeStorageProviderTest {
 
         BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
         provider0.getNewFederationUldUTXOs().add(new UTXO(hash1, 1, Coin.COIN, 0, false, ScriptBuilder.createOutputScript(federation.getAddress())));
-        provider0.getNewFederationUldUTXOs().add(new UTXO(hash2, 2, Coin.FIFTY_COINS, 0, false, ScriptBuilder.createOutputScript(federation.getAddress())));
+        provider0.getNewFederationUldUTXOs().add(new UTXO(hash2, 2, Coin.ONE_COIN, 0, false, ScriptBuilder.createOutputScript(federation.getAddress())));
         provider0.save();
         track.commit();
 
