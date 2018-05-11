@@ -166,9 +166,9 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         }
 
         /*
-        * We check that the there is no other block before the rsk tag, to avoid a possible malleability attack:
-        * If we have a mid state with 10 blocks, and the rsk tag, we can also have
-        * another mid state with 9 blocks, 64bytes + the rsk tag, giving us two blocks with different hashes but the same spv proof.
+        * We check that the there is no other block before the usc tag, to avoid a possible malleability attack:
+        * If we have a mid state with 10 blocks, and the usc tag, we can also have
+        * another mid state with 9 blocks, 64bytes + the usc tag, giving us two blocks with different hashes but the same spv proof.
         * */
         if (uscTagPosition >= 64) {
             logger.warn("ulord coinbase transaction tag position is bigger than expected 64. Actual: {}.", Integer.toString(uscTagPosition));
