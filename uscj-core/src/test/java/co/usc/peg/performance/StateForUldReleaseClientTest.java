@@ -91,8 +91,8 @@ public class StateForUldReleaseClientTest extends BridgePerformanceTestCase {
                 }
 
 
-                Keccak256 rskTxHash = new Keccak256(HashUtil.keccak256(BigInteger.valueOf(new Random().nextLong()).toByteArray()));
-                txsWaitingForSignatures.put(rskTxHash, releaseTx);
+                Keccak256 uscTxHash = new Keccak256(HashUtil.keccak256(BigInteger.valueOf(new Random().nextLong()).toByteArray()));
+                txsWaitingForSignatures.put(uscTxHash, releaseTx);
             }
         };
     }
