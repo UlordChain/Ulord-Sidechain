@@ -495,7 +495,7 @@ public class Transaction {
         }
         byte[] toEncodeGasPrice = RLP.encodeElement(this.gasPriceRaw);
         byte[] toEncodeGasLimit = RLP.encodeElement(this.gasLimit);
-        byte[] toEncodeReceiveAddress = RLP.encodeRskAddress(this.receiveAddress);
+        byte[] toEncodeReceiveAddress = RLP.encodeUscAddress(this.receiveAddress);
         byte[] toEncodeValue = RLP.encodeElement(this.valueRaw);
         byte[] toEncodeData = RLP.encodeElement(this.data);
 
@@ -530,7 +530,7 @@ public class Transaction {
         }
         byte[] toEncodeGasPrice = RLP.encodeElement(this.gasPriceRaw);
         byte[] toEncodeGasLimit = RLP.encodeElement(this.gasLimit);
-        byte[] toEncodeReceiveAddress = RLP.encodeRskAddress(this.receiveAddress);
+        byte[] toEncodeReceiveAddress = RLP.encodeUscAddress(this.receiveAddress);
         byte[] toEncodeValue = RLP.encodeElement(this.valueRaw);
         byte[] toEncodeData = RLP.encodeElement(this.data);
 

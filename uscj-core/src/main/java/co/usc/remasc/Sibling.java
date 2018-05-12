@@ -92,8 +92,8 @@ public class Sibling {
 
     public byte[] getEncoded() {
         byte[] rlpHash = RLP.encodeElement(this.hash);
-        byte[] rlpCoinbase = RLP.encodeRskAddress(this.coinbase);
-        byte[] rlpIncludedBlockCoinbase = RLP.encodeRskAddress(this.includedBlockCoinbase);
+        byte[] rlpCoinbase = RLP.encodeUscAddress(this.coinbase);
+        byte[] rlpIncludedBlockCoinbase = RLP.encodeUscAddress(this.includedBlockCoinbase);
 
         byte[] rlpPaidFees = RLP.encodeCoin(this.paidFees);
         byte[] rlpIncludedHeight = RLP.encodeBigInteger(BigInteger.valueOf(this.includedHeight));

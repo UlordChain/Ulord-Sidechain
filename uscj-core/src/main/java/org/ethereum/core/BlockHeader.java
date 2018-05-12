@@ -418,7 +418,7 @@ public class BlockHeader {
         byte[] parentHash = RLP.encodeElement(this.parentHash);
 
         byte[] unclesHash = RLP.encodeElement(this.unclesHash);
-        byte[] coinbase = RLP.encodeRskAddress(this.coinbase);
+        byte[] coinbase = RLP.encodeUscAddress(this.coinbase);
 
         byte[] stateRoot = RLP.encodeElement(this.stateRoot);
 

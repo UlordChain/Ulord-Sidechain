@@ -566,7 +566,7 @@ public class RLP {
         }
     }
 
-    public static byte[] encodeRskAddress(UscAddress addr) {
+    public static byte[] encodeUscAddress(UscAddress addr) {
         if (addr == null || UscAddress.nullAddress().equals(addr)) {
             return encodeElement(null);
         }

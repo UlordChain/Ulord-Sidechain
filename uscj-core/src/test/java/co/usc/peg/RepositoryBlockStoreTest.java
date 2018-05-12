@@ -25,6 +25,7 @@ import co.usc.ulordj.params.RegTestParams;
 import co.usc.config.TestSystemProperties;
 import co.usc.db.RepositoryImplForTesting;
 import co.usc.config.TestSystemProperties;
+import co.usc.ulordj.params.TestNet3Params;
 import org.apache.commons.lang3.tuple.Triple;
 import org.ethereum.core.Repository;
 import org.ethereum.vm.PrecompiledContracts;
@@ -87,7 +88,7 @@ public class RepositoryBlockStoreTest {
         RepositoryBlockStore store = new RepositoryBlockStore(config, repository, PrecompiledContracts.BRIDGE_ADDR);
         for (int i = 0; i < 614; i++) {
             Triple<byte[], BigInteger , Integer> tripleStoredBlock = (Triple<byte[], BigInteger , Integer>) objectInputStream.readObject();
-            UldBlock header = RegTestParams.get().getDefaultSerializer().makeBlock(tripleStoredBlock.getLeft());
+            UldBlock header = TestNet3Params.get().getDefaultSerializer().makeBlock(tripleStoredBlock.getLeft());
             StoredBlock storedBlock = new StoredBlock(header, tripleStoredBlock.getMiddle(), tripleStoredBlock.getRight());
             if (i==0) {
                 store.setChainHead(storedBlock);

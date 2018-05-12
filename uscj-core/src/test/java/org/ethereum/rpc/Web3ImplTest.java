@@ -131,7 +131,7 @@ public class Web3ImplTest {
 
         // Function must apply the Keccak-256 algorithm
         // Result taken from https://emn178.github.io/online-tools/keccak_256.html
-        Assert.assertTrue("hash does not match", result.compareTo("0x80553b6b348ae45ab8e8bf75e77064818c0a772f13cf8d3a175d3815aec59b56") == 0);
+        Assert.assertTrue("hash does not match", result.compareTo("0xc5a423621745e028981617bc22e774031868b50371259b941e6c01bb17626a1f") == 0);
     }
 
     @Test
@@ -1368,16 +1368,16 @@ public class Web3ImplTest {
                 null,
                 null
         );
-        String contract = "pragma solidity ^0.4.1; contract rsk { function multiply(uint a) returns(uint d) {   return a * 7;   } }";
+        String contract = "pragma solidity ^0.4.1; contract usc { function multiply(uint a) returns(uint d) {   return a * 7;   } }";
 
         Map<String, CompilationResultDTO> result = web3.eth_compileSolidity(contract);
 
         org.junit.Assert.assertNotNull(result);
 
-        CompilationResultDTO dto = result.get("rsk");
+        CompilationResultDTO dto = result.get("usc");
 
         if (dto == null)
-            dto = result.get("<stdin>:rsk");
+            dto = result.get("<stdin>:usc");
 
         org.junit.Assert.assertEquals(contract , dto.info.getSource());
     }
