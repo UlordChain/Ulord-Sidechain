@@ -385,6 +385,9 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
 
     public void registerUldTransaction(Object[] args)
     {
+        for (int i = 0; i < args.length; ++i)
+            System.out.println(args[i]);
+
         logger.trace("registerUldTransaction");
 
         byte[] uldTxSerialized = (byte[]) args[0];
@@ -788,8 +791,9 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             logger.warn("Exception in addLockWhitelistAddress: {}", e.getMessage());
             return 0;
         }
-
-        return bridgeSupport.addLockWhitelistAddress(uscTx, addressBase58, maxTransferValue);
+        Integer result = bridgeSupport.addLockWhitelistAddress(uscTx, addressBase58, maxTransferValue);
+        System.out.println("AddLockWhitelistAddress 1:Success, -1:Address already in Whitelist, -2:Invalid address, Result : " + result);
+        return result;
     }
 
     public Integer removeLockWhitelistAddress(Object[] args)

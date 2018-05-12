@@ -19,6 +19,7 @@
 package co.usc.peg.performance;
 
 import co.usc.ulordj.core.*;
+import co.usc.ulordj.params.TestNet3Params;
 import co.usc.ulordj.store.BlockStoreException;
 import co.usc.ulordj.store.UldBlockStore;
 import co.usc.config.TestSystemProperties;
@@ -67,6 +68,10 @@ public class LockWhitelistTest extends BridgePerformanceTestCase {
 
     @Test
     public void addLockWhitelistAddress() throws IOException {
+
+        BigInteger val = BigInteger.valueOf(1_000_000_000);
+        System.out.println(Sha256Hash.bytesToHex(Bridge.ADD_LOCK_WHITELIST_ADDRESS.encode(new Object[]{"ufGHmxvSDsXMKUm23a76JrrjvQqhpfL5E3", val})));
+
         ExecutionStats stats = new ExecutionStats("addLockWhitelistAddress");
         executeTestCase(
                 (int executionIndex) -> {

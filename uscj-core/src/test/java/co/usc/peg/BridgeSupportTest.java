@@ -145,7 +145,7 @@ public class BridgeSupportTest {
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
-        Assert.assertEquals(1229760, bridgeSupport.getUldBlockStore().getChainHead().getHeight());
+        Assert.assertEquals(0, bridgeSupport.getUldBlockStore().getChainHead().getHeight()); // Expected is 0 because we don't have any checkpoints yet
     }
 
     @Test
@@ -3033,7 +3033,7 @@ public class BridgeSupportTest {
         BridgeSupport result = new BridgeSupport(config, null, eventLogger, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), providerMock, null, null);
 
         Whitebox.setInternalState(result, "bridgeConstants", constantsMock);
-        Whitebox.setInternalState(result, "rskExecutionBlock", executionBlock);
+        Whitebox.setInternalState(result, "uscExecutionBlock", executionBlock);
 
         return result;
     }

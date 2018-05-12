@@ -85,8 +85,8 @@ public class LockWhitelistTest {
     @Test
     public void add() {
         Address randomAddress = Address.fromBase58(
-                NetworkParameters.fromID(NetworkParameters.ID_REGTEST),
-                "n3WzdjG7S2GjDbY1pJYxsY1VSQDkm4KDcm"
+                NetworkParameters.fromID(NetworkParameters.ID_TESTNET),
+                "ufGHmxvSDsXMKUm23a76JrrjvQqhpfL5E3"
         );
 
         Assert.assertFalse(whitelist.isWhitelisted(randomAddress));

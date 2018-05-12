@@ -304,47 +304,47 @@ public class BridgeSupport {
             byte[] data = scriptSig.getChunks().get(1).data;
 
             // Tx is a lock tx, check whether the sender is whitelisted
-//            UldECKey senderUldKey = UldECKey.fromPublicOnly(data);
-//            Address senderuldAddress = new Address(uldContext.getParams(), senderUldKey.getPubKeyHash());
+            UldECKey senderUldKey = UldECKey.fromPublicOnly(data);
+            Address senderuldAddress = new Address(uldContext.getParams(), senderUldKey.getPubKeyHash());
 
             // If the address is not whitelisted, then return the funds
             // using the exact same utxos sent to us.
             // That is, build a release transaction and get it in the release transaction set.
             // Otherwise, transfer SULD to the sender of the ULD
             // The USC account to update is the one that matches the pubkey "spent" on the first ulord tx input
-//            LockWhitelist lockWhitelist = provider.getLockWhitelist();
-//            if (!lockWhitelist.isWhitelistedFor(senderuldAddress, totalAmount, height)) {
-//                locked = false;
-//                // Build the list of UTXOs in the ULD transaction sent to either the active
-//                // or retiring federation
-//                List<UTXO> utxosToUs = uldTx.getWalletOutputs(getNoSpendWalletForLiveFederations()).stream()
-//                        .map(output ->
-//                                new UTXO(
-//                                        uldTx.getHash(),
-//                                        output.getIndex(),
-//                                        output.getValue(),
-//                                        0,
-//                                        uldTx.isCoinBase(),
-//                                        output.getScriptPubKey()
-//                                )
-//                        ).collect(Collectors.toList());
-//                // Use the list of UTXOs to build a transaction builder
-//                // for the return uld transaction generation
-//                ReleaseTransactionBuilder txBuilder = new ReleaseTransactionBuilder(
-//                        uldContext.getParams(),
-//                        getUTXOBasedWalletForLiveFederations(utxosToUs),
-//                        senderuldAddress,
-//                        getFeePerKb()
-//                );
-//                Optional<ReleaseTransactionBuilder.BuildResult> buildReturnResult = txBuilder.buildEmptyWalletTo(senderuldAddress);
-//                if (buildReturnResult.isPresent()) {
-//                    provider.getReleaseTransactionSet().add(buildReturnResult.get().getUldTx(), uscExecutionBlock.getNumber());
-//                    logger.info("whitelist money return tx build successful to {}. Tx {}. Value {}.", senderuldAddress, uscTx, totalAmount);
-//                } else {
-//                    logger.warn("whitelist money return tx build for uld tx {} error. Return was to {}. Tx {}. Value {}", uldTx.getHash(), senderuldAddress, uscTx, totalAmount);
-//                    panicProcessor.panic("whitelist-return-funds", String.format("whitelist money return tx build for uld tx {} error. Return was to {}. Tx {}. Value {}", uldTx.getHash(), senderuldAddress, uscTx, totalAmount));
-//                }
-//            } else {
+            LockWhitelist lockWhitelist = provider.getLockWhitelist();
+            if (!lockWhitelist.isWhitelistedFor(senderuldAddress, totalAmount, height)) {
+                locked = false;
+                // Build the list of UTXOs in the ULD transaction sent to either the active
+                // or retiring federation
+                List<UTXO> utxosToUs = uldTx.getWalletOutputs(getNoSpendWalletForLiveFederations()).stream()
+                        .map(output ->
+                                new UTXO(
+                                        uldTx.getHash(),
+                                        output.getIndex(),
+                                        output.getValue(),
+                                        0,
+                                        uldTx.isCoinBase(),
+                                        output.getScriptPubKey()
+                                )
+                        ).collect(Collectors.toList());
+                // Use the list of UTXOs to build a transaction builder
+                // for the return uld transaction generation
+                ReleaseTransactionBuilder txBuilder = new ReleaseTransactionBuilder(
+                        uldContext.getParams(),
+                        getUTXOBasedWalletForLiveFederations(utxosToUs),
+                        senderuldAddress,
+                        getFeePerKb()
+                );
+                Optional<ReleaseTransactionBuilder.BuildResult> buildReturnResult = txBuilder.buildEmptyWalletTo(senderuldAddress);
+                if (buildReturnResult.isPresent()) {
+                    provider.getReleaseTransactionSet().add(buildReturnResult.get().getUldTx(), uscExecutionBlock.getNumber());
+                    logger.info("whitelist money return tx build successful to {}. Tx {}. Value {}.", senderuldAddress, uscTx, totalAmount);
+                } else {
+                    logger.warn("whitelist money return tx build for uld tx {} error. Return was to {}. Tx {}. Value {}", uldTx.getHash(), senderuldAddress, uscTx, totalAmount);
+                    panicProcessor.panic("whitelist-return-funds", String.format("whitelist money return tx build for uld tx {} error. Return was to {}. Tx {}. Value {}", uldTx.getHash(), senderuldAddress, uscTx, totalAmount));
+                }
+            } else {
                 org.ethereum.crypto.ECKey key = org.ethereum.crypto.ECKey.fromPublicOnly(data);
                 UscAddress sender = new UscAddress(key.getAddress());
 
@@ -353,8 +353,8 @@ public class BridgeSupport {
                         sender,
                         co.usc.core.Coin.fromUlord(totalAmount)
                 );
-//                lockWhitelist.remove(senderuldAddress);
-//            }
+                lockWhitelist.remove(senderuldAddress);
+            }
         } else if (BridgeUtils.isReleaseTx(uldTx, federation, bridgeConstants)) {
             logger.debug("This is a release tx {}", uldTx);
             // do-nothing

@@ -20,6 +20,8 @@ package co.usc.peg;
 
 import co.usc.ulordj.core.Address;
 import co.usc.ulordj.core.Coin;
+import co.usc.ulordj.core.NetworkParameters;
+import co.usc.ulordj.params.TestNet3Params;
 import com.google.common.primitives.UnsignedBytes;
 
 import java.util.*;
