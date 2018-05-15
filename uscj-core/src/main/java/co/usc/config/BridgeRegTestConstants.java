@@ -18,6 +18,7 @@
 
 package co.usc.config;
 
+import co.usc.ulordj.core.Sha256Hash;
 import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.core.NetworkParameters;

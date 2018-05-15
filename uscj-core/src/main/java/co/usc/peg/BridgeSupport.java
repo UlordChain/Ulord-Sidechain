@@ -21,6 +21,7 @@ package co.usc.peg;
 import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.crypto.TransactionSignature;
+import co.usc.ulordj.params.TestNet3Params;
 import co.usc.ulordj.script.Script;
 import co.usc.ulordj.script.ScriptBuilder;
 import co.usc.ulordj.script.ScriptChunk;
@@ -45,12 +46,16 @@ import org.slf4j.LoggerFactory;
 import org.spongycastle.util.encoders.Hex;
 
 import javax.annotation.Nullable;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static co.usc.ulordj.core.Utils.HEX;
 
 /**
  * Helper class to move funds from uld to usc and usc to uld
@@ -149,7 +154,7 @@ public class BridgeSupport {
      */
     public void receiveHeaders(UldBlock[] headers) {
         if (headers.length > 0) {
-            logger.debug("Received {} headers. First {}, last {}.", headers.length, headers[0].getHash(), headers[headers.length - 1].getHash());
+            logger.info("Received {} headers. First {}, last {}.", headers.length, headers[0].getHash(), headers[headers.length - 1].getHash());
         } else {
             logger.warn("Received 0 headers");
         }
@@ -165,6 +170,7 @@ public class BridgeSupport {
             }
         }
     }
+
 
     /**
      * Get the wallet for the currently active federation
@@ -242,7 +248,8 @@ public class BridgeSupport {
         // Check the tx is in the partial merkle tree
         List<Sha256Hash> hashesInPmt = new ArrayList<>();
         Sha256Hash merkleRoot = pmt.getTxnHashAndMerkleRoot(hashesInPmt);
-        if (!hashesInPmt.contains(uldTx.getHash())) {
+        List<Sha256Hash> hashes = pmt.getHashes();
+        if (!hashes.contains(uldTx.getHash())) {
             logger.warn("Supplied tx is not in the supplied partial merkle tree");
             panicProcessor.panic("uldlock", "Supplied tx is not in the supplied partial merkle tree");
             return;
@@ -263,6 +270,7 @@ public class BridgeSupport {
 
         // Check the the merkle root equals merkle root of uld block at specified height in the uld best chain
         UldBlock blockHeader = BridgeUtils.getStoredBlockAtHeight(UldBlockStore, height).getHeader();
+        //UldBlock blockHeader = new UldBlock(TestNet3Params.get(), Sha256Hash.hexStringToByteArray("00000020c0dfd584a7ae3e45cce22058ec254b0c6d9418c9724f13b6a0f3e9bb0a010000d7a03593417d968d90b5b9d1e4a852741b5552631f56d8937b2746b638881bca0000000000000000000000000000000000000000000000000000000000000000734cf55ac49b011e021900480511f9ac9838365424df85011b7e70e70a2dbaee9e63e36ee389887e"));
         if (!blockHeader.getMerkleRoot().equals(merkleRoot)) {
             logger.warn("Supplied merkle root " + merkleRoot + "does not match block's merkle root " + blockHeader.getMerkleRoot());
             panicProcessor.panic("uldlock", "Supplied merkle root " + merkleRoot + "does not match block's merkle root " + blockHeader.getMerkleRoot());
@@ -1141,6 +1149,7 @@ public class BridgeSupport {
      * @return the federation ulord address.
      */
     public Address getFederationAddress() {
+        System.out.println("Best chain height: " + UldBlockChain.getBestChainHeight());
         return getActiveFederation().getAddress();
     }
 

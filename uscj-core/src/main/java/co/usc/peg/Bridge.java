@@ -385,9 +385,6 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
 
     public void registerUldTransaction(Object[] args)
     {
-        for (int i = 0; i < args.length; ++i)
-            System.out.println(args[i]);
-
         logger.trace("registerUldTransaction");
 
         byte[] uldTxSerialized = (byte[]) args[0];
