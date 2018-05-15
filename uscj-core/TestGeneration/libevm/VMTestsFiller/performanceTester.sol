@@ -1,3 +1,5 @@
+pragma solidity ^0.4.18;
+
 contract PerformanceTester {	
 	function ackermann(uint m, uint n) returns (uint) {
 		if (m == 0)
