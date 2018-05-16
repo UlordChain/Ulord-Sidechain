@@ -69,7 +69,7 @@ public class MinerUtils {
             throw new RuntimeException(e);
         }
         scriptPubKeyBytes.write(co.usc.ulordj.script.ScriptOpCodes.OP_CHECKSIG);
-        coinbaseTransaction.addOutput(new co.usc.ulordj.core.TransactionOutput(params, coinbaseTransaction, co.usc.ulordj.core.Coin.valueOf(50, 0), scriptPubKeyBytes.toByteArray()));
+        coinbaseTransaction.addOutput(new co.usc.ulordj.core.TransactionOutput(params, coinbaseTransaction, co.usc.ulordj.core.Coin.ONE_COIN, scriptPubKeyBytes.toByteArray()));
         return coinbaseTransaction;
     }
 

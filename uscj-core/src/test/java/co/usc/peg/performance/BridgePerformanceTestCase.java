@@ -208,7 +208,7 @@ public abstract class BridgePerformanceTestCase {
                     block.verifyHeader();
                     verified = true;
                 } catch (VerificationException e) {
-                    nonce.add(BigInteger.ONE);
+                    nonce = nonce.add(BigInteger.ONE);
                 }
             }
 

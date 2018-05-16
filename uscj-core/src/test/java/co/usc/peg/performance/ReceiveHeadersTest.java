@@ -56,7 +56,7 @@ public class ReceiveHeadersTest extends BridgePerformanceTestCase {
             try {
                 UldBlockChain = new UldBlockChain(btcContext, UldBlockStore);
             } catch (BlockStoreException e) {
-                throw new RuntimeException("Error initializing btc blockchain for tests");
+                throw new RuntimeException("Error initializing uld blockchain for tests");
             }
 
             int blocksToGenerate = Helper.randomInRange(minUldBlocks, maxUldBlocks);

@@ -30,7 +30,7 @@ import java.util.List;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        ReleaseBtcTest.class,
+        ReleaseUldTest.class,
         UpdateCollectionsTest.class,
         ReceiveHeadersTest.class,
         RegisterUldTransactionTest.class,
