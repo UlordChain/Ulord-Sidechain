@@ -117,7 +117,7 @@ public class BridgeStorageProviderTest {
         Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("uldTxHashesAP".getBytes())));
         Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("releaseRequestQueue".getBytes())));
         Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("releaseTransactionSet".getBytes())));
-        Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("rskTxsWaitingFS".getBytes())));
+        Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("uscTxsWaitingFS".getBytes())));
         Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("newFederationUldUTXOs".getBytes())));
         Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("oldFederationUldUTXOs".getBytes())));
 
