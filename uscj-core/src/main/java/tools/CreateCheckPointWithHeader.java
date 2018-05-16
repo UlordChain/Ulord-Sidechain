@@ -37,35 +37,34 @@ public class CreateCheckPointWithHeader {
             StoredBlock storedBlock;
             switch (i)
             {
-                case 5:
+                case 0:
                     storedBlock = new StoredBlock(block, new BigInteger("00000000000000000000000000000000000000000000000000000000a24ba896", 16), 2000);
                     break;
-                case 4:
+                case 1:
                     storedBlock = new StoredBlock(block, new BigInteger("0000000000000000000000000000000000000000000000000000000266a2e396", 16), 4000);
                     break;
-                case 3:
+                case 2:
                     storedBlock = new StoredBlock(block, new BigInteger("00000000000000000000000000000000000000000000000000000004c31b7844", 16), 6000);
                     break;
-                case 2:
+                case 3:
                     storedBlock = new StoredBlock(block, new BigInteger("0000000000000000000000000000000000000000000000000000000659c398d1", 16), 8000);
                     break;
-                case 1:
+                case 4:
                     storedBlock = new StoredBlock(block, new BigInteger("00000000000000000000000000000000000000000000000000000000a24ba896", 16), 10000);
                     break;
-                case 0:
+                case 5:
                     storedBlock = new StoredBlock(block, new BigInteger("0000000000000000000000000000000000000000000000000000000c4944a6d5", 16), 12000);
                     break;
                 default:
-                    storedBlock = new StoredBlock(block, new BigInteger("00000000000000000000000000000000000000000000000000000000a24ba896", 16), 2000);
+                    storedBlock = new StoredBlock(block, new BigInteger("0", 16), 0);
                     break;
             }
             checkpoints.put(storedBlock.getHeight(), storedBlock);
-
         }
 
-//        byte[] blockBytes = Sha256Hash.hexStringToByteArray(headerHexStr);
+//        byte[] blockBytes = Sha256Hash.hexStringToByteArray(headersHexStr[5]);
 //        UldBlock block= new UldBlock(params, blockBytes);
-//        StoredBlock storedBlock =  new StoredBlock(block, new BigInteger("0000000000000000000000000000000000000000000000000000001325ac3572", 16), height);
+//        StoredBlock storedBlock =  new StoredBlock(block, new BigInteger("0000000000000000000000000000000000000000000000000000000c4944a6d5", 16), 12000);
 //        checkpoints.put(storedBlock.getHeight(), storedBlock);
 
         File textFile = new File("org.ulord.test.checkpoints");
