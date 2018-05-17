@@ -12,4 +12,10 @@ The Two-way Peg is roughly divided into the following stages:
 (3)	Transfer the UlordToken to the sidechain and provide proof of SPV or miner's vote;  
 (4)	Wait for a reorganization period to prevent double spending;  
 (5)	Unlock the UlordToken for normal use on the sidechain;  
+After a period of time, if the user wants to redeem the UlordToken to the main chain, the reverse action can be performed. The redemption operation provides a sidechain user with an exit mechanism to prevent users from being forced to bind assets to unwanted sidechain applications.  
+Each sidechain can operate in different networks, with independent economic patterns and corresponding DAPPs. Developers can construct a sidechain and then dock it to the Ulord main chain. While inheriting and reusing the Ulord main chain technology, they also share the pressure of the Ulord main chain.  
+Each DAPP deployed on the sidechain is allowed to have a unique set of ledgers. According to different application scenarios of the DAPP, the sidechain's consensus mechanism and block parameters are allowed to be reformed. And because the sidechain is an independent system, the serious problem of DAPP on the sidechain will only affect the sidechain itself and will not affect the Ulord main chain.  
+Ulord supports multiple sidechains, each of which can support one or more DAPPs. Sidechains can have their own virtual machines, publish smart contracts, and remain compatible with Ethereum virtual machines.
+
+
 
