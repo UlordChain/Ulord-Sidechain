@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 @Ignore
-public class ReleaseBtcTest extends BridgePerformanceTestCase {
+public class ReleaseUldTest extends BridgePerformanceTestCase {
     @Test
     public void releaseBtc() throws IOException {
         int minCentsUld = 5;
