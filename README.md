@@ -15,7 +15,7 @@ Sidechain is not specifically referring to a certain chain, but refers to any ch
 *	Unlock the UlordToken for normal use on the sidechain;  
 
 After a period of time, if the user wants to redeem the UlordToken to the main chain, the reverse action can be performed. The redemption operation provides a sidechain user with an exit mechanism to prevent users from being forced to bind assets to unwanted sidechain applications.  
- ![The Two-way Peg between Ulord main chain and sidechain](https://github.com/UlordChain/Ulord-Sidechain/blob/master/Two-way-Peg.jpg)
+ ![The Two-way Peg between Ulord main chain and sidechain](https://github.com/UlordChain/Ulord-Sidechain/blob/master/pics/Two-way-Peg.jpg)
 
 Each sidechain can operate in different networks, with independent economic patterns and corresponding DAPPs. Developers can construct a sidechain and then dock it to the Ulord main chain. While inheriting and reusing the Ulord main chain technology, they also share the pressure of the Ulord main chain.  
 
