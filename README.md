@@ -6,12 +6,14 @@ Ulord-Sidechain a.k.a USC is a Secondary chain for Ulord implemented in java. US
 
 ## Sidechain techonology  
 Sidechain is not specifically referring to a certain chain, but refers to any chain that obeys the rules of the sidechain. The Ulord sidechain rule means that the Ulord sidechain can verify the data from the Ulord main chain, and through the Two-way Peg (2WP), the UlordToken is safely transferred between the mainchains and sidechains at a fixed exchange rate to achieve assets transfer between the chains.  
-The Two-way Peg is roughly divided into the following stages:  
+
+### The Two-way Peg is roughly divided into the following stages:  
 (1)	Send a 2WP transaction to lock the UlordToken in the main chain;  
 (2)	Wait for a confirmation period, making the transaction confirmed by enough blocks;  
 (3)	Transfer the UlordToken to the sidechain and provide proof of SPV or miner's vote;  
 (4)	Wait for a reorganization period to prevent double spending;  
 (5)	Unlock the UlordToken for normal use on the sidechain;  
+
 After a period of time, if the user wants to redeem the UlordToken to the main chain, the reverse action can be performed. The redemption operation provides a sidechain user with an exit mechanism to prevent users from being forced to bind assets to unwanted sidechain applications.  
 Each sidechain can operate in different networks, with independent economic patterns and corresponding DAPPs. Developers can construct a sidechain and then dock it to the Ulord main chain. While inheriting and reusing the Ulord main chain technology, they also share the pressure of the Ulord main chain.  
 Each DAPP deployed on the sidechain is allowed to have a unique set of ledgers. According to different application scenarios of the DAPP, the sidechain's consensus mechanism and block parameters are allowed to be reformed. And because the sidechain is an independent system, the serious problem of DAPP on the sidechain will only affect the sidechain itself and will not affect the Ulord main chain.  
