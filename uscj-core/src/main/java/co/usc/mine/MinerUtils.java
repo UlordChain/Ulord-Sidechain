@@ -42,6 +42,7 @@ import java.util.*;
 
 /**
  * Created by oscar on 26/09/2016.
+ * Update by Ulord team for Ulord merge-mining 2018/04
  */
 public class MinerUtils {
 
