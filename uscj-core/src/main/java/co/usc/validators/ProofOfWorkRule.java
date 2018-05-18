@@ -165,7 +165,7 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
             return false;
         }
 
-        /*
+        /* Just Checking...
         * We check that the there is no other block before the usc tag, to avoid a possible malleability attack:
         * If we have a mid state with 10 blocks, and the usc tag, we can also have
         * another mid state with 9 blocks, 64bytes + the usc tag, giving us two blocks with different hashes but the same spv proof.
