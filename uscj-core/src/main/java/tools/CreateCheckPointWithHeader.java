@@ -25,43 +25,47 @@ public class CreateCheckPointWithHeader {
             /*12000*/"00000020f9d1ac69e3906cd9cf9cde3731abca3f5bda59100755e1640b313b686f0100007a9fd5f22a3677b1ba481e345d8ba42cc625437a9224bc743427d7929c1806c500000000000000000000000000000000000000000000000000000000000000009c08f35aebcc011e86000000fecf90019067523965905f6e00ad347b43baddf4d1e319f8b466dd1c",
     };
 
-    private static final String headerHexStr = "00000020c0dfd584a7ae3e45cce22058ec254b0c6d9418c9724f13b6a0f3e9bb0a010000d7a03593417d968d90b5b9d1e4a852741b5552631f56d8937b2746b638881bca0000000000000000000000000000000000000000000000000000000000000000734cf55ac49b011e021900480511f9ac9838365424df85011b7e70e70a2dbaee9e63e36ee389887e";
+    private static final String headerHexStr = "010000000000000000000000000000000000000000000000000000000000000000000000166238fec2a8f51a74ec9fee7abc0013a6aeb4f94b44d6cbc835174afc4929a101000000000000000000000000000000000000000000000000000000000000006045d75affff0f1f73008485f5dc350d72ba63cfbb7a776d861d5b1f2ee0232308afd10df0200000";
     private static final Integer height = 12987;
 
     public static void main(@Nullable String[] args) {
 
         TreeMap<Integer, StoredBlock> checkpoints = new TreeMap<>();
-        for(int i = 0; i < headersHexStr.length; ++i) {
-            byte[] bBytes = Sha256Hash.hexStringToByteArray(headersHexStr[i]);
-            UldBlock block = new UldBlock(params, bBytes);
-            StoredBlock storedBlock;
-            switch (i)
-            {
-                case 0:
-                    storedBlock = new StoredBlock(block, new BigInteger("00000000000000000000000000000000000000000000000000000000a24ba896", 16), 2000);
-                    break;
-                case 1:
-                    storedBlock = new StoredBlock(block, new BigInteger("0000000000000000000000000000000000000000000000000000000266a2e396", 16), 4000);
-                    break;
-                case 2:
-                    storedBlock = new StoredBlock(block, new BigInteger("00000000000000000000000000000000000000000000000000000004c31b7844", 16), 6000);
-                    break;
-                case 3:
-                    storedBlock = new StoredBlock(block, new BigInteger("0000000000000000000000000000000000000000000000000000000659c398d1", 16), 8000);
-                    break;
-                case 4:
-                    storedBlock = new StoredBlock(block, new BigInteger("00000000000000000000000000000000000000000000000000000000a24ba896", 16), 10000);
-                    break;
-                case 5:
-                    storedBlock = new StoredBlock(block, new BigInteger("0000000000000000000000000000000000000000000000000000000c4944a6d5", 16), 12000);
-                    break;
-                default:
-                    storedBlock = new StoredBlock(block, new BigInteger("0", 16), 0);
-                    break;
-            }
-            checkpoints.put(storedBlock.getHeight(), storedBlock);
-        }
 
+        UldBlock block  = new UldBlock(params, Sha256Hash.hexStringToByteArray(headerHexStr));
+        StoredBlock blk = new StoredBlock(block, new BigInteger("0000000000000000000000000000000000000000000000000000000000001000", 16), 0);
+        checkpoints.put(0, blk);
+
+//        for(int i = 0; i < headersHexStr.length; ++i) {
+//            byte[] bBytes = Sha256Hash.hexStringToByteArray(headersHexStr[i]);
+//            UldBlock block = new UldBlock(params, bBytes);
+//            StoredBlock storedBlock;
+//            switch (i)
+//            {
+//                case 0:
+//                    storedBlock = new StoredBlock(block, new BigInteger("00000000000000000000000000000000000000000000000000000000a24ba896", 16), 2000);
+//                    break;
+//                case 1:
+//                    storedBlock = new StoredBlock(block, new BigInteger("0000000000000000000000000000000000000000000000000000000266a2e396", 16), 4000);
+//                    break;
+//                case 2:
+//                    storedBlock = new StoredBlock(block, new BigInteger("00000000000000000000000000000000000000000000000000000004c31b7844", 16), 6000);
+//                    break;
+//                case 3:
+//                    storedBlock = new StoredBlock(block, new BigInteger("0000000000000000000000000000000000000000000000000000000659c398d1", 16), 8000);
+//                    break;
+//                case 4:
+//                    storedBlock = new StoredBlock(block, new BigInteger("00000000000000000000000000000000000000000000000000000000a24ba896", 16), 10000);
+//                    break;
+//                case 5:
+//                    storedBlock = new StoredBlock(block, new BigInteger("0000000000000000000000000000000000000000000000000000000c4944a6d5", 16), 12000);
+//                    break;
+//                default:
+//                    storedBlock = new StoredBlock(block, new BigInteger("0", 16), 0);
+//                    break;
+//            }
+//            checkpoints.put(storedBlock.getHeight(), storedBlock);
+//        }
 //        byte[] blockBytes = Sha256Hash.hexStringToByteArray(headersHexStr[5]);
 //        UldBlock block= new UldBlock(params, blockBytes);
 //        StoredBlock storedBlock =  new StoredBlock(block, new BigInteger("0000000000000000000000000000000000000000000000000000000c4944a6d5", 16), 12000);
