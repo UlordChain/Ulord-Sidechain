@@ -5,7 +5,7 @@ Ulord-Sidechain a.k.a USC is a Secondary chain for Ulord implemented in java. US
  
 
 ## Sidechain techonology  
-Sidechain is not specifically referring to a certain chain, but refers to any chain that obeys the rules of the sidechain. The Ulord sidechain rule means that the Ulord sidechain can verify the data from the Ulord main chain, and through the Two-way Peg (2WP), the UlordToken is safely transferred between the mainchains and sidechains at a fixed exchange rate to achieve assets transfer between the chains.  
+Sidechain is not specifically referring to a certain chain, but refers to any chain that obeys the rules of the sidechain. The Ulord SideChain Rule (USCR) means that the USC can verify the data from the Ulord main chain, and through the Two-way Peg (2WP), the UlordToken is safely transferred between the mainchains and sidechains at a fixed exchange rate to achieve assets transfer between the chains.  
 
 ### The Two-way Peg is roughly divided into the following stages:  
 *	Send a 2WP transaction to lock the UlordToken in the main chain;  
