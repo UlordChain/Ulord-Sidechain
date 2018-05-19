@@ -20,6 +20,7 @@ package co.usc.config;
 
 /**
  * Created by ajlopez on 3/3/2016.
+ * Update by Ulord developer team 2018/04, from rsk_tak to usc_tag
  */
 public class UscMiningConstants {
     public static final byte[] USC_TAG = {'U','S','C','B','L','O','C','K',':'};

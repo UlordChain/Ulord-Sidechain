@@ -1,7 +1,7 @@
 /*
- * This file is part of RskJ
  * Copyright (C) 2017 RSK Labs Ltd.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
+ * Copyright (C) 2016-2018  Ulord developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -188,7 +188,7 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
                 UscMiningConstants.BLOCK_HEADER_HASH_SIZE;
 
         if (remainingByteCount > UscMiningConstants.MAX_BYTES_AFTER_MERGED_MINING_HASH) {
-            logger.warn("More than 128 bytes after USC tag");
+            logger.warn("More than " + Integer.toString(UscMiningConstants.MAX_BYTES_AFTER_MERGED_MINING_HASH) + "bytes after USC tag");
             return false;
         }
 
@@ -223,7 +223,7 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         }
 
         byte[] fallbackMiningPubKeyBytes;
-        boolean isEvenBlockNumber = header.getNumber() % 2 == 0;
+        boolean isEvenBlockNumber = (header.getNumber() % 2 == 0);
         if (isEvenBlockNumber) {
             fallbackMiningPubKeyBytes = constants.getFallbackMiningPubKey0();
         } else {
