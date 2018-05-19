@@ -200,7 +200,7 @@ public abstract class BridgePerformanceTestCase {
                             UldBlock.BLOCK_VERSION_BIP66,
                             prevBlock.getHash(),
                             merkleRoot,
-                            prevBlock.getTimeSeconds() + 10,
+                            prevBlock.getTimeSeconds() + (long)2.5,
                             UldBlock.EASIEST_DIFFICULTY_TARGET,
                             nonce,
                             txs

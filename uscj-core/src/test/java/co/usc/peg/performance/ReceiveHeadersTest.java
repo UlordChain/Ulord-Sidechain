@@ -80,6 +80,4 @@ public class ReceiveHeadersTest extends BridgePerformanceTestCase {
 
         BridgePerformanceTest.addStats(stats);
     }
-
-
 }
