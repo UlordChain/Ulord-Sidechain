@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
  * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2016 - 2018  Ulord Core team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -82,7 +82,7 @@ public class Web3Impl implements Web3 {
 
     public Ethereum eth;
 
-    private final String baseClientVersion = "RskJ";
+    private final String baseClientVersion = "UscJ";
 
     CompositeEthereumListener compositeEthereumListener;
 
