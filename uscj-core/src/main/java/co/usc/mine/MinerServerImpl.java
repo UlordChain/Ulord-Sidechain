@@ -1,6 +1,7 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of Usc
+ *  Copyright (c) 2016 - 2018 Ulord core team.
+ * (derived from RSKJ library, Copyright (C) 2017 RSK Labs Ltd)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -64,6 +65,7 @@ import java.util.stream.Collectors;
  * It builds blocks to mine and publishes blocks once a valid nonce was found by the miner.
  *
  * @author Oscar Guindzberg
+ * @updated by Ulord Core team
  */
 
 @Component("MinerServer")
