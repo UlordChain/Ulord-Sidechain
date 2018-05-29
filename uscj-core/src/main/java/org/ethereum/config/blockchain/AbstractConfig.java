@@ -1,7 +1,7 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
- * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
+ * This file is part of Usc
+ *  Copyright (c) 2016 - 2018 Ulord core team.
+ * (derived from RSKJ library, Copyright (c) 2016 <ether.camp> and Copyright (C) 2017 RSK Labs Ltd)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -95,13 +95,13 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
 
         int calcDur =(1+uncleCount)*duration;
         int sign = 0;
+
+	//Modified by Kwuaint @Ulord team 
         if (calcDur>delta) {
             sign =1;
-        }else if (calcDur<delta) { //Ulord team Kwuaint
+        }else if (calcDur<delta) { 
             sign =-1;
-        }
-
-        if (sign==0) {
+        }else{// (calcDur == delta), and then (sign==0) 
             return pd;
         }
 
