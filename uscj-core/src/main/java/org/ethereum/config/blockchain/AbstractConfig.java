@@ -97,8 +97,7 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
         int sign = 0;
         if (calcDur>delta) {
             sign =1;
-        }
-        if (calcDur<delta) {
+        }else if (calcDur<delta) { //Ulord team Kwuaint
             sign =-1;
         }
 
