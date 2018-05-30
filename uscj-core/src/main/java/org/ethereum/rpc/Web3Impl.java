@@ -61,13 +61,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.util.encoders.Hex;
 
-import java.math.BigDecimal;
+//import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
+//import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+//import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.max;
 import static org.ethereum.rpc.TypeConverter.*;
@@ -336,34 +336,28 @@ public class Web3Impl implements Web3 {
         }
     }
 
-    @Override
-    public String eth_hashrate() {
+    //Change the eth hashrate from string to Biginteger
+    //Kwuaint@Ulord
+     @Override
+    public BigInteger eth_hashrate() {
         BigInteger hashesPerHour = hashRateCalculator.calculateNodeHashRate(Duration.ofHours(1));
-        BigDecimal hashesPerSecond = new BigDecimal(hashesPerHour)
-                .divide(new BigDecimal(TimeUnit.HOURS.toSeconds(1)), 3, RoundingMode.HALF_UP);
+        BigInteger hashesPerSecond = hashesPerHour.divide(BigInteger.valueOf(Duration.ofHours(1).getSeconds()));
 
-        String result = hashesPerSecond.toString();
+        logger.debug("eth_hashrate(): {}", hashesPerSecond);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("eth_hashrate(): " + result);
-        }
-
-        return result;
+        return hashesPerSecond;
     }
 
+    //Change the eth_net hashrate from string to Biginteger
+    //Kwuaint@Ulord
     @Override
-    public String eth_netHashrate() {
+    public BigInteger eth_netHashrate() {
         BigInteger hashesPerHour = hashRateCalculator.calculateNetHashRate(Duration.ofHours(1));
-        BigDecimal hashesPerSecond = new BigDecimal(hashesPerHour)
-                .divide(new BigDecimal(TimeUnit.HOURS.toSeconds(1)), 3, RoundingMode.HALF_UP);
+        BigInteger hashesPerSecond = hashesPerHour.divide(BigInteger.valueOf(Duration.ofHours(1).getSeconds()));
 
-        String result = hashesPerSecond.toString();
+        logger.debug("eth_netHashrate(): {}", hashesPerSecond);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("eth_netHashrate(): " + result);
-        }
-
-        return result;
+        return hashesPerSecond;
     }
 
     @Override
