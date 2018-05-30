@@ -103,6 +103,8 @@ public class BlockToMineBuilder {
      * @param extraData      extra data to pass to the block being built
      */
     public Block build(Block newBlockParent, byte[] extraData) {
+
+	//Get the Uncles' info
         List<BlockHeader> uncles = FamilyUtils.getUnclesHeaders(
                 blockStore,
                 newBlockParent.getNumber() + 1,
@@ -115,15 +117,18 @@ public class BlockToMineBuilder {
             uncles = uncles.subList(0, miningConfig.getUncleListLimit());
         }
 
+       //get the MinGasPrice
         Coin minimumGasPrice = minimumGasPriceCalculator.calculate(
                 newBlockParent.getMinimumGasPrice(),
                 minerMinGasPriceTarget
         );
 
+       //Get the txs
         final List<Transaction> txsToRemove = new ArrayList<>();
         final List<Transaction> txs = getTransactions(txsToRemove, newBlockParent, minimumGasPrice);
         minimumAcceptableTime = newBlockParent.getTimestamp() + 1;
 
+       //create the new block
         final Block newBlock = createBlock(newBlockParent, uncles, txs, minimumGasPrice);
 
         newBlock.setExtraData(extraData);
