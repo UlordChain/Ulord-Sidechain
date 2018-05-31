@@ -142,10 +142,14 @@ public class MinerClientImpl implements MinerClient {
         newBestBlockArrivedFromAnotherNode = false;
         work = minerServer.getWork();
 
+        //get the ulord testnet NetworkParameters
         co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = co.usc.ulordj.params.TestNet3Params.get();
+        //get the CoinbaseTransaction of UMMB
         co.usc.ulordj.core.UldTransaction ulordMergedMiningCoinbaseTransaction = MinerUtils.getUlordMergedMiningCoinbaseTransaction(ulordNetworkParameters, work);
+        //get the UMMB
         co.usc.ulordj.core.UldBlock ulordMergedMiningBlock = MinerUtils.getUlordMergedMiningBlock(ulordNetworkParameters, ulordMergedMiningCoinbaseTransaction);
 
+       //get the usc target
         BigInteger target = new BigInteger(1, TypeConverter.stringHexToByteArray(work.getTarget()));
         logger.info("Miner Client Target : " + target);
 
@@ -160,8 +164,9 @@ public class MinerClientImpl implements MinerClient {
         }
 
         if (foundNonce) {
-            logger.info("Mined block: " + work.getBlockHashForMergedMining());
-            minerServer.submitUlordBlock(work.getBlockHashForMergedMining(), ulordMergedMiningBlock);
+	     String blockHashForMergedMining = work.getBlockHashForMergedMining();
+            logger.info("Mined block: " + blockHashForMergedMining);
+            minerServer.submitUlordBlock(blockHashForMergedMining, ulordMergedMiningBlock);
         }
 
         return foundNonce;
