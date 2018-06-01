@@ -164,7 +164,7 @@ public class MinerClientImpl implements MinerClient {
         }
 
         if (foundNonce) {
-	     String blockHashForMergedMining = work.getBlockHashForMergedMining();
+            String blockHashForMergedMining = work.getBlockHashForMergedMining();
             logger.info("Mined block: " + blockHashForMergedMining);
             minerServer.submitUlordBlock(blockHashForMergedMining, ulordMergedMiningBlock);
         }

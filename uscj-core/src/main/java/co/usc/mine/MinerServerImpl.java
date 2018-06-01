@@ -383,27 +383,27 @@ public class MinerServerImpl implements MinerServer {
     public SubmitBlockResult submitUlordBlockPartialMerkle(
             String blockHashForMergedMining,
             UldBlock blockWithHeaderOnly,
-            UldTransaction coinbase,
+            UldTransaction coinbaseTx,
             List<String> merkleHashes,
             int blockTxnCount) {
         logger.debug("Received merkle solution with hash {} for merged mining", blockHashForMergedMining);
 
         PartialMerkleTree ulordMergedMiningMerkleBranch = getUlordMergedMerkleBranchForCoinbase(blockWithHeaderOnly.getParams(), merkleHashes, blockTxnCount);
 
-        return processSolution(blockHashForMergedMining, blockWithHeaderOnly, coinbase, ulordMergedMiningMerkleBranch, true);
+        return processSolution(blockHashForMergedMining, blockWithHeaderOnly, coinbaseTx, ulordMergedMiningMerkleBranch, true);
     }
 
     @Override
     public SubmitBlockResult submitUlordBlockTransactions(
             String blockHashForMergedMining,
             UldBlock blockWithHeaderOnly,
-            UldTransaction coinbase,
+            UldTransaction coinbaseTx,
             List<String> txHashes) {
         logger.debug("Received tx solution with hash {} for merged mining", blockHashForMergedMining);
 
         PartialMerkleTree ulordMergedMiningMerkleBranch = getUlordMergedMerkleBranch(blockWithHeaderOnly.getParams(), txHashes);
 
-        return processSolution(blockHashForMergedMining, blockWithHeaderOnly, coinbase, ulordMergedMiningMerkleBranch, true);
+        return processSolution(blockHashForMergedMining, blockWithHeaderOnly, coinbaseTx, ulordMergedMiningMerkleBranch, true);
     }
 
     @Override
@@ -415,16 +415,16 @@ public class MinerServerImpl implements MinerServer {
         logger.debug("Received block with hash {} for merged mining", blockHashForMergedMining);
 
         //noinspection ConstantConditions
-        UldTransaction coinbase = ulordMergedMiningBlock.getTransactions().get(0);
+        UldTransaction coinbaseTx = ulordMergedMiningBlock.getTransactions().get(0);
         PartialMerkleTree ulordMergedMiningMerkleBranch = getUlordMergedMerkleBranch(ulordMergedMiningBlock);
 
-        return processSolution(blockHashForMergedMining, ulordMergedMiningBlock, coinbase, ulordMergedMiningMerkleBranch, lastTag);
+        return processSolution(blockHashForMergedMining, ulordMergedMiningBlock, coinbaseTx, ulordMergedMiningMerkleBranch, lastTag);
     }
 
     private SubmitBlockResult processSolution(
             String blockHashForMergedMining,
             UldBlock blockWithHeaderOnly,
-            UldTransaction coinbase,
+            UldTransaction coinbaseTx,
             PartialMerkleTree ulordMergedMiningMerkleBranch,
             boolean lastTag) {
         Block newBlock;
@@ -449,7 +449,7 @@ public class MinerServerImpl implements MinerServer {
         logger.info("Received block {} {}", newBlock.getNumber(), newBlock.getHash());
 
         newBlock.setUlordMergedMiningHeader(blockWithHeaderOnly.cloneAsHeader().ulordSerialize());
-        newBlock.setUlordMergedMiningCoinbaseTransaction(compressCoinbase(coinbase.ulordSerialize(), lastTag));
+        newBlock.setUlordMergedMiningCoinbaseTransaction(compressCoinbase(coinbaseTx.ulordSerialize(), lastTag));
         newBlock.setUlordMergedMiningMerkleProof(ulordMergedMiningMerkleBranch.ulordSerialize());
         newBlock.seal();
 
