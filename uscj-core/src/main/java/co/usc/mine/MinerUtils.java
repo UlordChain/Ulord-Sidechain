@@ -72,7 +72,7 @@ public class MinerUtils {
         }
         scriptPubKeyBytes.write(co.usc.ulordj.script.ScriptOpCodes.OP_CHECKSIG);
         //Set the ulord coinbase output. Kwuaint@Ulord 2018/06/01
-        coinbaseTransaction.addOutput(new co.usc.ulordj.core.TransactionOutput(params, coinbaseTransaction, co.usc.ulordj.core.Coin.valueOf(112, 966), scriptPubKeyBytes.toByteArray()));
+        coinbaseTransaction.addOutput(new co.usc.ulordj.core.TransactionOutput(params, coinbaseTransaction, co.usc.ulordj.core.Coin.valueOf(112, 96), scriptPubKeyBytes.toByteArray()));
         return coinbaseTransaction;
     }
 
