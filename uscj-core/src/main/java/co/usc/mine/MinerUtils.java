@@ -1,6 +1,7 @@
 /*
- * This file is part of RskJ
+ * This file is part of Usc
  * Copyright (C) 2017 RSK Labs Ltd.
+ * Copyright (C) 2018 Ulord developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -70,7 +71,8 @@ public class MinerUtils {
             throw new RuntimeException(e);
         }
         scriptPubKeyBytes.write(co.usc.ulordj.script.ScriptOpCodes.OP_CHECKSIG);
-        coinbaseTransaction.addOutput(new co.usc.ulordj.core.TransactionOutput(params, coinbaseTransaction, co.usc.ulordj.core.Coin.ONE_COIN, scriptPubKeyBytes.toByteArray()));
+        //Set the ulord coinbase output. Kwuaint@Ulord 2018/06/01
+        coinbaseTransaction.addOutput(new co.usc.ulordj.core.TransactionOutput(params, coinbaseTransaction, co.usc.ulordj.core.Coin.valueOf(112, 966), scriptPubKeyBytes.toByteArray()));
         return coinbaseTransaction;
     }
 

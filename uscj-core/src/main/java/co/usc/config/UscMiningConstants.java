@@ -1,5 +1,5 @@
 /*
- * This file is part of RskJ
+ * This file is part of Usc
  * Copyright (C) 2018 Ulord developer team.
  *
  * This program is free software: you can redistribute it and/or modify
