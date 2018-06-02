@@ -71,7 +71,7 @@ public class Prepare_eth_call {
                     builder.append(" ");
                 }
 
-                if(i%10==0 || i == blockCount){
+                if(i%400==0 || i == blockCount){
                     builder.insert(0, "receiveHeaders ");
                     try{
                         //String curl = "curl -X POST --data '{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":[{\"to\":\"0x0000000000000000000000000000000001000006\", \"data\": \""+ getReceiveHeadersString(builder.toString().split(" ")) +"\" },\"latest\"], \"id\":1}' -H \"Content-Type:application/json\" localhost:44444";
@@ -94,8 +94,8 @@ public class Prepare_eth_call {
                                 "\"gas\": \"0x76c0\"," +
                                 "\"gasPrice\": \"0x9184e72a000\"," +
                                 "\"value\": \"0x00\"," +
-                                "\"data\": \"" + getReceiveHeadersString(builder.toString().split(" ")) + "\"}," +
-                                "\"latest\"]," +
+                                "\"data\": \"" + getReceiveHeadersString(builder.toString().split(" ")) + "\"}]," +
+                                //"\"latest\"]," +
                                 "\"id\": \"1\"" +
                                 "}";
                         System.out.println(payload);
