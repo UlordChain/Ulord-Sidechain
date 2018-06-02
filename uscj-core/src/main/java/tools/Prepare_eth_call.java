@@ -34,6 +34,10 @@ import java.io.InputStreamReader;
 
 public class Prepare_eth_call {
     public static void main(String []args){
+        prepareAndCallReceiveHeadersRPC();
+    }
+
+    public static void prepareAndCallReceiveHeadersRPC(){
         try
         {
             Process proc = null;
@@ -77,9 +81,9 @@ public class Prepare_eth_call {
                                 "\"jsonrpc\": \"2.0\", " +
                                 "\"method\": \"eth_call\", " +
                                 "\"params\": [{" +
-                                    "\"to\": \"0x0000000000000000000000000000000001000006\"," +
-                                    "\"data\": \"" + getReceiveHeadersString(builder.toString().split(" ")) + "\"}," +
-                                    "\"latest\"]," +
+                                "\"to\": \"0x0000000000000000000000000000000001000006\"," +
+                                "\"data\": \"" + getReceiveHeadersString(builder.toString().split(" ")) + "\"}," +
+                                "\"latest\"]," +
                                 "\"id\": \"1\"" +
                                 "}";
                         System.out.println(payload);
@@ -92,12 +96,14 @@ public class Prepare_eth_call {
 
                         HttpResponse response = httpClient.execute(request);
                         System.out.println(response.getStatusLine().getStatusCode());
+                        int statusCode = response.getStatusLine().getStatusCode();
+                        while(statusCode != 200){
+                            Thread.sleep(10000);
+                        }
+                        builder = new StringBuilder();
                     }catch(Exception ex){
                         System.out.println(ex.getMessage());
                     }
-
-                    Thread.sleep(10000);
-                    builder = new StringBuilder();
                 }
             }
         } catch (Throwable t)
