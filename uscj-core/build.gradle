@@ -144,6 +144,8 @@ dependencies {
     compile "org.mapdb:mapdb:2.0-beta13"
     compile 'com.github.UlordChain:ulordj-thin:768c50be50'
 
+    compile 'org.apache.httpcomponents:httpclient:4.5.5'
+
     compile 'com.github.briandilley.jsonrpc4j:jsonrpc4j:1.5.1'
 
     runtime "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
