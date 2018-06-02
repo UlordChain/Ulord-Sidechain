@@ -1,3 +1,21 @@
+/*
+ * This file is part of Usc
+ * Copyright (C) 2016 - 2018 Ulord development team.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package tools;
 
 import co.usc.peg.Bridge;
@@ -5,6 +23,7 @@ import co.usc.ulordj.core.Sha256Hash;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 
@@ -48,26 +67,31 @@ public class Prepare_eth_call {
                     builder.append(" ");
                 }
 
-                if(i%500==0 || i == blockCount){
+                if(i%10==0 || i == blockCount){
                     builder.insert(0, "receiveHeaders ");
-                    String curl = "curl -X POST --data '{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":[{\"to\":\"0x0000000000000000000000000000000001000006\", \"data\": \""+ getReceiveHeadersString(builder.toString().split(" ")) +"\" },\"latest\"], \"id\":1}' -H \"Content-Type:application/json\" localhost:44444";
-
-                    System.out.println(curl);
-
                     try{
+                        //String curl = "curl -X POST --data '{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":[{\"to\":\"0x0000000000000000000000000000000001000006\", \"data\": \""+ getReceiveHeadersString(builder.toString().split(" ")) +"\" },\"latest\"], \"id\":1}' -H \"Content-Type:application/json\" localhost:44444";
+                        //System.out.println(curl);
 
-                        //TODO : Need to find a way to send request to rpc of USC using java.
+                        String payload = "{" +
+                                "\"jsonrpc\": \"2.0\", " +
+                                "\"method\": \"eth_call\", " +
+                                "\"params\": [{" +
+                                    "\"to\": \"0x0000000000000000000000000000000001000006\"," +
+                                    "\"data\": \"" + getReceiveHeadersString(builder.toString().split(" ")) + "\"}," +
+                                    "\"latest\"]," +
+                                "\"id\": \"1\"" +
+                                "}";
+                        System.out.println(payload);
+                        StringEntity entity = new StringEntity(payload,
+                                ContentType.APPLICATION_JSON);
 
-
-                        /*
                         HttpClient httpClient = HttpClientBuilder.create().build();
-
                         HttpPost request = new HttpPost("http://localhost:44444");
-                        StringEntity params =new StringEntity("{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":[{\"to\":\"0x0000000000000000000000000000000001000006\", \"data\": \"" + getReceiveHeadersString(builder.toString().split(" ")) +"\" },\"latest\"], \"id\":1}");
-                        request.addHeader("content-type", "application/json");
-                        request.setEntity(params);
+                        request.setEntity(entity);
+
                         HttpResponse response = httpClient.execute(request);
-                        */
+                        System.out.println(response.getStatusLine().getStatusCode());
                     }catch(Exception ex){
                         System.out.println(ex.getMessage());
                     }
