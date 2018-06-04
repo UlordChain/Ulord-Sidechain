@@ -100,6 +100,9 @@ public class Prepare_eth_call {
                         while(statusCode != 200){
                             Thread.sleep(10000);
                         }
+                        if(statusCode == 200){
+                            Thread.sleep(60000);
+                        }
                         builder = new StringBuilder();
                     }catch(Exception ex){
                         System.out.println(ex.getMessage());
