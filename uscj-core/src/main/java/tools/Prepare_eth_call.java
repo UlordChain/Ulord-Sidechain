@@ -16,10 +16,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * This file is part of Usc
- * Copyright (c) 2016 - 2018 Ulord development team.
- */
 package tools;
 
 import co.usc.peg.Bridge;
@@ -78,17 +74,6 @@ public class Prepare_eth_call {
                 if(i%400==0 || i == blockCount){
                     builder.insert(0, "receiveHeaders ");
                     try{
-                        //String curl = "curl -X POST --data '{\"jsonrpc\":\"2.0\",\"method\":\"eth_call\",\"params\":[{\"to\":\"0x0000000000000000000000000000000001000006\", \"data\": \""+ getReceiveHeadersString(builder.toString().split(" ")) +"\" },\"latest\"], \"id\":1}' -H \"Content-Type:application/json\" localhost:44444";
-                        //System.out.println(curl);
-
-                        //{"jsonrpc":"2.0","method":"eth_sendTransaction",
-                        // "params":[{"from": "674f05e1916abc32a38f40aa67ae6b503b565999",
-                        // "to": "0x0000000000000000000000000000000001000006",
-                        // "gas": "0x76c0",
-                        // "gasPrice": "0x9184e72a000",
-                        // "value": "0x00",
-                        // "data": ""}],"id":1}
-
                         String payload = "{" +
                                 "\"jsonrpc\": \"2.0\", " +
                                 "\"method\": \"eth_sendTransaction\", " +
@@ -99,7 +84,6 @@ public class Prepare_eth_call {
                                 "\"gasPrice\": \"0x9184e72a000\"," +
                                 "\"value\": \"0x00\"," +
                                 "\"data\": \"" + getReceiveHeadersString(builder.toString().split(" ")) + "\"}]," +
-                                //"\"latest\"]," +
                                 "\"id\": \"1\"" +
                                 "}";
                         System.out.println(payload);
