@@ -16,6 +16,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+ * This file is part of Usc
+ * Copyright (c) 2016 - 2018 Ulord development team.
+ */
 package tools;
 
 import co.usc.peg.Bridge;

@@ -38,7 +38,7 @@ public class BridgeTestNetConstants extends BridgeConstants {
     BridgeTestNetConstants() {
         uldParamsString = NetworkParameters.ID_TESTNET;
 
-        UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("03f0ed482997fd16e2b4aed02fe3a386749052fd44d00a75a221e11eac7348d0b6"));
+        UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("03392953c250719af7cb710389a9e0f5bb5c6a627cff6c5242b007e305d15068ca"));
 
         List<UldECKey> genesisFederationPublicKeys = Lists.newArrayList(
             federator0PublicKey
