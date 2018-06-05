@@ -20,6 +20,7 @@ package tools;
 
 import co.usc.peg.Bridge;
 import co.usc.ulordj.core.Sha256Hash;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -43,7 +44,7 @@ public class Prepare_eth_call {
             Process proc = null;
             Runtime rt = Runtime.getRuntime();
 
-            proc = rt.exec("ulord-cli getblockcount");
+            proc = rt.exec("ulord-cli -testnet getblockcount");
             InputStream inStr = proc.getInputStream();
             InputStreamReader isr = new InputStreamReader(inStr);
             BufferedReader br = new BufferedReader(isr);
@@ -53,13 +54,13 @@ public class Prepare_eth_call {
             StringBuilder builder = new StringBuilder();
             String line = null;
             for(int i=1; i<blockCount; ++i){
-                proc = rt.exec("ulord-cli getblockhash "+ i);
+                proc = rt.exec("ulord-cli -testnet getblockhash "+ i);
                 inStr = proc.getInputStream();
                 isr = new InputStreamReader(inStr);
                 br = new BufferedReader(isr);
 
                 line = br.readLine();
-                proc = rt.exec("ulord-cli getblockheader " + line +" false");
+                proc = rt.exec("ulord-cli -testnet getblockheader " + line +" false");
                 inStr = proc.getInputStream();
                 isr = new InputStreamReader(inStr);
                 br = new BufferedReader(isr);
@@ -71,7 +72,7 @@ public class Prepare_eth_call {
                     builder.append(" ");
                 }
 
-                if(i%400==0 || i == blockCount){
+                if(i%500==0 || i == blockCount){
                     builder.insert(0, "receiveHeaders ");
                     try{
                         String payload = "{" +
@@ -80,9 +81,9 @@ public class Prepare_eth_call {
                                 "\"params\": [{" +
                                 "\"from\": \"674f05e1916abc32a38f40aa67ae6b503b565999\"," +
                                 "\"to\": \"0x0000000000000000000000000000000001000006\"," +
-                                "\"gas\": \"0x76c0\"," +
+                                "\"gas\": \"0x4C4B40\"," +
                                 "\"gasPrice\": \"0x9184e72a000\"," +
-                                "\"value\": \"0x00\"," +
+//                                "\"value\": \"0x00\"," +
                                 "\"data\": \"" + getReceiveHeadersString(builder.toString().split(" ")) + "\"}]," +
                                 "\"id\": \"1\"" +
                                 "}";
