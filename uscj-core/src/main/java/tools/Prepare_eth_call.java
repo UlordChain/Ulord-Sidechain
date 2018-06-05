@@ -34,46 +34,82 @@ import java.io.InputStreamReader;
 
 public class Prepare_eth_call {
     public static void main(String []args){
-        prepareAndCallReceiveHeadersRPC();
+        prepareAndCallReceiveHeadersRPC(args);
     }
 
-    public static void prepareAndCallReceiveHeadersRPC(){
+    public static void prepareAndCallReceiveHeadersRPC(String []args){
         try
         {
+
+            StringBuilder getBlockCount = new StringBuilder();
+            StringBuilder getBlockHash = new StringBuilder();
+            StringBuilder getBlockHeader = new StringBuilder();
+
+            getBlockCount.append("ulord-cli");
+            getBlockHash.append("ulord-cli");
+            getBlockHeader.append("ulord-cli");
+
+            if (args.length > 0 && args[0].equals("testnet")) {
+                getBlockCount.append(" -testnet");
+                getBlockHash.append(" -testnet");
+                getBlockHeader.append(" -testnet");
+            }
+
+            getBlockCount.append(" getblockcount");
+            getBlockHash.append(" getblockhash");
+            getBlockHeader.append(" getblockheader");
+
             Process proc = null;
             Runtime rt = Runtime.getRuntime();
 
-            proc = rt.exec("ulord-cli getblockcount");
+            proc = rt.exec(getBlockCount.toString());
             InputStream inStr = proc.getInputStream();
             InputStreamReader isr = new InputStreamReader(inStr);
             BufferedReader br = new BufferedReader(isr);
 
+            int startIndex = 1;
             int blockCount = Integer.parseInt(br.readLine());
+            if(args.length > 0 && !args[0].equals("testnet")){
+                if(args.length == 1){
+                    startIndex = Integer.parseInt(args[0]);
+                } else if (args.length == 2){
+                    startIndex = Integer.parseInt(args[0]);
+                    blockCount = Integer.parseInt(args[1]);
+                }
+            }else{
+                if(args.length == 2){
+                    startIndex = Integer.parseInt(args[1]);
+                } else if (args.length == 3){
+                    startIndex = Integer.parseInt(args[1]);
+                    blockCount = Integer.parseInt(args[2]);
+                }
+            }
 
             StringBuilder builder = new StringBuilder();
             String line = null;
-            for(int i=1; i<blockCount; ++i){
-                proc = rt.exec("ulord-cli getblockhash "+ i);
+
+            for (int i = startIndex; i < blockCount; ++i) {
+                proc = rt.exec(getBlockHash.toString() + " " + i);
                 inStr = proc.getInputStream();
                 isr = new InputStreamReader(inStr);
                 br = new BufferedReader(isr);
 
                 line = br.readLine();
-                proc = rt.exec("ulord-cli getblockheader " + line +" false");
+                proc = rt.exec(getBlockHeader.toString() + " " + line + " false");
                 inStr = proc.getInputStream();
                 isr = new InputStreamReader(inStr);
                 br = new BufferedReader(isr);
                 line = null;
 
                 line = br.readLine();
-                if(line != null) {
+                if (line != null) {
                     builder.append(line);
                     builder.append(" ");
                 }
 
-                if(i%400==0 || i == blockCount){
+                if (i % 400 == 0 || i == blockCount) {
                     builder.insert(0, "receiveHeaders ");
-                    try{
+                    try {
                         String payload = "{" +
                                 "\"jsonrpc\": \"2.0\", " +
                                 "\"method\": \"eth_sendTransaction\", " +
@@ -97,22 +133,24 @@ public class Prepare_eth_call {
                         HttpResponse response = httpClient.execute(request);
                         System.out.println(response.getStatusLine().getStatusCode());
                         int statusCode = response.getStatusLine().getStatusCode();
-                        while(statusCode != 200){
-                            Thread.sleep(10000);
+                        while (statusCode != 200) {
+                            Thread.sleep(5000);
                         }
-                        if(statusCode == 200){
+                        if (statusCode == 200) {
                             Thread.sleep(60000);
                         }
                         builder = new StringBuilder();
-                    }catch(Exception ex){
+                    } catch (Exception ex) {
                         System.out.println(ex.getMessage());
                     }
                 }
             }
+
         } catch (Throwable t)
         {
             t.printStackTrace();
         }
+
     }
 
     private static String getReceiveHeadersString(String[] args) {
