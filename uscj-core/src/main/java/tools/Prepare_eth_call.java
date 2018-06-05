@@ -27,6 +27,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 
 import java.io.BufferedReader;
@@ -89,7 +90,7 @@ public class Prepare_eth_call {
 
             StringBuilder builder = new StringBuilder();
             String line = null;
-            for(int i=1; i<blockCount; ++i){
+            for(int i=startIndex; i<blockCount; ++i){
                 proc = rt.exec("ulord-cli -testnet getblockhash "+ i);
                 inStr = proc.getInputStream();
                 isr = new InputStreamReader(inStr);
@@ -108,16 +109,37 @@ public class Prepare_eth_call {
                     builder.append(" ");
                 }
 
-                if(i%500==0 || i == blockCount){
+                if(i%100==0 || i == blockCount){
                     builder.insert(0, "receiveHeaders ");
                     try {
+                        // Unlock account
+                        String payloadUnlockAcc = "{" +
+                                "\"jsonrpc\": \"2.0\", " +
+                                "\"method\": \"personal_unlockAccount\", " +
+                                "\"params\": [" +
+                                "\"674f05e1916abc32a38f40aa67ae6b503b565999\"," +
+                                "\"abcd1234\",\"\"" +
+                                "], " +
+                                "\"id\": \"1\"" +
+                                "}";
+                        System.out.println(payloadUnlockAcc);
+                        StringEntity entityUnlockAcc = new StringEntity(payloadUnlockAcc,
+                                ContentType.APPLICATION_JSON);
+
+                        HttpClient httpClientUnlockAcc = HttpClientBuilder.create().build();
+                        HttpPost requestUnlockAcc = new HttpPost("http://localhost:44444");
+                        requestUnlockAcc.setEntity(entityUnlockAcc);
+
+                        HttpResponse responseUnlockAcc = httpClientUnlockAcc.execute(requestUnlockAcc);
+                        System.out.println(responseUnlockAcc.getStatusLine().getStatusCode());
+
                         String payload = "{" +
                                 "\"jsonrpc\": \"2.0\", " +
                                 "\"method\": \"eth_sendTransaction\", " +
                                 "\"params\": [{" +
                                 "\"from\": \"674f05e1916abc32a38f40aa67ae6b503b565999\"," +
                                 "\"to\": \"0x0000000000000000000000000000000001000006\"," +
-                                "\"gas\": \"0x4C4B40\"," +
+                                "\"gas\": \"0x3D0900\"," +
                                 "\"gasPrice\": \"0x9184e72a000\"," +
 //                                "\"value\": \"0x00\"," +
                                 "\"data\": \"" + getReceiveHeadersString(builder.toString().split(" ")) + "\"}]," +
@@ -132,14 +154,12 @@ public class Prepare_eth_call {
                         request.setEntity(entity);
 
                         HttpResponse response = httpClient.execute(request);
-                        System.out.println(response.getStatusLine().getStatusCode());
+                        System.out.println(EntityUtils.toString(response.getEntity()));
                         int statusCode = response.getStatusLine().getStatusCode();
                         while (statusCode != 200) {
                             Thread.sleep(5000);
                         }
-                        if (statusCode == 200) {
-                            Thread.sleep(60000);
-                        }
+                        Thread.sleep(1000 * 60 * 8);
                         builder = new StringBuilder();
                     } catch (Exception ex) {
                         System.out.println(ex.getMessage());
