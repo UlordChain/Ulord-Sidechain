@@ -20,7 +20,6 @@ package tools;
 
 import co.usc.peg.Bridge;
 import co.usc.ulordj.core.Sha256Hash;
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -29,12 +28,15 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class Prepare_eth_call {
+
+    private static final String POST_URI = "http://localhost:44444";
+    private static final String ULORD_CLI = "ulord-cli";
+    private static final String ULORD_TESTNET = " -testnet";
     public static void main(String []args){
         prepareAndCallReceiveHeadersRPC(args);
     }
@@ -47,14 +49,14 @@ public class Prepare_eth_call {
             StringBuilder getBlockHash = new StringBuilder();
             StringBuilder getBlockHeader = new StringBuilder();
 
-            getBlockCount.append("ulord-cli");
-            getBlockHash.append("ulord-cli");
-            getBlockHeader.append("ulord-cli");
+            getBlockCount.append(ULORD_CLI);
+            getBlockHash.append(ULORD_CLI);
+            getBlockHeader.append(ULORD_CLI);
 
             if (args.length > 0 && args[0].equals("testnet")) {
-                getBlockCount.append(" -testnet");
-                getBlockHash.append(" -testnet");
-                getBlockHeader.append(" -testnet");
+                getBlockCount.append(ULORD_TESTNET);
+                getBlockHash.append(ULORD_TESTNET);
+                getBlockHeader.append(ULORD_TESTNET);
             }
 
             getBlockCount.append(" getblockcount");
@@ -64,7 +66,7 @@ public class Prepare_eth_call {
             Process proc = null;
             Runtime rt = Runtime.getRuntime();
 
-            proc = rt.exec("ulord-cli -testnet getblockcount");
+            proc = rt.exec(getBlockCount.toString());
 
             InputStream inStr = proc.getInputStream();
             InputStreamReader isr = new InputStreamReader(inStr);
@@ -91,13 +93,13 @@ public class Prepare_eth_call {
             StringBuilder builder = new StringBuilder();
             String line = null;
             for(int i=startIndex; i<blockCount; ++i){
-                proc = rt.exec("ulord-cli -testnet getblockhash "+ i);
+                proc = rt.exec(getBlockHash.toString() + " " + i);
                 inStr = proc.getInputStream();
                 isr = new InputStreamReader(inStr);
                 br = new BufferedReader(isr);
 
                 line = br.readLine();
-                proc = rt.exec("ulord-cli -testnet getblockheader " + line +" false");
+                proc = rt.exec(getBlockHeader.toString() + " " + line + " false");
                 inStr = proc.getInputStream();
                 isr = new InputStreamReader(inStr);
                 br = new BufferedReader(isr);
@@ -127,7 +129,7 @@ public class Prepare_eth_call {
                                 ContentType.APPLICATION_JSON);
 
                         HttpClient httpClientUnlockAcc = HttpClientBuilder.create().build();
-                        HttpPost requestUnlockAcc = new HttpPost("http://localhost:44444");
+                        HttpPost requestUnlockAcc = new HttpPost(POST_URI);
                         requestUnlockAcc.setEntity(entityUnlockAcc);
 
                         HttpResponse responseUnlockAcc = httpClientUnlockAcc.execute(requestUnlockAcc);
@@ -150,12 +152,13 @@ public class Prepare_eth_call {
                                 ContentType.APPLICATION_JSON);
 
                         HttpClient httpClient = HttpClientBuilder.create().build();
-                        HttpPost request = new HttpPost("http://localhost:44444");
+                        HttpPost request = new HttpPost(POST_URI);
                         request.setEntity(entity);
 
                         HttpResponse response = httpClient.execute(request);
                         System.out.println(EntityUtils.toString(response.getEntity()));
                         int statusCode = response.getStatusLine().getStatusCode();
+
                         while (statusCode != 200) {
                             Thread.sleep(5000);
                         }
