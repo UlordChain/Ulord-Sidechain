@@ -228,7 +228,7 @@ public class BridgeSupport {
     /**
      * In case of a lock tx: Transfers some SULDs to the sender of the uld tx and keeps track of the new UTXOs available for spending.
      * In case of a release tx: Keeps track of the change UTXOs, now available for spending.
-     * @param uldTx The ulord transaction
+     * @param uscTx The USC transaction
      * @param height The height of the ulord block that contains the tx
      * @param pmt Partial Merklee Tree that proves the tx is included in the uld block
      * @throws BlockStoreException
@@ -292,9 +292,8 @@ public class BridgeSupport {
             logger.debug("This is a lock tx {}", uldTx);
             Script scriptSig = uldTx.getInput(0).getScriptSig();
             if (scriptSig.getChunks().size() != 2) {
-                logger.warn("First input does not spend a Pay-to-PubkeyHash " + uldTx.getInput(0));
-                panicProcessor.panic("uldlock", "First input does not spend a Pay-to-PubkeyHash " + uldTx.getInput(0));
-                return;
+			  logger.warn("[uldlock:{}] First input does not spend a Pay-to-PubkeyHash " + uldTx.getInput(0), uldTx.getHash());
+              return;
             }
 
             // Compute the total amount sent. Value could have been sent both to the
