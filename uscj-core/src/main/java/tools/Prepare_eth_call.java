@@ -92,7 +92,7 @@ public class Prepare_eth_call {
 
             StringBuilder builder = new StringBuilder();
             String line = null;
-            for(int i=startIndex; i<blockCount; ++i){
+            for(int i=startIndex; i<=blockCount; ++i){
                 proc = rt.exec(getBlockHash.toString() + " " + i);
                 inStr = proc.getInputStream();
                 isr = new InputStreamReader(inStr);
