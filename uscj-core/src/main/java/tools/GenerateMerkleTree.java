@@ -27,25 +27,35 @@ public class GenerateMerkleTree {
 
     private static final NetworkParameters params = TestNet3Params.get();
     public static void main(@NotNull String[] args) {
-        if(args.length < 1) {
-            System.out.println("args: serialized block in hex");
+        if(args.length < 2) {
+            System.out.println("args: <serialized block in hex> <transaction id to be included>");
             return;
         }
 
         UldBlock block = new UldBlock(params , Sha256Hash.hexStringToByteArray(args[0]));
+        Sha256Hash txToInclude = new Sha256Hash(args[1]);
         List<UldTransaction> txs = block.getTransactions();
         List<Sha256Hash> txHashes = new ArrayList<>(txs.size());
+
         for (UldTransaction tx : txs) {
             txHashes.add(tx.getHash());
         }
 
-        PartialMerkleTree tree = buildMerkleBranch(txHashes, block.getParams());
+        PartialMerkleTree tree = buildMerkleBranch(txHashes, txToInclude, block.getParams());
         byte[] treebytes = tree.ulordSerialize();
 
         System.out.println(Sha256Hash.bytesToHex(treebytes).toLowerCase());
     }
 
-    private static PartialMerkleTree buildMerkleBranch(List<Sha256Hash> txHashes, NetworkParameters params) {
+    private static PartialMerkleTree buildMerkleBranch(List<Sha256Hash> txHashes, Sha256Hash txToInclude, NetworkParameters params) {
+
+        int index = 0;
+        for(Sha256Hash hash : txHashes) {
+            if (hash.equals(txToInclude))
+                break;
+            index ++;
+        }
+
         /*
            We need to convert the txs to a bitvector to choose which ones
            will be included in the Partial Merkle Tree.
@@ -54,7 +64,7 @@ public class GenerateMerkleTree {
            The coinbase tx is the first one of the txs so we set the first bit to 1.
          */
         byte[] bitvector = new byte[(txHashes.size() + 7) / 8];
-        Utils.setBitLE(bitvector, 0);
+        Utils.setBitLE(bitvector, index);
         return PartialMerkleTree.buildFromLeaves(params, bitvector, txHashes);
     }
 }
