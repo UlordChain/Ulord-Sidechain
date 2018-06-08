@@ -92,3 +92,6 @@ infer-out/
 
 #database
 database
+
+#tools
+uscj-core/src/main/java/tools
