@@ -229,6 +229,7 @@ public class BridgeSupport {
      * In case of a lock tx: Transfers some SULDs to the sender of the uld tx and keeps track of the new UTXOs available for spending.
      * In case of a release tx: Keeps track of the change UTXOs, now available for spending.
      * @param uscTx The USC transaction
+     * @param uldTx The ulord transaction
      * @param height The height of the ulord block that contains the tx
      * @param pmt Partial Merklee Tree that proves the tx is included in the uld block
      * @throws BlockStoreException
