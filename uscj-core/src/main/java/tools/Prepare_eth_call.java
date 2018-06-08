@@ -126,12 +126,9 @@ public class Prepare_eth_call {
                             HttpResponse responseUnlockAcc = httpClientUnlockAcc.execute(requestUnlockAcc);
                             System.out.println(responseUnlockAcc.getStatusLine().getStatusCode());
 
-                            int statusCode = receiveHeaders(builder);
+                            receiveHeaders(builder);
 
-                            while (statusCode != 200) {
-                                Thread.sleep(5000);
-                            }
-                            Thread.sleep(1000 * 60 * 15); //Wait 15 min before sending next 100 Ulord Blocks.
+                            //Thread.sleep(1000 * 60 * 15); //Wait 15 min before sending next 100 Ulord Blocks.
                             builder = new StringBuilder();
                         } catch (Exception ex) {
                             System.out.println(ex.getMessage());
@@ -158,7 +155,7 @@ public class Prepare_eth_call {
     }
 
     //Call receiveHeaders of Bridge.
-    private static int receiveHeaders(StringBuilder builder) throws IOException {
+    private static void receiveHeaders(StringBuilder builder) throws IOException {
         String payload = "{" +
                 "\"jsonrpc\": \"2.0\", " +
                 "\"method\": \"eth_sendTransaction\", " +
@@ -179,9 +176,56 @@ public class Prepare_eth_call {
         request.setEntity(entity);
 
         HttpResponse response = httpClient.execute(request);
-        System.out.println(EntityUtils.toString(response.getEntity()));
-        int statusCode = response.getStatusLine().getStatusCode();
-        return statusCode;
+
+        String responseString = EntityUtils.toString(response.getEntity());
+        JSONObject jsonObj = new JSONObject(responseString);
+        String txHash = jsonObj.get("result").toString();
+        while(true){
+            if(!getTransactionByHash(txHash)){
+                try{
+                    Thread.sleep(1000*30);
+                    break;
+                }catch (Exception ex){
+                    System.err.println(ex.getMessage());
+                }
+
+            }
+        }
+    }
+
+    private static Boolean getTransactionByHash(String txHash){
+        String payload = "{" +
+                "\"jsonrpc\": \"2.0\", " +
+                "\"method\": \"eth_getTransactionByHash\", " +
+                "\"params\": [" +
+                "\"" + txHash + "\"]," +
+                "\"id\": \"1\"" +
+                "}";
+
+        StringEntity entity = new StringEntity(payload,
+                ContentType.APPLICATION_JSON);
+
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost request = new HttpPost(POST_URI);
+        request.setEntity(entity);
+
+        try {
+            HttpResponse response = httpClient.execute(request);
+            String responseString = EntityUtils.toString(response.getEntity());
+            JSONObject jsonObj = new JSONObject(responseString);
+            jsonObj = new JSONObject(jsonObj.get("result").toString());
+            String blockHash = jsonObj.get("blockHash").toString();
+            String blockNumber = jsonObj.get("blockNumber").toString();
+
+
+            if(blockHash != null || blockNumber != null){
+                return true;
+            }
+            return false;
+        }catch(Exception ex){
+            System.out.println(ex);
+            return false;
+        }
     }
 
     //Call getUldBlockChainBestChainHeight of Bridge.
