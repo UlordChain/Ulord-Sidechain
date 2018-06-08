@@ -31,8 +31,8 @@ apply plugin: 'maven'
 
 sonarqube {
     properties {
-        property "sonar.projectName", "RskJ"
-        property "sonar.projectKey", "co.rsk:rskJ"
+        property "sonar.projectName", "UscJ"
+        property "sonar.projectKey", "co.usc:uscJ"
         property "sonar.java.source", "1.8"
 
         def libs = "build/libs/*.jar"
