@@ -84,7 +84,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     public static final CallTransaction.Function GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT = CallTransaction.Function.fromSignature("getUldBlockChainBestChainHeight", new String[]{}, new String[]{"int"});
     // Returns an array of block hashes known by the bridge contract. Federators can use this to find what is the latest block in the mainchain the bridge has.
     // The goal of this function is to help synchronize bridge and federators blockchains.
-    // Protocol inspired by ulord sync protocol, see block locator in https://en.ulord.it/wiki/Protocol_documentation#getheaders
+    // Protocol inspired by bitcoin sync protocol, see block locator in https://en.bitcoin.it/wiki/Protocol_documentation#getheaders
     public static final CallTransaction.Function GET_ULD_BLOCKCHAIN_BLOCK_LOCATOR = CallTransaction.Function.fromSignature("getUldBlockChainBlockLocator", new String[]{}, new String[]{"string[]"});
     // Returns the minimum amount of satoshis a user should send to the federation.
     public static final CallTransaction.Function GET_MINIMUM_LOCK_TX_VALUE = CallTransaction.Function.fromSignature("getMinimumLockTxValue", new String[]{}, new String[]{"int"});
