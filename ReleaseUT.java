@@ -46,7 +46,7 @@ public class ReleaseUT {
         releaseUT(bridgeConstants);
     }
 
-    // Requires federator's private key to run this function.
+    // NOTE: Requires federator's private key to run this function.
     public static void releaseUT(BridgeConstants bridgeConstants){
         NetworkParameters params = null;
         if(bridgeConstants instanceof BridgeTestNetConstants)
@@ -86,20 +86,17 @@ public class ReleaseUT {
                 uscTxsWaitingForSignatures = BridgeSerializationUtils.deserializeMap(rlpList.get(0).getRLPData(), params, false);
 
                 for (Map.Entry<Keccak256, UldTransaction> entry : uscTxsWaitingForSignatures.entrySet()) {
-
                     Keccak256 key = entry.getKey();
+
                     // Check there are at least N blocks on top of the supplied transaction
-                    boolean isValid = validateTxDepth(key, bridgeConstants);
-
-
-
-
-
+                    if(!validateTxDepth(key, bridgeConstants)) { continue; }
 
                     byte[] rawTx = entry.getValue().ulordSerialize();
-                    System.out.println(Sha256Hash.bytesToHex(rawTx));
+                    signRawTransaction(rawTx);
+                    // TODO: check if transaction signing complete is true
+                    // TODO: if true broadcast send transaction
+                    // TODO: Remove transaction from uscTxsWaitingForSignatures
 
-                    // TODO: Use getUldTxHashProcessedHeight to verify that the transaction is minimum 10 blocks deep in testnet
                 }
                 Thread.sleep(1000 * 60 * 10);
             }
@@ -110,6 +107,27 @@ public class ReleaseUT {
         }
     }
 
+    private static void signRawTransaction(byte[] rawTx) {
+        // TODO: Get UT Transaction id ????
+        String rpcCall = "'" + Sha256Hash.bytesToHex(rawTx) + "'" +
+                " '[{" +
+                        " \"txid\":"         + "\""   + "\"," +
+                        " \"scriptPubKey\":" + "\""   + "\"," +
+                        " \"redeemScript\":" + "\""   + "\"" +
+                "}]'"  +
+                " '["  +
+                        "\"" + "\"" +
+                "]'";
+        System.out.println(rpcCall);
+    }
+
+    /**
+     * Checks if there is at least N blocks on top of the supplied transaction
+     * @param key   Transaction hash to validate
+     * @param bridgeConstants   USC Network parameter constant
+     * @return  true: if there is at least N blocks on top of the supplied txn, false: otherwise
+     * @throws IOException
+     */
     private static boolean validateTxDepth(Keccak256 key, BridgeConstants bridgeConstants) throws IOException {
 
         String rpcCall = "{" +
@@ -143,6 +161,7 @@ public class ReleaseUT {
         entity = new StringEntity(rpcCall, ContentType.APPLICATION_JSON);
         request = new HttpPost(NetworkConstants.POST_URI);
         request.setEntity(entity);
+        httpClient = HttpClientBuilder.create().build();
         response = httpClient.execute(request);
         responseStr = EntityUtils.toString(response.getEntity());
 
@@ -153,11 +172,4 @@ public class ReleaseUT {
             return true;
         return false;
     }
-
-    private static String getGetUldTxHashProcessedHeightString(Sha256Hash key) {
-        System.out.println(key.toString());
-        return Sha256Hash.bytesToHex(Bridge.GET_ULD_TX_HASH_PROCESSED_HEIGHT.encode(new Object[]{key.toString()}));
-    }
-
-
 }
