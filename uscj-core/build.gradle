@@ -62,7 +62,7 @@ jacoco {
 }
 
 test {
-    systemProperty "solc", System.getProperty("solc")
+    //systemProperty "solc", System.getProperty("solc")
 
     beforeTest { descriptor ->
         logger.lifecycle("Running test: ${descriptor}")
@@ -80,7 +80,7 @@ test {
         destinationFile = file("build/reports/jacoco/jacoco.exec")
     }
 
-    systemProperty "file.encoding", "UTF-8"
+    //systemProperty "file.encoding", "UTF-8"
 }
 
 repositories {
