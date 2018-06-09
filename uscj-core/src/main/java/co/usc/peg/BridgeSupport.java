@@ -1149,7 +1149,6 @@ public class BridgeSupport {
      * @return the federation ulord address.
      */
     public Address getFederationAddress() {
-        System.out.println("Best chain height: " + UldBlockChain.getBestChainHeight());
         return getActiveFederation().getAddress();
     }
 
