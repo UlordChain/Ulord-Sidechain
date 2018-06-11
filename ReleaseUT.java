@@ -111,10 +111,8 @@ public class ReleaseUT {
                     String complete = jsonObject.get("complete").toString();
 
                     if(complete.equals("true")) {
-                        // TODO: if true broadcast send transaction
-                        //String sendTxResult = sendTransaction(jsonObject.get("hex").toString(), params);
-                        //System.out.println("Ulord tx successfully processed, Tx id: " + sendTxResult);
-
+                        String sendTxResult = sendTransaction(jsonObject.get("hex").toString(), params);
+                        System.out.println("Ulord tx successfully processed, Tx id: " + sendTxResult);
                     }
                     // TODO: Remove transaction from uscTxsWaitingForSignatures
                 }
@@ -134,10 +132,11 @@ public class ReleaseUT {
     }
 
     private static String sendTransaction(String hex, NetworkParameters params) throws IOException {
-        String sendRawTx = ulordCommand + " " + hex;
+        String sendRawTx = ulordCommand + " sendrawtransaction " + hex;
 
+        System.out.println(sendRawTx);
         Runtime runtime = Runtime.getRuntime();
-        Process proc = runtime.exec(sendRawTx);
+        Process proc = runtime.exec(new String[] { "bash", "-c", sendRawTx});
 
         InputStream inputStream = proc.getInputStream();
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -148,7 +147,7 @@ public class ReleaseUT {
     private static String signRawTransaction(UldTransaction tx, BridgeConstants bridgeConstants, NetworkParameters params)
             throws IOException, PrivateKeyNotFoundException {
 
-        String signRawTransaction = ulordCommand + " signrawtransaction ";
+        String signRawTransaction = ulordCommand + " signrawtransaction";
 
         String txId = getUtTxId(tx, params);
         int vout = getVout(txId, params);
@@ -168,7 +167,7 @@ public class ReleaseUT {
 
         Process proc = null;
         Runtime runtime = Runtime.getRuntime();
-        proc = runtime.exec(signRawTransaction);
+        proc = runtime.exec(new String[] { "bash", "-c", signRawTransaction});
 
         InputStream inputStream = proc.getInputStream();
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
