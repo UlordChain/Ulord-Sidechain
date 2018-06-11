@@ -11,9 +11,7 @@ import co.usc.config.BridgeTestNetConstants;
 import co.usc.crypto.Keccak256;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeSerializationUtils;
-import co.usc.ulordj.core.NetworkParameters;
-import co.usc.ulordj.core.Sha256Hash;
-import co.usc.ulordj.core.UldTransaction;
+import co.usc.ulordj.core.*;
 import co.usc.ulordj.params.MainNetParams;
 import co.usc.ulordj.params.TestNet3Params;
 import org.apache.http.HttpResponse;
@@ -27,13 +25,21 @@ import org.ethereum.core.CallTransaction;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
 import org.ethereum.vm.PrecompiledContracts;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
+
 public class ReleaseUT {
+
+    private static String ulordCommand = "";
 
     // USC release txs follow these steps: First, they are waiting for coin selection (releaseRequestQueue),
     // then they are waiting for enough confirmations on the USC network (releaseTransactionSet),
@@ -47,12 +53,19 @@ public class ReleaseUT {
     }
 
     // NOTE: Requires federator's private key to run this function.
-    public static void releaseUT(BridgeConstants bridgeConstants){
+    public static void releaseUT(BridgeConstants bridgeConstants) {
+
+        ulordCommand += NetworkConstants.ULORD_CLI;
+
         NetworkParameters params = null;
-        if(bridgeConstants instanceof BridgeTestNetConstants)
+        if(bridgeConstants instanceof BridgeTestNetConstants) {
             params = TestNet3Params.get();
-        else if (bridgeConstants instanceof BridgeMainNetConstants)
+            ulordCommand += NetworkConstants.ULORD_TESTNET;
+        }
+        else if (bridgeConstants instanceof BridgeMainNetConstants) {
             params = MainNetParams.get();
+        }
+
 
         while(true) {
             try {
@@ -91,34 +104,189 @@ public class ReleaseUT {
                     // Check there are at least N blocks on top of the supplied transaction
                     if(!validateTxDepth(key, bridgeConstants)) { continue; }
 
-                    byte[] rawTx = entry.getValue().ulordSerialize();
-                    signRawTransaction(rawTx);
-                    // TODO: check if transaction signing complete is true
-                    // TODO: if true broadcast send transaction
-                    // TODO: Remove transaction from uscTxsWaitingForSignatures
+                    String signResult = signRawTransaction(entry.getValue(), bridgeConstants, params);
+                    System.out.println(signResult);
 
+                    jsonObject = new JSONObject(signResult);
+                    String complete = jsonObject.get("complete").toString();
+
+                    if(complete.equals("true")) {
+                        // TODO: if true broadcast send transaction
+                        //String sendTxResult = sendTransaction(jsonObject.get("hex").toString(), params);
+                        //System.out.println("Ulord tx successfully processed, Tx id: " + sendTxResult);
+
+                    }
+                    // TODO: Remove transaction from uscTxsWaitingForSignatures
                 }
-                Thread.sleep(1000 * 60 * 10);
             }
             catch (Exception e) {
                 System.out.println(e);
                 break;
             }
+            finally {
+                try {
+                    Thread.sleep(1000 * 60 * 10);   // Sleep for 10 minutes
+                } catch (InterruptedException e) {
+                    System.out.println(e);
+                }
+            }
         }
     }
 
-    private static void signRawTransaction(byte[] rawTx) {
-        // TODO: Get UT Transaction id ????
-        String rpcCall = "'" + Sha256Hash.bytesToHex(rawTx) + "'" +
+    private static String sendTransaction(String hex, NetworkParameters params) throws IOException {
+        String sendRawTx = ulordCommand + " " + hex;
+
+        Runtime runtime = Runtime.getRuntime();
+        Process proc = runtime.exec(sendRawTx);
+
+        InputStream inputStream = proc.getInputStream();
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        return BufferedReaderToString(bufferedReader);
+    }
+
+    private static String signRawTransaction(UldTransaction tx, BridgeConstants bridgeConstants, NetworkParameters params)
+            throws IOException, PrivateKeyNotFoundException {
+
+        String signRawTransaction = ulordCommand + " signrawtransaction ";
+
+        String txId = getUtTxId(tx, params);
+        int vout = getVout(txId, params);
+        String scriptPubKey = getScriptPubKey(vout, txId, params);
+        signRawTransaction +=
+                " '" + Sha256Hash.bytesToHex(tx.ulordSerialize()) + "'" +
                 " '[{" +
-                        " \"txid\":"         + "\""   + "\"," +
-                        " \"scriptPubKey\":" + "\""   + "\"," +
-                        " \"redeemScript\":" + "\""   + "\"" +
+                        " \"txid\":"         + "\"" + txId + "\"," +
+                        " \"vout\":"         + vout + ","+
+                        " \"scriptPubKey\":" + "\"" + scriptPubKey + "\"," +
+                        " \"redeemScript\":" + "\"" + Sha256Hash.bytesToHex(tx.getInput(0).getScriptSig().getChunks().get(2).data) + "\"" +
                 "}]'"  +
                 " '["  +
-                        "\"" + "\"" +
+                        "\"" + getPrivateKey(bridgeConstants, params) +"\"" +
                 "]'";
-        System.out.println(rpcCall);
+        System.out.println(signRawTransaction);
+
+        Process proc = null;
+        Runtime runtime = Runtime.getRuntime();
+        proc = runtime.exec(signRawTransaction);
+
+        InputStream inputStream = proc.getInputStream();
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+        return BufferedReaderToString(bufferedReader);
+    }
+
+    private static String getScriptPubKey(int vout, String txId, NetworkParameters params) throws IOException {
+        String txJSONString = getRawTransaction(txId, params);
+        JSONObject jsonObject = new JSONObject(decodeTxToJSONString(Sha256Hash.hexStringToByteArray(txJSONString), params));
+        JSONArray voutObjects = jsonObject.getJSONArray("vout");
+        for(int i = 0; i < voutObjects.length(); ++i) {
+            int n = Integer.parseInt(voutObjects.getJSONObject(i).get("n").toString());
+            if(vout == n) {
+                return voutObjects.getJSONObject(i).getJSONObject("scriptPubKey").get("hex").toString();
+            }
+        }
+        return null;
+    }
+
+    private static String BufferedReaderToString(BufferedReader br) throws IOException {
+        String tempData, data = "";
+
+        while((tempData = br.readLine()) != null)
+            data += tempData;
+        return data;
+    }
+
+    private static String getRawTransaction(String txId, NetworkParameters params) throws IOException {
+        String getRawTransaction = ulordCommand + " getrawtransaction " + txId;
+        Runtime runtime = Runtime.getRuntime();
+        Process proc = runtime.exec(getRawTransaction);
+
+        InputStream inputStream = proc.getInputStream();
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        return BufferedReaderToString(bufferedReader);
+    }
+
+    private static int getVout(String txId, NetworkParameters params) throws IOException {
+
+        String txJSONString = decodeTxToJSONString(Sha256Hash.hexStringToByteArray(getRawTransaction(txId, params)), params);
+
+        JSONObject jsonObject = new JSONObject(txJSONString);
+        JSONArray voutObjects = jsonObject.getJSONArray("vout");
+
+        int vout = 0;
+        for(int i = 0; i < voutObjects.length(); ++i) {
+            jsonObject = new JSONObject(voutObjects.get(i).toString());
+            vout = Integer.parseInt(jsonObject.get("n").toString());
+            JSONArray addressObjects = jsonObject.getJSONObject("scriptPubKey").getJSONArray("addresses");
+
+            boolean found = false;
+            for(int j = 0; j < addressObjects.length(); ++j) {
+                if(addressObjects.get(j).toString().equals(NetworkConstants.MULTISIG_ADDRESS)) {
+                    found = true;
+                    break;
+                }
+            }
+            if(found)
+                break;
+        }
+        return vout;
+    }
+
+    private static String getPrivateKey(BridgeConstants bridgeConstants, NetworkParameters params)
+            throws IOException, PrivateKeyNotFoundException {
+
+        String dumpPrivKey = ulordCommand + " dumpprivkey ";
+
+        List<UldECKey> publicKeys = bridgeConstants.getGenesisFederation().getPublicKeys();
+        BufferedReader bufferedReader = null;
+
+        boolean privateKeyFound = false;
+        String key = null;
+        for(UldECKey pubKey : publicKeys) {
+            pubKey.toAddress(params);
+            String rpc = dumpPrivKey + pubKey.toAddress(params).toString();
+
+            Runtime runtime = Runtime.getRuntime();
+            Process proc = runtime.exec(rpc);
+
+            InputStream inputStream = proc.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            bufferedReader = new BufferedReader(inputStreamReader);
+            key = bufferedReader.readLine();
+            if(key != null) {
+                privateKeyFound = true;
+                break;
+            }
+        }
+        if(privateKeyFound == false)
+            throw new PrivateKeyNotFoundException();
+
+        return key;
+    }
+
+    private static String decodeTxToJSONString(byte[] tx, NetworkParameters params) throws IOException {
+        String decodeRawTx = ulordCommand + " decoderawtransaction " + Sha256Hash.bytesToHex(tx);
+
+        Process proc = null;
+        Runtime rt  = Runtime.getRuntime();
+        proc = rt.exec(decodeRawTx);
+
+        InputStream inputStream = proc.getInputStream();
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+        return BufferedReaderToString(bufferedReader);
+    }
+
+    private static String getUtTxId(UldTransaction tx, NetworkParameters params) throws IOException {
+        JSONObject jsonObject = new JSONObject(decodeTxToJSONString(tx.ulordSerialize(), params));
+        String vin = jsonObject.get("vin").toString();
+        jsonObject = new JSONObject(vin.substring(1, vin.length() - 1));
+
+        return jsonObject.get("txid").toString();
     }
 
     /**
