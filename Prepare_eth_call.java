@@ -179,13 +179,13 @@ public class Prepare_eth_call {
         String txHash = jsonObj.get("result").toString();
         while(true){
             if(getTransactionByHash(txHash)){
-                try{
-                    Thread.sleep(1000*30);
-                    txHash = null;
-                    break;
-                }catch (Exception ex){
-                    System.err.println(ex.getMessage());
-                }
+                txHash = null;
+                break;
+            }
+            try{
+                Thread.sleep(1000*30);
+            }catch (Exception ex){
+                System.err.println(ex.getMessage());
             }
         }
     }
