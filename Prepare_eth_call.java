@@ -65,6 +65,7 @@ public class Prepare_eth_call {
                 Process proc = null;
                 Runtime rt = Runtime.getRuntime();
 
+                //getBlockCount gets the ulord best block height.
                 proc = rt.exec(getBlockCount.toString());
 
                 InputStream inStr = proc.getInputStream();
@@ -81,12 +82,14 @@ public class Prepare_eth_call {
                 StringBuilder builder = new StringBuilder();
                 String line = null;
                 for (int i = startIndex; i <= blockCount; ++i) {
+                    //getBlockHash gets the block hash for the given height.
                     proc = rt.exec(getBlockHash.toString() + " " + i);
                     inStr = proc.getInputStream();
                     isr = new InputStreamReader(inStr);
                     br = new BufferedReader(isr);
 
                     line = br.readLine();
+                    //getBlockHeader gets the block header for the given block hash.
                     proc = rt.exec(getBlockHeader.toString() + " " + line + " false");
                     inStr = proc.getInputStream();
                     isr = new InputStreamReader(inStr);
@@ -112,7 +115,6 @@ public class Prepare_eth_call {
                                     "], " +
                                     "\"id\": \"1\"" +
                                     "}";
-                            //System.out.println(payloadUnlockAcc);
 
                             StringEntity entityUnlockAcc = new StringEntity(payloadUnlockAcc,
                                     ContentType.APPLICATION_JSON);
@@ -122,12 +124,10 @@ public class Prepare_eth_call {
                             requestUnlockAcc.setEntity(entityUnlockAcc);
 
                             HttpResponse responseUnlockAcc = httpClientUnlockAcc.execute(requestUnlockAcc);
-                            //System.out.println(responseUnlockAcc.getStatusLine().getStatusCode());
 
                             System.out.println("UT Block headers from " + (i - 100 + 1) + " to " + i + " sent to USC.");
                             receiveHeaders(builder);
 
-                            //Thread.sleep(1000 * 60 * 15); //Wait 15 min before sending next 100 Ulord Blocks.
                             builder = new StringBuilder();
                         } catch (Exception ex) {
                             System.out.println(ex.getMessage());
@@ -166,7 +166,6 @@ public class Prepare_eth_call {
                 "\"data\": \"" + getReceiveHeadersString(builder.toString().split(" ")) + "\"}]," +
                 "\"id\": \"1\"" +
                 "}";
-        //System.out.println(payload);
 
         StringEntity entity = new StringEntity(payload,
                 ContentType.APPLICATION_JSON);
