@@ -181,11 +181,13 @@ public class Prepare_eth_call {
         String txHash = jsonObj.get("result").toString();
         System.out.println("Transaction ID: " + txHash);
         while(true){
+            //send new block headers once previous block headers are mined.
             if(getTransactionByHash(txHash)){
                 txHash = null;
                 break;
             }
             try{
+                //sleep 30sec before new rpc call.
                 Thread.sleep(1000*30);
             }catch (Exception ex){
                 System.err.println(ex.getMessage());
