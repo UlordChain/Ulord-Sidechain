@@ -112,7 +112,8 @@ public class Prepare_eth_call {
                                     "], " +
                                     "\"id\": \"1\"" +
                                     "}";
-                            System.out.println(payloadUnlockAcc);
+                            //System.out.println(payloadUnlockAcc);
+
                             StringEntity entityUnlockAcc = new StringEntity(payloadUnlockAcc,
                                     ContentType.APPLICATION_JSON);
 
@@ -121,8 +122,9 @@ public class Prepare_eth_call {
                             requestUnlockAcc.setEntity(entityUnlockAcc);
 
                             HttpResponse responseUnlockAcc = httpClientUnlockAcc.execute(requestUnlockAcc);
-                            System.out.println(responseUnlockAcc.getStatusLine().getStatusCode());
+                            //System.out.println(responseUnlockAcc.getStatusLine().getStatusCode());
 
+                            System.out.println("UT Block headers from " + (i - 100 + 1) + " to " + i + " sent to USC.");
                             receiveHeaders(builder);
 
                             //Thread.sleep(1000 * 60 * 15); //Wait 15 min before sending next 100 Ulord Blocks.
@@ -164,7 +166,8 @@ public class Prepare_eth_call {
                 "\"data\": \"" + getReceiveHeadersString(builder.toString().split(" ")) + "\"}]," +
                 "\"id\": \"1\"" +
                 "}";
-        System.out.println(payload);
+        //System.out.println(payload);
+
         StringEntity entity = new StringEntity(payload,
                 ContentType.APPLICATION_JSON);
 
@@ -177,6 +180,7 @@ public class Prepare_eth_call {
         String responseString = EntityUtils.toString(response.getEntity());
         JSONObject jsonObj = new JSONObject(responseString);
         String txHash = jsonObj.get("result").toString();
+        System.out.println("Transaction ID: " + txHash);
         while(true){
             if(getTransactionByHash(txHash)){
                 txHash = null;
