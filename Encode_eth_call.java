@@ -83,24 +83,24 @@ public class Encode_eth_call {
         System.out.println(data);
     }
 
-    private static String getStateForUldReleaseClientString() {
+    public static String getStateForUldReleaseClientString() {
         return Sha256Hash.bytesToHex(Bridge.GET_STATE_FOR_ULD_RELEASE_CLIENT.encode(new Object[]{}));
     }
 
-    private static String getUldBlockChainBestChainHeightString() {
+    public static String getUldBlockChainBestChainHeightString() {
         return Sha256Hash.bytesToHex(Bridge.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT.encode(new Object[]{}));
     }
 
-    private static String getUpdateCollectionsString(String[] args) {
+    public static String getUpdateCollectionsString(String[] args) {
         return Sha256Hash.bytesToHex(Bridge.UPDATE_COLLECTIONS.encode(new Object[]{}));
     }
 
-    private static String getRemoveLockWhitelistAddressString(String[] args) {
+    public static String getRemoveLockWhitelistAddressString(String[] args) {
         return Sha256Hash.bytesToHex(Bridge.REMOVE_LOCK_WHITELIST_ADDRESS.encode(new Object[]{args[1]}));
     }
 
 
-    private static String getReceiveHeadersString(String[] args) {
+    public static String getReceiveHeadersString(String[] args) {
         if(args.length < 2)
             return "receiveHeaders <headers seperated by space>";
 
@@ -112,7 +112,7 @@ public class Encode_eth_call {
         return Sha256Hash.bytesToHex((Bridge.RECEIVE_HEADERS.encode(new Object[]{blocks})));
     }
 
-    private static String getRegisterUldTransactionString(String[] args) {
+    public static String getRegisterUldTransactionString(String[] args) {
         if(args.length < 3)
             return "registerUldTransaction <tx hex> <height> <merkletree>";
 
@@ -122,7 +122,7 @@ public class Encode_eth_call {
         return Sha256Hash.bytesToHex(Bridge.REGISTER_ULD_TRANSACTION.encode(new Object[]{tx, height, m}));
     }
 
-    private static String getAddLockWhitelistAddressString(String[] args) {
+    public static String getAddLockWhitelistAddressString(String[] args) {
         if(args.length < 3)
             return "addLockWhitelistAddress <address> <value in satoshi>";
 
