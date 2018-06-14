@@ -18,7 +18,7 @@
 
 package co.usc.net.handler;
 
-import co.usc.net.handler.txvalidator.*;
+//import co.usc.net.handler.txvalidator.*;
 import co.usc.net.handler.txvalidator.TxNotNullValidator;
 import co.usc.net.handler.txvalidator.TxValidatorGasLimitValidator;
 import co.usc.net.handler.txvalidator.TxValidatorNotRemascTxValidator;
