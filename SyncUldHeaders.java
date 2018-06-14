@@ -125,7 +125,7 @@ public class SyncUldHeaders {
 
                             HttpResponse responseUnlockAcc = httpClientUnlockAcc.execute(requestUnlockAcc);
 
-                            System.out.println("UT Block headers from " + (i - 100 + 1) + " to " + i + " sent to USC.");
+                            System.out.println("UT Block headers from " + (startIndex) + " to " + i + " sent to USC.");
                             receiveHeaders(builder);
 
                             builder = new StringBuilder();
