@@ -110,7 +110,7 @@ public class RegisterUTTransaction {
         Process proc = null;
         Runtime rt = Runtime.getRuntime();
 
-        //getBlockCount gets the ulord best block height.
+        //Get the ulord best block height.
         int bestBlockHeight = getBestBlockHeight(getBlockCount.toString());
 
         //Get Block hash of the best block in ulord blockchain
