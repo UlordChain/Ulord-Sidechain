@@ -218,20 +218,21 @@ public class Utils {
         return true;
     }
 
-<<<<<<< HEAD
+
     public static UldTransaction getUldTransaction(NetworkParameters params, String txId) throws IOException {
         String command = NetworkConstants.ULORD_CLI;
-        if(params instanceof TestNet3Params)
+        if (params instanceof TestNet3Params)
             command = command.concat(NetworkConstants.ULORD_TESTNET);
 
         command = command.concat(" getrawtransaction " + txId);
         String result = UlordCliExecutor.execute(command);
 
-        if(result.contains("error"))
+        if (result.contains("error"))
             return null;
 
         return new UldTransaction(params, Hex.decode(result));
-=======
+    }
+
     public static int getUscBestBlockHeight(){
         String payload = "{" +
                 "\"jsonrpc\":\"2.0\", " +
@@ -255,6 +256,5 @@ public class Utils {
             System.out.println(ex);
             return 0;
         }
->>>>>>> e5d2b1540e8250cd510823e418d9f65699a999d6
     }
 }
