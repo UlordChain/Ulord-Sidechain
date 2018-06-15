@@ -5,10 +5,8 @@
 
 package tools;
 
-import co.usc.ulordj.core.Base58;
-import co.usc.ulordj.core.NetworkParameters;
-import co.usc.ulordj.core.Sha256Hash;
-import co.usc.ulordj.core.UldECKey;
+import co.usc.ulordj.core.*;
+import co.usc.ulordj.params.TestNet3Params;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -22,6 +20,8 @@ import org.spongycastle.util.encoders.Hex;
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 
 public class Utils {
@@ -60,7 +60,6 @@ public class Utils {
             data += tempData;
         return data;
     }
-
 
     public static boolean tryUnlockUscAccount(String address, String pwd) throws IOException {
         String payloadUnlockAcc = "{" +
@@ -217,5 +216,19 @@ public class Utils {
             Thread.sleep(1000 * 10);
         }
         return true;
+    }
+
+    public static UldTransaction getUldTransaction(NetworkParameters params, String txId) throws IOException {
+        String command = NetworkConstants.ULORD_CLI;
+        if(params instanceof TestNet3Params)
+            command = command.concat(NetworkConstants.ULORD_TESTNET);
+
+        command = command.concat(" getrawtransaction " + txId);
+        String result = UlordCliExecutor.execute(command);
+
+        if(result.contains("error"))
+            return null;
+
+        return new UldTransaction(params, Hex.decode(result));
     }
 }

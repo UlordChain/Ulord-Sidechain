@@ -37,7 +37,7 @@ public class WhilelistUTAddress {
 
             // Try to unlock account
             if(!Utils.tryUnlockUscAccount(whitelistAuthorisedAddress, pwd))
-                return false;
+                throw new PrivateKeyNotFoundException();
 
             String encodedCmd = DataEncoder.encodeWhitelist(utAddress, valueInSatoshi);
 

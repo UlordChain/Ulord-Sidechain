@@ -7,6 +7,7 @@ package tools;
 
 import co.usc.peg.Bridge;
 import co.usc.ulordj.core.Sha256Hash;
+import co.usc.ulordj.core.UldTransaction;
 import com.sun.istack.internal.NotNull;
 import org.spongycastle.util.encoders.Hex;
 
@@ -113,17 +114,17 @@ public class DataEncoder {
         return Sha256Hash.bytesToHex((Bridge.RECEIVE_HEADERS.encode(new Object[]{blocks})));
     }
 
-    public static String getRegisterUldTransactionString(String[] args) {
+    private static String getRegisterUldTransactionString(String[] args) {
         if(args.length < 3)
             return "registerUldTransaction <tx hex> <height> <merkletree>";
 
         byte[] tx = Sha256Hash.hexStringToByteArray(args[1]);
         Integer height = Integer.parseInt(args[2]);
         byte[] m = Sha256Hash.hexStringToByteArray(args[3]);
-        return Sha256Hash.bytesToHex(Bridge.REGISTER_ULD_TRANSACTION.encode(new Object[]{tx, height, m}));
+        return encodeRegisterUtTransaction(tx, height, m);
     }
 
-    public static String getAddLockWhitelistAddressString(String[] args) {
+    private static String getAddLockWhitelistAddressString(String[] args) {
         if(args.length < 3)
             return "addLockWhitelistAddress <address> <value in satoshi>";
 
@@ -139,6 +140,10 @@ public class DataEncoder {
      */
     public static String encodeWhitelist(String address, BigInteger valueInSatoshi) {
         return Hex.toHexString(Bridge.ADD_LOCK_WHITELIST_ADDRESS.encode(new Object[] {address, valueInSatoshi}));
+    }
+
+    public static String encodeRegisterUtTransaction(byte[] utTx, int height, byte[] merkleTree) {
+        return Hex.toHexString(Bridge.REGISTER_ULD_TRANSACTION.encode(new Object[]{utTx, height, merkleTree}));
     }
 }
 
