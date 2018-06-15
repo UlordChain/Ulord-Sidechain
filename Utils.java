@@ -218,4 +218,29 @@ public class Utils {
         }
         return true;
     }
+
+    public static int getUscBestBlockHeight(){
+        String payload = "{" +
+                "\"jsonrpc\":\"2.0\", " +
+                "\"method\":\"eth_blockNumber\", " +
+                "\"params\":[], " +
+                "\"id\":83" +
+                "}";
+
+        StringEntity entity = new StringEntity(payload,
+                ContentType.APPLICATION_JSON);
+
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost request = new HttpPost(NetworkConstants.POST_URI);
+        request.setEntity(entity);
+        try {
+            HttpResponse response = httpClient.execute(request);
+            String responseString = EntityUtils.toString(response.getEntity());
+            JSONObject jsonObj = new JSONObject(responseString);
+            return Integer.decode(jsonObj.get("result").toString());
+        }catch(Exception ex){
+            System.out.println(ex);
+            return 0;
+        }
+    }
 }

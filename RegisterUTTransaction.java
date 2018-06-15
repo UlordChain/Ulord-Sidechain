@@ -24,10 +24,8 @@ import co.usc.core.UscAddress;
 import co.usc.peg.*;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.store.BlockStoreException;
-import co.usc.ulordj.store.UldBlockStore;
 import org.ethereum.config.DefaultConfig;
 import org.ethereum.core.Repository;
-import org.ethereum.crypto.ECKey;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -120,8 +118,12 @@ public class RegisterUTTransaction {
         String blockAsJsonString = getBlockAsJsonString(getBlock.toString() + " " + line);
 
         JSONObject json = new JSONObject(blockAsJsonString);
-        JSONArray tx = json.getJSONArray("tx");
-        System.out.println(tx.get(0));
+        JSONArray txs = json.getJSONArray("tx");
+        int noOfTx = txs.length();
+
+        for(int i=0; i<noOfTx; ++i){
+            String tx = txs.get(i).toString();
+        }
         System.out.println(json.getString("previousblockhash"));
     }
 

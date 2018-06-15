@@ -33,8 +33,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
-public class SyncUldHeaders {
+public class SyncUTHeaders {
 
     public static void main(String []args){
         prepareAndCallReceiveHeadersRPC(args);
@@ -62,41 +66,26 @@ public class SyncUldHeaders {
                 getBlockHash.append(" getblockhash");
                 getBlockHeader.append(" getblockheader");
 
-                Process proc = null;
-                Runtime rt = Runtime.getRuntime();
-
-                //getBlockCount gets the ulord best block height.
-                proc = rt.exec(getBlockCount.toString());
-
-                InputStream inStr = proc.getInputStream();
-                InputStreamReader isr = new InputStreamReader(inStr);
-                BufferedReader br = new BufferedReader(isr);
-
                 int startIndex = getUldBlockChainBestChainHeight() + 1;
-                int blockCount = Integer.parseInt(br.readLine());
 
-                if(startIndex == blockCount){
-                    Thread.sleep(1000*60*60); //sleep for 1hr.
+                //We keep the block headers in USC 24 blocks behind Ulord
+                //Approx 1hr behind ulord blocks.
+                //getBlockCount = gets the ulord best block height - 24.
+                int blockCount = getBestBlockHeight(getBlockCount.toString()) - 24;
+
+                if((blockCount < startIndex)){
+                    Thread.sleep((long)(1000*60*2.5)); //sleep for 2.5min.
                     continue;
                 }
                 StringBuilder builder = new StringBuilder();
                 String line = null;
                 for (int i = startIndex; i <= blockCount; ++i) {
                     //getBlockHash gets the block hash for the given height.
-                    proc = rt.exec(getBlockHash.toString() + " " + i);
-                    inStr = proc.getInputStream();
-                    isr = new InputStreamReader(inStr);
-                    br = new BufferedReader(isr);
+                    line = getBlockHashByHeight(getBlockHash.toString() + " " + i);
 
-                    line = br.readLine();
                     //getBlockHeader gets the block header for the given block hash.
-                    proc = rt.exec(getBlockHeader.toString() + " " + line + " false");
-                    inStr = proc.getInputStream();
-                    isr = new InputStreamReader(inStr);
-                    br = new BufferedReader(isr);
-                    line = null;
+                    line = getBlockHeaders(getBlockHeader.toString() + " " + line + " false");
 
-                    line = br.readLine();
                     if (line != null) {
                         builder.append(line);
                         builder.append(" ");
@@ -106,29 +95,55 @@ public class SyncUldHeaders {
                         builder.insert(0, "receiveHeaders ");
                         try {
                             // Unlock account
-                            String payloadUnlockAcc = "{" +
-                                    "\"jsonrpc\": \"2.0\", " +
-                                    "\"method\": \"personal_unlockAccount\", " +
-                                    "\"params\": [" +
-                                    "\"674f05e1916abc32a38f40aa67ae6b503b565999\"," +
-                                    "\"abcd1234\",\"\"" +
-                                    "], " +
-                                    "\"id\": \"1\"" +
-                                    "}";
+                            unlockFederationChangeAuthorizedKeys();
 
-                            StringEntity entityUnlockAcc = new StringEntity(payloadUnlockAcc,
-                                    ContentType.APPLICATION_JSON);
+                            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                            Date date = new Date();
+                            System.out.println(dateFormat.format(date) +": UT Block headers from " + (startIndex) + " to " + i + " sent to USC.");
 
-                            HttpClient httpClientUnlockAcc = HttpClientBuilder.create().build();
-                            HttpPost requestUnlockAcc = new HttpPost(NetworkConstants.POST_URI);
-                            requestUnlockAcc.setEntity(entityUnlockAcc);
 
-                            HttpResponse responseUnlockAcc = httpClientUnlockAcc.execute(requestUnlockAcc);
+                            int UscBestBlockHeightBeforeReceiveHeaders = Utils.getUscBestBlockHeight();
+                            //Receive ULD Headers and create a transaction on USC.
+                            String txHash = receiveHeaders(builder);
 
-                            System.out.println("UT Block headers from " + (startIndex) + " to " + i + " sent to USC.");
+                            System.out.println("Transaction ID: " + txHash);
+                            while(true){
+                                Thread.sleep(1000*30);
+                                int UscBestBlockHeightAfterReceiveHeaders = Utils.getUscBestBlockHeight();
+                                if(isBlockHeightDifferenceAtLeast20(UscBestBlockHeightBeforeReceiveHeaders, UscBestBlockHeightAfterReceiveHeaders)){
+                                    break;
+                                }
+                            }
+
+                            //send new block headers once previous block headers are mined.
+                            while(true){
+                                String txStatus = getTransactionByHash(txHash);
+                                if(txStatus.equals("notMined")){
+                                    //sleep 30sec before checking if transaction is mined.
+                                    Thread.sleep(1000*30);
+                                }
+                                else if(txStatus.equals("mined")){
+                                    txHash = null;
+                                    //sleep 30sec before sending new blocks to be mined.
+                                    Thread.sleep(1000*30);
+                                    break;
+                                }
+                                else if(txStatus.equals("rejected")){
+                                    //in case transaction is not mined and rejected recreate the transaction.
+                                    System.out.println(dateFormat.format(date) +": UT Block headers from " + (startIndex) + " to " + i + " sent to USC.");
+                                    UscBestBlockHeightBeforeReceiveHeaders = Utils.getUscBestBlockHeight();
+                                    txHash = receiveHeaders(builder);
+                                    System.out.println("Transaction ID: " + txHash);
+                                    while(true){
+                                        Thread.sleep(1000*30);
+                                        int UscBestBlockHeightAfterReceiveHeaders = Utils.getUscBestBlockHeight();
+                                        if(isBlockHeightDifferenceAtLeast20(UscBestBlockHeightBeforeReceiveHeaders, UscBestBlockHeightAfterReceiveHeaders)){
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
                             startIndex = i+1;
-                            receiveHeaders(builder);
-
                             builder = new StringBuilder();
                         } catch (Exception ex) {
                             System.out.println(ex.getMessage());
@@ -136,10 +151,62 @@ public class SyncUldHeaders {
                     }
                 }
             }
-        } catch (Throwable t)
-        {
+        }
+        catch (Throwable t){
             t.printStackTrace();
         }
+    }
+
+    public static int getBestBlockHeight(String getBlockCount) throws IOException{
+        Runtime rt = Runtime.getRuntime();
+        Process proc = rt.exec(getBlockCount);
+
+        InputStream inStr = proc.getInputStream();
+        InputStreamReader isr = new InputStreamReader(inStr);
+        BufferedReader br = new BufferedReader(isr);
+        return Integer.parseInt(br.readLine());
+    }
+
+    public static String getBlockHashByHeight(String getBlockHash) throws IOException{
+        Runtime rt = Runtime.getRuntime();
+        Process proc = rt.exec(getBlockHash);
+        InputStream inStr = proc.getInputStream();
+        InputStreamReader isr = new InputStreamReader(inStr);
+        BufferedReader br = new BufferedReader(isr);
+        String line = br.readLine();
+        return line;
+    }
+
+    public static String getBlockHeaders(String getBlockHeader)throws IOException {
+        Runtime rt = Runtime.getRuntime();
+        Process proc = rt.exec(getBlockHeader);
+        InputStream inStr = proc.getInputStream();
+        InputStreamReader isr = new InputStreamReader(inStr);
+        BufferedReader br = new BufferedReader(isr);
+        String line = br.readLine();
+
+        return line;
+    }
+
+    public static void unlockFederationChangeAuthorizedKeys() throws  IOException{
+        String payloadUnlockAcc = "{" +
+                "\"jsonrpc\": \"2.0\", " +
+                "\"method\": \"personal_unlockAccount\", " +
+                "\"params\": [" +
+                "\"674f05e1916abc32a38f40aa67ae6b503b565999\"," +
+                "\"abcd1234\",\"\"" +
+                "], " +
+                "\"id\": \"1\"" +
+                "}";
+
+        StringEntity entityUnlockAcc = new StringEntity(payloadUnlockAcc,
+                ContentType.APPLICATION_JSON);
+
+        HttpClient httpClientUnlockAcc = HttpClientBuilder.create().build();
+        HttpPost requestUnlockAcc = new HttpPost(NetworkConstants.POST_URI);
+        requestUnlockAcc.setEntity(entityUnlockAcc);
+
+        HttpResponse responseUnlockAcc = httpClientUnlockAcc.execute(requestUnlockAcc);
     }
 
     private static String getReceiveHeadersString(String[] args) {
@@ -155,7 +222,7 @@ public class SyncUldHeaders {
     }
 
     //Call receiveHeaders of Bridge.
-    private static void receiveHeaders(StringBuilder builder) throws IOException {
+    private static String receiveHeaders(StringBuilder builder) throws IOException {
         String payload = "{" +
                 "\"jsonrpc\": \"2.0\", " +
                 "\"method\": \"eth_sendTransaction\", " +
@@ -180,23 +247,11 @@ public class SyncUldHeaders {
         String responseString = EntityUtils.toString(response.getEntity());
         JSONObject jsonObj = new JSONObject(responseString);
         String txHash = jsonObj.get("result").toString();
-        System.out.println("Transaction ID: " + txHash);
-        while(true){
-            //send new block headers once previous block headers are mined.
-            if(getTransactionByHash(txHash)){
-                txHash = null;
-                break;
-            }
-            try{
-                //sleep 30sec before new rpc call.
-                Thread.sleep(1000*30);
-            }catch (Exception ex){
-                System.err.println(ex.getMessage());
-            }
-        }
+        return txHash;
+
     }
 
-    private static Boolean getTransactionByHash(String txHash){
+    private static String getTransactionByHash(String txHash){
         String payload = "{" +
                 "\"jsonrpc\": \"2.0\", " +
                 "\"method\": \"eth_getTransactionByHash\", " +
@@ -218,7 +273,7 @@ public class SyncUldHeaders {
             JSONObject jsonObj = new JSONObject(responseString);
             String result = jsonObj.get("result").toString();
             if(result.equals("null")){
-                return false;
+                return "rejected";
             }
 
             jsonObj = new JSONObject(result);
@@ -227,12 +282,12 @@ public class SyncUldHeaders {
 
 
             if(!blockHash.equals("null") || !blockNumber.equals("null")){
-                return true;
+                return "mined";
             }
-            return false;
+            return "notMined";
         }catch(Exception ex){
             System.out.println(ex);
-            return false;
+            return "error";
         }
     }
 
@@ -266,4 +321,10 @@ public class SyncUldHeaders {
         }
     }
 
+    private static boolean isBlockHeightDifferenceAtLeast20(int UscBestBlockHeightBeforeReceiveHeaders, int UscBestBlockHeightAfterReceiveHeaders){
+        if((UscBestBlockHeightAfterReceiveHeaders - UscBestBlockHeightBeforeReceiveHeaders) >=20){
+            return true;
+        }
+        return false;
+    }
 }
