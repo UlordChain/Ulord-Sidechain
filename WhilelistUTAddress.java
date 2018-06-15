@@ -13,8 +13,6 @@ import java.math.BigInteger;
 
 public class WhilelistUTAddress {
 
-    private static int tries = 3;
-
     public static void main(String[] args) {
         BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
         Address utAddress = new Address(TestNet3Params.get(), "ubhhcfxeZ2VJRADHEx5uqUBJ1HTip8cfRS");
@@ -28,12 +26,10 @@ public class WhilelistUTAddress {
     }
 
     public static boolean whitelistAddress(BridgeConstants bridgeConstants, UscAddress whitelistAuthorisedAddress, String pwd, Address utAddress, Coin valueInSatoshi) {
-        tries = 3;
         return whitelistAddress(bridgeConstants, whitelistAuthorisedAddress.toString(), pwd, utAddress.toString(), BigInteger.valueOf(valueInSatoshi.value));
     }
 
     public static boolean whitelistAddress(BridgeConstants bridgeConstants, String whitelistAuthorisedAddress, String pwd, String utAddress, BigInteger valueInSatoshi) {
-        tries = 3;
         try {
             AddressBasedAuthorizer lockWhitelistChangeAuthorizer = bridgeConstants.getLockWhitelistChangeAuthorizer();
             if (!lockWhitelistChangeAuthorizer.isAuthorized(new UscAddress(whitelistAuthorisedAddress)))
