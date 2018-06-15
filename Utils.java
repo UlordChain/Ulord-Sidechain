@@ -218,6 +218,7 @@ public class Utils {
         return true;
     }
 
+<<<<<<< HEAD
     public static UldTransaction getUldTransaction(NetworkParameters params, String txId) throws IOException {
         String command = NetworkConstants.ULORD_CLI;
         if(params instanceof TestNet3Params)
@@ -230,5 +231,30 @@ public class Utils {
             return null;
 
         return new UldTransaction(params, Hex.decode(result));
+=======
+    public static int getUscBestBlockHeight(){
+        String payload = "{" +
+                "\"jsonrpc\":\"2.0\", " +
+                "\"method\":\"eth_blockNumber\", " +
+                "\"params\":[], " +
+                "\"id\":83" +
+                "}";
+
+        StringEntity entity = new StringEntity(payload,
+                ContentType.APPLICATION_JSON);
+
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost request = new HttpPost(NetworkConstants.POST_URI);
+        request.setEntity(entity);
+        try {
+            HttpResponse response = httpClient.execute(request);
+            String responseString = EntityUtils.toString(response.getEntity());
+            JSONObject jsonObj = new JSONObject(responseString);
+            return Integer.decode(jsonObj.get("result").toString());
+        }catch(Exception ex){
+            System.out.println(ex);
+            return 0;
+        }
+>>>>>>> e5d2b1540e8250cd510823e418d9f65699a999d6
     }
 }
