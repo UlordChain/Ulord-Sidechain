@@ -8,10 +8,11 @@ package tools;
 import co.usc.peg.Bridge;
 import co.usc.ulordj.core.Sha256Hash;
 import com.sun.istack.internal.NotNull;
+import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigInteger;
 
-public class Encode_eth_call {
+public class DataEncoder {
     private static final String NOT_IMPLEMENTED =  "This function is not implemented yet!";
     private static final String NOT_FOUND = "Function not found!";
 
@@ -127,7 +128,17 @@ public class Encode_eth_call {
             return "addLockWhitelistAddress <address> <value in satoshi>";
 
         BigInteger val = BigInteger.valueOf(Long.parseLong(args[2]));
-        return Sha256Hash.bytesToHex(Bridge.ADD_LOCK_WHITELIST_ADDRESS.encode(new Object[]{args[1], val}));
+        return encodeWhitelist(args[1], val);
+    }
+
+    /**
+     * Encodes addLockWhitelistAddress function with its parameters
+     * @param address to whitelist
+     * @param valueInSatoshi the max amount allowed to transfer
+     * @return encoded string of function signature and its parameters
+     */
+    public static String encodeWhitelist(String address, BigInteger valueInSatoshi) {
+        return Hex.toHexString(Bridge.ADD_LOCK_WHITELIST_ADDRESS.encode(new Object[] {address, valueInSatoshi}));
     }
 }
 

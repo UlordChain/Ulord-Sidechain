@@ -35,14 +35,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
 
-public class ReleaseUT {
+public class ReleaseUTTransaction {
 
     private static String ulordCommand = "";
     private static UldECKey federationKey = null;
@@ -82,7 +80,7 @@ public class ReleaseUT {
                         "\"method\": \"eth_call\", " +
                         "\"params\": [{" +
                         "\"to\": \"" + PrecompiledContracts.BRIDGE_ADDR_STR + "\"," +
-                        "\"data\": \"" + Sha256Hash.bytesToHex(function.encodeSignature()) + "\"},\"latest\"]," +
+                        "\"data\": \"" + Hex.toHexString(function.encodeSignature()) + "\"},\"latest\"]," +
                         "\"id\": \"1\"" +
                         "}";
 
@@ -108,22 +106,23 @@ public class ReleaseUT {
                 for (Map.Entry<Keccak256, UldTransaction> entry : uscTxsWaitingForSignatures.entrySet()) {
                     Keccak256 key = entry.getKey();
                     UldTransaction utTx = entry.getValue();
+
                     // Check there are at least N blocks on top of the supplied transaction
                     if(!validateTxDepth(key, bridgeConstants)) { continue; }
 
                     String signResult = signRawTransaction(utTx, bridgeConstants, params);
 
-
                     jsonObject = new JSONObject(signResult);
                     String complete = jsonObject.get("complete").toString();
                     String rawUtTxHex = jsonObject.get("hex").toString();
 
-                    addSignatureToUSC(key, utTx, params);   // addSignatures in Bridge.java
+                    System.out.println(addSignatureToUSC(key, utTx, params));   // addSignatures in Bridge.java
 
                     if(complete.equals("true")) {
 
                         // Send Raw Transaction
-                        String sendTxResult = sendRawTransaction(jsonObject.get("hex").toString());
+                        String sendTxResult = sendRawTransaction(rawUtTxHex);
+
                         if(sendTxResult.contains("error")) {
                             String[] messages = sendTxResult.split(":");
                             if(messages[messages.length - 1].contains("transaction already in block chain")) {
@@ -158,18 +157,12 @@ public class ReleaseUT {
         }
     }
 
-    private static void addSignatureToUSC(Keccak256 uscTxHash, UldTransaction utTx, NetworkParameters params) throws IOException {
+    private static String addSignatureToUSC(Keccak256 uscTxHash, UldTransaction utTx, NetworkParameters params) throws IOException {
         // Requires
         // 1. Federator Public Key  -   federationPublicKey
         // 2. Signatures
         // 3. Usc Tx hash   -   key
 
-
-        //String txJSONStr = decodeTxToJSONString(Sha256Hash.hexStringToByteArray(rawTxHex), params);
-        //JSONObject jsonObject = new JSONObject(txJSONStr);
-        //String signature = jsonObject.getJSONArray("vin").getJSONObject(0).getJSONObject("scriptSig").get("hex").toString();
-
-        List<UldECKey.ECDSASignature> ecdsaSignatures = new ArrayList<>();
         int numInputs = utTx.getInputs().size();
         byte[][] signatures = new byte[numInputs][];
         for(int i = 0; i < numInputs; ++i) {
@@ -191,7 +184,7 @@ public class ReleaseUT {
                 "\"to\": \"" + PrecompiledContracts.BRIDGE_ADDR_STR + "\"," +
                 "\"gas\": \"0x3D0900\"," +
                 "\"gasPrice\": \"0x9184e72a000\"," +
-                "\"data\": \"" + Sha256Hash.bytesToHex(function.encode(federationKey.getPubKey(), signatures, uscTxHash.getBytes())) + "\"}]," +
+                "\"data\": \"" + Hex.toHexString(function.encode(federationKey.getPubKey(), signatures, uscTxHash.getBytes())) + "\"}]," +
                 "\"id\": \"1\"" +
                 "}";
         System.out.println(rpcCall);
@@ -200,11 +193,8 @@ public class ReleaseUT {
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost(NetworkConstants.POST_URI);
         httpPost.setEntity(entity);
-
         HttpResponse response = httpClient.execute(httpPost);
-        System.out.println(response.getStatusLine());
-
-
+        return EntityUtils.toString(response.getEntity());
     }
 
     private static String signRawTransaction(UldTransaction tx, BridgeConstants bridgeConstants, NetworkParameters params)
@@ -216,12 +206,12 @@ public class ReleaseUT {
         int vout = getVout(txId, params);
         String scriptPubKey = getScriptPubKey(vout, txId, params);
         signRawTransaction +=
-                " '" + Sha256Hash.bytesToHex(tx.ulordSerialize()) + "'" +
+                " '" + Hex.toHexString(tx.ulordSerialize()) + "'" +
                         " '[{" +
                             " \"txid\":"         + "\"" + txId + "\"," +
                             " \"vout\":"         + vout + ","+
                             " \"scriptPubKey\":" + "\"" + scriptPubKey + "\"," +
-                            " \"redeemScript\":" + "\"" + Sha256Hash.bytesToHex(tx.getInput(0).getScriptSig().getChunks().get(2).data) + "\"" +
+                            " \"redeemScript\":" + "\"" + Hex.toHexString(tx.getInput(0).getScriptSig().getChunks().get(2).data) + "\"" +
                         "}]'"  +
                         " '["  +
                             "\"" + getPrivateKey(bridgeConstants, params) +"\"" +
@@ -235,7 +225,7 @@ public class ReleaseUT {
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-        return BufferedReaderToString(bufferedReader);
+        return Utils.BufferedReaderToString(bufferedReader);
     }
 
     private static String sendRawTransaction(String hex) throws IOException {
@@ -249,13 +239,13 @@ public class ReleaseUT {
         InputStream inputStream = proc.getInputStream();
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        String result = BufferedReaderToString(bufferedReader);
+        String result = Utils.BufferedReaderToString(bufferedReader);
 
         if(result.equals("")) {
             inputStream = proc.getErrorStream();
             inputStreamReader = new InputStreamReader(inputStream);
             bufferedReader = new BufferedReader(inputStreamReader);
-            result = BufferedReaderToString(bufferedReader);
+            result = Utils.BufferedReaderToString(bufferedReader);
         }
 
         return result;
@@ -263,7 +253,7 @@ public class ReleaseUT {
 
     private static String getScriptPubKey(int vout, String txId, NetworkParameters params) throws IOException {
         String txJSONString = getRawTransaction(txId, params);
-        JSONObject jsonObject = new JSONObject(decodeTxToJSONString(Sha256Hash.hexStringToByteArray(txJSONString), params));
+        JSONObject jsonObject = new JSONObject(decodeTxToJSONString(Hex.decode(txJSONString), params));
         JSONArray voutObjects = jsonObject.getJSONArray("vout");
         for(int i = 0; i < voutObjects.length(); ++i) {
             int n = Integer.parseInt(voutObjects.getJSONObject(i).get("n").toString());
@@ -274,13 +264,7 @@ public class ReleaseUT {
         return null;
     }
 
-    private static String BufferedReaderToString(BufferedReader br) throws IOException {
-        String tempData, data = "";
 
-        while((tempData = br.readLine()) != null)
-            data += tempData;
-        return data;
-    }
 
     private static String getRawTransaction(String txId, NetworkParameters params) throws IOException {
         String getRawTransaction = ulordCommand + " getrawtransaction " + txId;
@@ -290,7 +274,7 @@ public class ReleaseUT {
         InputStream inputStream = proc.getInputStream();
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        return BufferedReaderToString(bufferedReader);
+        return Utils.BufferedReaderToString(bufferedReader);
     }
 
     private static int getVout(String txId, NetworkParameters params) throws IOException {
@@ -342,7 +326,7 @@ public class ReleaseUT {
             key = bufferedReader.readLine();
             if(key != null) {
                 privateKeyFound = true;
-                federationKey = convertWifToPrivateKey(key, pubKey, params);
+                federationKey = Utils.convertWifToPrivateKey(key, pubKey, params);
                 break;
             }
         }
@@ -350,33 +334,6 @@ public class ReleaseUT {
             throw new PrivateKeyNotFoundException();
 
         return key;
-    }
-
-    private static UldECKey convertWifToPrivateKey(String key, UldECKey pubKey, NetworkParameters params) {
-        String keyHex = Hex.toHexString(Base58.decode(key));
-        keyHex = keyHex.substring(0, keyHex.length() - 8);
-
-        int privKeyHeader = new BigInteger(keyHex.substring(0,2), 16).intValue();
-        if(privKeyHeader == params.getDumpedPrivateKeyHeader()) {
-            keyHex = keyHex.substring(2, keyHex.length());
-        }
-
-        int lastValue = new BigInteger(keyHex.substring(keyHex.length() -2, keyHex.length()), 16).intValue();
-
-        if(lastValue == 1)
-            keyHex = keyHex.substring(0, keyHex.length() - 2);
-
-        return UldECKey.fromPrivate(new BigInteger(keyHex, 16));
-    }
-
-    private static String convertPrivateKeyToWif(String keyHex, NetworkParameters params) {
-        StringBuilder privKey = new StringBuilder();
-        privKey.append(BigInteger.valueOf(params.getDumpedPrivateKeyHeader()).toString(16));
-        privKey.append(keyHex);
-        privKey.append("01");
-        String hash = Hex.toHexString(Sha256Hash.hashTwice(Hex.decode(privKey.toString())));
-        privKey.append(hash.substring(0,8));
-        return Base58.encode(Hex.decode(privKey.toString()));
     }
 
     private static String decodeTxToJSONString(byte[] tx, NetworkParameters params) throws IOException {
@@ -390,7 +347,7 @@ public class ReleaseUT {
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-        return BufferedReaderToString(bufferedReader);
+        return Utils.BufferedReaderToString(bufferedReader);
     }
 
     private static String getUtTxId(UldTransaction tx, NetworkParameters params) throws IOException {
