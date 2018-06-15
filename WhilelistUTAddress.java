@@ -7,17 +7,8 @@ import co.usc.peg.AddressBasedAuthorizer;
 import co.usc.ulordj.core.Address;
 import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.params.TestNet3Params;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.ethereum.vm.PrecompiledContracts;
-import org.json.JSONObject;
 
-import java.io.IOException;
 import java.math.BigInteger;
 
 public class WhilelistUTAddress {
@@ -54,7 +45,7 @@ public class WhilelistUTAddress {
 
             String encodedCmd = DataEncoder.encodeWhitelist(utAddress, valueInSatoshi);
 
-            if(sendTransaction(whitelistAuthorisedAddress, encodedCmd))
+            if(Utils.sendTransaction(whitelistAuthorisedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, encodedCmd, null, 3))
                 return true;
 
             return false;
@@ -62,45 +53,5 @@ public class WhilelistUTAddress {
             System.out.println(e);
             return false;
         }
-    }
-
-    private static boolean sendTransaction(String whitelistAuthorisedAddress, String encodedCmd) throws IOException, InterruptedException {
-        if(tries < 0)
-            return false;
-        tries--;
-        String rpcCall = "{" +
-                "\"jsonrpc\":\"2.0\", " +
-                " \"method\":\"eth_sendTransaction\", " +
-                " \"params\":[{" +
-                " \"from\":\"" + whitelistAuthorisedAddress + "\"," +
-                " \"to\":\"" + PrecompiledContracts.BRIDGE_ADDR_STR + "\"," +
-                " \"gas\":\"0x3D0900\"," +
-                " \"gasPrice\": \"0x9184e72a000\"," +
-                " \"data\":\"" + encodedCmd + "\"}]," +
-                " \"id\":\"1\"" +
-                "}";
-        System.out.println(rpcCall);
-
-        StringEntity entity = new StringEntity(rpcCall, ContentType.APPLICATION_JSON);
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost httpPost = new HttpPost(NetworkConstants.POST_URI);
-        httpPost.setEntity(entity);
-        HttpResponse response = httpClient.execute(httpPost);
-
-        JSONObject jsonObject = new JSONObject(EntityUtils.toString(response.getEntity()));
-
-        String txId = jsonObject.get("result").toString();
-        System.out.println(txId);
-
-        Thread.sleep(1000);
-        if (!Utils.isTransactionInMemPool(txId))
-            sendTransaction(whitelistAuthorisedAddress, encodedCmd);
-
-        while (!Utils.isTransactionMined(txId)) {
-            if(!Utils.isTransactionInMemPool(txId))
-                sendTransaction(whitelistAuthorisedAddress, encodedCmd);
-            Thread.sleep(1000 * 10);
-        }
-        return true;
     }
 }

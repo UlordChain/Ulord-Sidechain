@@ -19,6 +19,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -147,5 +148,74 @@ public class Utils {
             System.out.println(ex);
             return false;
         }
+    }
+
+    public static boolean sendTransaction(String from,
+                                           @Nullable String to,
+                                           @Nullable String gas,
+                                           @Nullable String gasPrice,
+                                           @Nullable String value,
+                                           @Nullable String data,
+                                           @Nullable String nonce,
+                                           int tries)
+            throws IOException, InterruptedException {
+
+        if(tries < 0)
+            return false;
+
+        StringBuilder call = new StringBuilder();
+        call.append("{");
+        call.append("\"jsonrpc\":\"2.0\",   ");
+
+        if(to != null)
+            call.append("\"id\":\"1\",      ");
+
+        call.append("\"method\":\"eth_sendTransaction\",    ");
+        call.append("\"params\":[{"     );
+        call.append("\"from\":\"" + from + "\",    ");
+
+        if(to != null)
+            call.append("\"to\":\"" + to + "\",     ");
+
+        if(gas != null)
+            call.append("\"gas\":\"" + gas + "\",     ");
+
+        if(gasPrice != null)
+            call.append("\"gasPrice\":\"" + gasPrice +"\",      ");
+
+        if(value != null)
+            call.append("\"value\":\"" + value + "\",      ");
+
+        if(nonce != null)
+            call.append("\"nonce\":\"" + nonce + "\",      ");
+
+        if(data != null)
+            call.append("\"data\":\"" + data);
+
+        call.append("\"}]}");
+
+        System.out.println(call.toString());
+
+        StringEntity entity = new StringEntity(call.toString(), ContentType.APPLICATION_JSON);
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost httpPost = new HttpPost(NetworkConstants.POST_URI);
+        httpPost.setEntity(entity);
+        HttpResponse response = httpClient.execute(httpPost);
+
+        JSONObject jsonObject = new JSONObject(EntityUtils.toString(response.getEntity()));
+
+        String txId = jsonObject.get("result").toString();
+        System.out.println(txId);
+
+        Thread.sleep(1000);
+        if (!Utils.isTransactionInMemPool(txId))
+            sendTransaction(from, to, gas, gasPrice, value, data, nonce, --tries);
+
+        while (!Utils.isTransactionMined(txId)) {
+            if(!Utils.isTransactionInMemPool(txId))
+                sendTransaction(from, to, gas, gasPrice, value, data, nonce, --tries);
+            Thread.sleep(1000 * 10);
+        }
+        return true;
     }
 }
