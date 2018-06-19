@@ -318,8 +318,22 @@ public class SyncUlordHeaders {
                 "\"id\": \"666\"" +
                 "}";
 
-        BufferedReader br = getResponse(payloadUSCBlockNumber);
-        return Integer.parseInt(br.readLine());
+        StringEntity entity = new StringEntity(payloadUSCBlockNumber,
+                ContentType.APPLICATION_JSON);
+
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost request = new HttpPost(NetworkConstants.POST_URI);
+        request.setEntity(entity);
+
+        try {
+            HttpResponse response = httpClient.execute(request);
+            String responseString = EntityUtils.toString(response.getEntity());
+            JSONObject jsonObj = new JSONObject(responseString);
+            return Integer.decode(jsonObj.get("result").toString());
+        }catch(Exception ex){
+            System.out.println(ex);
+            return 0;
+        }
     }
 
     public static BufferedReader getResponse(String request) throws IOException{
