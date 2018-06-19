@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.SortedMap;
 
 
-public class ReleaseUTTransaction {
+public class ReleaseUlordTransaction {
 
     private static String ulordCommand = "";
     private static UldECKey federationKey = null;

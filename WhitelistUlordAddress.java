@@ -11,7 +11,7 @@ import org.ethereum.vm.PrecompiledContracts;
 
 import java.math.BigInteger;
 
-public class WhitelistUTAddress {
+public class WhitelistUlordAddress {
 
     public static void main(String[] args) {
         BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();

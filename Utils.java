@@ -6,7 +6,6 @@
 package tools;
 
 import co.usc.ulordj.core.*;
-import co.usc.ulordj.params.TestNet3Params;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -20,8 +19,6 @@ import org.spongycastle.util.encoders.Hex;
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.math.BigInteger;
 
 public class Utils {
@@ -87,7 +84,7 @@ public class Utils {
         return false;
     }
 
-    public static boolean isTransactionInMemPool(String txId) throws IOException {
+    public static boolean isTransactionInMemPool(String txId) {
         String payload = "{" +
                 "\"jsonrpc\": \"2.0\", " +
                 "\"method\": \"eth_getTransactionByHash\", " +
@@ -117,7 +114,7 @@ public class Utils {
         }
     }
 
-    public static boolean isTransactionMined(String txId) throws IOException {
+    public static boolean isTransactionMined(String txId) {
         String payload = "{" +
                 "\"jsonrpc\": \"2.0\", " +
                 "\"method\": \"eth_getTransactionByHash\", " +
@@ -216,21 +213,6 @@ public class Utils {
             Thread.sleep(1000 * 10);
         }
         return true;
-    }
-
-
-    public static UldTransaction getUldTransaction(NetworkParameters params, String txId) throws IOException {
-        String command = NetworkConstants.ULORD_CLI;
-        if (params instanceof TestNet3Params)
-            command = command.concat(NetworkConstants.ULORD_TESTNET);
-
-        command = command.concat(" getrawtransaction " + txId);
-        String result = UlordCliExecutor.execute(command);
-
-        if (result.contains("error"))
-            return null;
-
-        return new UldTransaction(params, Hex.decode(result));
     }
 
     public static int getUscBestBlockHeight(){

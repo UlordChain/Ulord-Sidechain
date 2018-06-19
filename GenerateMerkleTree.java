@@ -6,8 +6,10 @@
 package tools;
 
 import co.usc.ulordj.core.*;
+import co.usc.ulordj.core.Utils;
 import co.usc.ulordj.params.TestNet3Params;
 import com.sun.istack.internal.NotNull;
+import org.spongycastle.util.encoders.Hex;
 import org.spongycastle.util.test.Test;
 
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class GenerateMerkleTree {
             return;
         }
 
-        UldBlock block = new UldBlock(params , Sha256Hash.hexStringToByteArray(args[0]));
+        UldBlock block = new UldBlock(params , Hex.decode(args[0]));
         Sha256Hash txToInclude = new Sha256Hash(args[1]);
         List<UldTransaction> txs = block.getTransactions();
         List<Sha256Hash> txHashes = new ArrayList<>(txs.size());
@@ -41,13 +43,20 @@ public class GenerateMerkleTree {
             txHashes.add(tx.getHash());
         }
 
-        PartialMerkleTree tree = buildMerkleBranch(txHashes, txToInclude, block.getParams());
+        PartialMerkleTree tree = buildMerkleBranch(block, txToInclude);
         byte[] treebytes = tree.ulordSerialize();
 
         System.out.println(Sha256Hash.bytesToHex(treebytes).toLowerCase());
     }
 
-    private static PartialMerkleTree buildMerkleBranch(List<Sha256Hash> txHashes, Sha256Hash txToInclude, NetworkParameters params) {
+    public static PartialMerkleTree buildMerkleBranch(UldBlock block, Sha256Hash txToInclude) {
+
+        List<UldTransaction> txs = block.getTransactions();
+        List<Sha256Hash> txHashes = new ArrayList<>(txs.size());
+
+        for (UldTransaction tx : txs) {
+            txHashes.add(tx.getHash());
+        }
 
         int index = 0;
         for(Sha256Hash hash : txHashes) {
