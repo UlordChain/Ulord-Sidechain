@@ -19,7 +19,9 @@
 package tools;
 
 import co.usc.peg.Bridge;
+import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.core.Sha256Hash;
+import co.usc.ulordj.params.TestNet3Params;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -51,33 +53,15 @@ public class SyncUlordHeaders {
             while(getUSCBlockNumber() <=60) {
                 Thread.sleep(1000*30);
             }
-
+            NetworkParameters params = TestNet3Params.get();
             //Start Syncing Ulord Headers.
             while(true) {
-                StringBuilder getBlockCount = new StringBuilder();
-                StringBuilder getBlockHash = new StringBuilder();
-                StringBuilder getBlockHeader = new StringBuilder();
-
-                getBlockCount.append(NetworkConstants.ULORD_CLI);
-                getBlockHash.append(NetworkConstants.ULORD_CLI);
-                getBlockHeader.append(NetworkConstants.ULORD_CLI);
-
-                if (args.length > 0 && args[0].equals("testnet")) {
-                    getBlockCount.append(NetworkConstants.ULORD_TESTNET);
-                    getBlockHash.append(NetworkConstants.ULORD_TESTNET);
-                    getBlockHeader.append(NetworkConstants.ULORD_TESTNET);
-                }
-
-                getBlockCount.append(" getblockcount");
-                getBlockHash.append(" getblockhash");
-                getBlockHeader.append(" getblockheader");
-
                 int startIndex = getUldBlockChainBestChainHeight() + 1;
 
-                //We keep the block headers in USC 24 blocks behind Ulord
-                //Approx 1hr behind ulord blocks.
-                //getBlockCount = gets the ulord best block height - 24.
-                int blockCount = getBestBlockHeight(getBlockCount.toString()) - 24;
+                //Keep the ulord block headers in USC 24 blocks behind actual Ulord block headers.
+                //Approx 1hr behind ulord blockchain.
+                //blockCount = gets the ulord best block height - 24.
+                int blockCount = Integer.parseInt(UlordCli.getBlockCount(params)) - 24;
 
                 if((blockCount < startIndex)){
                     Thread.sleep((long)(1000*60*2.5)); //sleep for 2.5min.
@@ -87,10 +71,10 @@ public class SyncUlordHeaders {
                 String line = null;
                 for (int i = startIndex; i <= blockCount; ++i) {
                     //getBlockHash gets the block hash for the given height.
-                    line = getBlockHashByHeight(getBlockHash.toString() + " " + i);
+                    line = UlordCli.getBlockHash(params,i);
 
                     //getBlockHeader gets the block header for the given block hash.
-                    line = getBlockHeaders(getBlockHeader.toString() + " " + line + " false");
+                    line = UlordCli.getBlockHeader(params, line, false);
 
                     if (line != null) {
                         builder.append(line);
@@ -163,23 +147,6 @@ public class SyncUlordHeaders {
         }
     }
 
-    public static int getBestBlockHeight(String getBlockCount) throws IOException{
-        BufferedReader br = getResponse(getBlockCount);
-        return Integer.parseInt(br.readLine());
-    }
-
-    public static String getBlockHashByHeight(String getBlockHash) throws IOException{
-        BufferedReader br = getResponse(getBlockHash);
-        String line = br.readLine();
-        return line;
-    }
-
-    public static String getBlockHeaders(String getBlockHeader)throws IOException {
-        BufferedReader br = getResponse(getBlockHeader);
-        String line = br.readLine();
-        return line;
-    }
-
     public static void unlockFederationChangeAuthorizedKeys() throws  IOException{
         String payloadUnlockAcc = "{" +
                 "\"jsonrpc\": \"2.0\", " +
@@ -201,18 +168,6 @@ public class SyncUlordHeaders {
         HttpResponse responseUnlockAcc = httpClientUnlockAcc.execute(requestUnlockAcc);
     }
 
-    private static String getReceiveHeadersString(String[] args) {
-        if(args.length < 2)
-            return "receiveHeaders <headers seperated by space>";
-
-        byte[][] blocks = new byte[args.length - 1][140];
-        for(int i = 0; i < args.length - 1; ++i) {
-            byte[] b = Sha256Hash.hexStringToByteArray(args[i + 1]);
-            blocks[i] = b;
-        }
-        return Sha256Hash.bytesToHex((Bridge.RECEIVE_HEADERS.encode(new Object[]{blocks})));
-    }
-
     //Call receiveHeaders of Bridge.
     private static String receiveHeaders(StringBuilder builder) throws IOException {
         String payload = "{" +
@@ -223,7 +178,7 @@ public class SyncUlordHeaders {
                 "\"to\": \"0x0000000000000000000000000000000001000006\"," +
                 "\"gas\": \"0x3D0900\"," +
                 "\"gasPrice\": \"0x9184e72a000\"," +
-                "\"data\": \"" + getReceiveHeadersString(builder.toString().split(" ")) + "\"}]," +
+                "\"data\": \"" + DataEncoder.getReceiveHeadersString(builder.toString().split(" ")) + "\"}]," +
                 "\"id\": \"1\"" +
                 "}";
 
@@ -335,16 +290,6 @@ public class SyncUlordHeaders {
             System.out.println(ex);
             return 0;
         }
-    }
-
-    public static BufferedReader getResponse(String request) throws IOException{
-        Runtime rt = Runtime.getRuntime();
-        Process proc = rt.exec(request);
-
-        InputStream inStr = proc.getInputStream();
-        InputStreamReader isr = new InputStreamReader(inStr);
-        BufferedReader br = new BufferedReader(isr);
-        return br;
     }
 
     private static boolean isBlockHeightDifferenceAtLeast20(int UscBestBlockHeightBeforeReceiveHeaders, int UscBestBlockHeightAfterReceiveHeaders){

@@ -3,6 +3,7 @@ package tools;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.params.TestNet3Params;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 
 public class UlordCli {
@@ -14,6 +15,20 @@ public class UlordCli {
 
     public static String getBlock(NetworkParameters params, String hash, boolean jsonFormat) throws IOException {
         String res = UlordCliExecutor.execute(getNetworkCommand(params) + " getblock " + hash + " "  + String.valueOf(jsonFormat));
+        return res;
+    }
+
+    public static String getBlockHash(NetworkParameters params, int height) throws IOException {
+        String res = UlordCliExecutor.execute(getNetworkCommand(params) + " getblockhash "+ height);
+        return res;
+    }
+
+    public static String getBlockHeader(NetworkParameters params, String hash) throws IOException {
+        return getBlockHeader(params, hash, true);
+    }
+
+    public static String getBlockHeader(NetworkParameters params, String hash, boolean verbose) throws IOException {
+        String res = UlordCliExecutor.execute(getNetworkCommand(params) + " getblockheader "+ hash +" "+ verbose);
         return res;
     }
 
