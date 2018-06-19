@@ -2,6 +2,7 @@ package tools;
 
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.params.TestNet3Params;
+import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,6 +18,17 @@ public class MonitorUlordFederationsUtxos {
             for(int i = 0; i < jsonArray.length(); ++i) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String txid = jsonObject.get("txid").toString();
+
+                // Check if the ulord transaction is already processed in USC
+                String data = DataEncoder.encodeIsUldTxHashAlreadyProcessed(txid);
+                JSONObject jsObj =  new JSONObject(UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, data));
+                String result = jsObj.get("result").toString();
+                if(result.substring(result.length()-1, result.length()).equals("1"))
+                    return;
+
+                // Here we can register Ulord transactions in USC
+
+
             }
         } catch (Exception e) {
             System.out.println(e);

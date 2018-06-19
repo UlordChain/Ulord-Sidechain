@@ -8,6 +8,7 @@ package tools;
 import co.usc.config.BridgeConstants;
 import co.usc.config.BridgeMainNetConstants;
 import co.usc.config.BridgeTestNetConstants;
+import co.usc.core.Usc;
 import co.usc.crypto.Keccak256;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeSerializationUtils;
@@ -74,24 +75,10 @@ public class ReleaseUlordTransaction {
             try {
                 //  web3.eth.call({data:"0B851400",to:"0x0000000000000000000000000000000001000006"})
                 CallTransaction.Function function = Bridge.GET_STATE_FOR_ULD_RELEASE_CLIENT;
-                String rpcCall = "{" +
-                        "\"jsonrpc\": \"2.0\", " +
-                        "\"method\": \"eth_call\", " +
-                        "\"params\": [{" +
-                        "\"to\": \"" + PrecompiledContracts.BRIDGE_ADDR_STR + "\"," +
-                        "\"data\": \"" + Hex.toHexString(function.encodeSignature()) + "\"},\"latest\"]," +
-                        "\"id\": \"1\"" +
-                        "}";
 
-                StringEntity entity = new StringEntity(rpcCall, ContentType.APPLICATION_JSON);
+                String response = UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, Hex.toHexString(function.encodeSignature()));
 
-                HttpClient httpClient = HttpClientBuilder.create().build();
-                HttpPost request = new HttpPost(NetworkConstants.POST_URI);
-                request.setEntity(entity);
-
-                HttpResponse response = httpClient.execute(request);
-                String responseStr = EntityUtils.toString(response.getEntity());
-                JSONObject jsonObject = new JSONObject(responseStr);
+                JSONObject jsonObject = new JSONObject(response);
 
                 String result = jsonObject.get("result").toString();
                 String resultSub = result.substring(2, result.length());
@@ -177,7 +164,7 @@ public class ReleaseUlordTransaction {
         CallTransaction.Function function = Bridge.ADD_SIGNATURE;
         String rpcCall = "{" +
                 "\"jsonrpc\": \"2.0\", " +
-                "\"method\": \"eth_sendTransaction\", " +  // Change it to eth_sendTransaction after testing.
+                "\"method\": \"eth_sendTransaction\", " +
                 "\"params\": [{" +
                 "\"from\": \"" + "674f05e1916abc32a38f40aa67ae6b503b565999" + "\"," +
                 "\"to\": \"" + PrecompiledContracts.BRIDGE_ADDR_STR + "\"," +
@@ -267,6 +254,7 @@ public class ReleaseUlordTransaction {
         return vout;
     }
 
+    // Todo: Call dumpprivkey from UlordCli.java
     private static String getPrivateKey(BridgeConstants bridgeConstants, NetworkParameters params)
             throws IOException, PrivateKeyNotFoundException {
 
@@ -280,6 +268,7 @@ public class ReleaseUlordTransaction {
         for(UldECKey pubKey : publicKeys) {
             pubKey.toAddress(params);
             String rpc = dumpPrivKey + pubKey.toAddress(params).toString();
+
             Runtime runtime = Runtime.getRuntime();
             Process proc = runtime.exec(rpc);
 
@@ -316,42 +305,13 @@ public class ReleaseUlordTransaction {
      */
     private static boolean validateTxDepth(Keccak256 key, BridgeConstants bridgeConstants) throws IOException {
 
-        String rpcCall = "{" +
-                "\"jsonrpc\": \"2.0\", " +
-                "\"method\": \"eth_getTransactionByHash\", " +
-                "\"params\": [\"" +
-                        key.toHexString() +
-                    "\"]," +
-                "\"id\": \"1\"" +
-                "}";
-        StringEntity entity = new StringEntity(rpcCall, ContentType.APPLICATION_JSON);
-
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost(NetworkConstants.POST_URI);
-        request.setEntity(entity);
-
-        HttpResponse response = httpClient.execute(request);
-        String responseStr = EntityUtils.toString(response.getEntity());
-        JSONObject jsonObject = new JSONObject(responseStr);
+        JSONObject jsonObject = new JSONObject(UscRpc.getTransactionByHash(key.toHexString()));
 
         String result = jsonObject.get("result").toString();
         jsonObject = new JSONObject(result);
         int txBlockNumber = Integer.decode(jsonObject.get("blockNumber").toString());
 
-        rpcCall = "{" +
-                "\"jsonrpc\": \"2.0\", " +
-                "\"method\": \"eth_blockNumber\", " +
-                "\"params\": []," +
-                "\"id\": \"1\"" +
-                "}";
-        entity = new StringEntity(rpcCall, ContentType.APPLICATION_JSON);
-        request = new HttpPost(NetworkConstants.POST_URI);
-        request.setEntity(entity);
-        httpClient = HttpClientBuilder.create().build();
-        response = httpClient.execute(request);
-        responseStr = EntityUtils.toString(response.getEntity());
-
-        jsonObject = new JSONObject(responseStr);
+        jsonObject = new JSONObject(UscRpc.blockNumber());
         int currentBlockNumber = Integer.decode(jsonObject.get("result").toString());
 
         if((currentBlockNumber - txBlockNumber) > bridgeConstants.getUsc2UldMinimumAcceptableConfirmations())

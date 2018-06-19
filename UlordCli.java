@@ -60,4 +60,8 @@ public class UlordCli {
         }
         return UlordCliExecutor.execute(getNetworkCommand(params) + " getaddressutxos '{\"addresses\":[" + adds + "]}'");
     }
+
+    public static String dumpPrivKey(NetworkParameters params,  String address) throws  IOException {
+        return UlordCliExecutor.execute(getNetworkCommand(params) + " dumpprivkey " + address);
+    }
 }

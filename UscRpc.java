@@ -1,6 +1,8 @@
 package tools;
 
+import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -96,8 +98,28 @@ public class UscRpc {
         String cmd = "{" +
                 "\"jsonrpc\":\"2.0\", " +
                 "\"method\":\"eth_blockNumber\", " +
-                "\"params\":[], " +
-                "\"id\":83" +
+                "\"id\":83, " +
+                "\"params\":[]}";
+        return UscRpcExecutor.execute(cmd);
+    }
+
+    public static String call(String to, String data) throws IOException {
+        String cmd = "{" +
+                "\"jsonrpc\": \"2.0\", " +
+                "\"method\": \"eth_call\", " +
+                "\"id\": \"1\", " +
+                "\"params\": [{" +
+                "\"to\": \"" + to + "\"," +
+                "\"data\": \"" + data + "\"},\"latest\"]}";
+        return UscRpcExecutor.execute(cmd);
+    }
+
+    public static String blockNumber() throws  IOException {
+        String cmd = "{" +
+                "\"jsonrpc\": \"2.0\", " +
+                "\"method\": \"eth_blockNumber\", " +
+                "\"id\": \"1\"," +
+                "\"params\": []" +
                 "}";
         return UscRpcExecutor.execute(cmd);
     }
