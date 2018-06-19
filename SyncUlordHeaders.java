@@ -38,7 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class SyncUTHeaders {
+public class SyncUlordHeaders {
 
     public static void main(String []args){
         prepareAndCallReceiveHeadersRPC(args);
@@ -47,6 +47,12 @@ public class SyncUTHeaders {
     public static void prepareAndCallReceiveHeadersRPC(String []args){
         try
         {
+            //Do not sync Ulord Headers if USC Blockchain has less than 60 blocks mined.
+            while(getUSCBlockNumber() <=60) {
+                Thread.sleep(1000*30);
+            }
+
+            //Start Syncing Ulord Headers.
             while(true) {
                 StringBuilder getBlockCount = new StringBuilder();
                 StringBuilder getBlockHash = new StringBuilder();
@@ -99,11 +105,11 @@ public class SyncUTHeaders {
 
                             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                             Date date = new Date();
-                            System.out.println(dateFormat.format(date) +": UT Block headers from " + (startIndex) + " to " + i + " sent to USC.");
+                            System.out.println(dateFormat.format(date) +": Ulord Block headers from " + (startIndex) + " to " + i + " sent to USC.");
 
 
                             int UscBestBlockHeightBeforeReceiveHeaders = Utils.getUscBestBlockHeight();
-                            //Receive ULD Headers and create a transaction on USC.
+                            //Receive Ulord Headers and create a transaction on USC.
                             String txHash = receiveHeaders(builder);
 
                             System.out.println("Transaction ID: " + txHash);
@@ -130,7 +136,7 @@ public class SyncUTHeaders {
                                 }
                                 else if(txStatus.equals("rejected")){
                                     //in case transaction is not mined and rejected recreate the transaction.
-                                    System.out.println(dateFormat.format(date) +": UT Block headers from " + (startIndex) + " to " + i + " sent to USC.");
+                                    System.out.println(dateFormat.format(date) +": Ulord Block headers from " + (startIndex) + " to " + i + " sent to USC.");
                                     UscBestBlockHeightBeforeReceiveHeaders = Utils.getUscBestBlockHeight();
                                     txHash = receiveHeaders(builder);
                                     System.out.println("Transaction ID: " + txHash);
@@ -158,31 +164,18 @@ public class SyncUTHeaders {
     }
 
     public static int getBestBlockHeight(String getBlockCount) throws IOException{
-        Runtime rt = Runtime.getRuntime();
-        Process proc = rt.exec(getBlockCount);
-
-        InputStream inStr = proc.getInputStream();
-        InputStreamReader isr = new InputStreamReader(inStr);
-        BufferedReader br = new BufferedReader(isr);
+        BufferedReader br = getResponse(getBlockCount);
         return Integer.parseInt(br.readLine());
     }
 
     public static String getBlockHashByHeight(String getBlockHash) throws IOException{
-        Runtime rt = Runtime.getRuntime();
-        Process proc = rt.exec(getBlockHash);
-        InputStream inStr = proc.getInputStream();
-        InputStreamReader isr = new InputStreamReader(inStr);
-        BufferedReader br = new BufferedReader(isr);
+        BufferedReader br = getResponse(getBlockHash);
         String line = br.readLine();
         return line;
     }
 
     public static String getBlockHeaders(String getBlockHeader)throws IOException {
-        Runtime rt = Runtime.getRuntime();
-        Process proc = rt.exec(getBlockHeader);
-        InputStream inStr = proc.getInputStream();
-        InputStreamReader isr = new InputStreamReader(inStr);
-        BufferedReader br = new BufferedReader(isr);
+        BufferedReader br = getResponse(getBlockHeader);
         String line = br.readLine();
 
         return line;
@@ -319,6 +312,28 @@ public class SyncUTHeaders {
             System.out.println(ex);
             return 1;
         }
+    }
+
+    public static int getUSCBlockNumber() throws IOException{
+        String payloadUSCBlockNumber = "{" +
+                "\"jsonrpc\": \"2.0\", " +
+                "\"method\": \"eth_blockNumber\", " +
+                "\"params\": {}," +
+                "\"id\": \"666\"" +
+                "}";
+
+        BufferedReader br = getResponse(payloadUSCBlockNumber);
+        return Integer.parseInt(br.readLine());
+    }
+
+    public static BufferedReader getResponse(String request) throws IOException{
+        Runtime rt = Runtime.getRuntime();
+        Process proc = rt.exec(request);
+
+        InputStream inStr = proc.getInputStream();
+        InputStreamReader isr = new InputStreamReader(inStr);
+        BufferedReader br = new BufferedReader(isr);
+        return br;
     }
 
     private static boolean isBlockHeightDifferenceAtLeast20(int UscBestBlockHeightBeforeReceiveHeaders, int UscBestBlockHeightAfterReceiveHeaders){
