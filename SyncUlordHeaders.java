@@ -152,6 +152,7 @@ public class SyncUlordHeaders {
                             builder = new StringBuilder();
                         } catch (Exception ex) {
                             System.out.println(ex.getMessage());
+                            break;
                         }
                     }
                 }
