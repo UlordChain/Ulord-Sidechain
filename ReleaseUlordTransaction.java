@@ -70,7 +70,6 @@ public class ReleaseUlordTransaction {
             params = MainNetParams.get();
         }
 
-
         while(true) {
             try {
                 //  web3.eth.call({data:"0B851400",to:"0x0000000000000000000000000000000001000006"})
@@ -121,7 +120,7 @@ public class ReleaseUlordTransaction {
                     if(complete.equals("true")) {
 
                         // Send Raw Transaction
-                        String sendTxResult = sendRawTransaction(rawUtTxHex);
+                        String sendTxResult = UlordCli.sendRawTransaction(params, rawUtTxHex);
 
                         if(sendTxResult.contains("error")) {
                             String[] messages = sendTxResult.split(":");
@@ -228,32 +227,9 @@ public class ReleaseUlordTransaction {
         return Utils.BufferedReaderToString(bufferedReader);
     }
 
-    private static String sendRawTransaction(String hex) throws IOException {
-        String sendRawTx = ulordCommand + " sendrawtransaction " + hex;
-        System.out.println(sendRawTx);
-
-        Process proc = null;
-        Runtime runtime = Runtime.getRuntime();
-        proc = runtime.exec(new String[] { "bash", "-c", sendRawTx});
-
-        InputStream inputStream = proc.getInputStream();
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        String result = Utils.BufferedReaderToString(bufferedReader);
-
-        if(result.equals("")) {
-            inputStream = proc.getErrorStream();
-            inputStreamReader = new InputStreamReader(inputStream);
-            bufferedReader = new BufferedReader(inputStreamReader);
-            result = Utils.BufferedReaderToString(bufferedReader);
-        }
-
-        return result;
-    }
-
     private static String getScriptPubKey(int vout, String txId, NetworkParameters params) throws IOException {
-        String txJSONString = getRawTransaction(txId, params);
-        JSONObject jsonObject = new JSONObject(decodeTxToJSONString(Hex.decode(txJSONString), params));
+        String txJSONString = UlordCli.getRawTransaction(params, txId, true);
+        JSONObject jsonObject = new JSONObject(txJSONString);
         JSONArray voutObjects = jsonObject.getJSONArray("vout");
         for(int i = 0; i < voutObjects.length(); ++i) {
             int n = Integer.parseInt(voutObjects.getJSONObject(i).get("n").toString());
@@ -264,22 +240,9 @@ public class ReleaseUlordTransaction {
         return null;
     }
 
-
-
-    private static String getRawTransaction(String txId, NetworkParameters params) throws IOException {
-        String getRawTransaction = ulordCommand + " getrawtransaction " + txId;
-        Runtime runtime = Runtime.getRuntime();
-        Process proc = runtime.exec(getRawTransaction);
-
-        InputStream inputStream = proc.getInputStream();
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        return Utils.BufferedReaderToString(bufferedReader);
-    }
-
     private static int getVout(String txId, NetworkParameters params) throws IOException {
 
-        String txJSONString = decodeTxToJSONString(Sha256Hash.hexStringToByteArray(getRawTransaction(txId, params)), params);
+        String txJSONString = UlordCli.getRawTransaction(params, txId, true);
 
         JSONObject jsonObject = new JSONObject(txJSONString);
         JSONArray voutObjects = jsonObject.getJSONArray("vout");
@@ -336,22 +299,8 @@ public class ReleaseUlordTransaction {
         return key;
     }
 
-    private static String decodeTxToJSONString(byte[] tx, NetworkParameters params) throws IOException {
-        String decodeRawTx = ulordCommand + " decoderawtransaction " + Sha256Hash.bytesToHex(tx);
-
-        Process proc = null;
-        Runtime rt  = Runtime.getRuntime();
-        proc = rt.exec(decodeRawTx);
-
-        InputStream inputStream = proc.getInputStream();
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-        return Utils.BufferedReaderToString(bufferedReader);
-    }
-
     private static String getUtTxId(UldTransaction tx, NetworkParameters params) throws IOException {
-        JSONObject jsonObject = new JSONObject(decodeTxToJSONString(tx.ulordSerialize(), params));
+        JSONObject jsonObject = new JSONObject(UlordCli.decodeRawTransaction(params, Hex.toHexString(tx.ulordSerialize())));
         String vin = jsonObject.get("vin").toString();
         jsonObject = new JSONObject(vin.substring(1, vin.length() - 1));
 

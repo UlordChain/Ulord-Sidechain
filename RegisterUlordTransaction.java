@@ -70,7 +70,7 @@ public class RegisterUlordTransaction {
 
             int height = Integer.parseInt(jsonObject.get("height").toString());
 
-            // Check if there is N block on top of the given transaction
+            // Check if there is N block on top of the given transaction in ulord chain
             int blockCount = Integer.parseInt(UlordCli.getBlockCount(params));
             if((blockCount - height) < bridgeConstants.getUld2UscMinimumAcceptableConfirmations()) {
                 System.out.println("No enough confirmations in Ulord");

@@ -41,6 +41,7 @@ public class WhitelistUlordAddress {
 
             String encodedCmd = DataEncoder.encodeWhitelist(utAddress, valueInSatoshi);
 
+            // TODO: Compute gasPrice, though it is a free transaction from genesis federation
             if(Utils.sendTransaction(whitelistAuthorisedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, encodedCmd, null, 3))
                 return true;
 
