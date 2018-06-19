@@ -107,7 +107,6 @@ public class SyncUlordHeaders {
                             Date date = new Date();
                             System.out.println(dateFormat.format(date) +": Ulord Block headers from " + (startIndex) + " to " + i + " sent to USC.");
 
-
                             int UscBestBlockHeightBeforeReceiveHeaders = Utils.getUscBestBlockHeight();
                             //Receive Ulord Headers and create a transaction on USC.
                             String txHash = receiveHeaders(builder);
@@ -130,12 +129,12 @@ public class SyncUlordHeaders {
                                 }
                                 else if(txStatus.equals("mined")){
                                     txHash = null;
-                                    //sleep 30sec before sending new blocks to be mined.
+                                    //sleep 30sec before sending new headers to be mined.
                                     Thread.sleep(1000*30);
                                     break;
                                 }
                                 else if(txStatus.equals("rejected")){
-                                    //in case transaction is not mined and rejected recreate the transaction.
+                                    //in case transaction is not mined/rejected recreate the transaction.
                                     System.out.println(dateFormat.format(date) +": Ulord Block headers from " + (startIndex) + " to " + i + " sent to USC.");
                                     UscBestBlockHeightBeforeReceiveHeaders = Utils.getUscBestBlockHeight();
                                     txHash = receiveHeaders(builder);
@@ -177,7 +176,6 @@ public class SyncUlordHeaders {
     public static String getBlockHeaders(String getBlockHeader)throws IOException {
         BufferedReader br = getResponse(getBlockHeader);
         String line = br.readLine();
-
         return line;
     }
 
@@ -241,7 +239,6 @@ public class SyncUlordHeaders {
         JSONObject jsonObj = new JSONObject(responseString);
         String txHash = jsonObj.get("result").toString();
         return txHash;
-
     }
 
     private static String getTransactionByHash(String txHash){
@@ -272,7 +269,6 @@ public class SyncUlordHeaders {
             jsonObj = new JSONObject(result);
             String blockHash = jsonObj.get("blockHash").toString();
             String blockNumber = jsonObj.get("blockNumber").toString();
-
 
             if(!blockHash.equals("null") || !blockNumber.equals("null")){
                 return "mined";
