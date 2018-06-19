@@ -86,10 +86,10 @@ public class RegisterUlordTransaction {
 
             PartialMerkleTree partialMerkleTree = GenerateMerkleTree.buildMerkleBranch(block, tx.getHash());
 
-            String data = DataEncoder.encodeRegisterUtTransaction(tx.ulordSerialize(), height, partialMerkleTree.ulordSerialize());
+            String data = DataEncoder.encodeRegisterUlordTransaction(tx.ulordSerialize(), height, partialMerkleTree.ulordSerialize());
 
             // TODO: Compute gasPrice, though it is a free transaction from genesis federation
-            if(Utils.sendTransaction(fedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, data, null, 3))
+            if(UscRpc.sendTransaction(fedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, data, null, 3))
                 return true;
             return false;
 

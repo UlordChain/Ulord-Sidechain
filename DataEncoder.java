@@ -7,7 +7,6 @@ package tools;
 
 import co.usc.peg.Bridge;
 import co.usc.ulordj.core.Sha256Hash;
-import co.usc.ulordj.core.UldTransaction;
 import com.sun.istack.internal.NotNull;
 import org.spongycastle.util.encoders.Hex;
 
@@ -58,7 +57,7 @@ public class DataEncoder {
                 data = NOT_IMPLEMENTED;
                 break;
             case "isUldTxHashAlreadyProcessed":
-                data = NOT_IMPLEMENTED;
+                data = encodeIsUldTxHashAlreadyProcessed(args[1]);
                 break;
             case "getUldTxHashProcessedHeight":
                 data = NOT_IMPLEMENTED;
@@ -121,7 +120,7 @@ public class DataEncoder {
         byte[] tx = Sha256Hash.hexStringToByteArray(args[1]);
         Integer height = Integer.parseInt(args[2]);
         byte[] m = Sha256Hash.hexStringToByteArray(args[3]);
-        return encodeRegisterUtTransaction(tx, height, m);
+        return encodeRegisterUlordTransaction(tx, height, m);
     }
 
     private static String getAddLockWhitelistAddressString(String[] args) {
@@ -142,8 +141,12 @@ public class DataEncoder {
         return Hex.toHexString(Bridge.ADD_LOCK_WHITELIST_ADDRESS.encode(new Object[] {address, valueInSatoshi}));
     }
 
-    public static String encodeRegisterUtTransaction(byte[] utTx, int height, byte[] merkleTree) {
+    public static String encodeRegisterUlordTransaction(byte[] utTx, int height, byte[] merkleTree) {
         return Hex.toHexString(Bridge.REGISTER_ULD_TRANSACTION.encode(new Object[]{utTx, height, merkleTree}));
+    }
+
+    public static String encodeIsUldTxHashAlreadyProcessed(String txId) {
+        return Hex.toHexString(Bridge.IS_ULD_TX_HASH_ALREADY_PROCESSED.encode(new Object[]{txId}));
     }
 }
 
