@@ -47,9 +47,12 @@ public class WhitelistUlordAddress {
             String encodedCmd = DataEncoder.encodeWhitelist(utAddress, valueInSatoshi);
 
             // TODO: Compute gasPrice, though it is a free transaction from genesis federation
-            String txResult = UscRpc.sendTransaction(whitelistAuthorisedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, encodedCmd, null, 3);
-            if(txResult.contains("error"))
+            String txResult = UscRpc.sendTransaction(whitelistAuthorisedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, encodedCmd, null);
+            System.out.println("Whitelist :" + txResult);
+
+            if(txResult.contains("error")) {
                 return false;
+            }
 
             return true;
         } catch (Exception e) {

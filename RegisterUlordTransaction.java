@@ -36,7 +36,7 @@ public class RegisterUlordTransaction {
 
     public static void main(String[]args){
         //registerUldTransaction <tx hex> <height> <merkletree>
-        register(BridgeTestNetConstants.getInstance(), "674f05e1916abc32a38f40aa67ae6b503b565999", "abcd1234", "fe472c8a0ad06f7ba682fe5a60bf9245496928be8f1e18a47ce6d4682921a176");
+        register(BridgeTestNetConstants.getInstance(), "674f05e1916abc32a38f40aa67ae6b503b565999", "abcd1234", "29ae1e72a00cdc394e52fa8341f9270a63356ff30e66520bfa75d77a5a1216f2");
     }
 
     public static boolean register(BridgeConstants bridgeConstants, String fedAddress, String pwd, String utTxId) {
@@ -89,7 +89,8 @@ public class RegisterUlordTransaction {
             String data = DataEncoder.encodeRegisterUlordTransaction(tx.ulordSerialize(), height, partialMerkleTree.ulordSerialize());
 
             // TODO: Compute gasPrice, though it is a free transaction from genesis federation
-            String txResult = UscRpc.sendTransaction(fedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, data, null, 3);
+            String txResult = UscRpc.sendTransaction(fedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, data, null);
+            System.out.println("RegisterUlordTransaction: " + txResult);
             if(txResult.contains("error"))
                 return false;
             return true;

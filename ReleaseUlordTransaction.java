@@ -153,8 +153,7 @@ public class ReleaseUlordTransaction {
                 "0x3D0900", "0x9184e72a000",
                 null,
                 Hex.toHexString(function.encode(federationKey.getPubKey(), signatures, uscTxHash.getBytes())),
-                null,
-                3
+                null
         );
         return res;
     }

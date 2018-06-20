@@ -56,5 +56,9 @@ public class DataEncoder {
     public static String encodeIsUldTxHashAlreadyProcessed(String txId) {
         return Hex.toHexString(Bridge.IS_ULD_TX_HASH_ALREADY_PROCESSED.encode(new Object[]{txId}));
     }
+
+    public static String encodeSetLockWhitelistDisableBlockDelay(BigInteger value) {
+        return Hex.toHexString(Bridge.SET_LOCK_WHITELIST_DISABLE_BLOCK_DELAY.encode(new Object[]{value}));
+    }
 }
 
