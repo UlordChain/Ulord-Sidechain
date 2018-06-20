@@ -14,6 +14,9 @@ public class MonitorUlordFederationsUtxos {
         String[] add = {"sY5XfaKEej45QBkw5cQwpiconeg7SqYLYL"};
         BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
         startMonitoring(bridgeConstants,"674f05e1916abc32a38f40aa67ae6b503b565999", "abcd1234", add);
+
+        Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(TestNet3Params.get()));
+        syncUlordHeaders.start();
     }
 
     public static void startMonitoring(BridgeConstants bridgeConstants,String fedAddress, String pwd, String[] address) {

@@ -40,20 +40,29 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class SyncUlordHeaders {
+public class SyncUlordHeaders implements Runnable{
 
-    public static void main(String []args){
-        prepareAndCallReceiveHeadersRPC(args);
+    NetworkParameters params;
+    public SyncUlordHeaders(NetworkParameters params){
+        this.params = params;
     }
 
-    public static void prepareAndCallReceiveHeadersRPC(String []args){
+    @Override
+    public void run() {
+        start();
+    }
+
+    public void start(){
+        prepareAndCallReceiveHeadersRPC();
+    }
+
+    private void prepareAndCallReceiveHeadersRPC(){
         try
         {
             //Do not sync Ulord Headers if USC Blockchain has less than 60 blocks mined.
             while(getUSCBlockNumber() <=60) {
                 Thread.sleep(1000*30);
             }
-            NetworkParameters params = TestNet3Params.get();
             //Start Syncing Ulord Headers.
             while(true) {
                 int startIndex = getUldBlockChainBestChainHeight() + 1;
