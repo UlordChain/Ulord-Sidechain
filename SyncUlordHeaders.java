@@ -18,10 +18,7 @@
 
 package tools;
 
-import co.usc.peg.Bridge;
 import co.usc.ulordj.core.NetworkParameters;
-import co.usc.ulordj.core.Sha256Hash;
-import co.usc.ulordj.params.TestNet3Params;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -31,13 +28,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class SyncUlordHeaders implements Runnable{
@@ -52,7 +45,7 @@ public class SyncUlordHeaders implements Runnable{
         start();
     }
 
-    public void start(){
+    private void start(){
         prepareAndCallReceiveHeadersRPC();
     }
 
@@ -91,7 +84,6 @@ public class SyncUlordHeaders implements Runnable{
                     }
 
                     if (i % 100 == 0 || i == blockCount) {
-                        builder.insert(0, "receiveHeaders ");
                         try {
                             // Unlock account
                             unlockFederationChangeAuthorizedKeys();
@@ -187,7 +179,7 @@ public class SyncUlordHeaders implements Runnable{
                 "\"to\": \"0x0000000000000000000000000000000001000006\"," +
                 "\"gas\": \"0x3D0900\"," +
                 "\"gasPrice\": \"0x9184e72a000\"," +
-                "\"data\": \"" + DataEncoder.getReceiveHeadersString(builder.toString().split(" ")) + "\"}]," +
+                "\"data\": \"" + DataEncoder.encodeReceiveHeaders(builder.toString().split(" ")) + "\"}]," +
                 "\"id\": \"1\"" +
                 "}";
 
