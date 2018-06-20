@@ -50,7 +50,7 @@ public class FederationMain implements Runnable {
                 for(int i = 0; i < jsonArray.length(); ++i) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     String txid = jsonObject.get("txid").toString();
-
+                    int height = Integer.parseInt(jsonObject.get("height").toString());
                     // Check if the ulord transaction is already processed in USC
                     String data = DataEncoder.encodeIsUldTxHashAlreadyProcessed(txid);
                     JSONObject jsObj = new JSONObject(UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, data));
@@ -60,10 +60,16 @@ public class FederationMain implements Runnable {
                         return;
                     }
 
+                    // TODO: Check usc chainhead before sending the transcation.
+                    JSONObject jsonObj = new JSONObject(UscRpc.getUldBlockChainBestChainHeight());
+                    int chainHeadHeight = Integer.decode(jsonObj.get("result").toString());
+                    if(chainHeadHeight < height + bridgeConstants.getUld2UscMinimumAcceptableConfirmations())
+                        continue;
+
                     // Here we can register Ulord transactions in USC
                     RegisterUlordTransaction.register(bridgeConstants, fromFedAddress, pwd, txid);
                 }
-                Thread.sleep(1000 * 1);
+                Thread.sleep(1000 * 60);
             }
         } catch (Exception e) {
             System.out.println(e);

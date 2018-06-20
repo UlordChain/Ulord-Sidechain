@@ -1,6 +1,9 @@
 package tools;
 
+import co.usc.config.BridgeConstants;
+import co.usc.peg.Bridge;
 import org.json.JSONObject;
+import org.spongycastle.util.encoders.Hex;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -105,6 +108,18 @@ public class UscRpc {
                 "\"method\": \"eth_blockNumber\", " +
                 "\"id\": \"1\"," +
                 "\"params\": []" +
+                "}";
+        return UscRpcExecutor.execute(cmd);
+    }
+
+    public static String getUldBlockChainBestChainHeight() throws IOException {
+        String cmd = "{" +
+                "\"jsonrpc\": \"2.0\", " +
+                "\"method\": \"eth_call\", " +
+                "\"params\": [{" +
+                "\"to\": \"0x0000000000000000000000000000000001000006\"," +
+                "\"data\": \"" + Hex.toHexString(Bridge.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT.encodeSignature()) +"\"},\"latest\"]," +
+                "\"id\": \"1\"" +
                 "}";
         return UscRpcExecutor.execute(cmd);
     }
