@@ -10,6 +10,9 @@ public class MonitorUlordFederationsUtxos {
     public static void main(String[]  args) {
         String[] add = {"sY5XfaKEej45QBkw5cQwpiconeg7SqYLYL", "sgwxX756HvCzKrsWSMmEpJDXxXcZhrHg3n"};
         startMonitoring(TestNet3Params.get(), add);
+
+        Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(TestNet3Params.get()));
+        syncUlordHeaders.start();
     }
 
     public static void startMonitoring(NetworkParameters params, String[] address) {
