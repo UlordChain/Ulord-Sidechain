@@ -1,9 +1,7 @@
 package tools;
 
 import co.usc.ulordj.core.NetworkParameters;
-import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.params.TestNet3Params;
-import org.spongycastle.util.encoders.Hex;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -67,4 +65,34 @@ public class UlordCli {
         return UlordCliExecutor.execute(getNetworkCommand(params) + " dumpprivkey " + address);
     }
 
+    //signrawtransaction "hexstring" ( [{"txid":"id","vout":n,"scriptPubKey":"hex","redeemScript":"hex"},...] ["privatekey1",...] sighashtype )
+    public static String signRawTransaction(NetworkParameters params,
+                                            String rawTx,
+                                            String txId,
+                                            int vout,
+                                            String scriptPubKey,
+                                            String redeemScript,
+                                            String[] privKeys,
+                                            @Nullable String sigHashType) throws IOException {
+        String cmd = getNetworkCommand(params) +
+                " '" + rawTx + "'" +
+                        " '[{" +
+                        " \"txid\":"         + "\"" + txId + "\"," +
+                        " \"vout\":"         + vout + ","+
+                        " \"scriptPubKey\":" + "\"" + scriptPubKey + "\"," +
+                        " \"redeemScript\":" + "\"" + redeemScript + "\"" +
+                        "}]'"  +
+                        " '[";
+        for(int i = 0; i < privKeys.length; ++i) {
+            if(i == privKeys.length - 1)
+                cmd += "\"" + privKeys[i] +"\"";
+            else
+                cmd += "\"" + privKeys[i] +"\", ";
+        }
+        cmd += "]'";
+        if(sigHashType != null)
+            cmd += " " + sigHashType;
+
+        return UlordCliExecutor.execute(cmd);
+    }
 }

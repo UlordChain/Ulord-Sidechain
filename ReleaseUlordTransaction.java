@@ -8,7 +8,6 @@ package tools;
 import co.usc.config.BridgeConstants;
 import co.usc.config.BridgeMainNetConstants;
 import co.usc.config.BridgeTestNetConstants;
-import co.usc.core.Usc;
 import co.usc.crypto.Keccak256;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeSerializationUtils;
@@ -17,13 +16,6 @@ import co.usc.ulordj.params.MainNetParams;
 import co.usc.ulordj.params.TestNet3Params;
 import co.usc.ulordj.script.Script;
 import co.usc.ulordj.script.ScriptChunk;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
@@ -32,10 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -43,7 +32,6 @@ import java.util.SortedMap;
 
 public class ReleaseUlordTransaction {
 
-    private static String ulordCommand = "";
     private static UldECKey federationKey = null;
 
     // USC release txs follow these steps: First, they are waiting for coin selection (releaseRequestQueue),
@@ -54,18 +42,15 @@ public class ReleaseUlordTransaction {
 
     public static void main(String[] args){
         BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
-        releaseUT(bridgeConstants);
+        release(bridgeConstants);
     }
 
     // NOTE: Requires federator's private key to run this function.
-    public static void releaseUT(BridgeConstants bridgeConstants) {
-
-        ulordCommand += NetworkConstants.ULORD_CLI;
+    public static void release(BridgeConstants bridgeConstants) {
 
         NetworkParameters params = null;
         if(bridgeConstants instanceof BridgeTestNetConstants) {
             params = TestNet3Params.get();
-            ulordCommand += NetworkConstants.ULORD_TESTNET;
         }
         else if (bridgeConstants instanceof BridgeMainNetConstants) {
             params = MainNetParams.get();
@@ -143,7 +128,7 @@ public class ReleaseUlordTransaction {
         }
     }
 
-    private static String addSignatureToUSC(Keccak256 uscTxHash, UldTransaction utTx, NetworkParameters params) throws IOException {
+    private static String addSignatureToUSC(Keccak256 uscTxHash, UldTransaction utTx, NetworkParameters params) throws IOException, InterruptedException {
         // Requires
         // 1. Federator Public Key  -   federationPublicKey
         // 2. Signatures
@@ -162,56 +147,37 @@ public class ReleaseUlordTransaction {
         }
 
         CallTransaction.Function function = Bridge.ADD_SIGNATURE;
-        String rpcCall = "{" +
-                "\"jsonrpc\": \"2.0\", " +
-                "\"method\": \"eth_sendTransaction\", " +
-                "\"params\": [{" +
-                "\"from\": \"" + "674f05e1916abc32a38f40aa67ae6b503b565999" + "\"," +
-                "\"to\": \"" + PrecompiledContracts.BRIDGE_ADDR_STR + "\"," +
-                "\"gas\": \"0x3D0900\"," +
-                "\"gasPrice\": \"0x9184e72a000\"," +
-                "\"data\": \"" + Hex.toHexString(function.encode(federationKey.getPubKey(), signatures, uscTxHash.getBytes())) + "\"}]," +
-                "\"id\": \"1\"" +
-                "}";
-        System.out.println(rpcCall);
 
-        StringEntity entity = new StringEntity(rpcCall, ContentType.APPLICATION_JSON);
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost httpPost = new HttpPost(NetworkConstants.POST_URI);
-        httpPost.setEntity(entity);
-        HttpResponse response = httpClient.execute(httpPost);
-        return EntityUtils.toString(response.getEntity());
+        String res = UscRpc.sendTransaction("674f05e1916abc32a38f40aa67ae6b503b565999",
+                PrecompiledContracts.BRIDGE_ADDR_STR,
+                "0x3D0900", "0x9184e72a000",
+                null,
+                Hex.toHexString(function.encode(federationKey.getPubKey(), signatures, uscTxHash.getBytes())),
+                null,
+                3
+        );
+        return res;
     }
 
     private static String signRawTransaction(UldTransaction tx, BridgeConstants bridgeConstants, NetworkParameters params)
             throws IOException, PrivateKeyNotFoundException {
-
-        String signRawTransaction = ulordCommand + " signrawtransaction";
-
-        String txId = getUtTxId(tx, params);
+        String txId = getUlordTxId(tx, params);
         int vout = getVout(txId, params);
         String scriptPubKey = getScriptPubKey(vout, txId, params);
-        signRawTransaction +=
-                " '" + Hex.toHexString(tx.ulordSerialize()) + "'" +
-                        " '[{" +
-                            " \"txid\":"         + "\"" + txId + "\"," +
-                            " \"vout\":"         + vout + ","+
-                            " \"scriptPubKey\":" + "\"" + scriptPubKey + "\"," +
-                            " \"redeemScript\":" + "\"" + Hex.toHexString(tx.getInput(0).getScriptSig().getChunks().get(2).data) + "\"" +
-                        "}]'"  +
-                        " '["  +
-                            "\"" + getPrivateKey(bridgeConstants, params) +"\"" +
-                        "]'";
 
-        Process proc = null;
-        Runtime runtime = Runtime.getRuntime();
-        proc = runtime.exec(new String[] { "bash", "-c", signRawTransaction });
+        String[] privKeys = {getPrivateKey(bridgeConstants, params)};
 
-        InputStream inputStream = proc.getInputStream();
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        String result = UlordCli.signRawTransaction(
+                params,
+                Hex.toHexString(tx.ulordSerialize()),
+                txId,
+                vout,
+                scriptPubKey,
+                Hex.toHexString(tx.getInput(0).getScriptSig().getChunks().get(2).data),
+                privKeys, null
+        );
 
-        return Utils.BufferedReaderToString(bufferedReader);
+        return result;
     }
 
     private static String getScriptPubKey(int vout, String txId, NetworkParameters params) throws IOException {
@@ -258,26 +224,14 @@ public class ReleaseUlordTransaction {
     private static String getPrivateKey(BridgeConstants bridgeConstants, NetworkParameters params)
             throws IOException, PrivateKeyNotFoundException {
 
-        String dumpPrivKey = ulordCommand + " dumpprivkey ";
-
         List<UldECKey> publicKeys = bridgeConstants.getGenesisFederation().getPublicKeys();
-        BufferedReader bufferedReader = null;
 
         boolean privateKeyFound = false;
         String key = null;
         for(UldECKey pubKey : publicKeys) {
 
-            //String Key = UlordCli.dumpPrivKey(params, pubKey.toAddress(params).toString());
-            String rpc = dumpPrivKey + pubKey.toAddress(params).toString();
-
-            Runtime runtime = Runtime.getRuntime();
-            Process proc = runtime.exec(rpc);
-
-            InputStream inputStream = proc.getInputStream();
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            bufferedReader = new BufferedReader(inputStreamReader);
-            key = bufferedReader.readLine();
-            if(key != null) {
+            key = UlordCli.dumpPrivKey(params, pubKey.toAddress(params).toString());
+            if(!key.contains("error")) {
                 privateKeyFound = true;
                 federationKey = Utils.convertWifToPrivateKey(key, pubKey, params);
                 break;
@@ -289,7 +243,7 @@ public class ReleaseUlordTransaction {
         return key;
     }
 
-    private static String getUtTxId(UldTransaction tx, NetworkParameters params) throws IOException {
+    private static String getUlordTxId(UldTransaction tx, NetworkParameters params) throws IOException {
         JSONObject jsonObject = new JSONObject(UlordCli.decodeRawTransaction(params, Hex.toHexString(tx.ulordSerialize())));
         String vin = jsonObject.get("vin").toString();
         jsonObject = new JSONObject(vin.substring(1, vin.length() - 1));

@@ -21,9 +21,9 @@ public class WhitelistUlordAddress {
     public static void main(String[] args) {
         BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
         Address utAddress = new Address(TestNet3Params.get(), "ubhhcfxeZ2VJRADHEx5uqUBJ1HTip8cfRS");
-        UscAddress whitelistAuthrisedAddress = new UscAddress("ddc165ce2c9026909856387fe50ff1e13ec22eb9");
+        UscAddress whitelistAuthorisedAddress = new UscAddress("ddc165ce2c9026909856387fe50ff1e13ec22eb9");
         String pwd = "abcd1234";
-        if(whitelistAddress(bridgeConstants, whitelistAuthrisedAddress, pwd, utAddress, Coin.valueOf(100_000_000_000l))) {
+        if(whitelistAddress(bridgeConstants, whitelistAuthorisedAddress, pwd, utAddress, Coin.valueOf(100_000_000_000l))) {
             System.out.println("Successfully whitelisted");
         }
         else
@@ -47,10 +47,11 @@ public class WhitelistUlordAddress {
             String encodedCmd = DataEncoder.encodeWhitelist(utAddress, valueInSatoshi);
 
             // TODO: Compute gasPrice, though it is a free transaction from genesis federation
-            if(UscRpc.sendTransaction(whitelistAuthorisedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, encodedCmd, null, 3))
-                return true;
+            String txResult = UscRpc.sendTransaction(whitelistAuthorisedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, encodedCmd, null, 3);
+            if(txResult.contains("error"))
+                return false;
 
-            return false;
+            return true;
         } catch (Exception e) {
             System.out.println(e);
             return false;

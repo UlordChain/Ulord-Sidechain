@@ -89,9 +89,10 @@ public class RegisterUlordTransaction {
             String data = DataEncoder.encodeRegisterUlordTransaction(tx.ulordSerialize(), height, partialMerkleTree.ulordSerialize());
 
             // TODO: Compute gasPrice, though it is a free transaction from genesis federation
-            if(UscRpc.sendTransaction(fedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, data, null, 3))
-                return true;
-            return false;
+            String txResult = UscRpc.sendTransaction(fedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, data, null, 3);
+            if(txResult.contains("error"))
+                return false;
+            return true;
 
         } catch (Exception e) {
             System.out.println(e);

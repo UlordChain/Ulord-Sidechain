@@ -1,8 +1,6 @@
 package tools;
 
-import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONObject;
-import org.spongycastle.util.encoders.Hex;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -33,7 +31,7 @@ public class UscRpc {
         return UscRpcExecutor.execute(cmd);
     }
 
-    public static boolean sendTransaction(String from,
+    public static String sendTransaction(String from,
                                           @Nullable String to,
                                           @Nullable String gas,
                                           @Nullable String gasPrice,
@@ -44,7 +42,7 @@ public class UscRpc {
             throws IOException, InterruptedException {
 
         if(tries < 0)
-            return false;
+            return "error:Transaction failed";
 
         StringBuilder cmd = new StringBuilder();
         cmd.append("{");
@@ -80,7 +78,6 @@ public class UscRpc {
         JSONObject jsonObject = new JSONObject(UscRpcExecutor.execute(cmd.toString()));
 
         String txId = jsonObject.get("result").toString();
-        System.out.println(txId);
 
         Thread.sleep(1000);
         if (!Utils.isTransactionInMemPool(txId))
@@ -91,7 +88,7 @@ public class UscRpc {
                 sendTransaction(from, to, gas, gasPrice, value, data, nonce, --tries);
             Thread.sleep(1000 * 10);
         }
-        return true;
+        return jsonObject.toString();
     }
 
     public static String getBlock() throws IOException {
@@ -123,6 +120,4 @@ public class UscRpc {
                 "}";
         return UscRpcExecutor.execute(cmd);
     }
-
-
 }
