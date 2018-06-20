@@ -60,7 +60,6 @@ public class FederationMain implements Runnable {
                         return;
                     }
 
-                    // TODO: Check usc chainhead before sending the transcation.
                     JSONObject jsonObj = new JSONObject(UscRpc.getUldBlockChainBestChainHeight());
                     int chainHeadHeight = Integer.decode(jsonObj.get("result").toString());
                     if(chainHeadHeight < height + bridgeConstants.getUld2UscMinimumAcceptableConfirmations())
