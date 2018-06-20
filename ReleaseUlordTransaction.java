@@ -266,7 +266,8 @@ public class ReleaseUlordTransaction {
         boolean privateKeyFound = false;
         String key = null;
         for(UldECKey pubKey : publicKeys) {
-            pubKey.toAddress(params);
+
+            //String Key = UlordCli.dumpPrivKey(params, pubKey.toAddress(params).toString());
             String rpc = dumpPrivKey + pubKey.toAddress(params).toString();
 
             Runtime runtime = Runtime.getRuntime();

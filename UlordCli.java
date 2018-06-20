@@ -1,7 +1,9 @@
 package tools;
 
 import co.usc.ulordj.core.NetworkParameters;
+import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.params.TestNet3Params;
+import org.spongycastle.util.encoders.Hex;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -64,4 +66,5 @@ public class UlordCli {
     public static String dumpPrivKey(NetworkParameters params,  String address) throws  IOException {
         return UlordCliExecutor.execute(getNetworkCommand(params) + " dumpprivkey " + address);
     }
+
 }

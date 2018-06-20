@@ -1,6 +1,9 @@
 package tools;
 
+import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeTestNetConstants;
 import co.usc.ulordj.core.NetworkParameters;
+import co.usc.ulordj.params.MainNetParams;
 import co.usc.ulordj.params.TestNet3Params;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONArray;
@@ -8,11 +11,18 @@ import org.json.JSONObject;
 
 public class MonitorUlordFederationsUtxos {
     public static void main(String[]  args) {
-        String[] add = {"sY5XfaKEej45QBkw5cQwpiconeg7SqYLYL", "sgwxX756HvCzKrsWSMmEpJDXxXcZhrHg3n"};
-        startMonitoring(TestNet3Params.get(), add);
+        String[] add = {"sY5XfaKEej45QBkw5cQwpiconeg7SqYLYL"};
+        BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
+        startMonitoring(bridgeConstants,"674f05e1916abc32a38f40aa67ae6b503b565999", "abcd1234", add);
     }
 
-    public static void startMonitoring(NetworkParameters params, String[] address) {
+    public static void startMonitoring(BridgeConstants bridgeConstants,String fedAddress, String pwd, String[] address) {
+        NetworkParameters params;
+        if(bridgeConstants instanceof BridgeTestNetConstants)
+            params = TestNet3Params.get();
+        else
+            params = MainNetParams.get();
+
         try {
             JSONArray jsonArray  = new JSONArray(UlordCli.getAddressUtxos(params, address));
             for(int i = 0; i < jsonArray.length(); ++i) {
@@ -27,7 +37,11 @@ public class MonitorUlordFederationsUtxos {
                     return;
 
                 // Here we can register Ulord transactions in USC
-
+                boolean res = RegisterUlordTransaction.register(bridgeConstants, fedAddress, pwd, txid);
+                if(res)
+                    System.out.println("Transaction " + txid + " successfully processed");
+                else
+                    System.out.println("Transaction " + txid + " failed");
 
             }
         } catch (Exception e) {

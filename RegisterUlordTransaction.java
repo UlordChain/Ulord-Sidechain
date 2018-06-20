@@ -36,10 +36,10 @@ public class RegisterUlordTransaction {
 
     public static void main(String[]args){
         //registerUldTransaction <tx hex> <height> <merkletree>
-        registerUT(BridgeTestNetConstants.getInstance(), "674f05e1916abc32a38f40aa67ae6b503b565999", "abcd1234", "fe472c8a0ad06f7ba682fe5a60bf9245496928be8f1e18a47ce6d4682921a176");
+        register(BridgeTestNetConstants.getInstance(), "674f05e1916abc32a38f40aa67ae6b503b565999", "abcd1234", "fe472c8a0ad06f7ba682fe5a60bf9245496928be8f1e18a47ce6d4682921a176");
     }
 
-    public static boolean registerUT(BridgeConstants bridgeConstants, String fedAddress, String pwd, String utTxId) {
+    public static boolean register(BridgeConstants bridgeConstants, String fedAddress, String pwd, String utTxId) {
         try {
             AddressBasedAuthorizer federationChangeAuthorizer = bridgeConstants.getFederationChangeAuthorizer();
 
