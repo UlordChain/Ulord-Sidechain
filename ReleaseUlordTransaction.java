@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.SortedMap;
 
 
-public class ReleaseUlordTransaction {
+public class ReleaseUlordTransaction implements Runnable {
 
     private static UldECKey federationKey = null;
 
@@ -40,13 +40,22 @@ public class ReleaseUlordTransaction {
     // then they are logged into the block that has them as completely signed for uld release
     // and are removed from uscTxsWaitingForSignatures.
 
-    public static void main(String[] args){
-        BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
+    BridgeConstants bridgeConstants;
+    public ReleaseUlordTransaction(BridgeConstants bridgeConstants) {
+        this.bridgeConstants = bridgeConstants;
+    }
+
+    private void start(){
         release(bridgeConstants);
     }
 
+    @Override
+    public void run() {
+        start();
+    }
+
     // NOTE: Requires federator's private key to run this function.
-    public static void release(BridgeConstants bridgeConstants) {
+    public void release(BridgeConstants bridgeConstants) {
 
         NetworkParameters params = null;
         if(bridgeConstants instanceof BridgeTestNetConstants) {
@@ -128,7 +137,7 @@ public class ReleaseUlordTransaction {
         }
     }
 
-    private static String addSignatureToUSC(Keccak256 uscTxHash, UldTransaction utTx, NetworkParameters params) throws IOException, InterruptedException {
+    private String addSignatureToUSC(Keccak256 uscTxHash, UldTransaction utTx, NetworkParameters params) throws IOException, InterruptedException {
         // Requires
         // 1. Federator Public Key  -   federationPublicKey
         // 2. Signatures
@@ -158,7 +167,7 @@ public class ReleaseUlordTransaction {
         return res;
     }
 
-    private static String signRawTransaction(UldTransaction tx, BridgeConstants bridgeConstants, NetworkParameters params)
+    private String signRawTransaction(UldTransaction tx, BridgeConstants bridgeConstants, NetworkParameters params)
             throws IOException, PrivateKeyNotFoundException {
         String txId = getUlordTxId(tx, params);
         int vout = getVout(txId, params);
@@ -179,7 +188,7 @@ public class ReleaseUlordTransaction {
         return result;
     }
 
-    private static String getScriptPubKey(int vout, String txId, NetworkParameters params) throws IOException {
+    private String getScriptPubKey(int vout, String txId, NetworkParameters params) throws IOException {
         String txJSONString = UlordCli.getRawTransaction(params, txId, true);
         JSONObject jsonObject = new JSONObject(txJSONString);
         JSONArray voutObjects = jsonObject.getJSONArray("vout");
@@ -192,7 +201,7 @@ public class ReleaseUlordTransaction {
         return null;
     }
 
-    private static int getVout(String txId, NetworkParameters params) throws IOException {
+    private int getVout(String txId, NetworkParameters params) throws IOException {
 
         String txJSONString = UlordCli.getRawTransaction(params, txId, true);
 
@@ -220,7 +229,7 @@ public class ReleaseUlordTransaction {
     }
 
     // Todo: Call dumpprivkey from UlordCli.java
-    private static String getPrivateKey(BridgeConstants bridgeConstants, NetworkParameters params)
+    private String getPrivateKey(BridgeConstants bridgeConstants, NetworkParameters params)
             throws IOException, PrivateKeyNotFoundException {
 
         List<UldECKey> publicKeys = bridgeConstants.getGenesisFederation().getPublicKeys();
@@ -242,7 +251,7 @@ public class ReleaseUlordTransaction {
         return key;
     }
 
-    private static String getUlordTxId(UldTransaction tx, NetworkParameters params) throws IOException {
+    private String getUlordTxId(UldTransaction tx, NetworkParameters params) throws IOException {
         JSONObject jsonObject = new JSONObject(UlordCli.decodeRawTransaction(params, Hex.toHexString(tx.ulordSerialize())));
         String vin = jsonObject.get("vin").toString();
         jsonObject = new JSONObject(vin.substring(1, vin.length() - 1));
@@ -257,7 +266,7 @@ public class ReleaseUlordTransaction {
      * @return  true: if there is at least N blocks on top of the supplied txn, false: otherwise
      * @throws IOException
      */
-    private static boolean validateTxDepth(Keccak256 key, BridgeConstants bridgeConstants) throws IOException {
+    private boolean validateTxDepth(Keccak256 key, BridgeConstants bridgeConstants) throws IOException {
 
         JSONObject jsonObject = new JSONObject(UscRpc.getTransactionByHash(key.toHexString()));
 
@@ -272,4 +281,6 @@ public class ReleaseUlordTransaction {
             return true;
         return false;
     }
+
+
 }

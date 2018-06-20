@@ -21,20 +21,23 @@ public class FederationMain implements Runnable {
 
     public static void main(String[]  args) {
         FederationMain fedMain = new FederationMain();
-        Thread releaseUlordTransactions = new Thread(fedMain);
-        releaseUlordTransactions.start();
+        Thread registerUlordTransactions = new Thread(fedMain);
+        registerUlordTransactions.start();
 
         Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params));
         syncUlordHeaders.start();
+
+        Thread releaseUlordTx = new Thread(new ReleaseUlordTransaction(fedMain.bridgeConstants));
+        releaseUlordTx.start();
     }
 
     @Override
     public void run() {
-        monitorUtxosAndReleaseUlordTx(bridgeConstants, federationChangeAuthorizedAddress,pwd, ulordFederationAddress);
+        monitorUtxosAndRegisterUlordTx(bridgeConstants, federationChangeAuthorizedAddress,pwd, ulordFederationAddress);
     }
 
 
-    public void monitorUtxosAndReleaseUlordTx(BridgeConstants bridgeConstants, String fromFedAddress, String pwd, String[] address) {
+    public void monitorUtxosAndRegisterUlordTx(BridgeConstants bridgeConstants, String fromFedAddress, String pwd, String[] address) {
         NetworkParameters params;
         if(bridgeConstants instanceof BridgeTestNetConstants)
             params = TestNet3Params.get();
