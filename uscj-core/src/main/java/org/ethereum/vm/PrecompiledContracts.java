@@ -1,7 +1,7 @@
 package org.ethereum.vm;
 /*
  * This file is part of UscJ
- * Copyright (C) 2017 Usc Labs Ltd.
+ * Copyright (C) 2016 - 2018 Ulord development team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
