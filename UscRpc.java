@@ -15,7 +15,6 @@ public class UscRpc {
                 "\"" + address + "\", " +
                 "\"" + pwd + "\", \"\"" +
                 "]}";
-
         return UscRpcExecutor.execute(cmd);
     }
 
@@ -27,7 +26,6 @@ public class UscRpc {
                 "\"params\":[" +
                 "\"" + txId + "\"" +
                 "]}";
-        System.out.println(cmd);
         return UscRpcExecutor.execute(cmd);
     }
 
