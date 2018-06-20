@@ -35,12 +35,11 @@ public class UscRpc {
                                           @Nullable String gasPrice,
                                           @Nullable String value,
                                           @Nullable String data,
-                                          @Nullable String nonce,
-                                          int tries)
+                                          @Nullable String nonce)
             throws IOException, InterruptedException {
 
-        if(tries < 0)
-            return "error:Transaction failed";
+//        if(tries < 0)
+//            return "error:Transaction failed";
 
         StringBuilder cmd = new StringBuilder();
         cmd.append("{");
@@ -75,27 +74,18 @@ public class UscRpc {
 
         JSONObject jsonObject = new JSONObject(UscRpcExecutor.execute(cmd.toString()));
 
-        String txId = jsonObject.get("result").toString();
-
-        Thread.sleep(1000);
-        if (!Utils.isTransactionInMemPool(txId))
-            sendTransaction(from, to, gas, gasPrice, value, data, nonce, --tries);
-
-        while (!Utils.isTransactionMined(txId)) {
-            if(!Utils.isTransactionInMemPool(txId))
-                sendTransaction(from, to, gas, gasPrice, value, data, nonce, --tries);
-            Thread.sleep(1000 * 10);
-        }
+//        String txId = jsonObject.get("result").toString();
+//
+//        Thread.sleep(1000);
+//        if (!Utils.isTransactionInMemPool(txId))
+//            sendTransaction(from, to, gas, gasPrice, value, data, nonce, --tries);
+//
+//        while (!Utils.isTransactionMined(txId)) {
+//            if(!Utils.isTransactionInMemPool(txId))
+//                sendTransaction(from, to, gas, gasPrice, value, data, nonce, --tries);
+//            Thread.sleep(1000 * 10);
+//        }
         return jsonObject.toString();
-    }
-
-    public static String getBlock() throws IOException {
-        String cmd = "{" +
-                "\"jsonrpc\":\"2.0\", " +
-                "\"method\":\"eth_blockNumber\", " +
-                "\"id\":83, " +
-                "\"params\":[]}";
-        return UscRpcExecutor.execute(cmd);
     }
 
     public static String call(String to, String data) throws IOException {

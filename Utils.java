@@ -87,7 +87,7 @@ public class Utils {
 
     public static int getUscBestBlockHeight(){
         try {
-            JSONObject jsonObj = new JSONObject(UscRpc.getBlock());
+            JSONObject jsonObj = new JSONObject(UscRpc.blockNumber());
             return Integer.decode(jsonObj.get("result").toString());
         }catch(Exception ex){
             System.out.println(ex);
