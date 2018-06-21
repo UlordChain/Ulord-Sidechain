@@ -47,7 +47,6 @@ class TxValidator {
     private final Blockchain blockchain;
 
     private final List<TxValidatorStep> validatorSteps = new LinkedList<>();
-    private final List<TxFilter> txFilters = new LinkedList<>();
 
     public TxValidator(UscSystemProperties config, Repository repository, Blockchain blockchain) {
         this.config = config;
@@ -59,8 +58,6 @@ class TxValidator {
         validatorSteps.add(new TxValidatorAccountBalanceValidator());
         validatorSteps.add(new TxValidatorMinimuGasPriceValidator());
         validatorSteps.add(new TxValidatorIntrinsicGasLimitValidator(config));
-
-        txFilters.add(new TxFilterAccumCostFilter(config));
     }
 
     /**
@@ -85,8 +82,8 @@ class TxValidator {
 
             for (TxValidatorStep step : validatorSteps) {
                 if (!step.validate(tx, state, blockGasLimit, minimumGasPrice, bestBlockNumber, basicTxCost == 0)) {
-                    logger.info("Tx validation failed: validator {} tx={}", step.getClass().getName(), tx.getHash());
-                    valid = false;
+                    logger.info("[tx={}] {} failed", tx.getHash(), step.getClass());
+				    valid = false;
                     break;
                 }
             }
