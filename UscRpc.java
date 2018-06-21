@@ -74,8 +74,8 @@ public class UscRpc {
             cmd.append("\"data\":\"" + data);
 
         cmd.append("\"}]}");
-
-        JSONObject jsonObject = new JSONObject(UscRpcExecutor.execute(cmd.toString()));
+        return UscRpcExecutor.execute(cmd.toString());
+//        JSONObject jsonObject = new JSONObject(UscRpcExecutor.execute(cmd.toString()));
 
 //        String txId = jsonObject.get("result").toString();
 //
@@ -88,7 +88,7 @@ public class UscRpc {
 //                sendTransaction(from, to, gas, gasPrice, value, data, nonce, --tries);
 //            Thread.sleep(1000 * 10);
 //        }
-        return jsonObject.toString();
+//        return jsonObject.toString();
     }
 
     public static String call(String to, String data) throws IOException {

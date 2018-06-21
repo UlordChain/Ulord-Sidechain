@@ -6,29 +6,26 @@ import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.params.MainNetParams;
 import co.usc.ulordj.params.TestNet3Params;
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.File;
 
 public class FederationMain implements Runnable {
 
     //TODO: Move those settings to a config file
     BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
     NetworkParameters params = TestNet3Params.get();
-
+    Config config;
     String[] ulordFederationAddress;
     String federationChangeAuthorizedAddress;
-    String pwd;
+    String federationChangeAuthorizedPassword;
 
     public FederationMain(){
         FederationConfigLoader configLoader = new FederationConfigLoader();
-        Config config = configLoader.getConfigFromFiles();
-        ulordFederationAddress = config.getStringList("federation.address").toArray(new String[0]);
-        federationChangeAuthorizedAddress = config.getString("federation.changeAuthorizedAddress");
-        pwd = config.getString("federation.password");
+        config = configLoader.getConfigFromFiles();
+        this.ulordFederationAddress = config.getStringList("federation.address").toArray(new String[0]);
+        this.federationChangeAuthorizedAddress = config.getString("federation.changeAuthorizedAddress");
+        this.federationChangeAuthorizedPassword = config.getString("federation.changeAuthorizedPassword");
     }
 
     public static void main(String[]  args) {
@@ -36,7 +33,7 @@ public class FederationMain implements Runnable {
         Thread registerUlordTransactions = new Thread(fedMain);
         registerUlordTransactions.start();
 
-        Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params));
+        Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params, fedMain.config));
         syncUlordHeaders.start();
 
         Thread releaseUlordTx = new Thread(new ReleaseUlordTransaction(fedMain.bridgeConstants));
@@ -45,7 +42,7 @@ public class FederationMain implements Runnable {
 
     @Override
     public void run() {
-        monitorUtxosAndRegisterUlordTx(bridgeConstants, federationChangeAuthorizedAddress,pwd, ulordFederationAddress);
+        monitorUtxosAndRegisterUlordTx(bridgeConstants, federationChangeAuthorizedAddress, federationChangeAuthorizedPassword, ulordFederationAddress);
     }
 
 

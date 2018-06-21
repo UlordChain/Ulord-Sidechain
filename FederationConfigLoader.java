@@ -10,7 +10,6 @@ public class FederationConfigLoader {
         String file = System.getProperty("federation.conf.file");
         Config cmdLineConfigFile = file != null ? ConfigFactory.parseFile(new File(file)) : ConfigFactory.empty();
 
-
         Config userConfig = ConfigFactory.systemProperties()
                 .withFallback(cmdLineConfigFile);
 
