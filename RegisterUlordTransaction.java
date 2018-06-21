@@ -31,13 +31,17 @@ import co.usc.ulordj.params.TestNet3Params;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RegisterUlordTransaction {
 
-    public static void main(String[]args){
-        //registerUldTransaction <tx hex> <height> <merkletree>
-        register(BridgeTestNetConstants.getInstance(), "674f05e1916abc32a38f40aa67ae6b503b565999", "abcd1234", "29ae1e72a00cdc394e52fa8341f9270a63356ff30e66520bfa75d77a5a1216f2");
-    }
+    private static Logger logger = LoggerFactory.getLogger("registerulordtransaction");
+
+//    public static void main(String[]args){
+//        //registerUldTransaction <tx hex> <height> <merkletree>
+//        register(BridgeTestNetConstants.getInstance(), "674f05e1916abc32a38f40aa67ae6b503b565999", "abcd1234", "29ae1e72a00cdc394e52fa8341f9270a63356ff30e66520bfa75d77a5a1216f2");
+//    }
 
     public static boolean register(BridgeConstants bridgeConstants, String fedAddress, String pwd, String utTxId) {
         try {
@@ -58,31 +62,34 @@ public class RegisterUlordTransaction {
             else
                 params = MainNetParams.get();
 
-            String txHex = UlordCli.getRawTransaction(TestNet3Params.get(), utTxId, false);
-            if(txHex.contains("error")) {
-                System.out.println(txHex);
+            String getRawTransactionResponse = UlordCli.getRawTransaction(TestNet3Params.get(), utTxId, false);
+            if(getRawTransactionResponse.contains("error")) {
+                logger.info(getRawTransactionResponse);
+                System.out.println(getRawTransactionResponse);
                 return false;
             }
-            UldTransaction tx = new UldTransaction(params, Hex.decode(txHex));
+            UldTransaction tx = new UldTransaction(params, Hex.decode(getRawTransactionResponse));
 
-            JSONObject jsonObject = new JSONObject(UlordCli.getRawTransaction(TestNet3Params.get(), utTxId, true));
-            String blockHash = jsonObject.get("blockhash").toString();
+            JSONObject getRawTxJSON = new JSONObject(UlordCli.getRawTransaction(TestNet3Params.get(), utTxId, true));
+            String blockHash = getRawTxJSON.get("blockhash").toString();
 
-            int height = Integer.parseInt(jsonObject.get("height").toString());
+            int height = Integer.parseInt(getRawTxJSON.get("height").toString());
 
             // Check if there is N block on top of the given transaction in ulord chain
             int blockCount = Integer.parseInt(UlordCli.getBlockCount(params));
             if((blockCount - height) < bridgeConstants.getUld2UscMinimumAcceptableConfirmations()) {
-                System.out.println("No enough confirmations in Ulord");
+                System.out.println("No enough confirmations in Ulord for transaction: " + tx.getHash().toString());
+                logger.info("No enough confirmations in Ulord for transaction: " + tx.getHash().toString());
                 return false;
             }
 
-            String blockHex = UlordCli.getBlock(params, blockHash, false);
-            if(blockHex.contains("error")) {
-                System.out.println(blockHex);
+            String getBlockResponse = UlordCli.getBlock(params, blockHash, false);
+            if(getBlockResponse.contains("error")) {
+                logger.info(getBlockResponse);
+                System.out.println(getBlockResponse);
                 return false;
             }
-            UldBlock block = new UldBlock(params, Hex.decode(blockHex));
+            UldBlock block = new UldBlock(params, Hex.decode(getBlockResponse));
 
             PartialMerkleTree partialMerkleTree = GenerateMerkleTree.buildMerkleBranch(block, tx.getHash());
 
@@ -90,12 +97,14 @@ public class RegisterUlordTransaction {
 
             // TODO: Compute gasPrice, though it is a free transaction from genesis federation
             String txResult = UscRpc.sendTransaction(fedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, data, null);
+            logger.info(txResult);
             System.out.println("RegisterUlordTransaction: " + txResult);
             if(txResult.contains("error"))
                 return false;
             return true;
 
         } catch (Exception e) {
+            logger.error(e.toString());
             System.out.println(e);
             return false;
         }

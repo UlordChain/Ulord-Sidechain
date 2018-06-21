@@ -13,10 +13,14 @@ import co.usc.ulordj.core.Address;
 import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.params.TestNet3Params;
 import org.ethereum.vm.PrecompiledContracts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 
 public class WhitelistUlordAddress {
+
+    private static Logger logger = LoggerFactory.getLogger("whitelistaddress");
 
     public static void main(String[] args) {
         BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
@@ -47,15 +51,17 @@ public class WhitelistUlordAddress {
             String encodedCmd = DataEncoder.encodeWhitelist(utAddress, valueInSatoshi);
 
             // TODO: Compute gasPrice, though it is a free transaction from genesis federation
-            String txResult = UscRpc.sendTransaction(whitelistAuthorisedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, encodedCmd, null);
-            System.out.println("Whitelist :" + txResult);
+            String sendTransactionResponse = UscRpc.sendTransaction(whitelistAuthorisedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, encodedCmd, null);
+            logger.info(sendTransactionResponse);
+            System.out.println("Whitelist :" + sendTransactionResponse);
 
-            if(txResult.contains("error")) {
+            if(sendTransactionResponse.contains("error")) {
                 return false;
             }
 
             return true;
         } catch (Exception e) {
+            logger.error(e.toString());
             System.out.println(e);
             return false;
         }

@@ -22,6 +22,8 @@ import org.ethereum.util.RLPList;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.IOException;
@@ -31,6 +33,8 @@ import java.util.SortedMap;
 
 
 public class ReleaseUlordTransaction implements Runnable {
+
+    //private static Logger logger = LoggerFactory.getLogger("releaseulordtransaction");
 
     private static UldECKey federationKey = null;
 
@@ -101,10 +105,10 @@ public class ReleaseUlordTransaction implements Runnable {
                     if(complete.equals("true")) {
 
                         // Send Raw Transaction
-                        String sendTxResult = UlordCli.sendRawTransaction(params, rawUtTxHex);
+                        String sendTxResponse = UlordCli.sendRawTransaction(params, rawUtTxHex);
 
-                        if(sendTxResult.contains("error")) {
-                            String[] messages = sendTxResult.split(":");
+                        if(sendTxResponse.contains("error")) {
+                            String[] messages = sendTxResponse.split(":");
                             if(messages[messages.length - 1].contains("transaction already in block chain")) {
                                 System.out.println("Transaction already in blockchain");
                                 // Its safe to remove processed transactions here.
@@ -114,7 +118,7 @@ public class ReleaseUlordTransaction implements Runnable {
                                 System.out.println("Transaction failed: " + messages[messages.length - 1]);
                         }
                         else {
-                            System.out.println("Ulord tx successfully processed, Tx id: " + sendTxResult);
+                            System.out.println("Ulord tx successfully processed, Tx id: " + sendTxResponse);
                         }
                     }
                     else
@@ -175,7 +179,7 @@ public class ReleaseUlordTransaction implements Runnable {
 
         String[] privKeys = {getPrivateKey(bridgeConstants, params)};
 
-        String result = UlordCli.signRawTransaction(
+        String signRawTxResponse = UlordCli.signRawTransaction(
                 params,
                 Hex.toHexString(tx.ulordSerialize()),
                 txId,
@@ -185,12 +189,12 @@ public class ReleaseUlordTransaction implements Runnable {
                 privKeys, null
         );
 
-        return result;
+        return signRawTxResponse;
     }
 
     private String getScriptPubKey(int vout, String txId, NetworkParameters params) throws IOException {
-        String txJSONString = UlordCli.getRawTransaction(params, txId, true);
-        JSONObject jsonObject = new JSONObject(txJSONString);
+        String getRawTxJSON = UlordCli.getRawTransaction(params, txId, true);
+        JSONObject jsonObject = new JSONObject(getRawTxJSON);
         JSONArray voutObjects = jsonObject.getJSONArray("vout");
         for(int i = 0; i < voutObjects.length(); ++i) {
             int n = Integer.parseInt(voutObjects.getJSONObject(i).get("n").toString());
@@ -203,9 +207,9 @@ public class ReleaseUlordTransaction implements Runnable {
 
     private int getVout(String txId, NetworkParameters params) throws IOException {
 
-        String txJSONString = UlordCli.getRawTransaction(params, txId, true);
+        String getRawTxJSON = UlordCli.getRawTransaction(params, txId, true);
 
-        JSONObject jsonObject = new JSONObject(txJSONString);
+        JSONObject jsonObject = new JSONObject(getRawTxJSON);
         JSONArray voutObjects = jsonObject.getJSONArray("vout");
 
         int vout = 0;
@@ -228,7 +232,6 @@ public class ReleaseUlordTransaction implements Runnable {
         return vout;
     }
 
-    // Todo: Call dumpprivkey from UlordCli.java
     private String getPrivateKey(BridgeConstants bridgeConstants, NetworkParameters params)
             throws IOException, PrivateKeyNotFoundException {
 

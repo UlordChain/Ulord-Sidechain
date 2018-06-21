@@ -8,8 +8,12 @@ import co.usc.ulordj.params.TestNet3Params;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FederationMain implements Runnable {
+
+    private static Logger logger = LoggerFactory.getLogger("federation");
 
     //TODO: Move those settings to a config file
     BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
@@ -51,30 +55,35 @@ public class FederationMain implements Runnable {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     String txid = jsonObject.get("txid").toString();
                     int height = Integer.parseInt(jsonObject.get("height").toString());
+
                     // Check if the ulord transaction is already processed in USC
                     String data = DataEncoder.encodeIsUldTxHashAlreadyProcessed(txid);
                     JSONObject jsObj = new JSONObject(UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, data));
+                    logger.info(jsObj.toString());
                     String result = jsObj.get("result").toString();
+
                     if (result.substring(result.length() - 1, result.length()).equals("1")) {
+                        logger.info("Tx already processed: " + txid);
                         System.out.println("Tx already processed: " + txid);
                         return;
                     }
 
                     JSONObject jsonObj = new JSONObject(UscRpc.getUldBlockChainBestChainHeight());
                     int chainHeadHeight = Integer.decode(jsonObj.get("result").toString());
-                    if(chainHeadHeight < height + bridgeConstants.getUld2UscMinimumAcceptableConfirmations())
+                    if(chainHeadHeight < height + bridgeConstants.getUld2UscMinimumAcceptableConfirmations()) {
+                        logger.info("Chainhead height is less than supplied transaction's height");
+                        System.out.println("Chainhead height is less than supplied transaction's height");
                         continue;
+                    }
 
                     // Here we can register Ulord transactions in USC
+                    logger.info("Transaction " + txid + " sent to USC");
                     RegisterUlordTransaction.register(bridgeConstants, fromFedAddress, pwd, txid);
                 }
-                Thread.sleep(1000 * 60);
+                Thread.sleep(1000 * 60 * 5);
             }
         } catch (Exception e) {
             System.out.println(e);
         }
-
     }
-
-
 }
