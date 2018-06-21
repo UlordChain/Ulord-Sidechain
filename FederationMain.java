@@ -19,7 +19,6 @@ public class FederationMain implements Runnable {
 
     private static Logger logger = LoggerFactory.getLogger("federation");
 
-    //TODO: Move those settings to a config file
     BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
     NetworkParameters params = TestNet3Params.get();
 

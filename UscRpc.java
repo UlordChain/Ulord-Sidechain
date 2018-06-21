@@ -39,7 +39,7 @@ public class UscRpc {
                                           @Nullable String value,
                                           @Nullable String data,
                                           @Nullable String nonce)
-            throws IOException, InterruptedException {
+            throws IOException {
 
 //        if(tries < 0)
 //            return "error:Transaction failed";

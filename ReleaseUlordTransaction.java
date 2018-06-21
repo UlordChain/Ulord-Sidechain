@@ -74,14 +74,14 @@ public class ReleaseUlordTransaction implements Runnable {
                 //  web3.eth.call({data:"0B851400",to:"0x0000000000000000000000000000000001000006"})
                 CallTransaction.Function function = Bridge.GET_STATE_FOR_ULD_RELEASE_CLIENT;
 
-                String response = UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, Hex.toHexString(function.encodeSignature()));
+                String callResponse = UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, Hex.toHexString(function.encodeSignature()));
 
-                JSONObject jsonObject = new JSONObject(response);
+                JSONObject jsonObject = new JSONObject(callResponse);
 
                 String result = jsonObject.get("result").toString();
                 String resultSub = result.substring(2, result.length());
 
-                Object[] args = function.decodeResult(Sha256Hash.hexStringToByteArray(resultSub));
+                Object[] args = function.decodeResult(Hex.decode(resultSub));
                 byte[] data = (byte[])args[0];
                 RLPList rlpList = (RLPList) RLP.decode2(Sha256Hash.hexStringToByteArray(Sha256Hash.bytesToHex(data))).get(0);
                 SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures;
