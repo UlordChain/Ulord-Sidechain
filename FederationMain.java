@@ -5,11 +5,15 @@ import co.usc.config.BridgeTestNetConstants;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.params.MainNetParams;
 import co.usc.ulordj.params.TestNet3Params;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 public class FederationMain implements Runnable {
 
@@ -19,9 +23,17 @@ public class FederationMain implements Runnable {
     BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
     NetworkParameters params = TestNet3Params.get();
 
-    String[] ulordFederationAddress = {"sY5XfaKEej45QBkw5cQwpiconeg7SqYLYL"};
-    String federationChangeAuthorizedAddress = "674f05e1916abc32a38f40aa67ae6b503b565999";
-    String pwd = "abcd1234";
+    String[] ulordFederationAddress;
+    String federationChangeAuthorizedAddress;
+    String pwd;
+
+    public FederationMain(){
+        FederationConfigLoader configLoader = new FederationConfigLoader();
+        Config config = configLoader.getConfigFromFiles();
+        ulordFederationAddress = config.getStringList("federation.address").toArray(new String[0]);
+        federationChangeAuthorizedAddress = config.getString("federation.changeAuthorizedAddress");
+        pwd = config.getString("federation.password");
+    }
 
     public static void main(String[]  args) {
         FederationMain fedMain = new FederationMain();
