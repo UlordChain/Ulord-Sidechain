@@ -19,6 +19,7 @@
 package tools;
 
 import co.usc.ulordj.core.NetworkParameters;
+import com.typesafe.config.Config;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -26,6 +27,8 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.ethereum.db.ContractDetails;
+import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -36,8 +39,15 @@ import java.util.Date;
 public class SyncUlordHeaders implements Runnable{
 
     NetworkParameters params;
-    public SyncUlordHeaders(NetworkParameters params){
+    String[] ulordFederationAddress;
+    String federationChangeAuthorizedAddress;
+    String federationChangeAuthorizedPassword;
+
+    public SyncUlordHeaders(NetworkParameters params, Config config){
         this.params = params;
+        this.ulordFederationAddress = config.getStringList("federation.address").toArray(new String[0]);
+        this.federationChangeAuthorizedAddress = config.getString("federation.changeAuthorizedAddress");
+        this.federationChangeAuthorizedPassword = config.getString("federation.changeAuthorizedPassword");
     }
 
     @Override
@@ -86,7 +96,7 @@ public class SyncUlordHeaders implements Runnable{
                     if (i % 100 == 0 || i == blockCount) {
                         try {
                             // Unlock account
-                            unlockFederationChangeAuthorizedKeys();
+                            UscRpc.unlockAccount(federationChangeAuthorizedAddress, federationChangeAuthorizedPassword);
 
                             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                             Date date = new Date();
@@ -148,75 +158,20 @@ public class SyncUlordHeaders implements Runnable{
         }
     }
 
-    public static void unlockFederationChangeAuthorizedKeys() throws  IOException{
-        String payloadUnlockAcc = "{" +
-                "\"jsonrpc\": \"2.0\", " +
-                "\"method\": \"personal_unlockAccount\", " +
-                "\"params\": [" +
-                "\"674f05e1916abc32a38f40aa67ae6b503b565999\"," +
-                "\"abcd1234\",\"\"" +
-                "], " +
-                "\"id\": \"1\"" +
-                "}";
-
-        StringEntity entityUnlockAcc = new StringEntity(payloadUnlockAcc,
-                ContentType.APPLICATION_JSON);
-
-        HttpClient httpClientUnlockAcc = HttpClientBuilder.create().build();
-        HttpPost requestUnlockAcc = new HttpPost(NetworkConstants.POST_URI);
-        requestUnlockAcc.setEntity(entityUnlockAcc);
-
-        HttpResponse responseUnlockAcc = httpClientUnlockAcc.execute(requestUnlockAcc);
-    }
-
     //Call receiveHeaders of Bridge.
-    private static String receiveHeaders(StringBuilder builder) throws IOException {
-        String payload = "{" +
-                "\"jsonrpc\": \"2.0\", " +
-                "\"method\": \"eth_sendTransaction\", " +
-                "\"params\": [{" +
-                "\"from\": \"674f05e1916abc32a38f40aa67ae6b503b565999\"," +
-                "\"to\": \"0x0000000000000000000000000000000001000006\"," +
-                "\"gas\": \"0x3D0900\"," +
-                "\"gasPrice\": \"0x9184e72a000\"," +
-                "\"data\": \"" + DataEncoder.encodeReceiveHeaders(builder.toString().split(" ")) + "\"}]," +
-                "\"id\": \"1\"" +
-                "}";
+    private String receiveHeaders(StringBuilder builder) throws IOException , InterruptedException{
 
-        StringEntity entity = new StringEntity(payload,
-                ContentType.APPLICATION_JSON);
-
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost(NetworkConstants.POST_URI);
-        request.setEntity(entity);
-
-        HttpResponse response = httpClient.execute(request);
-
-        String responseString = EntityUtils.toString(response.getEntity());
+        String responseString = UscRpc.sendTransaction(federationChangeAuthorizedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, DataEncoder.encodeReceiveHeaders(builder.toString().split(" ")), null);
         JSONObject jsonObj = new JSONObject(responseString);
         String txHash = jsonObj.get("result").toString();
+
         return txHash;
+
     }
 
-    private static String getTransactionByHash(String txHash){
-        String payload = "{" +
-                "\"jsonrpc\": \"2.0\", " +
-                "\"method\": \"eth_getTransactionByHash\", " +
-                "\"params\": [" +
-                "\"" + txHash + "\"]," +
-                "\"id\": \"1\"" +
-                "}";
-
-        StringEntity entity = new StringEntity(payload,
-                ContentType.APPLICATION_JSON);
-
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost(NetworkConstants.POST_URI);
-        request.setEntity(entity);
-
+    private String getTransactionByHash(String txHash){
         try {
-            HttpResponse response = httpClient.execute(request);
-            String responseString = EntityUtils.toString(response.getEntity());
+            String responseString = UscRpc.getTransactionByHash(txHash);
             JSONObject jsonObj = new JSONObject(responseString);
             String result = jsonObj.get("result").toString();
             if(result.equals("null")){
@@ -238,27 +193,9 @@ public class SyncUlordHeaders implements Runnable{
     }
 
     //Call getUldBlockChainBestChainHeight of Bridge.
-    private static int getUldBlockChainBestChainHeight(){
-        //web3.eth.call({data:"3f4173af", to:"0x0000000000000000000000000000000001000006"});
-        String payload = "{" +
-                "\"jsonrpc\": \"2.0\", " +
-                "\"method\": \"eth_call\", " +
-                "\"params\": [{" +
-                "\"to\": \"0x0000000000000000000000000000000001000006\"," +
-                "\"data\": \"3f4173af\"},\"latest\"]," +
-                "\"id\": \"1\"" +
-                "}";
-
-        StringEntity entity = new StringEntity(payload,
-                ContentType.APPLICATION_JSON);
-
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost(NetworkConstants.POST_URI);
-        request.setEntity(entity);
-
+    private int getUldBlockChainBestChainHeight(){
         try {
-            HttpResponse response = httpClient.execute(request);
-            String responseString = EntityUtils.toString(response.getEntity());
+            String responseString = UscRpc.getUldBlockChainBestChainHeight();
             JSONObject jsonObj = new JSONObject(responseString);
             return Integer.decode(jsonObj.get("result").toString());
         }catch(Exception ex){
@@ -267,24 +204,9 @@ public class SyncUlordHeaders implements Runnable{
         }
     }
 
-    public static int getUSCBlockNumber() throws IOException{
-        String payloadUSCBlockNumber = "{" +
-                "\"jsonrpc\": \"2.0\", " +
-                "\"method\": \"eth_blockNumber\", " +
-                "\"params\": {}," +
-                "\"id\": \"666\"" +
-                "}";
-
-        StringEntity entity = new StringEntity(payloadUSCBlockNumber,
-                ContentType.APPLICATION_JSON);
-
-        HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost(NetworkConstants.POST_URI);
-        request.setEntity(entity);
-
+    public int getUSCBlockNumber() throws IOException{
         try {
-            HttpResponse response = httpClient.execute(request);
-            String responseString = EntityUtils.toString(response.getEntity());
+            String responseString = UscRpc.blockNumber();
             JSONObject jsonObj = new JSONObject(responseString);
             return Integer.decode(jsonObj.get("result").toString());
         }catch(Exception ex){
@@ -293,7 +215,7 @@ public class SyncUlordHeaders implements Runnable{
         }
     }
 
-    private static boolean isBlockHeightDifferenceAtLeast20(int UscBestBlockHeightBeforeReceiveHeaders, int UscBestBlockHeightAfterReceiveHeaders){
+    private boolean isBlockHeightDifferenceAtLeast20(int UscBestBlockHeightBeforeReceiveHeaders, int UscBestBlockHeightAfterReceiveHeaders){
         if((UscBestBlockHeightAfterReceiveHeaders - UscBestBlockHeightBeforeReceiveHeaders) >=20){
             return true;
         }
