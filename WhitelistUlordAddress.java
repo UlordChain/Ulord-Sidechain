@@ -98,7 +98,7 @@ public class WhitelistUlordAddress {
 
         } catch (Exception e) {
             logger.error(e.toString());
-            System.out.println(e);
+            System.out.println("WhitelistUlordAddress: " + e);
             return false;
         }
     }

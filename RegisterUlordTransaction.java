@@ -34,6 +34,8 @@ import org.spongycastle.util.encoders.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class RegisterUlordTransaction {
 
     private static Logger logger = LoggerFactory.getLogger("registerulordtransaction");
@@ -43,15 +45,15 @@ public class RegisterUlordTransaction {
 //        register(BridgeTestNetConstants.getInstance(), "674f05e1916abc32a38f40aa67ae6b503b565999", "abcd1234", "29ae1e72a00cdc394e52fa8341f9270a63356ff30e66520bfa75d77a5a1216f2");
 //    }
 
-    public static boolean register(BridgeConstants bridgeConstants, String fedAddress, String pwd, String utTxId) {
+    public static boolean register(BridgeConstants bridgeConstants, String changeAuthorizedAddress, String pwd, String utTxId) {
         try {
             AddressBasedAuthorizer federationChangeAuthorizer = bridgeConstants.getFederationChangeAuthorizer();
 
-            if (!federationChangeAuthorizer.isAuthorized(new UscAddress(fedAddress)))
+            if (!federationChangeAuthorizer.isAuthorized(new UscAddress(changeAuthorizedAddress)))
                 return false;
 
             // Try to unlock account
-            if (!Utils.tryUnlockUscAccount(fedAddress, pwd)) {
+            if (!Utils.tryUnlockUscAccount(changeAuthorizedAddress, pwd)) {
                 throw new PrivateKeyNotFoundException();
             }
 
@@ -95,18 +97,34 @@ public class RegisterUlordTransaction {
 
             String data = DataEncoder.encodeRegisterUlordTransaction(tx.ulordSerialize(), height, partialMerkleTree.ulordSerialize());
 
-            // TODO: Compute gasPrice, though it is a free transaction from genesis federation
-            String txResult = UscRpc.sendTransaction(fedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, data, null);
-            logger.info(txResult);
-            System.out.println("RegisterUlordTransaction: " + txResult);
-            if(txResult.contains("error"))
-                return false;
-            return true;
+            return sendTx(changeAuthorizedAddress, data, 3);
 
         } catch (Exception e) {
             logger.error(e.toString());
-            System.out.println(e);
+            System.out.println("RegisterUlordTransaction: " + e);
             return false;
         }
+    }
+
+    private static boolean sendTx(String changeAuthorizedAddress, String data, int tries) throws IOException, InterruptedException {
+
+        if (tries == 0)
+            return false;
+
+        String sendTransactionResponse = UscRpc.sendTransaction(changeAuthorizedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, data, null);
+        logger.info(sendTransactionResponse);
+        JSONObject jsonObject = new JSONObject(sendTransactionResponse);
+        String txId = jsonObject.get("result").toString();
+
+        if (!Utils.isTransactionInMemPool(txId))
+            sendTx(changeAuthorizedAddress, data, --tries);
+
+        while (!Utils.isTransactionMined(txId)) {
+            if (!Utils.isTransactionInMemPool(txId))
+                sendTx(changeAuthorizedAddress, data, --tries);
+            Thread.sleep(1000 * 15);
+        }
+
+        return true;
     }
 }

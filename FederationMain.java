@@ -38,9 +38,6 @@ public class FederationMain implements Runnable {
 
         Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params, fedMain.config));
         syncUlordHeaders.start();
-
-        Thread releaseUlordTx = new Thread(new ReleaseUlordTransaction(fedMain.bridgeConstants));
-        releaseUlordTx.start();
     }
 
     @Override
@@ -49,20 +46,22 @@ public class FederationMain implements Runnable {
     }
 
 
-    public void monitorUtxosAndRegisterUlordTx(BridgeConstants bridgeConstants, String fromFedAddress, String pwd, String[] address) {
+    public void monitorUtxosAndRegisterUlordTx(BridgeConstants bridgeConstants, String federationChangeAuthorizedAddress, String pwd, String[] addresses) {
         NetworkParameters params;
         if(bridgeConstants instanceof BridgeTestNetConstants)
             params = TestNet3Params.get();
         else
             params = MainNetParams.get();
 
-        try {
-            while(true) {
-                JSONArray jsonArray  = new JSONArray(UlordCli.getAddressUtxos(params, address));
-                for(int i = 0; i < jsonArray.length(); ++i) {
+
+        while(true) {
+            try {
+                JSONArray jsonArray = new JSONArray(UlordCli.getAddressUtxos(params, addresses));
+                for (int i = 0; i < jsonArray.length(); ++i) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     String txid = jsonObject.get("txid").toString();
                     int height = Integer.parseInt(jsonObject.get("height").toString());
+                    String fedMultisigAddr = jsonObject.get("address").toString();
 
                     // Check if the ulord transaction is already processed in USC
                     String data = DataEncoder.encodeIsUldTxHashAlreadyProcessed(txid);
@@ -71,27 +70,30 @@ public class FederationMain implements Runnable {
                     String result = jsObj.get("result").toString();
 
                     if (result.substring(result.length() - 1, result.length()).equals("1")) {
-                        logger.info("Tx already processed: " + txid);
+                        logger.info("Transaction " + txid + " already processed");
                         System.out.println("Tx already processed: " + txid);
-                        return;
+                        // If already processed, try release.
+                        ReleaseUlordTransaction.release(bridgeConstants, federationChangeAuthorizedAddress, pwd, fedMultisigAddr);
+                        continue;
                     }
 
                     JSONObject jsonObj = new JSONObject(UscRpc.getUldBlockChainBestChainHeight());
                     int chainHeadHeight = Integer.decode(jsonObj.get("result").toString());
-                    if(chainHeadHeight < height + bridgeConstants.getUld2UscMinimumAcceptableConfirmations()) {
-                        logger.info("Chainhead height is less than supplied transaction's height");
+                    if (chainHeadHeight < height + bridgeConstants.getUld2UscMinimumAcceptableConfirmations()) {
+                        logger.info("Chainhead height " + chainHeadHeight + " is less than supplied transaction's height " + height);
                         System.out.println("Chainhead height is less than supplied transaction's height");
                         continue;
                     }
 
                     // Here we can register Ulord transactions in USC
                     logger.info("Transaction " + txid + " sent to USC");
-                    RegisterUlordTransaction.register(bridgeConstants, fromFedAddress, pwd, txid);
+                    RegisterUlordTransaction.register(bridgeConstants, federationChangeAuthorizedAddress, pwd, txid);
                 }
                 Thread.sleep(1000 * 60 * 5);
+            } catch (Exception e) {
+                logger.warn(e.toString());
+                System.out.println("FederationMain: " + e);
             }
-        } catch (Exception e) {
-            System.out.println(e);
         }
     }
 }
