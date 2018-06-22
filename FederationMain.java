@@ -59,7 +59,6 @@ public class FederationMain implements Runnable {
         while(true) {
             try {
 
-
                 String getAddressUtxosResponse = UlordCli.getAddressUtxos(params, addresses);
                 if(getAddressUtxosResponse.contains("error")) {
                     logger.error(getAddressUtxosResponse);
@@ -80,11 +79,12 @@ public class FederationMain implements Runnable {
                     logger.info(jsObj.toString());
                     String result = jsObj.get("result").toString();
 
+                    // Try to release any pending transaction.
+                    ReleaseUlordTransaction.release(bridgeConstants, federationChangeAuthorizedAddress, pwd, fedMultisigAddr);
+
                     if (result.substring(result.length() - 1, result.length()).equals("1")) {
                         logger.info("Transaction " + txid + " already processed");
                         System.out.println("Tx already processed: " + txid);
-                        // If already processed, try release.
-                        ReleaseUlordTransaction.release(bridgeConstants, federationChangeAuthorizedAddress, pwd, fedMultisigAddr);
                         continue;
                     }
 

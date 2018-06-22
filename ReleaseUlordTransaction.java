@@ -105,6 +105,8 @@ public class ReleaseUlordTransaction {
                         String[] messages = sendTxResponse.split(":");
                         if(messages[messages.length - 1].contains("transaction already in block chain")) {
                             System.out.println("ReleaseUlordTransaction: Transaction already in blockchain");
+                            // Try adding signature again to remove already processed transaction
+                            addSignatureToUSC(key, utTx, federationChangeAuthorizedAddress);
                         }
                         else
                             System.out.println("ReleaseUlordTransaction: Transaction failed: " + messages[messages.length - 1]);
