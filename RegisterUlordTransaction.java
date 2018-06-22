@@ -93,7 +93,7 @@ public class RegisterUlordTransaction {
             }
             UldBlock block = new UldBlock(params, Hex.decode(getBlockResponse));
 
-            PartialMerkleTree partialMerkleTree = GenerateMerkleTree.buildMerkleBranch(block, tx.getHash());
+            PartialMerkleTree partialMerkleTree = GenerateMerkleTree.buildMerkleBranch(params, block, tx.getHash());
 
             String data = DataEncoder.encodeRegisterUlordTransaction(tx.ulordSerialize(), height, partialMerkleTree.ulordSerialize());
 

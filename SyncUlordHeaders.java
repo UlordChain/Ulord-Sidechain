@@ -146,7 +146,7 @@ public class SyncUlordHeaders implements Runnable{
                             startIndex = i+1;
                             builder = new StringBuilder();
                         } catch (Exception ex) {
-                            System.out.println("SyncUlordHeaders: " + ex.getMessage());
+                            System.out.println("SyncUlordHeaders.prepareAndCallReceiveHeadersRPC: " + ex.getMessage());
                             break;
                         }
                     }
@@ -161,12 +161,18 @@ public class SyncUlordHeaders implements Runnable{
     //Call receiveHeaders of Bridge.
     private String receiveHeaders(StringBuilder builder) throws IOException {
 
-        String responseString = UscRpc.sendTransaction(federationChangeAuthorizedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, DataEncoder.encodeReceiveHeaders(builder.toString().split(" ")), null);
+        String responseString = UscRpc.sendTransaction(
+                federationChangeAuthorizedAddress,
+                PrecompiledContracts.BRIDGE_ADDR_STR,
+                "0x3D0900",
+                "0x9184e72a000",
+                null,
+                DataEncoder.encodeReceiveHeaders(builder.toString().split(" ")),
+                null);
         JSONObject jsonObj = new JSONObject(responseString);
         String txHash = jsonObj.get("result").toString();
 
         return txHash;
-
     }
 
     private String getTransactionByHash(String txHash) {
@@ -187,7 +193,7 @@ public class SyncUlordHeaders implements Runnable{
             }
             return "notMined";
         }catch(Exception ex){
-            System.out.println("SyncUlordHeaders: " + ex);
+            System.out.println("SyncUlordHeaders.getTransactionByHash: " + ex);
             return "error";
         }
     }
@@ -199,7 +205,7 @@ public class SyncUlordHeaders implements Runnable{
             JSONObject jsonObj = new JSONObject(responseString);
             return Integer.decode(jsonObj.get("result").toString());
         }catch(Exception ex){
-            System.out.println("SyncUlordHeaders: " + ex);
+            System.out.println("SyncUlordHeaders.getUldBlockChainBestChainHeight: " + ex);
             return 1;
         }
     }
@@ -210,7 +216,7 @@ public class SyncUlordHeaders implements Runnable{
             JSONObject jsonObj = new JSONObject(responseString);
             return Integer.decode(jsonObj.get("result").toString());
         }catch(Exception ex){
-            System.out.println("SyncUlordHeaders: " + ex);
+            System.out.println("SyncUlordHeaders.getUSCBlockNumber: " + ex);
             return 0;
         }
     }

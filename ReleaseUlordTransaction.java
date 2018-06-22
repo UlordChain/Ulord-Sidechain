@@ -67,7 +67,7 @@ public class ReleaseUlordTransaction {
 
             Object[] args = function.decodeResult(Hex.decode(resultSub));
             byte[] data = (byte[])args[0];
-            RLPList rlpList = (RLPList) RLP.decode2(Sha256Hash.hexStringToByteArray(Sha256Hash.bytesToHex(data))).get(0);
+            RLPList rlpList = (RLPList) RLP.decode2(data).get(0);
             SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures;
             uscTxsWaitingForSignatures = BridgeSerializationUtils.deserializeMap(rlpList.get(0).getRLPData(), params, false);
 
@@ -92,7 +92,9 @@ public class ReleaseUlordTransaction {
                 String complete = jsonObject.get("complete").toString();
                 String rawUtTxHex = jsonObject.get("hex").toString();
 
-                System.out.println(addSignatureToUSC(key, utTx, federationChangeAuthorizedAddress));   // addSignatures in Bridge.java
+                String addSigToUscResponse = addSignatureToUSC(key, utTx, federationChangeAuthorizedAddress);
+                System.out.println(addSigToUscResponse );   // addSignatures in Bridge.java
+                logger.info(addSigToUscResponse);
 
                 if(complete.equals("true")) {
 
@@ -119,13 +121,6 @@ public class ReleaseUlordTransaction {
         }
         catch (Exception e) {
             System.out.println("ReleaseUlordTransaction: " + e);
-        }
-        finally {
-            try {
-                Thread.sleep(1000 * 60 * 15);   // Sleep for 15 minutes
-            } catch (InterruptedException e) {
-                System.out.println("ReleaseUlordTransaction:" + e);
-            }
         }
     }
 

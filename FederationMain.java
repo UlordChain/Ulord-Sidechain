@@ -2,6 +2,7 @@ package tools;
 
 import co.usc.config.BridgeConstants;
 import co.usc.config.BridgeTestNetConstants;
+import co.usc.peg.Bridge;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.params.MainNetParams;
 import co.usc.ulordj.params.TestNet3Params;
@@ -11,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spongycastle.util.encoders.Hex;
 
 public class FederationMain implements Runnable {
 
@@ -56,7 +58,16 @@ public class FederationMain implements Runnable {
 
         while(true) {
             try {
-                JSONArray jsonArray = new JSONArray(UlordCli.getAddressUtxos(params, addresses));
+
+
+                String getAddressUtxosResponse = UlordCli.getAddressUtxos(params, addresses);
+                if(getAddressUtxosResponse.contains("error")) {
+                    logger.error(getAddressUtxosResponse);
+                    System.out.println(getAddressUtxosResponse);
+                    return;
+                }
+                JSONArray jsonArray = new JSONArray(getAddressUtxosResponse);
+
                 for (int i = 0; i < jsonArray.length(); ++i) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     String txid = jsonObject.get("txid").toString();
@@ -81,7 +92,7 @@ public class FederationMain implements Runnable {
                     int chainHeadHeight = Integer.decode(jsonObj.get("result").toString());
                     if (chainHeadHeight < height + bridgeConstants.getUld2UscMinimumAcceptableConfirmations()) {
                         logger.info("Chainhead height " + chainHeadHeight + " is less than supplied transaction's height " + height);
-                        System.out.println("Chainhead height is less than supplied transaction's height");
+                        System.out.println("Chainhead height " + chainHeadHeight + " is less than supplied transaction's height " + height);
                         continue;
                     }
 
@@ -89,6 +100,19 @@ public class FederationMain implements Runnable {
                     logger.info("Transaction " + txid + " sent to USC");
                     RegisterUlordTransaction.register(bridgeConstants, federationChangeAuthorizedAddress, pwd, txid);
                 }
+
+                String sendTxResponse = UscRpc.sendTransaction(federationChangeAuthorizedAddress,
+                        PrecompiledContracts.BRIDGE_ADDR_STR,
+                        "0x3D0900",
+                        "0x9184e72a000",
+                        null,
+                        Hex.toHexString(Bridge.UPDATE_COLLECTIONS.encodeSignature()),
+                        null
+                );
+                logger.info(sendTxResponse);
+                System.out.println("FederationMain: " + sendTxResponse);
+
+
                 Thread.sleep(1000 * 60 * 5);
             } catch (Exception e) {
                 logger.warn(e.toString());

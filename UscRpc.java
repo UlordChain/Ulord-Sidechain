@@ -1,8 +1,6 @@
 package tools;
 
-import co.usc.config.BridgeConstants;
 import co.usc.peg.Bridge;
-import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import javax.annotation.Nullable;
@@ -41,9 +39,6 @@ public class UscRpc {
                                           @Nullable String nonce)
             throws IOException {
 
-//        if(tries < 0)
-//            return "error:Transaction failed";
-
         StringBuilder cmd = new StringBuilder();
         cmd.append("{");
         cmd.append("\"jsonrpc\":\"2.0\", ");
@@ -74,21 +69,8 @@ public class UscRpc {
             cmd.append("\"data\":\"" + data);
 
         cmd.append("\"}]}");
-        return UscRpcExecutor.execute(cmd.toString());
-//        JSONObject jsonObject = new JSONObject(UscRpcExecutor.execute(cmd.toString()));
 
-//        String txId = jsonObject.get("result").toString();
-//
-//        Thread.sleep(1000);
-//        if (!Utils.isTransactionInMemPool(txId))
-//            sendTransaction(from, to, gas, gasPrice, value, data, nonce, --tries);
-//
-//        while (!Utils.isTransactionMined(txId)) {
-//            if(!Utils.isTransactionInMemPool(txId))
-//                sendTransaction(from, to, gas, gasPrice, value, data, nonce, --tries);
-//            Thread.sleep(1000 * 10);
-//        }
-//        return jsonObject.toString();
+        return UscRpcExecutor.execute(cmd.toString());
     }
 
     public static String call(String to, String data) throws IOException {
@@ -121,6 +103,16 @@ public class UscRpc {
                 "\"data\": \"" + Hex.toHexString(Bridge.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT.encodeSignature()) +"\"},\"latest\"]," +
                 "\"id\": \"1\"" +
                 "}";
+        return UscRpcExecutor.execute(cmd);
+    }
+
+    public static String getTransactionCount(String address) throws IOException {
+        String cmd = "{" +
+                "\"jsonrpc\": \"2.0\", " +
+                "\"method\": \"eth_getTransactionCount\", " +
+                "\"id\": \"1\", " +
+                "\"params\": [" +
+                "\"" + address + "\", \"latest\"]}";
         return UscRpcExecutor.execute(cmd);
     }
 }
