@@ -24,37 +24,45 @@ public class FederationMain implements Runnable {
     String[] ulordFederationAddress;
     String federationChangeAuthorizedAddress;
     String federationChangeAuthorizedPassword;
+    boolean isSyncUlordHeadersEnabled;
+    boolean isPegEnabled;
 
     public FederationMain(){
         FederationConfigLoader configLoader = new FederationConfigLoader();
         config = configLoader.getConfigFromFiles();
-        this.ulordFederationAddress = config.getStringList("federation.address").toArray(new String[0]);
+        this.ulordFederationAddress = config.getStringList("federation.addresses").toArray(new String[0]);
         this.federationChangeAuthorizedAddress = config.getString("federation.changeAuthorizedAddress");
         this.federationChangeAuthorizedPassword = config.getString("federation.changeAuthorizedPassword");
+        this.isSyncUlordHeadersEnabled = config.getString("federation.syncUlordHeaders.enabled") == "true" ? true : false;
+        this.isPegEnabled = config.getString("federation.peg.enabled") == "true" ? true : false;
     }
 
     public static void main(String[]  args) {
         FederationMain fedMain = new FederationMain();
-        Thread registerUlordTransactions = new Thread(fedMain);
-        registerUlordTransactions.start();
 
-        Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params, fedMain.config));
-        syncUlordHeaders.start();
+        if(fedMain.isPegEnabled) {
+            Thread peg = new Thread(fedMain);
+            peg.start();
+        }
+
+        if(fedMain.isSyncUlordHeadersEnabled) {
+            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params, fedMain.config));
+            syncUlordHeaders.start();
+        }
     }
 
     @Override
     public void run() {
-        monitorUtxosAndRegisterUlordTx(bridgeConstants, federationChangeAuthorizedAddress, federationChangeAuthorizedPassword, ulordFederationAddress);
+        startPeg(bridgeConstants, federationChangeAuthorizedAddress, federationChangeAuthorizedPassword, ulordFederationAddress);
     }
 
 
-    public void monitorUtxosAndRegisterUlordTx(BridgeConstants bridgeConstants, String federationChangeAuthorizedAddress, String pwd, String[] addresses) {
+    public void startPeg(BridgeConstants bridgeConstants, String federationChangeAuthorizedAddress, String pwd, String[] addresses) {
         NetworkParameters params;
         if(bridgeConstants instanceof BridgeTestNetConstants)
             params = TestNet3Params.get();
         else
             params = MainNetParams.get();
-
 
         while(true) {
             try {
@@ -71,16 +79,12 @@ public class FederationMain implements Runnable {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     String txid = jsonObject.get("txid").toString();
                     int height = Integer.parseInt(jsonObject.get("height").toString());
-                    String fedMultisigAddr = jsonObject.get("address").toString();
 
                     // Check if the ulord transaction is already processed in USC
                     String data = DataEncoder.encodeIsUldTxHashAlreadyProcessed(txid);
                     JSONObject jsObj = new JSONObject(UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, data));
                     logger.info(jsObj.toString());
                     String result = jsObj.get("result").toString();
-
-                    // Try to release any pending transaction.
-                    ReleaseUlordTransaction.release(bridgeConstants, federationChangeAuthorizedAddress, pwd, fedMultisigAddr);
 
                     if (result.substring(result.length() - 1, result.length()).equals("1")) {
                         logger.info("Transaction " + txid + " already processed");
@@ -112,6 +116,8 @@ public class FederationMain implements Runnable {
                 logger.info(sendTxResponse);
                 System.out.println("FederationMain: " + sendTxResponse);
 
+                // Try to release any pending transaction.
+                ReleaseUlordTransaction.release(bridgeConstants, federationChangeAuthorizedAddress, pwd);
 
                 Thread.sleep(1000 * 60 * 5);
             } catch (Exception e) {

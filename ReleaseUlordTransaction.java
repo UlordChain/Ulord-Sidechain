@@ -44,7 +44,7 @@ public class ReleaseUlordTransaction {
 
     private static Logger logger = LoggerFactory.getLogger("releaseulordtransaction");
 
-    public static void release(BridgeConstants bridgeConstants, String federationChangeAuthorizedAddress, String pwd, String fedMultisigAddress) {
+    public static void release(BridgeConstants bridgeConstants, String federationChangeAuthorizedAddress, String pwd) {
 
         NetworkParameters params = null;
         if(bridgeConstants instanceof BridgeTestNetConstants) {
@@ -86,7 +86,7 @@ public class ReleaseUlordTransaction {
                 // Check there are at least N blocks on top of the supplied transaction
                 if(!validateTxDepth(key, bridgeConstants)) { continue; }
 
-                String signResult = signRawTransaction(utTx, bridgeConstants, params, fedMultisigAddress);
+                String signResult = signRawTransaction(utTx, bridgeConstants, params);
 
                 jsonObject = new JSONObject(signResult);
                 String complete = jsonObject.get("complete").toString();
@@ -156,10 +156,10 @@ public class ReleaseUlordTransaction {
         return res;
     }
 
-    private static String signRawTransaction(UldTransaction tx, BridgeConstants bridgeConstants, NetworkParameters params, String fedMultisigAddr)
+    private static String signRawTransaction(UldTransaction tx, BridgeConstants bridgeConstants, NetworkParameters params)
             throws IOException, PrivateKeyNotFoundException {
         String txId = getUlordTxId(tx, params);
-        int vout = getVout(txId, params, fedMultisigAddr);
+        int vout = getVout(txId, params);
         String scriptPubKey = getScriptPubKey(vout, txId, params);
 
         String[] privKeys = {getPrivateKey(bridgeConstants, params)};
@@ -190,12 +190,18 @@ public class ReleaseUlordTransaction {
         return null;
     }
 
-    private static int getVout(String txId, NetworkParameters params, String fedMultisigAddr) throws IOException {
+    private static int getVout(String txId, NetworkParameters params) throws IOException {
 
         String getRawTxJSON = UlordCli.getRawTransaction(params, txId, true);
 
         JSONObject jsonObject = new JSONObject(getRawTxJSON);
         JSONArray voutObjects = jsonObject.getJSONArray("vout");
+
+        // Get Federation address
+        String getFedAddrResponse = UscRpc.getFederationAddress();
+        JSONObject getFedAddrJson = new JSONObject(getFedAddrResponse);
+        String getFedAddrResult = getFedAddrJson.getString("result").substring(2);
+        Object[] fedAddress = Bridge.GET_FEDERATION_ADDRESS.decodeResult(Hex.decode(getFedAddrResult));
 
         int vout = 0;
         for(int i = 0; i < voutObjects.length(); ++i) {
@@ -205,9 +211,11 @@ public class ReleaseUlordTransaction {
 
             boolean found = false;
             for(int j = 0; j < addressObjects.length(); ++j) {
-                if(addressObjects.get(j).toString().equals(fedMultisigAddr)) {
-                    found = true;
-                    break;
+                for (int k = 0; k < fedAddress.length; k++) {
+                    if(addressObjects.get(j).toString().equals(fedAddress[k].toString())) {
+                        found = true;
+                        break;
+                    }
                 }
             }
             if(found)
