@@ -111,7 +111,11 @@ public class RegisterUlordTransaction {
         if (tries == 0)
             return false;
 
-        String sendTransactionResponse = UscRpc.sendTransaction(changeAuthorizedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, data, null);
+        // Get gasPrice
+        JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
+        String gasPrice = getGasPriceJSON.getString("result");
+
+        String sendTransactionResponse = UscRpc.sendTransaction(changeAuthorizedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", gasPrice, null, data, null);
         logger.info(sendTransactionResponse);
         JSONObject jsonObject = new JSONObject(sendTransactionResponse);
         String txId = jsonObject.get("result").toString();

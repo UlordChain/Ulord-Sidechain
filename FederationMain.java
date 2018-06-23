@@ -105,10 +105,14 @@ public class FederationMain implements Runnable {
                     RegisterUlordTransaction.register(bridgeConstants, federationChangeAuthorizedAddress, pwd, txid);
                 }
 
+                // Get gasPrice
+                JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
+                String gasPrice = getGasPriceJSON.getString("result");
+
                 String sendTxResponse = UscRpc.sendTransaction(federationChangeAuthorizedAddress,
                         PrecompiledContracts.BRIDGE_ADDR_STR,
                         "0x3D0900",
-                        "0x9184e72a000",
+                        gasPrice,
                         null,
                         Hex.toHexString(Bridge.UPDATE_COLLECTIONS.encodeSignature()),
                         null

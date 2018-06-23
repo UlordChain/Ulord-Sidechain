@@ -161,11 +161,15 @@ public class SyncUlordHeaders implements Runnable{
     //Call receiveHeaders of Bridge.
     private String receiveHeaders(StringBuilder builder) throws IOException {
 
+        // Get gasPrice
+        JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
+        String gasPrice = getGasPriceJSON.getString("result");
+
         String responseString = UscRpc.sendTransaction(
                 federationChangeAuthorizedAddress,
                 PrecompiledContracts.BRIDGE_ADDR_STR,
                 "0x3D0900",
-                "0x9184e72a000",
+                gasPrice,
                 null,
                 DataEncoder.encodeReceiveHeaders(builder.toString().split(" ")),
                 null);

@@ -146,9 +146,13 @@ public class ReleaseUlordTransaction {
 
         CallTransaction.Function function = Bridge.ADD_SIGNATURE;
 
+        // Get gasPrice
+        JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
+        String gasPrice = getGasPriceJSON.getString("result");
+
         String res = UscRpc.sendTransaction(federationChangeAuthorizedAddress,
                 PrecompiledContracts.BRIDGE_ADDR_STR,
-                "0x3D0900", "0x9184e72a000",
+                "0x3D0900", gasPrice,
                 null,
                 Hex.toHexString(function.encode(federationKey.getPubKey(), signatures, uscTxHash.getBytes())),
                 null
