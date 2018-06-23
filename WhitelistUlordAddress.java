@@ -9,23 +9,70 @@ import co.usc.config.BridgeConstants;
 import co.usc.config.BridgeTestNetConstants;
 import co.usc.core.UscAddress;
 import co.usc.peg.AddressBasedAuthorizer;
+import co.usc.peg.Bridge;
 import co.usc.ulordj.core.Address;
 import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.params.TestNet3Params;
+import com.typesafe.config.Config;
+import org.ethereum.util.RLPList;
 import org.ethereum.vm.PrecompiledContracts;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spongycastle.util.encoders.Hex;
 
+import java.io.IOException;
 import java.math.BigInteger;
 
 public class WhitelistUlordAddress {
 
+    private static Logger logger = LoggerFactory.getLogger("whitelistaddress");
+
     public static void main(String[] args) {
-        BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
-        Address utAddress = new Address(TestNet3Params.get(), "ubhhcfxeZ2VJRADHEx5uqUBJ1HTip8cfRS");
-        UscAddress whitelistAuthorisedAddress = new UscAddress("ddc165ce2c9026909856387fe50ff1e13ec22eb9");
-        String pwd = "abcd1234";
-        if(whitelistAddress(bridgeConstants, whitelistAuthorisedAddress, pwd, utAddress, Coin.valueOf(100_000_000_000l))) {
-            System.out.println("Successfully whitelisted");
+
+        if(args.length < 2) {
+            System.out.println("<Ulord address to whitelist> <Max value in Satoshi>");
         }
+
+        FederationConfigLoader configLoader = new FederationConfigLoader();
+        Config config = configLoader.getConfigFromFiles();
+
+        BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
+        String lockWhitelistChangeAddress = config.getString("federation.lockWhitelistChangeAddress");
+        String lockWhitelistChangePassword = config.getString("federation.lockWhitelistChangePassword");
+
+        Address utAddress = new Address(TestNet3Params.get(), args[0]);
+        UscAddress whitelistAuthorisedAddress = new UscAddress(lockWhitelistChangeAddress);
+
+        boolean isWhitelisted = false;
+        if(whitelistAddress(bridgeConstants, whitelistAuthorisedAddress, lockWhitelistChangePassword, utAddress, Coin.valueOf(Long.valueOf(args[1])))) {
+            // Confirm if the whitelist address is stored in the blockchain
+            try {
+                String callResponse = UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, Hex.toHexString(Bridge.GET_LOCK_WHITELIST_SIZE.encodeSignature()));
+                JSONObject callResponseJson = new JSONObject(callResponse);
+                long whitelistSize = Long.parseLong(callResponseJson.get("result").toString().substring(2));
+
+                for (int i = 0; i < whitelistSize; i++) {
+                    callResponse = UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, Hex.toHexString(Bridge.GET_LOCK_WHITELIST_ADDRESS.encode(new Object[]{i})));
+                    callResponseJson = new JSONObject(callResponse);
+                    String result = callResponseJson.get("result").toString().substring(2);
+                    Object[] objects = Bridge.GET_LOCK_WHITELIST_ADDRESS.decodeResult(Hex.decode(result));
+
+                    String address = objects[0].toString();
+                    System.out.println(address);
+                    //RLPList rlpElements =
+                    if(utAddress.toString().equals(address)) {
+                        isWhitelisted = true;
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+
+        if (isWhitelisted)
+            System.out.println("Successfully whitelisted");
         else
             System.out.println("Whitelist failed");
     }
@@ -44,23 +91,37 @@ public class WhitelistUlordAddress {
             if(!Utils.tryUnlockUscAccount(whitelistAuthorisedAddress, pwd))
                 throw new PrivateKeyNotFoundException();
 
-            String encodedCmd = DataEncoder.encodeWhitelist(utAddress, valueInSatoshi);
+            String data = DataEncoder.encodeWhitelist(utAddress, valueInSatoshi);
 
             // TODO: Compute gasPrice, though it is a free transaction from genesis federation
-            String txResult = UscRpc.sendTransaction(whitelistAuthorisedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, encodedCmd, null);
-            System.out.println("Whitelist :" + txResult);
+            return sendTx(whitelistAuthorisedAddress, data, 3);
 
-            if(txResult.contains("error")) {
-                return false;
-            }
-
-            return true;
         } catch (Exception e) {
-            System.out.println(e);
+            logger.error(e.toString());
+            System.out.println("WhitelistUlordAddress: " + e);
             return false;
         }
     }
 
+    private static boolean sendTx(String whitelistAuthorisedAddress, String data, int tries) throws IOException, InterruptedException {
 
+        if (tries == 0)
+            return false;
 
+        String sendTransactionResponse = UscRpc.sendTransaction(whitelistAuthorisedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", "0x9184e72a000", null, data, null);
+        logger.info(sendTransactionResponse);
+        JSONObject jsonObject = new JSONObject(sendTransactionResponse);
+        String txId = jsonObject.get("result").toString();
+
+        if (!Utils.isTransactionInMemPool(txId))
+            sendTx(whitelistAuthorisedAddress, data, --tries);
+
+        while (!Utils.isTransactionMined(txId)) {
+            if (!Utils.isTransactionInMemPool(txId))
+                sendTx(whitelistAuthorisedAddress, data, --tries);
+            Thread.sleep(1000 * 15);
+        }
+
+        return true;
+    }
 }

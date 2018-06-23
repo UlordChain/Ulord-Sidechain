@@ -74,7 +74,7 @@ public class UlordCli {
                                             String redeemScript,
                                             String[] privKeys,
                                             @Nullable String sigHashType) throws IOException {
-        String cmd = getNetworkCommand(params) +
+        String cmd = getNetworkCommand(params) + " signrawtransaction" +
                 " '" + rawTx + "'" +
                         " '[{" +
                         " \"txid\":"         + "\"" + txId + "\"," +

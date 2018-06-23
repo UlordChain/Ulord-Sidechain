@@ -22,6 +22,8 @@ import org.ethereum.util.RLPList;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.IOException;
@@ -30,32 +32,19 @@ import java.util.Map;
 import java.util.SortedMap;
 
 
-public class ReleaseUlordTransaction implements Runnable {
+// USC release txs follow these steps: First, they are waiting for coin selection (releaseRequestQueue),
+// then they are waiting for enough confirmations on the USC network (releaseTransactionSet),
+// then they are waiting for federators' signatures (uscTxsWaitingForSignatures),
+// then they are logged into the block that has them as completely signed for uld release
+// and are removed from uscTxsWaitingForSignatures.
+
+public class ReleaseUlordTransaction {
 
     private static UldECKey federationKey = null;
 
-    // USC release txs follow these steps: First, they are waiting for coin selection (releaseRequestQueue),
-    // then they are waiting for enough confirmations on the USC network (releaseTransactionSet),
-    // then they are waiting for federators' signatures (uscTxsWaitingForSignatures),
-    // then they are logged into the block that has them as completely signed for uld release
-    // and are removed from uscTxsWaitingForSignatures.
+    private static Logger logger = LoggerFactory.getLogger("releaseulordtransaction");
 
-    BridgeConstants bridgeConstants;
-    public ReleaseUlordTransaction(BridgeConstants bridgeConstants) {
-        this.bridgeConstants = bridgeConstants;
-    }
-
-    private void start(){
-        release(bridgeConstants);
-    }
-
-    @Override
-    public void run() {
-        start();
-    }
-
-    // NOTE: Requires federator's private key to run this function.
-    public void release(BridgeConstants bridgeConstants) {
+    public static void release(BridgeConstants bridgeConstants, String federationChangeAuthorizedAddress, String pwd) {
 
         NetworkParameters params = null;
         if(bridgeConstants instanceof BridgeTestNetConstants) {
@@ -65,82 +54,82 @@ public class ReleaseUlordTransaction implements Runnable {
             params = MainNetParams.get();
         }
 
-        while(true) {
-            try {
-                //  web3.eth.call({data:"0B851400",to:"0x0000000000000000000000000000000001000006"})
-                CallTransaction.Function function = Bridge.GET_STATE_FOR_ULD_RELEASE_CLIENT;
+        try {
 
-                String response = UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, Hex.toHexString(function.encodeSignature()));
+            CallTransaction.Function function = Bridge.GET_STATE_FOR_ULD_RELEASE_CLIENT;
 
-                JSONObject jsonObject = new JSONObject(response);
+            String callResponse = UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, Hex.toHexString(function.encodeSignature()));
 
-                String result = jsonObject.get("result").toString();
-                String resultSub = result.substring(2, result.length());
+            JSONObject jsonObject = new JSONObject(callResponse);
 
-                Object[] args = function.decodeResult(Sha256Hash.hexStringToByteArray(resultSub));
-                byte[] data = (byte[])args[0];
-                RLPList rlpList = (RLPList) RLP.decode2(Sha256Hash.hexStringToByteArray(Sha256Hash.bytesToHex(data))).get(0);
-                SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures;
-                uscTxsWaitingForSignatures = BridgeSerializationUtils.deserializeMap(rlpList.get(0).getRLPData(), params, false);
+            String result = jsonObject.get("result").toString();
+            String resultSub = result.substring(2, result.length());
 
-                for (Map.Entry<Keccak256, UldTransaction> entry : uscTxsWaitingForSignatures.entrySet()) {
-                    Keccak256 key = entry.getKey();
-                    UldTransaction utTx = entry.getValue();
+            Object[] args = function.decodeResult(Hex.decode(resultSub));
+            byte[] data = (byte[])args[0];
+            RLPList rlpList = (RLPList) RLP.decode2(data).get(0);
+            SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures;
+            uscTxsWaitingForSignatures = BridgeSerializationUtils.deserializeMap(rlpList.get(0).getRLPData(), params, false);
 
-                    // Check there are at least N blocks on top of the supplied transaction
-                    if(!validateTxDepth(key, bridgeConstants)) { continue; }
+            if(uscTxsWaitingForSignatures.isEmpty())
+                return;
 
-                    String signResult = signRawTransaction(utTx, bridgeConstants, params);
+            // Try to unlock account
+            if (!Utils.tryUnlockUscAccount(federationChangeAuthorizedAddress, pwd)) {
+                throw new PrivateKeyNotFoundException();
+            }
 
-                    jsonObject = new JSONObject(signResult);
-                    String complete = jsonObject.get("complete").toString();
-                    String rawUtTxHex = jsonObject.get("hex").toString();
+            for (Map.Entry<Keccak256, UldTransaction> entry : uscTxsWaitingForSignatures.entrySet()) {
+                Keccak256 key = entry.getKey();
+                UldTransaction utTx = entry.getValue();
 
-                    System.out.println(addSignatureToUSC(key, utTx, params));   // addSignatures in Bridge.java
+                // Check there are at least N blocks on top of the supplied transaction
+                if(!validateTxDepth(key, bridgeConstants)) { continue; }
 
-                    if(complete.equals("true")) {
+                String signResult = signRawTransaction(utTx, bridgeConstants, params);
 
-                        // Send Raw Transaction
-                        String sendTxResult = UlordCli.sendRawTransaction(params, rawUtTxHex);
+                jsonObject = new JSONObject(signResult);
+                String complete = jsonObject.get("complete").toString();
+                String rawUtTxHex = jsonObject.get("hex").toString();
 
-                        if(sendTxResult.contains("error")) {
-                            String[] messages = sendTxResult.split(":");
-                            if(messages[messages.length - 1].contains("transaction already in block chain")) {
-                                System.out.println("Transaction already in blockchain");
-                                // Its safe to remove processed transactions here.
-                                // TODO: Remove transaction from uscTxsWaitingForSignatures
-                            }
-                            else
-                                System.out.println("Transaction failed: " + messages[messages.length - 1]);
+                String addSigToUscResponse = addSignatureToUSC(key, utTx, federationChangeAuthorizedAddress);
+                System.out.println(addSigToUscResponse );   // addSignatures in Bridge.java
+                logger.info(addSigToUscResponse);
+
+                if(complete.equals("true")) {
+
+                    // Send Raw Transaction
+                    String sendTxResponse = UlordCli.sendRawTransaction(params, rawUtTxHex);
+
+                    if(sendTxResponse.contains("error")) {
+                        String[] messages = sendTxResponse.split(":");
+                        if(messages[messages.length - 1].contains("transaction already in block chain")) {
+                            System.out.println("ReleaseUlordTransaction: Transaction already in blockchain");
+                            // Try adding signature again to remove already processed transaction
+                            addSignatureToUSC(key, utTx, federationChangeAuthorizedAddress);
                         }
-                        else {
-                            System.out.println("Ulord tx successfully processed, Tx id: " + sendTxResult);
-                        }
+                        else
+                            System.out.println("ReleaseUlordTransaction: Transaction failed: " + messages[messages.length - 1]);
                     }
-                    else
-                    {
-                        // TODO: Send Transaction for further signing
+                    else {
+                        System.out.println("ReleaseUlordTransaction: Ulord tx successfully processed, Tx id: " + sendTxResponse);
                     }
                 }
-            }
-            catch (Exception e) {
-                System.out.println(e);
-                //break;
-            }
-            finally {
-                try {
-                    Thread.sleep(1000 * 60 * 15);   // Sleep for 15 minutes
-                } catch (InterruptedException e) {
-                    System.out.println(e);
+                else
+                {
+                    // TODO: Send Transaction for further signing
                 }
             }
         }
+        catch (Exception e) {
+            System.out.println("ReleaseUlordTransaction: " + e);
+        }
     }
 
-    private String addSignatureToUSC(Keccak256 uscTxHash, UldTransaction utTx, NetworkParameters params) throws IOException, InterruptedException {
+    private static String addSignatureToUSC(Keccak256 uscTxHash, UldTransaction utTx, String federationChangeAuthorizedAddress) throws IOException {
         // Requires
         // 1. Federator Public Key  -   federationPublicKey
-        // 2. Signatures
+        // 2. Signatures    -   federation Signatures
         // 3. Usc Tx hash   -   key
 
         int numInputs = utTx.getInputs().size();
@@ -157,7 +146,7 @@ public class ReleaseUlordTransaction implements Runnable {
 
         CallTransaction.Function function = Bridge.ADD_SIGNATURE;
 
-        String res = UscRpc.sendTransaction("674f05e1916abc32a38f40aa67ae6b503b565999",
+        String res = UscRpc.sendTransaction(federationChangeAuthorizedAddress,
                 PrecompiledContracts.BRIDGE_ADDR_STR,
                 "0x3D0900", "0x9184e72a000",
                 null,
@@ -167,7 +156,7 @@ public class ReleaseUlordTransaction implements Runnable {
         return res;
     }
 
-    private String signRawTransaction(UldTransaction tx, BridgeConstants bridgeConstants, NetworkParameters params)
+    private static String signRawTransaction(UldTransaction tx, BridgeConstants bridgeConstants, NetworkParameters params)
             throws IOException, PrivateKeyNotFoundException {
         String txId = getUlordTxId(tx, params);
         int vout = getVout(txId, params);
@@ -175,7 +164,7 @@ public class ReleaseUlordTransaction implements Runnable {
 
         String[] privKeys = {getPrivateKey(bridgeConstants, params)};
 
-        String result = UlordCli.signRawTransaction(
+        String signRawTxResponse = UlordCli.signRawTransaction(
                 params,
                 Hex.toHexString(tx.ulordSerialize()),
                 txId,
@@ -185,12 +174,12 @@ public class ReleaseUlordTransaction implements Runnable {
                 privKeys, null
         );
 
-        return result;
+        return signRawTxResponse;
     }
 
-    private String getScriptPubKey(int vout, String txId, NetworkParameters params) throws IOException {
-        String txJSONString = UlordCli.getRawTransaction(params, txId, true);
-        JSONObject jsonObject = new JSONObject(txJSONString);
+    private static String getScriptPubKey(int vout, String txId, NetworkParameters params) throws IOException {
+        String getRawTxJSON = UlordCli.getRawTransaction(params, txId, true);
+        JSONObject jsonObject = new JSONObject(getRawTxJSON);
         JSONArray voutObjects = jsonObject.getJSONArray("vout");
         for(int i = 0; i < voutObjects.length(); ++i) {
             int n = Integer.parseInt(voutObjects.getJSONObject(i).get("n").toString());
@@ -201,12 +190,18 @@ public class ReleaseUlordTransaction implements Runnable {
         return null;
     }
 
-    private int getVout(String txId, NetworkParameters params) throws IOException {
+    private static int getVout(String txId, NetworkParameters params) throws IOException {
 
-        String txJSONString = UlordCli.getRawTransaction(params, txId, true);
+        String getRawTxJSON = UlordCli.getRawTransaction(params, txId, true);
 
-        JSONObject jsonObject = new JSONObject(txJSONString);
+        JSONObject jsonObject = new JSONObject(getRawTxJSON);
         JSONArray voutObjects = jsonObject.getJSONArray("vout");
+
+        // Get Federation address
+        String getFedAddrResponse = UscRpc.getFederationAddress();
+        JSONObject getFedAddrJson = new JSONObject(getFedAddrResponse);
+        String getFedAddrResult = getFedAddrJson.getString("result").substring(2);
+        Object[] fedAddress = Bridge.GET_FEDERATION_ADDRESS.decodeResult(Hex.decode(getFedAddrResult));
 
         int vout = 0;
         for(int i = 0; i < voutObjects.length(); ++i) {
@@ -216,10 +211,11 @@ public class ReleaseUlordTransaction implements Runnable {
 
             boolean found = false;
             for(int j = 0; j < addressObjects.length(); ++j) {
-                // TODO: Find a better way to get Federation multisig address
-                if(addressObjects.get(j).toString().equals(NetworkConstants.MULTISIG_ADDRESS)) {
-                    found = true;
-                    break;
+                for (int k = 0; k < fedAddress.length; k++) {
+                    if(addressObjects.get(j).toString().equals(fedAddress[k].toString())) {
+                        found = true;
+                        break;
+                    }
                 }
             }
             if(found)
@@ -228,8 +224,7 @@ public class ReleaseUlordTransaction implements Runnable {
         return vout;
     }
 
-    // Todo: Call dumpprivkey from UlordCli.java
-    private String getPrivateKey(BridgeConstants bridgeConstants, NetworkParameters params)
+    private static String getPrivateKey(BridgeConstants bridgeConstants, NetworkParameters params)
             throws IOException, PrivateKeyNotFoundException {
 
         List<UldECKey> publicKeys = bridgeConstants.getGenesisFederation().getPublicKeys();
@@ -251,7 +246,7 @@ public class ReleaseUlordTransaction implements Runnable {
         return key;
     }
 
-    private String getUlordTxId(UldTransaction tx, NetworkParameters params) throws IOException {
+    private static String getUlordTxId(UldTransaction tx, NetworkParameters params) throws IOException {
         JSONObject jsonObject = new JSONObject(UlordCli.decodeRawTransaction(params, Hex.toHexString(tx.ulordSerialize())));
         String vin = jsonObject.get("vin").toString();
         jsonObject = new JSONObject(vin.substring(1, vin.length() - 1));
@@ -266,7 +261,7 @@ public class ReleaseUlordTransaction implements Runnable {
      * @return  true: if there is at least N blocks on top of the supplied txn, false: otherwise
      * @throws IOException
      */
-    private boolean validateTxDepth(Keccak256 key, BridgeConstants bridgeConstants) throws IOException {
+    private static boolean validateTxDepth(Keccak256 key, BridgeConstants bridgeConstants) throws IOException {
 
         JSONObject jsonObject = new JSONObject(UscRpc.getTransactionByHash(key.toHexString()));
 
@@ -281,6 +276,4 @@ public class ReleaseUlordTransaction implements Runnable {
             return true;
         return false;
     }
-
-
 }

@@ -27,29 +27,7 @@ public class GenerateMerkleTree {
     // The tree is represented as a list: t1,t2,t3,t4,A,B,root where each
     // entry is a hash.
 
-    private static final NetworkParameters params = TestNet3Params.get();
-    public static void main(@NotNull String[] args) {
-        if(args.length < 2) {
-            System.out.println("args: <serialized block in hex> <transaction id to be included>");
-            return;
-        }
-
-        UldBlock block = new UldBlock(params , Hex.decode(args[0]));
-        Sha256Hash txToInclude = new Sha256Hash(args[1]);
-        List<UldTransaction> txs = block.getTransactions();
-        List<Sha256Hash> txHashes = new ArrayList<>(txs.size());
-
-        for (UldTransaction tx : txs) {
-            txHashes.add(tx.getHash());
-        }
-
-        PartialMerkleTree tree = buildMerkleBranch(block, txToInclude);
-        byte[] treebytes = tree.ulordSerialize();
-
-        System.out.println(Sha256Hash.bytesToHex(treebytes).toLowerCase());
-    }
-
-    public static PartialMerkleTree buildMerkleBranch(UldBlock block, Sha256Hash txToInclude) {
+    public static PartialMerkleTree buildMerkleBranch(NetworkParameters params, UldBlock block, Sha256Hash txToInclude) {
 
         List<UldTransaction> txs = block.getTransactions();
         List<Sha256Hash> txHashes = new ArrayList<>(txs.size());
