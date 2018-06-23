@@ -1,6 +1,7 @@
 package tools;
 
 import co.usc.peg.Bridge;
+import org.ethereum.vm.PrecompiledContracts;
 import org.spongycastle.util.encoders.Hex;
 
 import javax.annotation.Nullable;
@@ -11,7 +12,7 @@ public class UscRpc {
         String cmd = "{" +
                 "\"jsonrpc\":\"2.0\", " +
                 "\"method\":\"personal_unlockAccount\", " +
-                "\"id\":\"1\", " +
+                "\"id\":\"880\", " +
                 "\"params\":[" +
                 "\"" + address + "\", " +
                 "\"" + pwd + "\", \"\"" +
@@ -23,7 +24,7 @@ public class UscRpc {
         String cmd = "{" +
                 "\"jsonrpc\":\"2.0\", " +
                 "\"method\":\"eth_getTransactionByHash\", " +
-                "\"id\":\"1\", " +
+                "\"id\":\"881\", " +
                 "\"params\":[" +
                 "\"" + txId + "\"" +
                 "]}";
@@ -42,10 +43,7 @@ public class UscRpc {
         StringBuilder cmd = new StringBuilder();
         cmd.append("{");
         cmd.append("\"jsonrpc\":\"2.0\", ");
-
-        if(to != null)
-            cmd.append("\"id\":\"1\", ");
-
+        cmd.append("\"id\":\"882\", ");
         cmd.append("\"method\":\"eth_sendTransaction\", ");
         cmd.append("\"params\":[{");
         cmd.append("\"from\":\"" + from + "\", ");
@@ -77,7 +75,7 @@ public class UscRpc {
         String cmd = "{" +
                 "\"jsonrpc\": \"2.0\", " +
                 "\"method\": \"eth_call\", " +
-                "\"id\": \"1\", " +
+                "\"id\": \"883\", " +
                 "\"params\": [{" +
                 "\"to\": \"" + to + "\"," +
                 "\"data\": \"" + data + "\"},\"latest\"]}";
@@ -88,31 +86,28 @@ public class UscRpc {
         String cmd = "{" +
                 "\"jsonrpc\": \"2.0\", " +
                 "\"method\": \"eth_blockNumber\", " +
-                "\"id\": \"1\"," +
+                "\"id\": \"884\"," +
                 "\"params\": []" +
                 "}";
         return UscRpcExecutor.execute(cmd);
     }
 
     public static String getUldBlockChainBestChainHeight() throws IOException {
-        String cmd = "{" +
-                "\"jsonrpc\": \"2.0\", " +
-                "\"method\": \"eth_call\", " +
-                "\"params\": [{" +
-                "\"to\": \"0x0000000000000000000000000000000001000006\"," +
-                "\"data\": \"" + Hex.toHexString(Bridge.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT.encodeSignature()) +"\"},\"latest\"]," +
-                "\"id\": \"1\"" +
-                "}";
-        return UscRpcExecutor.execute(cmd);
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, Hex.toHexString(Bridge.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT.encodeSignature()));
     }
 
     public static String getTransactionCount(String address) throws IOException {
         String cmd = "{" +
                 "\"jsonrpc\": \"2.0\", " +
                 "\"method\": \"eth_getTransactionCount\", " +
-                "\"id\": \"1\", " +
+                "\"id\": \"885\", " +
                 "\"params\": [" +
                 "\"" + address + "\", \"latest\"]}";
         return UscRpcExecutor.execute(cmd);
     }
+
+    public static String getFederationAddress() throws IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, Hex.toHexString(Bridge.GET_FEDERATION_ADDRESS.encodeSignature()));
+    }
+
 }
