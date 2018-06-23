@@ -65,8 +65,8 @@ public class FederationMain implements Runnable {
             params = MainNetParams.get();
 
         while(true) {
-            try {
 
+            try {
                 String getAddressUtxosResponse = UlordCli.getAddressUtxos(params, addresses);
                 if(getAddressUtxosResponse.contains("error")) {
                     logger.error(getAddressUtxosResponse);
@@ -95,8 +95,8 @@ public class FederationMain implements Runnable {
                     JSONObject jsonObj = new JSONObject(UscRpc.getUldBlockChainBestChainHeight());
                     int chainHeadHeight = Integer.decode(jsonObj.get("result").toString());
                     if (chainHeadHeight < height + bridgeConstants.getUld2UscMinimumAcceptableConfirmations()) {
-                        logger.info("Chainhead height " + chainHeadHeight + " is less than supplied transaction's height " + height);
-                        System.out.println("Chainhead height " + chainHeadHeight + " is less than supplied transaction's height " + height);
+                        logger.info("Supplied transaction height " + height + " is greater than Chainhead height " + chainHeadHeight);
+                        System.out.println("Supplied transaction height " + height + " is greater than Chainhead height " + chainHeadHeight);
                         continue;
                     }
 
@@ -115,6 +115,9 @@ public class FederationMain implements Runnable {
                 );
                 logger.info(sendTxResponse);
                 System.out.println("FederationMain: " + sendTxResponse);
+
+                // Try to unlock account
+                Utils.tryUnlockUscAccount(federationChangeAuthorizedAddress, pwd);
 
                 // Try to release any pending transaction.
                 ReleaseUlordTransaction.release(bridgeConstants, federationChangeAuthorizedAddress, pwd);

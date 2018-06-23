@@ -45,7 +45,7 @@ public class SyncUlordHeaders implements Runnable{
 
     public SyncUlordHeaders(NetworkParameters params, Config config){
         this.params = params;
-        this.ulordFederationAddress = config.getStringList("federation.address").toArray(new String[0]);
+        this.ulordFederationAddress = config.getStringList("federation.addresses").toArray(new String[0]);
         this.federationChangeAuthorizedAddress = config.getString("federation.changeAuthorizedAddress");
         this.federationChangeAuthorizedPassword = config.getString("federation.changeAuthorizedPassword");
     }

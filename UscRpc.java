@@ -110,4 +110,9 @@ public class UscRpc {
         return call(PrecompiledContracts.BRIDGE_ADDR_STR, Hex.toHexString(Bridge.GET_FEDERATION_ADDRESS.encodeSignature()));
     }
 
+    public static String gasPrice() throws IOException {
+        String cmd = "{\"jsonrpc\":\"2.0\",\"method\":\"eth_gasPrice\",\"params\":[],\"id\":886}";
+        return UscRpcExecutor.execute(cmd);
+    }
+
 }
