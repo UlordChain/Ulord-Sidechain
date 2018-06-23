@@ -89,7 +89,6 @@ public class BridgeSupport {
 
     private final BridgeEventLogger eventLogger;
     private org.ethereum.core.Block uscExecutionBlock;
-    private StoredBlock initialUldStoredBlock;
 
     // Used by bridge
     public BridgeSupport(UscSystemProperties config, Repository repository, BridgeEventLogger eventLogger, UscAddress contractAddress, Block uscExecutionBlock) throws IOException, BlockStoreException {
@@ -118,7 +117,6 @@ public class BridgeSupport {
             }
         }
         this.UldBlockChain = new UldBlockChain(uldContext, UldBlockStore);
-        this.initialUldStoredBlock = this.getLowestBlock();
     }
 
 
@@ -933,19 +931,20 @@ public class BridgeSupport {
      * @return a List of ulord block hashes
      */
     public List<Sha256Hash> getUldBlockChainBlockLocator() throws IOException {
-        final int maxHashesToInform = 100;
+        final int maxHashesToInform = 100;		
+        StoredBlock initialUldStoredBlock = this.getLowestBlock();
         List<Sha256Hash> blockLocator = new ArrayList<>();
         StoredBlock cursor = UldBlockChain.getChainHead();
         int bestBlockHeight = cursor.getHeight();
         blockLocator.add(cursor.getHeader().getHash());
-        if (bestBlockHeight > this.initialUldStoredBlock.getHeight()) {
+        if (bestBlockHeight > initialUldStoredBlock.getHeight()) {
             boolean stop = false;
             int i = 0;
             try {
                 while (blockLocator.size() <= maxHashesToInform && !stop) {
                     int blockHeight = (int) (bestBlockHeight - Math.pow(2, i));
-                    if (blockHeight <= this.initialUldStoredBlock.getHeight()) {
-                        blockLocator.add(this.initialUldStoredBlock.getHeader().getHash());
+                    if (blockHeight <= initialUldStoredBlock.getHeight()) {
+                        blockLocator.add(initialUldStoredBlock.getHeader().getHash());
                         stop = true;
                     } else {
                         cursor = this.getPrevBlockAtHeight(cursor, blockHeight);
@@ -959,7 +958,7 @@ public class BridgeSupport {
                 throw new RuntimeException(e);
             }
             if (!stop) {
-                blockLocator.add(this.initialUldStoredBlock.getHeader().getHash());
+                blockLocator.add(initialUldStoredBlock.getHeader().getHash());
             }
         }
         return blockLocator;
