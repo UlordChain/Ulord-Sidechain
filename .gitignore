@@ -1,5 +1,6 @@
 # .conf files
 ulord-testnet.conf
+federation.conf
 
 # resources
 build-info.properties
