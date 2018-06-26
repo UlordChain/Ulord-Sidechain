@@ -46,6 +46,15 @@ public class FederationMain implements Runnable {
         }
 
         if(fedMain.isSyncUlordHeadersEnabled) {
+            if(fedMain.isPegEnabled) {
+                try {
+                    Thread.sleep(1000 * 30);  // Sleep for some time before we start second thread. This is to avoid
+                    // sending two different transaction in the same time from the same account.
+                    // We do this to avoid incorrect nonce value, if one transaction is rejected.
+                } catch (Exception e) {
+                }
+            }
+
             Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params, fedMain.config));
             syncUlordHeaders.start();
         }
@@ -108,6 +117,9 @@ public class FederationMain implements Runnable {
                 // Get gasPrice
                 JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
                 String gasPrice = getGasPriceJSON.getString("result");
+
+                if(gasPrice.equals("0"))
+                    gasPrice = null;
 
                 String sendTxResponse = UscRpc.sendTransaction(federationChangeAuthorizedAddress,
                         PrecompiledContracts.BRIDGE_ADDR_STR,

@@ -105,24 +105,32 @@ public class WhitelistUlordAddress {
 
     private static boolean sendTx(String whitelistAuthorisedAddress, String data, int tries) throws IOException, InterruptedException {
 
-        if (tries == 0)
+        if (tries <= 0)
             return false;
 
         // Get gasPrice
         JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
         String gasPrice = getGasPriceJSON.getString("result");
 
-        String sendTransactionResponse = UscRpc.sendTransaction(whitelistAuthorisedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", gasPrice, null, data, null);
+        if(gasPrice.equals("0"))
+            gasPrice = null;
+
+        String sendTransactionResponse = UscRpc.sendTransaction(whitelistAuthorisedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, null, gasPrice, null, data, null);
         logger.info(sendTransactionResponse);
         JSONObject jsonObject = new JSONObject(sendTransactionResponse);
         String txId = jsonObject.get("result").toString();
 
+        Thread.sleep(1000 * 5);
+
         if (!Utils.isTransactionInMemPool(txId))
-            sendTx(whitelistAuthorisedAddress, data, --tries);
+            if(!sendTx(whitelistAuthorisedAddress, data, --tries))
+                return false;
 
         while (!Utils.isTransactionMined(txId)) {
             if (!Utils.isTransactionInMemPool(txId))
-                sendTx(whitelistAuthorisedAddress, data, --tries);
+                if(!sendTx(whitelistAuthorisedAddress, data, --tries))
+                    return false;
+
             Thread.sleep(1000 * 15);
         }
 
