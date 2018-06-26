@@ -18,22 +18,22 @@ public class FederationMain implements Runnable {
 
     private static Logger logger = LoggerFactory.getLogger("federation");
 
-    BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
+    private BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
     NetworkParameters params = TestNet3Params.get();
-    Config config;
-    String[] ulordFederationAddress;
-    String feePerkbAuthorizedAddress;
-    String feePerkbAuthorizedPassword;
-    String changeAuthorizedAddress;
-    String changeAuthorizedPassword;
-    boolean isSyncUlordHeadersEnabled;
-    boolean isPegEnabled;
+
+    private String[] ulordFederationAddresses;  // Multisig address to monitor for UTXOs
+    private String feePerkbAuthorizedAddress;
+    private String feePerkbAuthorizedPassword;
+    private String changeAuthorizedAddress;
+    private String changeAuthorizedPassword;
+    private boolean isSyncUlordHeadersEnabled;
+    private boolean isPegEnabled;
 
     public FederationMain(){
         FederationConfigLoader configLoader = new FederationConfigLoader();
-        config = configLoader.getConfigFromFiles();
+        Config config = configLoader.getConfigFromFiles();
 
-        this.ulordFederationAddress = config.getStringList("federation.addresses").toArray(new String[0]);
+        this.ulordFederationAddresses = config.getStringList("federation.addresses").toArray(new String[0]);
 
         this.feePerkbAuthorizedAddress = config.getString("federation.feePerkbAuthorizedAddress");
         this.feePerkbAuthorizedPassword = config.getString("federation.feePerkbAuthorizedPassword");
@@ -41,8 +41,8 @@ public class FederationMain implements Runnable {
         this.changeAuthorizedAddress = config.getString("federation.changeAuthorizedAddress");
         this.changeAuthorizedPassword = config.getString("federation.changeAuthorizedPassword");
 
-        this.isSyncUlordHeadersEnabled = config.getString("federation.syncUlordHeaders.enabled") == "true" ? true : false;
-        this.isPegEnabled = config.getString("federation.peg.enabled") == "true" ? true : false;
+        this.isSyncUlordHeadersEnabled = config.getString("federation.syncUlordHeaders.enabled").equals("true");
+        this.isPegEnabled = config.getString("federation.peg.enabled").equals("true");
     }
 
     public static void main(String[]  args) {
@@ -70,7 +70,7 @@ public class FederationMain implements Runnable {
 
     @Override
     public void run() {
-        startPeg(bridgeConstants, changeAuthorizedAddress, changeAuthorizedPassword, ulordFederationAddress);
+        startPeg(bridgeConstants, changeAuthorizedAddress, changeAuthorizedPassword, ulordFederationAddresses);
     }
 
 
