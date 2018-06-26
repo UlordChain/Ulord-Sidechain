@@ -22,17 +22,25 @@ public class FederationMain implements Runnable {
     NetworkParameters params = TestNet3Params.get();
     Config config;
     String[] ulordFederationAddress;
-    String authorizedAddress;
-    String authorizedAddressPassword;
+    String feePerkbAuthorizedAddress;
+    String feePerkbAuthorizedPassword;
+    String changeAuthorizedAddress;
+    String changeAuthorizedPassword;
     boolean isSyncUlordHeadersEnabled;
     boolean isPegEnabled;
 
     public FederationMain(){
         FederationConfigLoader configLoader = new FederationConfigLoader();
         config = configLoader.getConfigFromFiles();
+
         this.ulordFederationAddress = config.getStringList("federation.addresses").toArray(new String[0]);
-        this.authorizedAddress = config.getString("federation.changeAuthorizedAddress");
-        this.authorizedAddressPassword = config.getString("federation.changeAuthorizedPassword");
+
+        this.feePerkbAuthorizedAddress = config.getString("federation.feePerkbAuthorizedAddress");
+        this.feePerkbAuthorizedPassword = config.getString("federation.feePerkbAuthorizedPassword");
+
+        this.changeAuthorizedAddress = config.getString("federation.changeAuthorizedAddress");
+        this.changeAuthorizedPassword = config.getString("federation.changeAuthorizedPassword");
+
         this.isSyncUlordHeadersEnabled = config.getString("federation.syncUlordHeaders.enabled") == "true" ? true : false;
         this.isPegEnabled = config.getString("federation.peg.enabled") == "true" ? true : false;
     }
@@ -55,14 +63,14 @@ public class FederationMain implements Runnable {
                 }
             }
 
-            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params, fedMain.authorizedAddress, fedMain.authorizedAddressPassword));
+            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params, fedMain.feePerkbAuthorizedAddress, fedMain.feePerkbAuthorizedPassword));
             syncUlordHeaders.start();
         }
     }
 
     @Override
     public void run() {
-        startPeg(bridgeConstants, authorizedAddress, authorizedAddressPassword, ulordFederationAddress);
+        startPeg(bridgeConstants, changeAuthorizedAddress, changeAuthorizedPassword, ulordFederationAddress);
     }
 
 

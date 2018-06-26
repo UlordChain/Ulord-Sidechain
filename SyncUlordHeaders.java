@@ -19,15 +19,6 @@
 package tools;
 
 import co.usc.ulordj.core.NetworkParameters;
-import com.typesafe.config.Config;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
-import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONObject;
 
@@ -39,7 +30,6 @@ import java.util.Date;
 public class SyncUlordHeaders implements Runnable{
 
     NetworkParameters params;
-    String[] ulordFederationAddress;
     String federationChangeAuthorizedAddress;
     String federationChangeAuthorizedPassword;
 
@@ -62,17 +52,17 @@ public class SyncUlordHeaders implements Runnable{
         try
         {
             //Do not sync Ulord Headers if USC Blockchain has less than 60 blocks mined.
-            while(getUSCBlockNumber() <=60) {
-                Thread.sleep(1000*30);
-            }
+//            while(getUSCBlockNumber() <= 60) {
+//                Thread.sleep(1000*30);
+//            }
             //Start Syncing Ulord Headers.
             while(true) {
                 int startIndex = getUldBlockChainBestChainHeight() + 1;
 
-                //Keep the ulord block headers in USC 24 blocks behind actual Ulord block headers.
+                //Keep the ulord block headers in USC 10 blocks behind actual Ulord block headers.
                 //Approx 1hr behind ulord blockchain.
-                //blockCount = gets the ulord best block height - 24.
-                int blockCount = Integer.parseInt(UlordCli.getBlockCount(params)) - 24;
+                //blockCount = gets the ulord best block height - 10.
+                int blockCount = Integer.parseInt(UlordCli.getBlockCount(params)) - 10;
 
                 if((blockCount < startIndex)){
                     Thread.sleep((long)(1000*60*2.5)); //sleep for 2.5min.
@@ -105,11 +95,11 @@ public class SyncUlordHeaders implements Runnable{
                             //Receive Ulord Headers and create a transaction on USC.
                             String txHash = receiveHeaders(builder);
 
-                            System.out.println("Transaction ID: " + txHash);
+                            System.out.println("SyncUlordHeaders.Transaction ID: " + txHash);
                             while(true){
                                 Thread.sleep(1000*30);
                                 int UscBestBlockHeightAfterReceiveHeaders = Utils.getUscBestBlockHeight();
-                                if(isBlockHeightDifferenceAtLeast20(UscBestBlockHeightBeforeReceiveHeaders, UscBestBlockHeightAfterReceiveHeaders)){
+                                if(isBlockHeightDifferenceAtLeast10(UscBestBlockHeightBeforeReceiveHeaders, UscBestBlockHeightAfterReceiveHeaders)){
                                     break;
                                 }
                             }
@@ -138,7 +128,7 @@ public class SyncUlordHeaders implements Runnable{
                                     while(true){
                                         Thread.sleep(1000*30);
                                         int UscBestBlockHeightAfterReceiveHeaders = Utils.getUscBestBlockHeight();
-                                        if(isBlockHeightDifferenceAtLeast20(UscBestBlockHeightBeforeReceiveHeaders, UscBestBlockHeightAfterReceiveHeaders)){
+                                        if(isBlockHeightDifferenceAtLeast10(UscBestBlockHeightBeforeReceiveHeaders, UscBestBlockHeightAfterReceiveHeaders)){
                                             break;
                                         }
                                     }
@@ -163,16 +153,13 @@ public class SyncUlordHeaders implements Runnable{
     private String receiveHeaders(StringBuilder builder) throws IOException {
 
         // Get gasPrice
-        //JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
-        String gasPrice = "0x9184e72a000"; //getGasPriceJSON.getString("result");
-
-//        if(gasPrice.equals("0"))
-//            gasPrice = null;
+        JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
+        String gasPrice = getGasPriceJSON.getString("result"); //"0x9184e72a000";
 
         String responseString = UscRpc.sendTransaction(
                 federationChangeAuthorizedAddress,
                 PrecompiledContracts.BRIDGE_ADDR_STR,
-                "0x3D0900",
+                null,
                 gasPrice,
                 null,
                 DataEncoder.encodeReceiveHeaders(builder.toString().split(" ")),
@@ -229,8 +216,8 @@ public class SyncUlordHeaders implements Runnable{
         }
     }
 
-    private boolean isBlockHeightDifferenceAtLeast20(int UscBestBlockHeightBeforeReceiveHeaders, int UscBestBlockHeightAfterReceiveHeaders){
-        if((UscBestBlockHeightAfterReceiveHeaders - UscBestBlockHeightBeforeReceiveHeaders) >=20){
+    private boolean isBlockHeightDifferenceAtLeast10(int UscBestBlockHeightBeforeReceiveHeaders, int UscBestBlockHeightAfterReceiveHeaders){
+        if((UscBestBlockHeightAfterReceiveHeaders - UscBestBlockHeightBeforeReceiveHeaders) >=10){
             return true;
         }
         return false;
