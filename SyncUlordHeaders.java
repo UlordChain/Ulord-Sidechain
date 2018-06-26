@@ -43,11 +43,10 @@ public class SyncUlordHeaders implements Runnable{
     String federationChangeAuthorizedAddress;
     String federationChangeAuthorizedPassword;
 
-    public SyncUlordHeaders(NetworkParameters params, Config config){
+    public SyncUlordHeaders(NetworkParameters params, String authorizedAddress, String password){
         this.params = params;
-        this.ulordFederationAddress = config.getStringList("federation.addresses").toArray(new String[0]);
-        this.federationChangeAuthorizedAddress = config.getString("federation.changeAuthorizedAddress");
-        this.federationChangeAuthorizedPassword = config.getString("federation.changeAuthorizedPassword");
+        this.federationChangeAuthorizedAddress = authorizedAddress;
+        this.federationChangeAuthorizedPassword = password;
     }
 
     @Override
@@ -130,6 +129,8 @@ public class SyncUlordHeaders implements Runnable{
                                 }
                                 else if(txStatus.equals("rejected")){
                                     //in case transaction is not mined/rejected recreate the transaction.
+                                    dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                                    date = new Date();
                                     System.out.println(dateFormat.format(date) +": Ulord Block headers from " + (startIndex) + " to " + i + " sent to USC.");
                                     UscBestBlockHeightBeforeReceiveHeaders = Utils.getUscBestBlockHeight();
                                     txHash = receiveHeaders(builder);
@@ -162,8 +163,11 @@ public class SyncUlordHeaders implements Runnable{
     private String receiveHeaders(StringBuilder builder) throws IOException {
 
         // Get gasPrice
-        JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
-        String gasPrice = getGasPriceJSON.getString("result");
+        //JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
+        String gasPrice = "0x9184e72a000"; //getGasPriceJSON.getString("result");
+
+//        if(gasPrice.equals("0"))
+//            gasPrice = null;
 
         String responseString = UscRpc.sendTransaction(
                 federationChangeAuthorizedAddress,

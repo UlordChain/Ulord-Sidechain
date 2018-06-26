@@ -22,8 +22,8 @@ public class FederationMain implements Runnable {
     NetworkParameters params = TestNet3Params.get();
     Config config;
     String[] ulordFederationAddress;
-    String federationChangeAuthorizedAddress;
-    String federationChangeAuthorizedPassword;
+    String authorizedAddress;
+    String authorizedAddressPassword;
     boolean isSyncUlordHeadersEnabled;
     boolean isPegEnabled;
 
@@ -31,8 +31,8 @@ public class FederationMain implements Runnable {
         FederationConfigLoader configLoader = new FederationConfigLoader();
         config = configLoader.getConfigFromFiles();
         this.ulordFederationAddress = config.getStringList("federation.addresses").toArray(new String[0]);
-        this.federationChangeAuthorizedAddress = config.getString("federation.changeAuthorizedAddress");
-        this.federationChangeAuthorizedPassword = config.getString("federation.changeAuthorizedPassword");
+        this.authorizedAddress = config.getString("federation.changeAuthorizedAddress");
+        this.authorizedAddressPassword = config.getString("federation.changeAuthorizedPassword");
         this.isSyncUlordHeadersEnabled = config.getString("federation.syncUlordHeaders.enabled") == "true" ? true : false;
         this.isPegEnabled = config.getString("federation.peg.enabled") == "true" ? true : false;
     }
@@ -55,18 +55,18 @@ public class FederationMain implements Runnable {
                 }
             }
 
-            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params, fedMain.config));
+            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params, fedMain.authorizedAddress, fedMain.authorizedAddressPassword));
             syncUlordHeaders.start();
         }
     }
 
     @Override
     public void run() {
-        startPeg(bridgeConstants, federationChangeAuthorizedAddress, federationChangeAuthorizedPassword, ulordFederationAddress);
+        startPeg(bridgeConstants, authorizedAddress, authorizedAddressPassword, ulordFederationAddress);
     }
 
 
-    public void startPeg(BridgeConstants bridgeConstants, String federationChangeAuthorizedAddress, String pwd, String[] addresses) {
+    public void startPeg(BridgeConstants bridgeConstants, String authorizedAddress, String pwd, String[] addresses) {
         NetworkParameters params;
         if(bridgeConstants instanceof BridgeTestNetConstants)
             params = TestNet3Params.get();
@@ -111,7 +111,7 @@ public class FederationMain implements Runnable {
 
                     // Here we can register Ulord transactions in USC
                     logger.info("Transaction " + txid + " sent to USC");
-                    RegisterUlordTransaction.register(bridgeConstants, federationChangeAuthorizedAddress, pwd, txid);
+                    RegisterUlordTransaction.register(bridgeConstants, authorizedAddress, pwd, txid);
                 }
 
                 // Get gasPrice
@@ -121,7 +121,7 @@ public class FederationMain implements Runnable {
                 if(gasPrice.equals("0"))
                     gasPrice = null;
 
-                String sendTxResponse = UscRpc.sendTransaction(federationChangeAuthorizedAddress,
+                String sendTxResponse = UscRpc.sendTransaction(authorizedAddress,
                         PrecompiledContracts.BRIDGE_ADDR_STR,
                         "0x3D0900",
                         gasPrice,
@@ -133,10 +133,10 @@ public class FederationMain implements Runnable {
                 System.out.println("FederationMain: " + sendTxResponse);
 
                 // Try to unlock account
-                Utils.tryUnlockUscAccount(federationChangeAuthorizedAddress, pwd);
+                Utils.tryUnlockUscAccount(authorizedAddress, pwd);
 
                 // Try to release any pending transaction.
-                ReleaseUlordTransaction.release(bridgeConstants, federationChangeAuthorizedAddress, pwd);
+                ReleaseUlordTransaction.release(bridgeConstants, authorizedAddress, pwd);
 
                 Thread.sleep(1000 * 60 * 5);
             } catch (Exception e) {
