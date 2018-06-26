@@ -6,7 +6,7 @@
       "punishmentDivisor" : 10,
       "publishersDivisor" : 10,
       "federationDivisor" : 100,
-      "uscLabsAddress" : "dabadabadabadabadabadabadabadabadaba0002",
+      "uscLabsAddress" : "3d28a0682f69bb4a536ef6849c8ba3abf40dd02d",
       "lateUncleInclusionPunishmentDivisor": 20
    },
    "regtest": {
@@ -52,7 +52,7 @@
       "punishmentDivisor" : 10,
       "publishersDivisor" : 10,
       "federationDivisor" : 100,
-      "uscLabsAddress" : "dabadabadabadabadabadabadabadabadaba0003",
+      "uscLabsAddress" : "3d28a0682f69bb4a536ef6849c8ba3abf40dd02d",
       "lateUncleInclusionPunishmentDivisor": 20,
       "paidFeesMultiplier": 2,
       "paidFeesDivisor": 1

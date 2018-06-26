@@ -106,7 +106,7 @@ public class BridgeTestNetConstants extends BridgeConstants {
                 AddressBasedAuthorizer.MinimumRequiredCalculation.MAJORITY
         );
 
-        genesisFeePerKb = Coin.MILLICOIN;
+        genesisFeePerKb = Coin.MICROCOIN;
     }
 
     public static BridgeTestNetConstants getInstance() {
