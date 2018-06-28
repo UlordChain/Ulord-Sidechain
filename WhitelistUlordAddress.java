@@ -120,20 +120,15 @@ public class WhitelistUlordAddress {
         JSONObject jsonObject = new JSONObject(sendTransactionResponse);
         String txId = jsonObject.get("result").toString();
 
-        Thread.sleep(1000 * 5);
+        System.out.println("Whitelist tx id: " + txId);
 
-        if (!Utils.isTransactionInMemPool(txId))
-            if(!sendTx(whitelistAuthorisedAddress, data, --tries))
-                return false;
+        Thread.sleep(1000 * 15);
 
         while (!Utils.isTransactionMined(txId)) {
             if (!Utils.isTransactionInMemPool(txId))
                 if(!sendTx(whitelistAuthorisedAddress, data, --tries))
                     return false;
-
-            Thread.sleep(1000 * 15);
         }
-
         return true;
     }
 }

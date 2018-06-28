@@ -123,19 +123,15 @@ public class RegisterUlordTransaction {
         JSONObject jsonObject = new JSONObject(sendTransactionResponse);
         String txId = jsonObject.get("result").toString();
 
-        Thread.sleep(1000 * 5);
+        System.out.println("RegisterUlordTransaction ID: " + txId);
 
-        if (!Utils.isTransactionInMemPool(txId))
-            if(!sendTx(changeAuthorizedAddress, data, --tries))
-                return false;
+        Thread.sleep(1000 * 15);
 
         while (!Utils.isTransactionMined(txId)) {
             if (!Utils.isTransactionInMemPool(txId))
-                if(sendTx(changeAuthorizedAddress, data, --tries))
+                if(!sendTx(changeAuthorizedAddress, data, --tries))
                     return false;
-            Thread.sleep(1000 * 15);
         }
-
         return true;
     }
 }
