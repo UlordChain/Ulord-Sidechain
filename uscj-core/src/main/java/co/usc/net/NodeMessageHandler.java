@@ -335,15 +335,16 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
     }
 
     private void relayBlock(@Nonnull MessageChannel sender, Block block) {
+        byte[] blockHashBytes = block.getHash().getBytes();
         final BlockNodeInformation nodeInformation = this.blockProcessor.getNodeInformation();
-        final Set<NodeID> nodesWithBlock = nodeInformation.getNodesByBlock(block.getHash().getBytes());
+        final Set<NodeID> nodesWithBlock = nodeInformation.getNodesByBlock(blockHashBytes);
         final Set<NodeID> newNodes = this.syncProcessor.getKnownPeersNodeIDs().stream()
                 .filter(p -> !nodesWithBlock.contains(p))
                 .collect(Collectors.toSet());
 
 
         List<BlockIdentifier> identifiers = new ArrayList<>();
-        identifiers.add(new BlockIdentifier(block.getHash().getBytes(), block.getNumber()));
+        identifiers.add(new BlockIdentifier(blockHashBytes, block.getNumber()));
         channelManager.broadcastBlockHash(identifiers, newNodes);
 
         Metrics.processBlockMessage("blockRelayed", block, sender.getPeerNodeID());
