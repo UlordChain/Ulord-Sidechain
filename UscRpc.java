@@ -117,7 +117,6 @@ public class UscRpc {
 
     public static String getBlockByNumber(String blockNumber, boolean fullTx) throws IOException {
         String cmd = "{\"jsonrpc\":\"2.0\", \"id\":887, \"method\":\"eth_getBlockByNumber\", \"params\":[\"" + blockNumber + "\", \"" + fullTx + "\"]}";
-        System.out.println(cmd);
         return UscRpcExecutor.execute(cmd);
     }
 }

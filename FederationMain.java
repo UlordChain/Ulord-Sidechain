@@ -104,16 +104,19 @@ public class FederationMain implements Runnable {
                     String result = jsObj.get("result").toString();
 
                     if (result.substring(result.length() - 1, result.length()).equals("1")) {
-                        logger.info("Transaction " + txid + " already processed");
-                        System.out.println("Tx already processed: " + txid);
+                        data = DataEncoder.encodeGetUldTxHashProcessedHeight(txid);
+                        jsObj = new JSONObject(UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, data));
+                        logger.info("Transaction " + txid + " already processed at height: " +  Long.parseLong(jsObj.getString("result").substring(2),16));
+                        System.out.println("Transaction " + txid + " already processed at height: " +  Long.parseLong(jsObj.getString("result").substring(2),16));
                         continue;
                     }
 
                     JSONObject jsonObj = new JSONObject(UscRpc.getUldBlockChainBestChainHeight());
                     int chainHeadHeight = Integer.decode(jsonObj.get("result").toString());
-                    if (chainHeadHeight < height + bridgeConstants.getUld2UscMinimumAcceptableConfirmations()) {
-                        logger.info("Supplied transaction height " + height + " is greater than Chainhead height " + chainHeadHeight);
-                        System.out.println("Supplied transaction height " + height + " is greater than Chainhead height " + chainHeadHeight);
+                    int minAcceptableConfirmationHeight = height + bridgeConstants.getUld2UscMinimumAcceptableConfirmations();
+                    if (chainHeadHeight < minAcceptableConfirmationHeight) {
+                        logger.info("Supplied transaction minimum acceptable confirmation height: " + minAcceptableConfirmationHeight + " is greater than Chainhead height " + chainHeadHeight);
+                        System.out.println("Supplied transaction minimum acceptable confirmation height: " + minAcceptableConfirmationHeight + " is greater than Chainhead height " + chainHeadHeight);
                         continue;
                     }
 
@@ -125,10 +128,6 @@ public class FederationMain implements Runnable {
                 // Get gasPrice
                 JSONObject getGasPriceJSON = new JSONObject(UscRpc.getBlockByNumber("latest", false));
                 String gasPrice = getGasPriceJSON.getJSONObject("result").getString("minimumGasPrice");
-
-
-                if(gasPrice.equals("0"))
-                    gasPrice = null;
 
                 String sendTxResponse = UscRpc.sendTransaction(authorizedAddress,
                         PrecompiledContracts.BRIDGE_ADDR_STR,
