@@ -150,9 +150,6 @@ public class ReleaseUlordTransaction {
         JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
         String gasPrice = getGasPriceJSON.getString("result");
 
-        if(gasPrice.equals("0"))
-            gasPrice = null;
-
         String res = UscRpc.sendTransaction(federationChangeAuthorizedAddress,
                 PrecompiledContracts.BRIDGE_ADDR_STR,
                 "0x3D0900", gasPrice,

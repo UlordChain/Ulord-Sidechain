@@ -123,8 +123,9 @@ public class FederationMain implements Runnable {
                 }
 
                 // Get gasPrice
-                JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
-                String gasPrice = getGasPriceJSON.getString("result");
+                JSONObject getGasPriceJSON = new JSONObject(UscRpc.getBlockByNumber("latest", false));
+                String gasPrice = getGasPriceJSON.getJSONObject("result").getString("minimumGasPrice");
+
 
                 if(gasPrice.equals("0"))
                     gasPrice = null;
