@@ -88,7 +88,6 @@ public class BlockUnclesValidationRule implements BlockValidationRule {
             logger.warn("Uncles list validation failed");
             return false;
         }
-
         return true;
     }
 
