@@ -112,11 +112,8 @@ public class RegisterUlordTransaction {
             return false;
 
         // Get gasPrice
-        JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
-        String gasPrice = getGasPriceJSON.getString("result");
-
-        if(gasPrice.equals("0"))
-            gasPrice = null;
+        JSONObject getGasPriceJSON = new JSONObject(UscRpc.getBlockByNumber("latest", false));
+        String gasPrice = getGasPriceJSON.getJSONObject("result").getString("minimumGasPrice");
 
         String sendTransactionResponse = UscRpc.sendTransaction(changeAuthorizedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", gasPrice, null, data, null);
         logger.info(sendTransactionResponse);
@@ -128,6 +125,7 @@ public class RegisterUlordTransaction {
         Thread.sleep(1000 * 15);
 
         while (!Utils.isTransactionMined(txId)) {
+            Thread.sleep(1000 * 15); // Sleep to stop flooding rpc requests.
             if (!Utils.isTransactionInMemPool(txId))
                 if(!sendTx(changeAuthorizedAddress, data, --tries))
                     return false;

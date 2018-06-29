@@ -109,8 +109,8 @@ public class WhitelistUlordAddress {
             return false;
 
         // Get gasPrice
-        JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
-        String gasPrice = getGasPriceJSON.getString("result");
+        JSONObject getGasPriceJSON = new JSONObject(UscRpc.getBlockByNumber("latest", false));
+        String gasPrice = getGasPriceJSON.getJSONObject("result").getString("minimumGasPrice");
 
         if(gasPrice.equals("0"))
             gasPrice = null;
@@ -125,6 +125,7 @@ public class WhitelistUlordAddress {
         Thread.sleep(1000 * 15);
 
         while (!Utils.isTransactionMined(txId)) {
+            Thread.sleep(1000 * 15); // Sleep to stop flooding rpc requests.
             if (!Utils.isTransactionInMemPool(txId))
                 if(!sendTx(whitelistAuthorisedAddress, data, --tries))
                     return false;

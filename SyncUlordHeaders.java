@@ -153,11 +153,9 @@ public class SyncUlordHeaders implements Runnable{
     private String receiveHeaders(StringBuilder builder) throws IOException {
 
         // Get gasPrice
-        JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
-        String gasPrice = getGasPriceJSON.getString("result"); //"0x9184e72a000";
+        JSONObject getGasPriceJSON = new JSONObject(UscRpc.getBlockByNumber("latest", false));
+        String gasPrice = getGasPriceJSON.getJSONObject("result").getString("minimumGasPrice");
 
-        if(gasPrice.equals("0x00"))//make the gasprice to 20Gwei when gasprice is 0
-            gasPrice = "0x4A817C800";   // 20 GWei
         String responseString = UscRpc.sendTransaction(
                 federationChangeAuthorizedAddress,
                 PrecompiledContracts.BRIDGE_ADDR_STR,
