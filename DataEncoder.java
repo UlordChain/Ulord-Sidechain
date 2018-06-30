@@ -14,20 +14,8 @@ import java.math.BigInteger;
 
 public class DataEncoder {
 
-    public static String encodeStateForUldReleaseClient() {
-        return Sha256Hash.bytesToHex(Bridge.GET_STATE_FOR_ULD_RELEASE_CLIENT.encode(new Object[]{}));
-    }
-
-    public static String encodeUldBlockChainBestChainHeight() {
-        return Sha256Hash.bytesToHex(Bridge.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT.encode(new Object[]{}));
-    }
-
     public static String encodeUpdateCollections() {
-        return Sha256Hash.bytesToHex(Bridge.UPDATE_COLLECTIONS.encode(new Object[]{}));
-    }
-
-    public static String encodeRemoveLockWhitelistAddress(String address) {
-        return Sha256Hash.bytesToHex(Bridge.REMOVE_LOCK_WHITELIST_ADDRESS.encode(new Object[]{address}));
+        return Sha256Hash.bytesToHex(Bridge.UPDATE_COLLECTIONS.encodeSignature());
     }
 
     public static String encodeReceiveHeaders(String[] headers) {
@@ -36,8 +24,22 @@ public class DataEncoder {
             byte[] b = Sha256Hash.hexStringToByteArray(headers[i]);
             blocks[i] = b;
         }
-        return Sha256Hash.bytesToHex((Bridge.RECEIVE_HEADERS.encode(new Object[]{blocks})));
+        return Hex.toHexString(Bridge.RECEIVE_HEADERS.encode(new Object[]{blocks}));
     }
+
+    public static String encodeStateForUldReleaseClient() {
+        return Hex.toHexString(Bridge.GET_STATE_FOR_ULD_RELEASE_CLIENT.encode(new Object[]{}));
+    }
+
+    public static String encodeUldBlockChainBestChainHeight() {
+        return Hex.toHexString(Bridge.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT.encode(new Object[]{}));
+    }
+
+    public static String encodeRemoveLockWhitelistAddress(String address) {
+        return Hex.toHexString(Bridge.REMOVE_LOCK_WHITELIST_ADDRESS.encode(new Object[]{address}));
+    }
+
+
 
     /**
      * Encodes addLockWhitelistAddress function with its parameters
@@ -60,8 +62,112 @@ public class DataEncoder {
     public static String encodeGetUldTxHashProcessedHeight(String txId) {
         return Hex.toHexString(Bridge.GET_ULD_TX_HASH_PROCESSED_HEIGHT.encode(new Object[]{txId}));
     }
+
     public static String encodeSetLockWhitelistDisableBlockDelay(BigInteger value) {
         return Hex.toHexString(Bridge.SET_LOCK_WHITELIST_DISABLE_BLOCK_DELAY.encode(new Object[]{value}));
     }
+
+
+    // Federation Functions ---------------------------------------------------
+    public static String encodeGetFederationAddress() {
+        return Hex.toHexString(Bridge.GET_FEDERATION_ADDRESS.encodeSignature());
+    }
+
+    public static String encodeGetFederationSize() {
+        return Hex.toHexString(Bridge.GET_FEDERATION_SIZE.encodeSignature());
+    }
+
+    public static String encodeGetFederationThreshold() {
+        return Hex.toHexString(Bridge.GET_FEDERATION_THRESHOLD.encodeSignature());
+    }
+
+    public static String encodeGetFederatorPublicKey(int index) {
+        return Hex.toHexString(Bridge.GET_FEDERATOR_PUBLIC_KEY.encode(new Object[] {index}));
+    }
+
+    public static String encodeGetFederationCreationTime() {
+        return Hex.toHexString(Bridge.GET_FEDERATION_CREATION_TIME.encodeSignature());
+    }
+
+    public static String encodeGetFederationCreationBlockNumber() {
+        return Hex.toHexString(Bridge.GET_FEDERATION_CREATION_BLOCK_NUMBER.encodeSignature());
+    }
+
+
+
+
+    public static String encodeGetRetiringFederationAddress() {
+        return Hex.toHexString(Bridge.GET_RETIRING_FEDERATION_ADDRESS.encodeSignature());
+    }
+
+    public static String encodeGetRetiringFederationSize() {
+        return Hex.toHexString(Bridge.GET_RETIRING_FEDERATION_SIZE.encodeSignature());
+    }
+
+    public static String encodeGetRetiringFederationThreshold() {
+        return Hex.toHexString(Bridge.GET_RETIRING_FEDERATION_THRESHOLD.encodeSignature());
+    }
+
+    public static String encodeGetRetiringFederatorPublicKey(int index) {
+        return Hex.toHexString(Bridge.GET_RETIRING_FEDERATOR_PUBLIC_KEY.encode(new Object[] {index}));
+    }
+
+    public static String encodeGetRetiringFederationCreationTime() {
+        return Hex.toHexString(Bridge.GET_RETIRING_FEDERATION_CREATION_TIME.encodeSignature());
+    }
+
+    public static String encodeGetRetiringFederationCreationBlockNumber() {
+        return Hex.toHexString(Bridge.GET_RETIRING_FEDERATION_CREATION_BLOCK_NUMBER.encodeSignature());
+    }
+
+
+
+
+    public static String encodeCreateFederation() {
+        return Hex.toHexString(Bridge.CREATE_FEDERATION.encodeSignature());
+    }
+
+    public static String encodeAddFederatorPublicKey(String publicKey) {
+        return Hex.toHexString(Bridge.ADD_FEDERATOR_PUBLIC_KEY.encode(new Object[]{Hex.decode(publicKey)}));
+    }
+
+    public static String encodeCommitFederation(String hash) {
+        return Hex.toHexString(Bridge.COMMIT_FEDERATION.encode(new Object[]{Hex.decode(hash)}));
+    }
+
+    public static String encodeRollbackFederation() {
+        return Hex.toHexString(Bridge.ROLLBACK_FEDERATION.encodeSignature());
+    }
+
+
+
+
+    public static String encodeGetPendingFederationHash() {
+        return Hex.toHexString(Bridge.GET_PENDING_FEDERATION_HASH.encodeSignature());
+    }
+
+    public static String encodeGetPendingFederationSize() {
+        return Hex.toHexString(Bridge.GET_PENDING_FEDERATION_SIZE.encodeSignature());
+    }
+
+    public static String encodeGetPendingFederatorPublicKey(int index) {
+        return Hex.toHexString(Bridge.GET_PENDING_FEDERATOR_PUBLIC_KEY.encode(new Object[]{index}));
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

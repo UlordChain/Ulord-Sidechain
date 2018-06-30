@@ -2,7 +2,6 @@ package tools;
 
 import co.usc.config.BridgeConstants;
 import co.usc.config.BridgeTestNetConstants;
-import co.usc.peg.Bridge;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.params.MainNetParams;
 import co.usc.ulordj.params.TestNet3Params;
@@ -12,7 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.util.encoders.Hex;
 
 public class FederationMain implements Runnable {
 
@@ -137,7 +135,7 @@ public class FederationMain implements Runnable {
                         "0x3D0900",
                         gasPrice,
                         null,
-                        Hex.toHexString(Bridge.UPDATE_COLLECTIONS.encodeSignature()),
+                        DataEncoder.encodeUpdateCollections(),
                         null
                 );
                 logger.info(sendTxResponse);
