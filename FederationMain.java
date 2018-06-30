@@ -125,6 +125,9 @@ public class FederationMain implements Runnable {
                     RegisterUlordTransaction.register(bridgeConstants, authorizedAddress, pwd, txid);
                 }
 
+                // Try to unlock account
+                Utils.tryUnlockUscAccount(authorizedAddress, pwd);
+
                 // Get gasPrice
                 JSONObject getGasPriceJSON = new JSONObject(UscRpc.getBlockByNumber("latest", false));
                 String gasPrice = getGasPriceJSON.getJSONObject("result").getString("minimumGasPrice");
@@ -139,9 +142,6 @@ public class FederationMain implements Runnable {
                 );
                 logger.info(sendTxResponse);
                 System.out.println("FederationMain: " + sendTxResponse);
-
-                // Try to unlock account
-                Utils.tryUnlockUscAccount(authorizedAddress, pwd);
 
                 // Try to release any pending transaction.
                 ReleaseUlordTransaction.release(bridgeConstants, authorizedAddress, pwd);

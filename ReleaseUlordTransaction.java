@@ -115,10 +115,6 @@ public class ReleaseUlordTransaction {
                         System.out.println("ReleaseUlordTransaction: Ulord tx successfully processed, Tx id: " + sendTxResponse);
                     }
                 }
-                else
-                {
-                    // TODO: Send Transaction for further signing
-                }
             }
         }
         catch (Exception e) {
@@ -147,8 +143,8 @@ public class ReleaseUlordTransaction {
         CallTransaction.Function function = Bridge.ADD_SIGNATURE;
 
         // Get gasPrice
-        JSONObject getGasPriceJSON = new JSONObject(UscRpc.gasPrice());
-        String gasPrice = getGasPriceJSON.getString("result");
+        JSONObject getGasPriceJSON = new JSONObject(UscRpc.getBlockByNumber("latest", false));
+        String gasPrice = getGasPriceJSON.getJSONObject("result").getString("minimumGasPrice");
 
         String res = UscRpc.sendTransaction(federationChangeAuthorizedAddress,
                 PrecompiledContracts.BRIDGE_ADDR_STR,
@@ -157,6 +153,8 @@ public class ReleaseUlordTransaction {
                 Hex.toHexString(function.encode(federationKey.getPubKey(), signatures, uscTxHash.getBytes())),
                 null
         );
+        logger.info("addSignatureToUSC response : " + res);
+        System.out.println("addSignatureToUSC response : " + res);
         return res;
     }
 

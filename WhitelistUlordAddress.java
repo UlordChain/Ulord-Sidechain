@@ -93,7 +93,6 @@ public class WhitelistUlordAddress {
 
             String data = DataEncoder.encodeWhitelist(utAddress, valueInSatoshi);
 
-            // TODO: Compute gasPrice, though it is a free transaction from genesis federation
             return sendTx(whitelistAuthorisedAddress, data, 3);
 
         } catch (Exception e) {
