@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC Core Team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,11 +26,11 @@ import java.util.Arrays;
 
 /**
  * See http://www.herongyang.com/Java/Bit-String-Set-Bit-to-Byte-Array.html.
+ * Build a Bloom Filter
  *
  * @author Roman Mandeleil
  * @since 20.11.2014
  */
-
 public class Bloom {
 
     static final int _8STEPS = 8;
