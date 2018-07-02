@@ -115,21 +115,28 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         // TODO: Make ProofOfWorkRule one of the classes that inherits from AuthenticationRule.
 
         if (isFallbackMiningPossibleAndBlockSigned(header)) {
-            return validFallbackBlockSignature(constants, header, header.getUlordMergedMiningHeader());
+            boolean isValidFallbackSignature = validFallbackBlockSignature(constants, header, header.getUlordMergedMiningHeader());
+            if (!isValidFallbackSignature) {
+                logger.warn("Fallback signature failed. Header {}", header.getShortHash());
+            }
+            return isValidFallbackSignature;
         }
 
         co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = bridgeConstants.getUldParams();
         byte[] ulordMergedMiningCoinbaseTransactionCompressed = header.getUlordMergedMiningCoinbaseTransaction();
 
         if (ulordMergedMiningCoinbaseTransactionCompressed==null) {
+			logger.warn("Compressed coinbase transaction does not exist");
             return false;
         }
 
         if (header.getUlordMergedMiningHeader()==null) {
+			logger.warn("Ulord merged mining header does not exist");
             return false;
         }
 
         if (header.getUlordMergedMiningMerkleProof()==null) {
+			logger.warn("Partial merkle tree does not have the expected size");
             return false;
         }
 
