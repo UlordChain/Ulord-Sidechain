@@ -126,17 +126,17 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         byte[] ulordMergedMiningCoinbaseTransactionCompressed = header.getUlordMergedMiningCoinbaseTransaction();
 
         if (ulordMergedMiningCoinbaseTransactionCompressed==null) {
-			logger.warn("Compressed coinbase transaction does not exist");
+			logger.warn("Compressed coinbase transaction does not exist. Header {}", header.getShortHash());
             return false;
         }
 
         if (header.getUlordMergedMiningHeader()==null) {
-			logger.warn("Ulord merged mining header does not exist");
+			logger.warn("Ulord merged mining header does not exist. Header {}", header.getShortHash());
             return false;
         }
 
         if (header.getUlordMergedMiningMerkleProof()==null) {
-			logger.warn("Partial merkle tree does not have the expected size");
+			logger.warn("Partial merkle tree does not have the expected size. Header {}", header.getShortHash());
             return false;
         }
 
