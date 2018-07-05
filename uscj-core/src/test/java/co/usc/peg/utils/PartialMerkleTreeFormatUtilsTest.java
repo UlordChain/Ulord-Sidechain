@@ -56,7 +56,7 @@ public class PartialMerkleTreeFormatUtilsTest {
     }
 
     @Test
-    public void doesntHaveExpectedSize() {
+    public void notHasExpectedSize() {
         String pmtSerializedEncoded = "030000000279e7c0da739df8a00f12c0bff55e5438f530aa5859ff9874258cd7bad3fe709746aff89" +
                 "7e6a851faa80120d6ae99db30883699ac0428fc7192d6c3fec0ca64010d";
         byte[] pmtSerialized = Hex.decode(pmtSerializedEncoded);
@@ -70,4 +70,5 @@ public class PartialMerkleTreeFormatUtilsTest {
         byte[] pmtSerialized = Hex.decode(pmtSerializedEncoded);
         PartialMerkleTreeFormatUtils.getFlagBitsCount(pmtSerialized);
     }
+
 }
