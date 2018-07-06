@@ -71,6 +71,9 @@ public class ReleaseUlordTransaction {
             SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures;
             uscTxsWaitingForSignatures = BridgeSerializationUtils.deserializeMap(rlpList.get(0).getRLPData(), params, false);
 
+            logger.info(uscTxsWaitingForSignatures.size() + " transactions waiting for signatures");
+            System.out.println(uscTxsWaitingForSignatures.size() + " transactions waiting for signatures");
+
             if(uscTxsWaitingForSignatures.isEmpty())
                 return;
 
@@ -104,20 +107,25 @@ public class ReleaseUlordTransaction {
                     if(sendTxResponse.contains("error")) {
                         String[] messages = sendTxResponse.split(":");
                         if(messages[messages.length - 1].contains("transaction already in block chain")) {
-                            System.out.println("ReleaseUlordTransaction: Transaction already in blockchain");
+                            logger.warn("Transaction already in Ulord blockchain");
+                            System.out.println("ReleaseUlordTransaction: Transaction already in Ulord blockchain");
                             // Try adding signature again to remove already processed transaction
                             addSignatureToUSC(key, utTx, federationChangeAuthorizedAddress);
                         }
-                        else
+                        else {
+                            logger.info("Transaction failed: " + messages[messages.length - 1]);
                             System.out.println("ReleaseUlordTransaction: Transaction failed: " + messages[messages.length - 1]);
+                        }
                     }
                     else {
-                        System.out.println("ReleaseUlordTransaction: Ulord tx successfully processed, Tx id: " + sendTxResponse);
+                        logger.info("Ulord tx successfully processed, Ulord Tx id: " + sendTxResponse);
+                        System.out.println("ReleaseUlordTransaction: Ulord tx successfully processed, Ulord Tx id: " + sendTxResponse);
                     }
                 }
             }
         }
         catch (Exception e) {
+            logger.error(e.toString());
             System.out.println("ReleaseUlordTransaction: " + e);
         }
     }
