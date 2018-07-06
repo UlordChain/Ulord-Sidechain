@@ -247,6 +247,11 @@ public class BridgeSupport {
             return;
         }
 
+        //check the PMT size  TODO:
+       /* if (!PartialMerkleTreeFormatUtils.hasExpectedSize(pmtSerialized)) {
+            throw new BridgeIllegalArgumentException("PartialMerkleTree doesn't have expected size");
+        }*/
+
         // Check the tx is in the partial merkle tree
         List<Sha256Hash> hashesInPmt = new ArrayList<>();
         Sha256Hash merkleRoot = pmt.getTxnHashAndMerkleRoot(hashesInPmt);
