@@ -135,13 +135,14 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
             return false;
         }
 
-        if (header.getUlordMergedMiningMerkleProof()==null) {
+        byte[] pmtSerialized = header.getUlordMergedMiningMerkleProof();
+        if (!PartialMerkleTreeFormatUtils.hasExpectedSize(pmtSerialized)) {
 			logger.warn("Partial merkle tree does not have the expected size. Header {}", header.getShortHash());
             return false;
         }
 
         UldBlock ulordMergedMiningBlock = ulordNetworkParameters.getDefaultSerializer().makeBlock(header.getUlordMergedMiningHeader());
-        PartialMerkleTree UlordMergedMiningMerkleBranch  = new PartialMerkleTree(ulordNetworkParameters, header.getUlordMergedMiningMerkleProof(), 0);
+        PartialMerkleTree UlordMergedMiningMerkleBranch  = new PartialMerkleTree(ulordNetworkParameters, pmtSerialized, 0);
 
         BigInteger target = DifficultyUtils.difficultyToTarget(header.getDifficulty());
         BigInteger ulordMergedMiningBlockHashBI = ulordMergedMiningBlock.getHash().toBigInteger();
