@@ -7,7 +7,6 @@ package tools;
 
 import co.usc.peg.Bridge;
 import co.usc.ulordj.core.Sha256Hash;
-import com.sun.istack.internal.NotNull;
 import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigInteger;
