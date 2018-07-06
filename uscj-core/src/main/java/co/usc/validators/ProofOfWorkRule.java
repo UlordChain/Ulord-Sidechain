@@ -1,7 +1,6 @@
 /*
- * Copyright (C) 2017 RSK Labs Ltd.
- * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  * Copyright (C) 2016-2018  Ulord developers
+ * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +18,7 @@
 
 package co.usc.validators;
 
+import co.usc.peg.utils.PartialMerkleTreeFormatUtils;
 import co.usc.ulordj.core.UldBlock;
 import co.usc.ulordj.core.PartialMerkleTree;
 import co.usc.ulordj.core.Sha256Hash;
