@@ -71,6 +71,48 @@ public class UscRpc {
         return UscRpcExecutor.execute(cmd.toString());
     }
 
+    public static String call(String from,
+                                         @Nullable String to,
+                                         @Nullable String gas,
+                                         @Nullable String gasPrice,
+                                         @Nullable String value,
+                                         @Nullable String data,
+                                         @Nullable String nonce,
+                                                    String quantityTag)
+            throws IOException {
+
+        StringBuilder cmd = new StringBuilder();
+        cmd.append("{");
+        cmd.append("\"jsonrpc\":\"2.0\", ");
+        cmd.append("\"id\":\"882\", ");
+        cmd.append("\"method\":\"eth_call\", ");
+        cmd.append("\"params\":[{");
+        cmd.append("\"from\":\"" + from + "\", ");
+
+        if(to != null)
+            cmd.append("\"to\":\"" + to + "\", ");
+
+        if(gas != null)
+            cmd.append("\"gas\":\"" + gas + "\", ");
+
+        if(gasPrice != null)
+            cmd.append("\"gasPrice\":\"" + gasPrice +"\", ");
+
+        if(value != null)
+            cmd.append("\"value\":\"" + value + "\", ");
+
+        if(nonce != null)
+            cmd.append("\"nonce\":\"" + nonce + "\", ");
+
+        if(data != null)
+            cmd.append("\"data\":\"" + data);
+
+        cmd.append("\"},\"" + quantityTag + "\"]}");
+
+        return UscRpcExecutor.execute(cmd.toString());
+    }
+
+
     public static String call(String to, String data) throws IOException {
         String cmd = "{" +
                 "\"jsonrpc\": \"2.0\", " +
