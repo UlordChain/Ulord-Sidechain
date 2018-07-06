@@ -95,7 +95,8 @@ public class SyncUlordHeaders implements Runnable{
                             //Receive Ulord Headers and create a transaction on USC.
                             String txHash = receiveHeaders(builder);
 
-                            System.out.println("SyncUlordHeaders.Transaction ID: " + txHash);
+                            System.out.println("SyncUlordHeaders.receiveHeaders Response: " + txHash);
+
                             while(true){
                                 Thread.sleep(1000*30);
                                 int UscBestBlockHeightAfterReceiveHeaders = Utils.getUscBestBlockHeight();
@@ -159,15 +160,17 @@ public class SyncUlordHeaders implements Runnable{
         String responseString = UscRpc.sendTransaction(
                 federationChangeAuthorizedAddress,
                 PrecompiledContracts.BRIDGE_ADDR_STR,
-                null,
+                "0x3D0900",
                 gasPrice,
                 null,
                 DataEncoder.encodeReceiveHeaders(builder.toString().split(" ")),
                 null);
         JSONObject jsonObj = new JSONObject(responseString);
-        String txHash = jsonObj.get("result").toString();
+        if(jsonObj.toString().contains("error")) {
+            return jsonObj.getJSONObject("error").getString("message");
+        }
 
-        return txHash;
+        return jsonObj.get("result").toString();
     }
 
     private String getTransactionByHash(String txHash) {
