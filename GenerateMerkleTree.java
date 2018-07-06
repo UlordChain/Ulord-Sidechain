@@ -7,10 +7,6 @@ package tools;
 
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.core.Utils;
-import co.usc.ulordj.params.TestNet3Params;
-import com.sun.istack.internal.NotNull;
-import org.spongycastle.util.encoders.Hex;
-import org.spongycastle.util.test.Test;
 
 import java.util.ArrayList;
 import java.util.List;
