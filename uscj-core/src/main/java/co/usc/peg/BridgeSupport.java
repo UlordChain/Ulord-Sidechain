@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 Usc Development team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,6 +34,7 @@ import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
 import co.usc.peg.utils.BridgeEventLogger;
+//import co.rsk.peg.utils.PartialMerkleTreeFormatUtils; //TODO:
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.tuple.Pair;
 import org.ethereum.core.Block;
@@ -245,6 +246,11 @@ public class BridgeSupport {
             logger.warn("Supplied tx was already processed");
             return;
         }
+
+        //check the PMT size  TODO:
+       /* if (!PartialMerkleTreeFormatUtils.hasExpectedSize(pmtSerialized)) {
+            throw new BridgeIllegalArgumentException("PartialMerkleTree doesn't have expected size");
+        }*/
 
         // Check the tx is in the partial merkle tree
         List<Sha256Hash> hashesInPmt = new ArrayList<>();
