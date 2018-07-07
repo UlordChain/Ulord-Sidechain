@@ -31,6 +31,48 @@ public class UscRpc {
         return UscRpcExecutor.execute(cmd);
     }
 
+    public static String estimateGas(@Nullable String from,
+                                         @Nullable String to,
+                                         @Nullable String gas,
+                                         @Nullable String gasPrice,
+                                         @Nullable String value,
+                                         @Nullable String data,
+                                         @Nullable String nonce)
+            throws IOException {
+
+        StringBuilder cmd = new StringBuilder();
+        cmd.append("{");
+        cmd.append("\"jsonrpc\":\"2.0\", ");
+        cmd.append("\"id\":\"882\", ");
+        cmd.append("\"method\":\"eth_estimateGas\", ");
+        cmd.append("\"params\":[{");
+
+        if(from != null)
+            cmd.append("\"from\":\"" + from + "\", ");
+
+        if(to != null)
+            cmd.append("\"to\":\"" + to + "\", ");
+
+        if(gas != null)
+            cmd.append("\"gas\":\"" + gas + "\", ");
+
+        if(gasPrice != null)
+            cmd.append("\"gasPrice\":\"" + gasPrice +"\", ");
+
+        if(value != null)
+            cmd.append("\"value\":\"" + value + "\", ");
+
+        if(nonce != null)
+            cmd.append("\"nonce\":\"" + nonce + "\", ");
+
+        if(data != null)
+            cmd.append("\"data\":\"" + data);
+
+        cmd.append("\"}]}");
+
+        return UscRpcExecutor.execute(cmd.toString());
+    }
+
     public static String sendTransaction(String from,
                                           @Nullable String to,
                                           @Nullable String gas,
@@ -71,8 +113,8 @@ public class UscRpc {
         return UscRpcExecutor.execute(cmd.toString());
     }
 
-    public static String call(String from,
-                                         @Nullable String to,
+    public static String call(@Nullable String from,
+                                         String to,
                                          @Nullable String gas,
                                          @Nullable String gasPrice,
                                          @Nullable String value,
@@ -87,10 +129,11 @@ public class UscRpc {
         cmd.append("\"id\":\"882\", ");
         cmd.append("\"method\":\"eth_call\", ");
         cmd.append("\"params\":[{");
-        cmd.append("\"from\":\"" + from + "\", ");
 
-        if(to != null)
-            cmd.append("\"to\":\"" + to + "\", ");
+        if(from != null)
+            cmd.append("\"from\":\"" + from + "\", ");
+
+        cmd.append("\"to\":\"" + to + "\", ");
 
         if(gas != null)
             cmd.append("\"gas\":\"" + gas + "\", ");
