@@ -600,9 +600,18 @@ public class Transaction {
     }
 
     public static Transaction create(UscSystemProperties config, String to, BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, byte[] decodedData) {
+        if(gasLimit.equals(BigInteger.ZERO))
+            return new Transaction(BigIntegers.asUnsignedByteArray(nonce),
+                    BigIntegers.asUnsignedByteArray(gasPrice),
+                    gasLimit.toByteArray(),         // We don't want to use "asUnsignedByteArray" when gas limit is set to 0 as "asUnsignedByteArray" function returns an empty byte array {}
+                    to != null ? Hex.decode(to) : null,
+                    BigIntegers.asUnsignedByteArray(amount),
+                    decodedData,
+                    config.getBlockchainConfig().getCommonConstants().getChainId());
+
         return new Transaction(BigIntegers.asUnsignedByteArray(nonce),
                 BigIntegers.asUnsignedByteArray(gasPrice),
-                BigIntegers.asUnsignedByteArray(gasLimit),
+                BigIntegers.asUnsignedByteArray(gasLimit),      // asUnsignedByteArray returns {} empty byte array if the gasLimit is set to 0
                 to != null ? Hex.decode(to) : null,
                 BigIntegers.asUnsignedByteArray(amount),
                 decodedData,
