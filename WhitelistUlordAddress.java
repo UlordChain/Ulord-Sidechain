@@ -24,6 +24,8 @@ import org.spongycastle.util.encoders.Hex;
 import java.io.IOException;
 import java.math.BigInteger;
 
+import static tools.Utils.getMinimumGasPrice;
+
 public class WhitelistUlordAddress {
 
     private static Logger logger = LoggerFactory.getLogger("whitelistaddress");
@@ -50,7 +52,7 @@ public class WhitelistUlordAddress {
             try {
                 String callResponse = UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, Hex.toHexString(Bridge.GET_LOCK_WHITELIST_SIZE.encodeSignature()));
                 JSONObject callResponseJson = new JSONObject(callResponse);
-                long whitelistSize = Long.parseLong(callResponseJson.get("result").toString().substring(2));
+                long whitelistSize = Long.parseLong(callResponseJson.get("result").toString().substring(2), 16);
 
                 for (int i = 0; i < whitelistSize; i++) {
                     callResponse = UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, Hex.toHexString(Bridge.GET_LOCK_WHITELIST_ADDRESS.encode(new Object[]{i})));
@@ -59,12 +61,12 @@ public class WhitelistUlordAddress {
                     Object[] objects = Bridge.GET_LOCK_WHITELIST_ADDRESS.decodeResult(Hex.decode(result));
 
                     String address = objects[0].toString();
-                    System.out.println(address);
-                    //RLPList rlpElements =
                     if(utAddress.toString().equals(address)) {
                         isWhitelisted = true;
-                        break;
+                        //break;
                     }
+                    // Print all the whitelisted addresses
+                    System.out.println(address);
                 }
             } catch (Exception e) {
                 System.out.println(e);
@@ -107,14 +109,14 @@ public class WhitelistUlordAddress {
         if (tries <= 0)
             return false;
 
-        // Get gasPrice
-        JSONObject getGasPriceJSON = new JSONObject(UscRpc.getBlockByNumber("latest", false));
-        String gasPrice = getGasPriceJSON.getJSONObject("result").getString("minimumGasPrice");
-
-        if(gasPrice.equals("0"))
-            gasPrice = null;
-
-        String sendTransactionResponse = UscRpc.sendTransaction(whitelistAuthorisedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, null, gasPrice, null, data, null);
+        String sendTransactionResponse = UscRpc.sendTransaction(
+                whitelistAuthorisedAddress,
+                PrecompiledContracts.BRIDGE_ADDR_STR,
+                "0x0",
+                getMinimumGasPrice(),
+                null,
+                data,
+                null);
         logger.info(sendTransactionResponse);
         JSONObject jsonObject = new JSONObject(sendTransactionResponse);
         String txId = jsonObject.get("result").toString();
