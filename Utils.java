@@ -9,6 +9,7 @@ import co.usc.ulordj.core.*;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -60,6 +61,10 @@ public class Utils {
     public static boolean isTransactionInMemPool(String txId) {
         try {
             JSONObject jsonObj = new JSONObject(UscRpc.getTransactionByHash(txId));
+            if(jsonObj.toString().contains("error")) {
+                System.out.println(jsonObj.toString());
+                return false;
+            }
             String result = jsonObj.get("result").toString();
             if(result.equals("null"))
                 return false;
@@ -73,6 +78,11 @@ public class Utils {
     public static boolean isTransactionMined(String txId) {
         try {
             JSONObject jsonObj = new JSONObject(UscRpc.getTransactionByHash(txId));
+            if(jsonObj.toString().contains("error")) {
+                System.out.println(jsonObj.toString());
+                return false;
+            }
+
             String result = jsonObj.getJSONObject("result").get("blockNumber").toString();
 
             if(!result.equals("null"))
@@ -93,5 +103,21 @@ public class Utils {
             System.out.println(ex);
             return 0;
         }
+    }
+
+    public static String getMinimumGasPrice() throws IOException {
+        JSONObject getGasPriceJSON = new JSONObject(UscRpc.getBlockByNumber("latest", false));
+        return getGasPriceJSON.getJSONObject("result").getString("minimumGasPrice");
+    }
+
+    public static String getGasForTx(@Nullable String from,
+                                     @Nullable String to,
+                                     @Nullable String gas,
+                                     @Nullable String gasPrice,
+                                     @Nullable String value,
+                                     @Nullable String data,
+                                     @Nullable String nonce) throws IOException {
+        JSONObject jsonObject = new JSONObject(UscRpc.estimateGas(from, to, gas, gasPrice, value, data, nonce));
+        return jsonObject.getString("result");
     }
 }
