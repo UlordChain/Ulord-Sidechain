@@ -12,6 +12,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static tools.Utils.*;
+
 public class FederationMain implements Runnable {
 
     private static Logger logger = LoggerFactory.getLogger("federation");
@@ -19,7 +21,6 @@ public class FederationMain implements Runnable {
     private BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
     NetworkParameters params = TestNet3Params.get();
 
-    private String[] ulordFederationAddresses;  // Multisig address to monitor for UTXOs
     private String feePerkbAuthorizedAddress;
     private String feePerkbAuthorizedPassword;
     private String changeAuthorizedAddress;
@@ -30,8 +31,6 @@ public class FederationMain implements Runnable {
     public FederationMain(){
         FederationConfigLoader configLoader = new FederationConfigLoader();
         Config config = configLoader.getConfigFromFiles();
-
-        this.ulordFederationAddresses = config.getStringList("federation.addresses").toArray(new String[0]);
 
         this.feePerkbAuthorizedAddress = config.getString("federation.feePerkbAuthorizedAddress");
         this.feePerkbAuthorizedPassword = config.getString("federation.feePerkbAuthorizedPassword");
@@ -61,18 +60,18 @@ public class FederationMain implements Runnable {
                 }
             }
 
-            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params, fedMain.feePerkbAuthorizedAddress, fedMain.feePerkbAuthorizedPassword));
+            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params, fedMain.changeAuthorizedAddress, fedMain.changeAuthorizedPassword));
             syncUlordHeaders.start();
         }
     }
 
     @Override
     public void run() {
-        startPeg(bridgeConstants, changeAuthorizedAddress, changeAuthorizedPassword, ulordFederationAddresses);
+        startPeg(bridgeConstants, changeAuthorizedAddress, changeAuthorizedPassword);
     }
 
 
-    public void startPeg(BridgeConstants bridgeConstants, String authorizedAddress, String pwd, String[] addresses) {
+    public void startPeg(BridgeConstants bridgeConstants, String authorizedAddress, String pwd) {
         NetworkParameters params;
         if(bridgeConstants instanceof BridgeTestNetConstants)
             params = TestNet3Params.get();
@@ -81,7 +80,22 @@ public class FederationMain implements Runnable {
 
         while(true) {
 
+            String[] addresses;
             try {
+                String res = UscRpc.getFederationAddress();
+                if (res.contains("error")) {
+                    logger.error(res);
+                    System.out.println("getAddressUtxosResponse: " + res);
+                    return;
+                }
+                addresses = DataDecoder.decodeGetFederationAddress(res);
+
+                if(addresses == null) {
+                    logger.error("No Federation address found.");
+                    System.out.println("No Federation address found.");
+                    return;
+                }
+
                 String getAddressUtxosResponse = UlordCli.getAddressUtxos(params, addresses);
                 if(getAddressUtxosResponse.contains("error")) {
                     logger.error(getAddressUtxosResponse);
@@ -126,20 +140,16 @@ public class FederationMain implements Runnable {
                 // Try to unlock account
                 Utils.tryUnlockUscAccount(authorizedAddress, pwd);
 
-                // Get gasPrice
-                JSONObject getGasPriceJSON = new JSONObject(UscRpc.getBlockByNumber("latest", false));
-                String gasPrice = getGasPriceJSON.getJSONObject("result").getString("minimumGasPrice");
-
                 String sendTxResponse = UscRpc.sendTransaction(authorizedAddress,
                         PrecompiledContracts.BRIDGE_ADDR_STR,
-                        "0x3D0900",
-                        gasPrice,
+                        "0x0",
+                        getMinimumGasPrice(),
                         null,
                         DataEncoder.encodeUpdateCollections(),
                         null
                 );
                 logger.info(sendTxResponse);
-                System.out.println("FederationMain: " + sendTxResponse);
+                System.out.println("UpdateCollections: " + sendTxResponse);
 
                 // Try to release any pending transaction.
                 ReleaseUlordTransaction.release(bridgeConstants, authorizedAddress, pwd);
@@ -148,6 +158,7 @@ public class FederationMain implements Runnable {
             } catch (Exception e) {
                 logger.warn(e.toString());
                 System.out.println("FederationMain: " + e);
+                break;
             }
         }
     }
