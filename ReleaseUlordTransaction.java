@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
+import static tools.Utils.*;
+
 
 // USC release txs follow these steps: First, they are waiting for coin selection (releaseRequestQueue),
 // then they are waiting for enough confirmations on the USC network (releaseTransactionSet),
@@ -150,13 +152,10 @@ public class ReleaseUlordTransaction {
 
         CallTransaction.Function function = Bridge.ADD_SIGNATURE;
 
-        // Get gasPrice
-        JSONObject getGasPriceJSON = new JSONObject(UscRpc.getBlockByNumber("latest", false));
-        String gasPrice = getGasPriceJSON.getJSONObject("result").getString("minimumGasPrice");
-
         String res = UscRpc.sendTransaction(federationChangeAuthorizedAddress,
                 PrecompiledContracts.BRIDGE_ADDR_STR,
-                "0x3D0900", gasPrice,
+                "0x0",
+                getMinimumGasPrice(),
                 null,
                 Hex.toHexString(function.encode(federationKey.getPubKey(), signatures, uscTxHash.getBytes())),
                 null

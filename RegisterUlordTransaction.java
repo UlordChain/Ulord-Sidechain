@@ -36,6 +36,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static tools.Utils.getMinimumGasPrice;
+
 public class RegisterUlordTransaction {
 
     private static Logger logger = LoggerFactory.getLogger("registerulordtransaction");
@@ -111,13 +113,13 @@ public class RegisterUlordTransaction {
         if (tries == 0)
             return false;
 
-        // Get gasPrice
-        JSONObject getGasPriceJSON = new JSONObject(UscRpc.getBlockByNumber("latest", false));
-        String gasPrice = getGasPriceJSON.getJSONObject("result").getString("minimumGasPrice");
-
-        String sendTransactionResponse = UscRpc.sendTransaction(changeAuthorizedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x3D0900", gasPrice, null, data, null);
+        String sendTransactionResponse = UscRpc.sendTransaction(changeAuthorizedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x0", getMinimumGasPrice(), null, data, null);
         logger.info(sendTransactionResponse);
         JSONObject jsonObject = new JSONObject(sendTransactionResponse);
+        if(jsonObject.toString().contains("error")) {
+            System.out.println(sendTransactionResponse);
+            return false;
+        }
         String txId = jsonObject.get("result").toString();
 
         System.out.println("RegisterUlordTransaction ID: " + txId);

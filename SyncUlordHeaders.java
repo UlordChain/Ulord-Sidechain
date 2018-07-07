@@ -27,6 +27,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static tools.Utils.*;
+
 public class SyncUlordHeaders implements Runnable{
 
     NetworkParameters params;
@@ -153,14 +155,12 @@ public class SyncUlordHeaders implements Runnable{
     //Call receiveHeaders of Bridge.
     private String receiveHeaders(StringBuilder builder) throws IOException {
 
-        // Get gasPrice
-        JSONObject getGasPriceJSON = new JSONObject(UscRpc.getBlockByNumber("latest", false));
-        String gasPrice = getGasPriceJSON.getJSONObject("result").getString("minimumGasPrice");
+        String gasPrice = getMinimumGasPrice();
 
         String responseString = UscRpc.sendTransaction(
                 federationChangeAuthorizedAddress,
                 PrecompiledContracts.BRIDGE_ADDR_STR,
-                "0x3D0900",
+                "0x0",
                 gasPrice,
                 null,
                 DataEncoder.encodeReceiveHeaders(builder.toString().split(" ")),
