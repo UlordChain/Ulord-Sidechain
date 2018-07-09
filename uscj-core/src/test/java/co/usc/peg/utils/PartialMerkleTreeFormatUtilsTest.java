@@ -21,13 +21,8 @@ package co.usc.peg.utils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.spongycastle.util.encoders.Hex;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+
 
 public class PartialMerkleTreeFormatUtilsTest {
 
