@@ -6,12 +6,17 @@
 package tools;
 
 import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeMainNetConstants;
+import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.BridgeTestNetConstants;
 import co.usc.core.UscAddress;
 import co.usc.peg.AddressBasedAuthorizer;
 import co.usc.peg.Bridge;
 import co.usc.ulordj.core.Address;
 import co.usc.ulordj.core.Coin;
+import co.usc.ulordj.core.NetworkParameters;
+import co.usc.ulordj.params.MainNetParams;
+import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.params.TestNet3Params;
 import com.typesafe.config.Config;
 import org.ethereum.util.RLPList;
@@ -29,7 +34,7 @@ import static tools.Utils.getMinimumGasPrice;
 public class WhitelistUlordAddress {
 
     private static Logger logger = LoggerFactory.getLogger("whitelistaddress");
-
+    private static NetworkParameters params;
     public static void main(String[] args) {
 
         if(args.length < 2) {
@@ -39,11 +44,23 @@ public class WhitelistUlordAddress {
         FederationConfigLoader configLoader = new FederationConfigLoader();
         Config config = configLoader.getConfigFromFiles();
 
-        BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
+        String paramName = config.getString("blockchain.config.name");
+        BridgeConstants bridgeConstants;
+        if(paramName.equals("testnet")) {
+            bridgeConstants = BridgeTestNetConstants.getInstance();
+            params = TestNet3Params.get();
+        }else if(paramName.equals("regtest")) {
+            bridgeConstants = BridgeRegTestConstants.getInstance();
+            params = RegTestParams.get();
+        }else {
+            bridgeConstants = BridgeMainNetConstants.getInstance();
+            params = MainNetParams.get();
+        }
+
         String lockWhitelistChangeAddress = config.getString("federation.lockWhitelistChangeAddress");
         String lockWhitelistChangePassword = config.getString("federation.lockWhitelistChangePassword");
 
-        Address utAddress = new Address(TestNet3Params.get(), args[0]);
+        Address utAddress = new Address(params, args[0]);
         UscAddress whitelistAuthorisedAddress = new UscAddress(lockWhitelistChangeAddress);
 
         boolean isWhitelisted = false;

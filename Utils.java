@@ -26,7 +26,7 @@ public class Utils {
         return Base58.encode(Hex.decode(privKey.toString()));
     }
 
-    public static UldECKey convertWifToPrivateKey(String key, UldECKey pubKey, NetworkParameters params) {
+    public static UldECKey convertWifToPrivateKey(String key, NetworkParameters params) {
         String keyHex = Hex.toHexString(Base58.decode(key));
         keyHex = keyHex.substring(0, keyHex.length() - 8);
 

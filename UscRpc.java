@@ -204,4 +204,12 @@ public class UscRpc {
         String cmd = "{\"jsonrpc\":\"2.0\", \"id\":887, \"method\":\"eth_getBlockByNumber\", \"params\":[\"" + blockNumber + "\", \"" + fullTx + "\"]}";
         return UscRpcExecutor.execute(cmd);
     }
+
+    public static String getFederatorPublicKey(int index) throws IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetFederatorPublicKey(index));
+    }
+
+    public static String getFederationSize() throws IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetFederationSize());
+    }
 }

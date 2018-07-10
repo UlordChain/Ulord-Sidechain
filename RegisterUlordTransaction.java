@@ -19,6 +19,7 @@
 package tools;
 
 import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.BridgeTestNetConstants;
 import co.usc.core.UscAddress;
 import co.usc.peg.AddressBasedAuthorizer;
@@ -27,6 +28,7 @@ import co.usc.ulordj.core.PartialMerkleTree;
 import co.usc.ulordj.core.UldBlock;
 import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.params.MainNetParams;
+import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.params.TestNet3Params;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONObject;
@@ -63,10 +65,12 @@ public class RegisterUlordTransaction {
 
             if(bridgeConstants instanceof BridgeTestNetConstants)
                 params = TestNet3Params.get();
+            else if(bridgeConstants instanceof BridgeRegTestConstants)
+                params = RegTestParams.get();
             else
                 params = MainNetParams.get();
 
-            String getRawTransactionResponse = UlordCli.getRawTransaction(TestNet3Params.get(), utTxId, false);
+            String getRawTransactionResponse = UlordCli.getRawTransaction(params, utTxId, false);
             if(getRawTransactionResponse.contains("error")) {
                 logger.info(getRawTransactionResponse);
                 System.out.println(getRawTransactionResponse);
@@ -74,7 +78,7 @@ public class RegisterUlordTransaction {
             }
             UldTransaction tx = new UldTransaction(params, Hex.decode(getRawTransactionResponse));
 
-            JSONObject getRawTxJSON = new JSONObject(UlordCli.getRawTransaction(TestNet3Params.get(), utTxId, true));
+            JSONObject getRawTxJSON = new JSONObject(UlordCli.getRawTransaction(params, utTxId, true));
             String blockHash = getRawTxJSON.get("blockhash").toString();
 
             int height = Integer.parseInt(getRawTxJSON.get("height").toString());

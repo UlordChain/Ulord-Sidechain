@@ -1,5 +1,6 @@
 package tools;
 
+import co.usc.core.Usc;
 import org.ethereum.vm.PrecompiledContracts;
 
 import java.io.IOException;
@@ -12,6 +13,7 @@ public class FederationManagement {
     private static final String BRIDGE_ADDRESS = PrecompiledContracts.BRIDGE_ADDR_STR;
 
     public static void main(String[] args) {
+
         if(args.length < 1) {
             help();
             return;

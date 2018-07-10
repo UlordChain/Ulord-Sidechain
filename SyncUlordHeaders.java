@@ -18,7 +18,13 @@
 
 package tools;
 
+import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeRegTestConstants;
+import co.usc.config.BridgeTestNetConstants;
 import co.usc.ulordj.core.NetworkParameters;
+import co.usc.ulordj.params.MainNetParams;
+import co.usc.ulordj.params.RegTestParams;
+import co.usc.ulordj.params.TestNet3Params;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONObject;
 
@@ -35,8 +41,14 @@ public class SyncUlordHeaders implements Runnable{
     String federationChangeAuthorizedAddress;
     String federationChangeAuthorizedPassword;
 
-    public SyncUlordHeaders(NetworkParameters params, String authorizedAddress, String password){
-        this.params = params;
+    public SyncUlordHeaders(BridgeConstants bridgeConstants, String authorizedAddress, String password){
+        if(bridgeConstants instanceof BridgeTestNetConstants)
+            this.params = TestNet3Params.get();
+        else if(bridgeConstants instanceof BridgeRegTestConstants)
+            this.params = RegTestParams.get();
+        else
+            this.params = MainNetParams.get();
+
         this.federationChangeAuthorizedAddress = authorizedAddress;
         this.federationChangeAuthorizedPassword = password;
     }

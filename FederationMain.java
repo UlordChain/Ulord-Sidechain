@@ -1,9 +1,12 @@
 package tools;
 
 import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeMainNetConstants;
+import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.BridgeTestNetConstants;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.params.MainNetParams;
+import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.params.TestNet3Params;
 import com.typesafe.config.Config;
 import org.ethereum.vm.PrecompiledContracts;
@@ -18,9 +21,10 @@ public class FederationMain implements Runnable {
 
     private static Logger logger = LoggerFactory.getLogger("federation");
 
-    private BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
-    NetworkParameters params = TestNet3Params.get();
+    private BridgeConstants bridgeConstants;
+    NetworkParameters params;
 
+    private String paramName;
     private String feePerkbAuthorizedAddress;
     private String feePerkbAuthorizedPassword;
     private String changeAuthorizedAddress;
@@ -31,6 +35,16 @@ public class FederationMain implements Runnable {
     public FederationMain(){
         FederationConfigLoader configLoader = new FederationConfigLoader();
         Config config = configLoader.getConfigFromFiles();
+
+        this.paramName = config.getString("blockchain.config.name");
+        if(this.paramName.equals("testnet")) {
+            bridgeConstants = BridgeTestNetConstants.getInstance();
+        }else if(this.paramName.equals("regtest")) {
+            bridgeConstants = BridgeRegTestConstants.getInstance();
+        }else {
+            bridgeConstants = BridgeMainNetConstants.getInstance();
+        }
+
 
         this.feePerkbAuthorizedAddress = config.getString("federation.feePerkbAuthorizedAddress");
         this.feePerkbAuthorizedPassword = config.getString("federation.feePerkbAuthorizedPassword");
@@ -60,7 +74,7 @@ public class FederationMain implements Runnable {
                 }
             }
 
-            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.params, fedMain.changeAuthorizedAddress, fedMain.changeAuthorizedPassword));
+            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.bridgeConstants, fedMain.feePerkbAuthorizedAddress, fedMain.feePerkbAuthorizedPassword));
             syncUlordHeaders.start();
         }
     }
@@ -75,6 +89,8 @@ public class FederationMain implements Runnable {
         NetworkParameters params;
         if(bridgeConstants instanceof BridgeTestNetConstants)
             params = TestNet3Params.get();
+        else if(bridgeConstants instanceof BridgeRegTestConstants)
+            params = RegTestParams.get();
         else
             params = MainNetParams.get();
 

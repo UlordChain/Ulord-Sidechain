@@ -73,4 +73,13 @@ public class DataDecoder {
         Object[] objects = Bridge.GET_FEDERATION_THRESHOLD.decodeResult(Hex.decode(getResult(response)));
         return Integer.valueOf(objects[0].toString());
     }
+
+    public static String decodeGetFederatorPublicKey(String response) {
+        return Hex.toHexString((byte[]) Bridge.GET_FEDERATOR_PUBLIC_KEY.decodeResult(Hex.decode(getResult(response)))[0]);
+    }
+
+    public static String decodeGetRetiringFederationAddress(String response) {
+        Object[] objects = Bridge.GET_RETIRING_FEDERATION_ADDRESS.decodeResult(Hex.decode(getResult(response)));
+        return objects[0].toString();
+    }
 }

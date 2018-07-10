@@ -1,16 +1,20 @@
 package tools;
 
 import co.usc.ulordj.core.NetworkParameters;
+import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.params.TestNet3Params;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 
 public class UlordCli {
+
     private static String getNetworkCommand(NetworkParameters params) {
         if(params instanceof TestNet3Params)
-            return NetworkConstants.ULORD_CLI + NetworkConstants.ULORD_TESTNET;
-        return NetworkConstants.ULORD_CLI;
+            return "ulord-cli -testnet";
+        else if(params instanceof RegTestParams)
+            return "ulord-cli -regtest";
+        return "ulord-cli ";
     }
 
     public static String getBlock(NetworkParameters params, String hash, boolean jsonFormat) throws IOException {
