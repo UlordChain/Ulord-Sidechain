@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 Usc Development team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,6 +57,10 @@ public final class TestUtils {
 
     public static UscAddress randomAddress() {
         return new UscAddress(randomBytes(20));
+    }
+
+    public static Keccak256 randomHash() {
+        return new Keccak256(randomBytes(32));
     }
 
     public static Map<Long, List<IndexedBlockStore.BlockInfo>> createIndexMap(DB db){
