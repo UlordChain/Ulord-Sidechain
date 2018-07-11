@@ -142,8 +142,8 @@ public class MinerClientImpl implements MinerClient {
         newBestBlockArrivedFromAnotherNode = false;
         work = minerServer.getWork();
 
-        //get the ulord testnet NetworkParameters
-        co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = co.usc.ulordj.params.TestNet3Params.get();
+        //get the ulord RegTest NetworkParameters
+        co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
         //get the CoinbaseTransaction of UMMB
         co.usc.ulordj.core.UldTransaction ulordMergedMiningCoinbaseTransaction = MinerUtils.getUlordMergedMiningCoinbaseTransaction(ulordNetworkParameters, work);
         //get the UMMB
