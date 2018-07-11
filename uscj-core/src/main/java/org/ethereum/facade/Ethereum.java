@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC development team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,6 @@ import org.ethereum.core.Transaction;
 import org.ethereum.listener.EthereumListener;
 
 import java.math.BigInteger;
-import java.util.concurrent.Future;
 
 /**
  * @author Roman Mandeleil
@@ -67,7 +66,7 @@ public interface Ethereum {
      * @param transaction submit transaction to the net, return option to wait for net
      *                    return this transaction as approved
      */
-    Future<Transaction> submitTransaction(Transaction transaction);
+     void submitTransaction(Transaction transaction);
 
     /**
      * Calculates a 'reasonable' Gas price based on statistics of the latest transaction's Gas prices

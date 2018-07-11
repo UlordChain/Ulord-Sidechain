@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 Usc Development team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +21,10 @@ package org.ethereum;
 
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
+import co.usc.crypto.Keccak256;
 import org.apache.commons.lang3.StringUtils;
 import org.ethereum.core.Block;
+import org.ethereum.crypto.HashUtil;
 import org.ethereum.db.IndexedBlockStore;
 import org.ethereum.vm.DataWord;
 import org.mapdb.DB;
@@ -57,6 +59,10 @@ public final class TestUtils {
 
     public static UscAddress randomAddress() {
         return new UscAddress(randomBytes(20));
+    }
+
+    public static Keccak256 randomHash() {
+        return new Keccak256(randomBytes(32));
     }
 
     public static Map<Long, List<IndexedBlockStore.BlockInfo>> createIndexMap(DB db){
@@ -94,11 +100,11 @@ public final class TestUtils {
 
         for (int i = 0; i < length; ++i){
 
-            byte[] difficutly = new BigInteger(8, new Random()).toByteArray();
-            byte[] newHash = randomHash();
+            byte[] difficulty = new BigInteger(8, new Random()).toByteArray();
+            byte[] newHash = HashUtil.randomHash();
 
-            Block block = new Block(lastHash, newHash,  UscAddress.nullAddress().getBytes(), null, difficutly, lastIndex, new byte[] {0}, 0, 0, null, null,
-                    null, null, EMPTY_TRIE_HASH, randomHash(), null, null, null, Coin.ZERO);
+            Block block = new Block(lastHash, newHash,  UscAddress.nullAddress().getBytes(), null, difficulty, lastIndex, new byte[] {0}, 0, 0, null, null,
+                    null, null, EMPTY_TRIE_HASH, HashUtil.randomHash(), null, null, null, Coin.ZERO);
 
             ++lastIndex;
             lastHash = block.getHash().getBytes();
