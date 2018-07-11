@@ -73,10 +73,10 @@ public class SimpleEthereum implements Ethereum {
     }
 
     @Override
-    public Future<Transaction> submitTransaction(Transaction transaction) {
+    public void submitTransaction(Transaction transaction) {
         tx = transaction;
-        return null;
     }
+
 
     public Repository getRepository() {
         return repository;

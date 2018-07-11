@@ -102,22 +102,11 @@ public class EthereumImpl implements Ethereum {
     }
 
     @Override
-    public Future<Transaction> submitTransaction(Transaction transaction) {
-
-        TransactionTask transactionTask = new TransactionTask(transaction, channelManager);
-
-        final Future<List<Transaction>> listFuture =
-                TransactionExecutor.getInstance().submitTransaction(transactionTask);
-
-        transactionPool.addTransaction(transaction);
-
-        return new FutureAdapter<Transaction, List<Transaction>>(listFuture) {
-            @Override
-            protected Transaction adapt(List<Transaction> adapteeResult) throws ExecutionException {
-                return adapteeResult.get(0);
-            }
-        };
+    public void submitTransaction(Transaction transaction) {
+      transactionPool.addTransaction(transaction);
     }
+
+
 
     @Override
     public Coin getGasPrice() {
