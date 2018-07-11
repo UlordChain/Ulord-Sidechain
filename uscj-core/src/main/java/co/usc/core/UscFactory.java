@@ -333,4 +333,12 @@ public class UscFactory {
     public BlockStore getBlockStore(){
         return new BlockStore();
     }
+
+    @Bean
+    public TransactionGateway getTransactionGateway(
+            ChannelManager channelManager,
+            TransactionPool transactionPool,
+            CompositeEthereumListener emitter){
+        return new TransactionGateway(channelManager, transactionPool, emitter);
+    }
 }
