@@ -866,7 +866,6 @@ public class NodeMessageHandlerTest {
         TransactionGateway transactionGateway = mock(TransactionGateway.class);
         BlockProcessor blockProcessor = mock(BlockProcessor.class);
         Mockito.when(blockProcessor.hasBetterBlockToSync()).thenReturn(false);
-        TxHandler txHandler = new TxHandlerImpl(config, mock(CompositeEthereumListener.class), mock(RepositoryImpl.class), blockchain);
 
          final NodeMessageHandler handler = new NodeMessageHandler(config, blockProcessor, null, channelManager, transactionGateway, null, scoring,
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
