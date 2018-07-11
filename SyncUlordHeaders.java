@@ -204,7 +204,7 @@ public class SyncUlordHeaders implements Runnable{
             return "notMined";
         }catch(Exception ex){
             System.out.println("SyncUlordHeaders.getTransactionByHash: " + ex);
-            return "error";
+            return "notMined";
         }
     }
 
