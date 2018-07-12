@@ -46,7 +46,12 @@ test {
     //systemProperty "file.encoding", "UTF-8"
 }
 
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
 repositories {
+    jcenter()
     maven {
         url 'https://jitpack.io'
     }
@@ -64,6 +69,8 @@ applicationDefaultJvmArgs = ["-server", "-Xss32m", "-Xms3G", "-XX:+UseCompressed
 
 tasks.withType(JavaCompile){
     options.warnings = false
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-XDignore.symbol.file'
 }
 
 tasks.withType(AbstractArchiveTask) {
