@@ -2,6 +2,7 @@
 ulord-testnet.conf
 usc-testnet.conf
 federation.conf
+usc-regtest.conf
 
 # resources
 build-info.properties
