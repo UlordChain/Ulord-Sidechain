@@ -132,10 +132,12 @@ javadoc {
 }
 
 def generatedResources = "$buildDir/generated-resources"
-sourceSets {
-    generated {
-        output.dir(generatedResources, builtBy: 'generateResources')
-    }
+    sourceSets {
+      main {
+        resources {
+            srcDirs += generatedResources
+        }
+      }
 }
 
 task generateResources << {
@@ -170,7 +172,7 @@ task javadocJar(type: Jar) {
     from javadoc
 }
 
-task jar(type:Jar, overwrite: true) {
+task jar(type:Jar, overwrite: true, dependsOn: generateResources) {
     def commitHash = gitCommitHash()
     def currentBranch = gitCurrentBranch()
     manifest {
@@ -179,7 +181,7 @@ task jar(type:Jar, overwrite: true) {
     }
     from sourceSets.main.output.classesDirs
     from sourceSets.main.output.resourcesDir
-    from sourceSets.generated.output.dirs
+    from generatedResources
 }
 
 
