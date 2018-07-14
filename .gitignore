@@ -1,4 +1,4 @@
 # .conf files
 federation.conf
 federation-testnet.conf
-
+federation-regtest.conf
