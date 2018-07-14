@@ -15,6 +15,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.*;
+
 import static tools.Utils.*;
 
 public class FederationMain implements Runnable {
@@ -22,7 +24,6 @@ public class FederationMain implements Runnable {
     private static Logger logger = LoggerFactory.getLogger("federation");
 
     private BridgeConstants bridgeConstants;
-    NetworkParameters params;
 
     private String paramName;
     private String feePerkbAuthorizedAddress;
@@ -31,6 +32,8 @@ public class FederationMain implements Runnable {
     private String changeAuthorizedPassword;
     private boolean isSyncUlordHeadersEnabled;
     private boolean isPegEnabled;
+
+    private HashMap<String, Boolean> processedTxs = new HashMap<>();
 
     public FederationMain(){
         FederationConfigLoader configLoader = new FederationConfigLoader();
@@ -120,12 +123,22 @@ public class FederationMain implements Runnable {
                 }
                 JSONArray jsonArray = new JSONArray(getAddressUtxosResponse);
 
+                for ( String key : processedTxs.keySet() ) {
+                    processedTxs.replace(key, true, false);
+                }
+
                 for (int i = 0; i < jsonArray.length(); ++i) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     String txid = jsonObject.get("txid").toString();
                     int height = Integer.parseInt(jsonObject.get("height").toString());
 
                     // Check if the ulord transaction is already processed in USC
+                    if(processedTxs.containsKey(txid)) {
+                        // Mark tx as visited
+                        processedTxs.replace(txid, false, true);
+                        continue;
+                    }
+
                     String data = DataEncoder.encodeIsUldTxHashAlreadyProcessed(txid);
                     JSONObject jsObj = new JSONObject(UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, data));
                     logger.info(jsObj.toString());
@@ -134,6 +147,7 @@ public class FederationMain implements Runnable {
                     if (result.substring(result.length() - 1, result.length()).equals("1")) {
                         data = DataEncoder.encodeGetUldTxHashProcessedHeight(txid);
                         jsObj = new JSONObject(UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, data));
+                        processedTxs.put(txid, true);   // Mark Transaction as processed here as out side this we are still not sure if the transaction was processed successfully
                         logger.info("Transaction " + txid + " already processed at height: " +  Long.parseLong(jsObj.getString("result").substring(2),16));
                         System.out.println("Transaction " + txid + " already processed at height: " +  Long.parseLong(jsObj.getString("result").substring(2),16));
                         continue;
@@ -149,8 +163,16 @@ public class FederationMain implements Runnable {
                     }
 
                     // Here we can register Ulord transactions in USC
-                    logger.info("Transaction " + txid + " sent to USC");
-                    RegisterUlordTransaction.register(bridgeConstants, authorizedAddress, pwd, txid);
+                    //logger.info("Transaction " + txid + " sent to USC");
+                    if(!RegisterUlordTransaction.register(bridgeConstants, authorizedAddress, pwd, txid)) {
+                        logger.warn("Failed to register transaction: " + txid);
+                        System.out.println("Failed to register transaction: " + txid);
+                    }
+                }
+
+                for ( String key : processedTxs.keySet() ) {
+                    // Remove unvisited transactions as the UTXO of this transaction is spent.
+                    processedTxs.remove(key, false);
                 }
 
                 // Try to unlock account
@@ -170,7 +192,10 @@ public class FederationMain implements Runnable {
                 // Try to release any pending transaction.
                 ReleaseUlordTransaction.release(bridgeConstants, authorizedAddress, pwd);
 
-                Thread.sleep(1000 * 60 * 5);
+                if(params instanceof RegTestParams)
+                    Thread.sleep(1000 * 60 );
+                else
+                    Thread.sleep(1000 * 60 * 5);
             } catch (Exception e) {
                 logger.warn(e.toString());
                 System.out.println("FederationMain: " + e);

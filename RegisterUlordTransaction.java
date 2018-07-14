@@ -21,15 +21,18 @@ package tools;
 import co.usc.config.BridgeConstants;
 import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.BridgeTestNetConstants;
+import co.usc.core.Usc;
 import co.usc.core.UscAddress;
+import co.usc.core.Wallet;
 import co.usc.peg.AddressBasedAuthorizer;
-import co.usc.ulordj.core.NetworkParameters;
-import co.usc.ulordj.core.PartialMerkleTree;
-import co.usc.ulordj.core.UldBlock;
-import co.usc.ulordj.core.UldTransaction;
+import co.usc.peg.BridgeUtils;
+import co.usc.peg.Federation;
+import co.usc.ulordj.core.*;
 import co.usc.ulordj.params.MainNetParams;
 import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.params.TestNet3Params;
+import co.usc.ulordj.script.Script;
+import com.google.common.collect.Lists;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
@@ -37,6 +40,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import static tools.Utils.getMinimumGasPrice;
 
@@ -78,6 +84,18 @@ public class RegisterUlordTransaction {
             }
             UldTransaction tx = new UldTransaction(params, Hex.decode(getRawTransactionResponse));
 
+            if (isLockTx(tx, getLiveFederations(params), bridgeConstants)) {
+                // Taken from BridgeSupport.
+                // Check if the First input spends a P2PKH
+                // If not then the transaction is going to get rejected in BridgeSupport.
+                Script scriptSig = tx.getInput(0).getScriptSig();
+                if (scriptSig.getChunks().size() != 2) {
+                    System.out.println("[uldlock: {" + tx.getHash() + "}] First input does not spend a Pay-to-PubkeyHash " + tx.getInput(0));
+                    logger.warn("[uldlock:{}] First input does not spend a Pay-to-PubkeyHash " + tx.getInput(0), tx.getHash());
+                    return false;
+                }
+            }
+
             JSONObject getRawTxJSON = new JSONObject(UlordCli.getRawTransaction(params, utTxId, true));
             String blockHash = getRawTxJSON.get("blockhash").toString();
 
@@ -103,7 +121,7 @@ public class RegisterUlordTransaction {
 
             String data = DataEncoder.encodeRegisterUlordTransaction(tx.ulordSerialize(), height, partialMerkleTree.ulordSerialize());
 
-            return sendTx(changeAuthorizedAddress, data, 3);
+            return sendTx(changeAuthorizedAddress, utTxId, data, 3);
 
         } catch (Exception e) {
             logger.error(e.toString());
@@ -112,7 +130,103 @@ public class RegisterUlordTransaction {
         }
     }
 
-    private static boolean sendTx(String changeAuthorizedAddress, String data, int tries) throws IOException, InterruptedException {
+    private static boolean scriptCorrectlySpendsTx(UldTransaction tx, int index, Script script) {
+        try {
+            TransactionInput txInput = tx.getInput(index);
+            txInput.getScriptSig().correctlySpends(tx, index, script, Script.ALL_VERIFY_FLAGS);
+            return true;
+        } catch (ScriptException se) {
+            return false;
+        }
+    }
+
+    private static boolean isLockTx(UldTransaction tx, List<Federation> federations, BridgeConstants bridgeConstants) {
+        // First, check tx is not a typical release tx (tx spending from the any of the federation addresses and
+        // optionally sending some change to any of the federation addresses)
+        for (int i = 0; i < tx.getInputs().size(); i++) {
+            final int index = i;
+            if (federations.stream().anyMatch(federation -> scriptCorrectlySpendsTx(tx, index, federation.getP2SHScript()))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static List<Federation> getLiveFederations(NetworkParameters params) throws IOException {
+        List<Federation> liveFederations = new ArrayList<>();
+
+        // Get Retiring Federation
+        String response = UscRpc.getRetiringFederationSize();
+        int fedSize = DataDecoder.decodeGetRetiringFederationSize(response);
+        if(fedSize > 0)
+        {
+            List<UldECKey> fedeationPublicKeys = getRetiringFederationPublicKeys(fedSize);
+
+            response = UscRpc.getRetiringFederationCreationTime();
+            Long time = DataDecoder.decodeGetRetiringFederationCreationTime(response);
+            Instant federationCreatedAt = Instant.ofEpochMilli(time);
+
+            response = UscRpc.getRetiringFederationCreationBlockNumber();
+            Long federationCreationBlockNumber = DataDecoder.decodeGetRetiringFederationCreationBlockNumber(response);
+
+            liveFederations.add(
+                    new Federation(
+                            fedeationPublicKeys,
+                            federationCreatedAt,
+                            federationCreationBlockNumber,
+                            params
+                    )
+            );
+        }
+
+        // Get Active Federation
+        response = UscRpc.getFederationSize();
+        fedSize = DataDecoder.decodeGetFederationSize(response);
+        if(fedSize > 0)
+        {
+            List<UldECKey> avtiveFedeationPublicKeys = getFederationPublicKeys(fedSize);
+
+            response = UscRpc.getFederationCreationTime();
+            Long time = DataDecoder.decodeGetFederationCreationTime(response);
+            Instant federationCreatedAt = Instant.ofEpochMilli(time);
+
+            response = UscRpc.getFederationCreationBlockNumber();
+            Long federationCreationBlockNumber = DataDecoder.decodeGetFederationCreationBlockNumber(response);
+
+            liveFederations.add(
+                    new Federation(
+                            avtiveFedeationPublicKeys,
+                            federationCreatedAt,
+                            federationCreationBlockNumber,
+                            params
+                    )
+            );
+        }
+
+        return liveFederations;
+    }
+
+    private static List<UldECKey> getFederationPublicKeys(int fedSize) throws IOException {
+        List<UldECKey> activeFederation = new ArrayList<>();
+        for (int i = 0; i < fedSize; i++) {
+            String response = new JSONObject(UscRpc.getFederatorPublicKey(i)).getString("result");
+            String pubKey = DataDecoder.decodeGetFederatorPublicKey(response);
+            activeFederation.add(UldECKey.fromPublicOnly(Hex.decode(pubKey)));
+        }
+        return activeFederation;
+    }
+
+    private static List<UldECKey> getRetiringFederationPublicKeys(int fedSize) throws IOException {
+        List<UldECKey> retiringFederation = new ArrayList<>();
+        for (int i = 0; i < fedSize; i++) {
+            String response = new JSONObject(UscRpc.getRetiringFederatorPublicKey(i)).getString("result");
+            String pubKey = DataDecoder.decodeGetRetiringFederatorPublicKey(response);
+            retiringFederation.add(UldECKey.fromPublicOnly(Hex.decode(pubKey)));
+        }
+        return retiringFederation;
+    }
+
+    private static boolean sendTx(String changeAuthorizedAddress, String utTxId,String data, int tries) throws IOException, InterruptedException {
 
         if (tries == 0)
             return false;
@@ -126,14 +240,14 @@ public class RegisterUlordTransaction {
         }
         String txId = jsonObject.get("result").toString();
 
-        System.out.println("RegisterUlordTransaction ID: " + txId);
+        System.out.println("RegisterUlordTransaction " + utTxId + ", Tx ID: " + txId);
 
         Thread.sleep(1000 * 15);
 
         while (!Utils.isTransactionMined(txId)) {
             Thread.sleep(1000 * 15); // Sleep to stop flooding rpc requests.
             if (!Utils.isTransactionInMemPool(txId))
-                if(!sendTx(changeAuthorizedAddress, data, --tries))
+                if(!sendTx(changeAuthorizedAddress, utTxId, data, --tries))
                     return false;
         }
         return true;

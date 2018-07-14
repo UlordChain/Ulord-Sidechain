@@ -6,17 +6,19 @@
 package tools;
 
 import co.usc.config.BridgeConstants;
-import co.usc.config.BridgeMainNetConstants;
 import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.BridgeTestNetConstants;
 import co.usc.crypto.Keccak256;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeSerializationUtils;
+import co.usc.peg.Federation;
 import co.usc.ulordj.core.*;
+import co.usc.ulordj.crypto.TransactionSignature;
 import co.usc.ulordj.params.MainNetParams;
 import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.params.TestNet3Params;
 import co.usc.ulordj.script.Script;
+import co.usc.ulordj.script.ScriptBuilder;
 import co.usc.ulordj.script.ScriptChunk;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.util.RLP;
@@ -49,7 +51,7 @@ public class ReleaseUlordTransaction {
 
     private static Logger logger = LoggerFactory.getLogger("releaseulordtransaction");
 
-    public static void release(BridgeConstants bridgeConstants, String federationChangeAuthorizedAddress, String pwd) {
+    public static void release(BridgeConstants bridgeConstants, String federationAuthorizedAddress, String pwd) {
 
         NetworkParameters params = null;
         if(bridgeConstants instanceof BridgeTestNetConstants) {
@@ -85,53 +87,40 @@ public class ReleaseUlordTransaction {
                 return;
 
             // Try to unlock account
-            if (!Utils.tryUnlockUscAccount(federationChangeAuthorizedAddress, pwd)) {
+            if (!Utils.tryUnlockUscAccount(federationAuthorizedAddress, pwd)) {
                 throw new PrivateKeyNotFoundException();
             }
 
             for (Map.Entry<Keccak256, UldTransaction> entry : uscTxsWaitingForSignatures.entrySet()) {
-                Keccak256 key = entry.getKey();
+                Keccak256 uscTxHash = entry.getKey();
                 UldTransaction utTx = entry.getValue();
 
+//                System.out.println(Hex.toHexString(utTx.ulordSerialize()));
+//                List<TransactionInput> inputs = utTx.getInputs();
+//                for (TransactionInput input : inputs) {
+//                    // check if retiring federation input doesn't spend to active federation
+//
+//                    Address inputAddressFromP2SH = input.getParentTransaction().getOutput(1).getAddressFromP2SH(params);
+//
+//                    if(!inputAddressFromP2SH.isP2SHAddress())
+//                        continue;
+//
+//                    List<TransactionOutput> outputs = utTx.getOutputs();
+//                    for(TransactionOutput output : outputs) {
+//                        Address addressFromP2SH = output.getAddressFromP2SH(params);
+//                    }
+//                }
+
+
+                // TODO: Check if the transaction does not spends from retiring federation to active federation
+
                 // Check there are at least N blocks on top of the supplied transaction
-                if(!validateTxDepth(key, bridgeConstants)) { continue; }
+                if(!validateTxDepth(uscTxHash, bridgeConstants)) { continue; }
 
-                String signResult = signRawTransaction(utTx, params);
+                List<UldECKey> privateKeys = getPrivateKeys(params);
 
-                if(signResult.contains("error")) {
-                    System.out.println(signResult);
-                    continue;
-                }
+                procesSigning(params, privateKeys, utTx, uscTxHash, federationAuthorizedAddress);
 
-                jsonObject = new JSONObject(signResult);
-                String complete = jsonObject.get("complete").toString();
-                String rawUtTxHex = jsonObject.get("hex").toString();
-
-                addSignatureToUSC(key, utTx, federationChangeAuthorizedAddress);
-
-                if(complete.equals("true")) {
-
-                    // Send Raw Transaction
-                    String sendTxResponse = UlordCli.sendRawTransaction(params, rawUtTxHex);
-
-                    if(sendTxResponse.contains("error")) {
-                        String[] messages = sendTxResponse.split(":");
-                        if(messages[messages.length - 1].contains("transaction already in block chain")) {
-                            logger.warn("Transaction already in Ulord blockchain");
-                            System.out.println("ReleaseUlordTransaction: Transaction already in Ulord blockchain");
-                            // Try adding signature again to remove already processed transaction
-                            addSignatureToUSC(key, utTx, federationChangeAuthorizedAddress);
-                        }
-                        else {
-                            logger.info("Transaction failed: " + messages[messages.length - 1]);
-                            System.out.println("ReleaseUlordTransaction: Transaction failed: " + messages[messages.length - 1]);
-                        }
-                    }
-                    else {
-                        logger.info("Ulord tx successfully processed, Ulord Tx id: " + sendTxResponse);
-                        System.out.println("ReleaseUlordTransaction: Ulord tx successfully processed, Ulord Tx id: " + sendTxResponse);
-                    }
-                }
             }
         }
         catch (Exception e) {
@@ -140,123 +129,209 @@ public class ReleaseUlordTransaction {
         }
     }
 
-    private static void addSignatureToUSC(Keccak256 uscTxHash, UldTransaction utTx, String federationChangeAuthorizedAddress) throws IOException {
-        // Requires
-        // 1. Federator Public Key  -   federationPublicKey
-        // 2. Signatures    -   federation Signatures
-        // 3. Usc Tx hash   -   key
+    private static void procesSigning(NetworkParameters params, List<UldECKey> keys, UldTransaction utTx, Keccak256 uscTxHash, String federationAuthorizedAddress) {
 
-        for (int nPrivKey = 0; nPrivKey < federationKeys.size(); nPrivKey++) {
+        for (int k = 0; k < keys.size(); k++) {
 
+            List<Sha256Hash> sighashes = new ArrayList<>();
+            List<byte[]> signatures = new ArrayList<>();
+            List<TransactionSignature> txSigs = new ArrayList<>();
             int numInputs = utTx.getInputs().size();
-            byte[][] signatures = new byte[numInputs][];
+
             for (int i = 0; i < numInputs; ++i) {
                 TransactionInput txIn = utTx.getInput(i);
                 Script inputScript = txIn.getScriptSig();
                 List<ScriptChunk> chunks = inputScript.getChunks();
                 byte[] program = chunks.get(chunks.size() - 1).data;
                 Script reedemScript = new Script(program);
-                byte[] sig = federationKeys.get(nPrivKey).sign(utTx.hashForSignature(i, reedemScript, UldTransaction.SigHash.ALL, false)).encodeToDER();
-                signatures[i] = sig;
+                Sha256Hash sigHash = utTx.hashForSignature(i, reedemScript, UldTransaction.SigHash.ALL, false);
+                byte[] sig = keys.get(k).sign(sigHash).encodeToDER();
+                signatures.add(sig);
+                sighashes.add(sigHash);
             }
 
-            CallTransaction.Function function = Bridge.ADD_SIGNATURE;
+            // verify signatures
+            for (int i = 0; i < numInputs; i++) {
+                UldECKey.ECDSASignature sig;
+                try {
+                    sig = UldECKey.ECDSASignature.decodeFromDER(signatures.get(i));
+                } catch (RuntimeException e) {
+                    logger.warn("Malformed signature for input {} of tx {}: {}", i, uscTxHash, Hex.toHexString(signatures.get(i)));
+                    return;
+                }
 
-            String res = UscRpc.sendTransaction(federationChangeAuthorizedAddress,
-                    PrecompiledContracts.BRIDGE_ADDR_STR,
-                    "0x0",
-                    getMinimumGasPrice(),
-                    null,
-                    Hex.toHexString(function.encode(federationKeys.get(nPrivKey).getPubKey(), signatures, uscTxHash.getBytes())),
-                    null
-            );
-            logger.info("addSignatureToUSC response : " + res);
-            System.out.println("addSignatureToUSC response : " + res);
-        }
-    }
+                Sha256Hash sighash = sighashes.get(i);
 
-    private static String signRawTransaction(UldTransaction tx, NetworkParameters params)
-            throws IOException, PrivateKeyNotFoundException {
-        String txId = getUlordTxId(tx, params);
-        int vout = getVout(txId, params);
-        String scriptPubKey = getScriptPubKey(vout, txId, params);
+                if (!keys.get(k).verify(sighash, sig)) {
+                    logger.warn("Signature {} {} is not valid for hash {} and public key {}", i, Hex.toHexString(sig.encodeToDER()), sighash, Hex.toHexString(keys.get(i).getPubKey()));
+                    return;
+                }
 
-        Object[] keysObj = getPrivateKey(params).toArray();
-        String[] keys = new String[keysObj.length];
-        for(int i = 0 ; i < keysObj.length ; i ++){
-            keys[i] = (String) keysObj[i];
-        }
-
-        String redeemScript = "";
-        List<ScriptChunk> chunk = tx.getInput(0).getScriptSig().getChunks();
-        for (int i = 0; i < chunk.size(); i++) {
-            if(Hex.toHexString(chunk.get(i).data).equals(""))
-                continue;
-            redeemScript = Hex.toHexString(chunk.get(i).data);
-            break;
-        }
-
-        String signRawTxResponse = UlordCli.signRawTransaction(
-                params,
-                Hex.toHexString(tx.ulordSerialize()),
-                txId,
-                vout,
-                scriptPubKey,
-                redeemScript,
-                keys, null
-        );
-
-        return signRawTxResponse;
-    }
-
-    private static String getScriptPubKey(int vout, String txId, NetworkParameters params) throws IOException {
-        String getRawTxJSON = UlordCli.getRawTransaction(params, txId, true);
-        JSONObject jsonObject = new JSONObject(getRawTxJSON);
-        JSONArray voutObjects = jsonObject.getJSONArray("vout");
-        for(int i = 0; i < voutObjects.length(); ++i) {
-            int n = Integer.parseInt(voutObjects.getJSONObject(i).get("n").toString());
-            if(vout == n) {
-                return voutObjects.getJSONObject(i).getJSONObject("scriptPubKey").get("hex").toString();
-            }
-        }
-        return null;
-    }
-
-    private static int getVout(String txId, NetworkParameters params) throws IOException {
-
-        String getRawTxJSON = UlordCli.getRawTransaction(params, txId, true);
-
-        JSONObject jsonObject = new JSONObject(getRawTxJSON);
-        JSONArray voutObjects = jsonObject.getJSONArray("vout");
-
-        // Get Federation address
-        String getFedAddrResponse = UscRpc.getFederationAddress();
-        JSONObject getFedAddrJson = new JSONObject(getFedAddrResponse);
-        String getFedAddrResult = getFedAddrJson.getString("result").substring(2);
-        Object[] fedAddress = Bridge.GET_FEDERATION_ADDRESS.decodeResult(Hex.decode(getFedAddrResult));
-
-        int vout = 0;
-        for(int i = 0; i < voutObjects.length(); ++i) {
-            jsonObject = new JSONObject(voutObjects.get(i).toString());
-            vout = Integer.parseInt(jsonObject.get("n").toString());
-            JSONArray addressObjects = jsonObject.getJSONObject("scriptPubKey").getJSONArray("addresses");
-
-            boolean found = false;
-            for(int j = 0; j < addressObjects.length(); ++j) {
-                for (int k = 0; k < fedAddress.length; k++) {
-                    if(addressObjects.get(j).toString().equals(fedAddress[k].toString())) {
-                        found = true;
-                        break;
-                    }
+                TransactionSignature txSig = new TransactionSignature(sig, UldTransaction.SigHash.ALL, false);
+                txSigs.add(txSig);
+                if (!txSig.isCanonical()) {
+                    logger.warn("Signature {} {} is not canonical.", i, Hex.toHexString(signatures.get(i)));
+                    return;
                 }
             }
-            if(found)
-                break;
+
+            // All signatures are correct. Proceed to signing
+            for (int i = 0; i < utTx.getInputs().size(); i++) {
+                Sha256Hash sighash = sighashes.get(i);
+                TransactionInput input = utTx.getInput(i);
+                Script inputScript = input.getScriptSig();
+
+                boolean alreadySignedByThisFederator = isInputSignedByThisFederator(keys.get(k), sighash, input);
+
+                if(!alreadySignedByThisFederator) {
+                    try {
+                        int sigIndex = inputScript.getSigInsertionIndex(sighash, keys.get(k));
+                        inputScript = ScriptBuilder.updateScriptWithSignature(inputScript, txSigs.get(i).encodeToUlord(), sigIndex, 1, 1);
+                        input .setScriptSig(inputScript);
+                        logger.debug("Tx input {} for tx {} signed.", i, uscTxHash);
+                    } catch (IllegalStateException e) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(UscRpc.getRetiringFederationSize());
+                            int fedSize = Integer.valueOf(jsonObject.getString("result").substring(2), 16);
+
+                            List<String> retiringFedPubKeys = new ArrayList<>();
+                            for (int j = 0; j < fedSize; j++) {
+                                String response = new JSONObject(UscRpc.getRetiringFederatorPublicKey(j)).getString("result");
+                                String pubKey = DataDecoder.decodeGetRetiringFederatorPublicKey(response);
+                                retiringFedPubKeys.add(pubKey);
+                            }
+
+                            jsonObject = new JSONObject(UscRpc.getFederationSize());
+                            fedSize = Integer.valueOf(jsonObject.getString("result").substring(2), 16);
+
+                            List<String> activeFedPubKeys = new ArrayList<>();
+                            for (int j = 0; j < fedSize; j++) {
+                                String response = new JSONObject(UscRpc.getFederatorPublicKey(j)).getString("result");
+                                String pubKey = DataDecoder.decodeGetFederatorPublicKey(response);
+                                activeFedPubKeys.add(pubKey);
+                            }
+
+                            if (retiringFedPubKeys.contains((keys.get(k).getPublicKeyAsHex())) && retiringFedPubKeys.size() != 0) {
+                                logger.debug("A member of the active federation is trying to sign a tx of the retiring one");
+                                break;
+                            } else if (activeFedPubKeys.contains(keys.get(k).getPublicKeyAsHex())) {
+                                logger.debug("A member of the retiring federation is trying to sign a tx of the active one");
+                                break;
+                            }
+                            throw e;
+                        }
+                        catch (IOException ex) {
+                            logger.error("Error in JSON format" + ex);
+                        }
+                    }
+                } else {
+                    logger.warn("Input {} of tx {} already signed by this federator.", i, uscTxHash);
+                    break;
+                }
+            }
+
+            try {
+                // Transaction Fully signed
+                if(hasEnoughSignatures(utTx)) {
+                    logger.info("Tx fully signed {}. Hex: {}", utTx, Hex.toHexString(utTx.ulordSerialize()));
+                    System.out.println("Tx fully signed" + utTx +". Hex: " + Hex.toHexString(utTx.ulordSerialize()));
+
+                    if(!sendTx(signatures, keys.get(k), uscTxHash, federationAuthorizedAddress, 3)) {
+                        logger.debug("addSignature transaction failed, failed to release funds");
+                        System.out.println("addSignature transaction failed, failed to release funds");
+                        break;
+                    }
+
+                    // Broadcast Ulord release transaction
+                    UlordCli.sendRawTransaction(params, Hex.toHexString(utTx.ulordSerialize()));
+                    break;
+                } else {
+                    // Add the signature to Ulord Transaction
+                    logger.debug("Tx not yet fully signed {}", uscTxHash);
+                    System.out.println("Tx not yet fully signed " + uscTxHash);
+
+                    if(!sendTx(signatures, keys.get(k), uscTxHash, federationAuthorizedAddress, 3)) {
+                        logger.debug("addSignature transaction failed");
+                        System.out.println("addSignature transaction failed");
+                    }
+                }
+            } catch (IOException ex) {
+                logger.error("getMinimumGasPrice error: " + ex);
+            } catch (InterruptedException ie) {
+                logger.error("Exception in sendTx Thread " + ie);
+            }
         }
-        return vout;
     }
 
-    private static List<String> getPrivateKey(NetworkParameters params)
+    private static boolean sendTx(List<byte[]> signatures,
+                                  UldECKey key,
+                                  Keccak256 uscTxHash,
+                                  String federationAuthorizedAddress,
+                                  int tries)
+            throws IOException, InterruptedException {
+        if (tries <= 0)
+            return false;
+
+        String sendTransactionResponse = UscRpc.sendTransaction(federationAuthorizedAddress,
+                PrecompiledContracts.BRIDGE_ADDR_STR,
+                "0x0",
+                getMinimumGasPrice(),
+                null,
+                Hex.toHexString(Bridge.ADD_SIGNATURE.encode(key.getPubKey(), signatures, uscTxHash.getBytes())),
+                null
+        );
+        logger.info(sendTransactionResponse);
+        JSONObject jsonObject = new JSONObject(sendTransactionResponse);
+        String txId = jsonObject.get("result").toString();
+
+        System.out.println("Add Signature tx id: " + txId);
+        logger.info("Add Signature tx id: {}", txId);
+        Thread.sleep(1000 * 15);
+
+        while (!Utils.isTransactionMined(txId)) {
+            Thread.sleep(1000 * 15); // Sleep to stop flooding rpc requests.
+            if (!Utils.isTransactionInMemPool(txId))
+                if(!sendTx(signatures, key, uscTxHash, federationAuthorizedAddress,--tries))
+                    return false;
+        }
+        return true;
+    }
+
+    private static boolean hasEnoughSignatures(UldTransaction utTx) {
+        // When the tx is constructed OP_0 are placed where signature should go.
+        // Check all OP_0 have been replaced with actual signatures in all inputs
+        for (TransactionInput input : utTx.getInputs()) {
+            Script scriptSig = input.getScriptSig();
+            List<ScriptChunk> chunks = scriptSig.getChunks();
+            for (int i = 1; i < chunks.size(); i++) {
+                ScriptChunk chunk = chunks.get(i);
+                if (!chunk.isOpCode() && chunk.data.length == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private static boolean isInputSignedByThisFederator(UldECKey federatorKey, Sha256Hash sighash, TransactionInput input) {
+        List<ScriptChunk> chunks = input.getScriptSig().getChunks();
+        for (int j = 1; j < chunks.size() - 1; j++) {
+            ScriptChunk chunk = chunks.get(j);
+
+            if (chunk.data.length == 0) {
+                continue;
+            }
+
+            TransactionSignature sig2 = TransactionSignature.decodeFromUlord(chunk.data, false, false);
+
+            if (federatorKey.verify(sighash, sig2)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static List<UldECKey> getPrivateKeys(NetworkParameters params)
             throws IOException, PrivateKeyNotFoundException {
 
         JSONObject jsonObject = new JSONObject(UscRpc.getFederationSize());
@@ -270,13 +345,12 @@ public class ReleaseUlordTransaction {
         }
 
         boolean privateKeyFound = false;
-        List<String> keys = new ArrayList<>();
+        List<UldECKey> keys = new ArrayList<>();
         for (int i = 0; i < publicKeys.size(); i++) {
             String res = UlordCli.dumpPrivKey(params, publicKeys.get(i).toAddress(params).toString());
             if(!res.contains("error")) {
                 privateKeyFound = true;
-                keys.add(res);
-                federationKeys.add(Utils.convertWifToPrivateKey(res, params));
+                keys.add(Utils.convertWifToPrivateKey(res, params));
             }
         }
 
@@ -284,14 +358,6 @@ public class ReleaseUlordTransaction {
             throw new PrivateKeyNotFoundException();
 
         return keys;
-    }
-
-    private static String getUlordTxId(UldTransaction tx, NetworkParameters params) throws IOException {
-        JSONObject jsonObject = new JSONObject(UlordCli.decodeRawTransaction(params, Hex.toHexString(tx.ulordSerialize())));
-        String vin = jsonObject.get("vin").toString();
-        jsonObject = new JSONObject(vin.substring(1, vin.length() - 1));
-
-        return jsonObject.get("txid").toString();
     }
 
     /**

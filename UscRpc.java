@@ -212,4 +212,28 @@ public class UscRpc {
     public static String getFederationSize() throws IOException {
         return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetFederationSize());
     }
+
+    public static String getRetiringFederationSize() throws IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetRetiringFederationSize());
+    }
+
+    public static String getRetiringFederatorPublicKey(int index) throws IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetRetiringFederatorPublicKey(index));
+    }
+
+    public static String getRetiringFederationCreationTime() throws IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetRetiringFederationCreationTime());
+    }
+
+    public static String getRetiringFederationCreationBlockNumber() throws IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetRetiringFederationCreationBlockNumber());
+    }
+
+    public static String getFederationCreationBlockNumber() throws IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetFederationCreationBlockNumber());
+    }
+
+    public static String getFederationCreationTime() throws IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetFederationCreationTime());
+    }
 }

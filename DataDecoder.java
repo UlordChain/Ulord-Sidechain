@@ -82,4 +82,38 @@ public class DataDecoder {
         Object[] objects = Bridge.GET_RETIRING_FEDERATION_ADDRESS.decodeResult(Hex.decode(getResult(response)));
         return objects[0].toString();
     }
+
+    public static String decodeGetRetiringFederatorPublicKey(String response) {
+        return Hex.toHexString((byte[]) Bridge.GET_RETIRING_FEDERATOR_PUBLIC_KEY.decodeResult(Hex.decode(getResult(response)))[0]);
+    }
+
+    public static Integer decodeGetRetiringFederationSize(String response) {
+        Object[] objects = Bridge.GET_RETIRING_FEDERATION_SIZE.decodeResult(Hex.decode(getResult(response)));
+        return Integer.valueOf(objects[0].toString());
+    }
+
+    public static Integer decodeGetFederationSize(String response) {
+        Object[] objects = Bridge.GET_FEDERATION_SIZE.decodeResult(Hex.decode(getResult(response)));
+        return Integer.valueOf(objects[0].toString());
+    }
+
+    public static Long decodeGetFederationCreationTime(String response) {
+        Object[] objects = Bridge.GET_FEDERATION_CREATION_TIME.decodeResult(Hex.decode(getResult(response)));
+        return Long.valueOf(objects[0].toString());
+    }
+
+    public static Long decodeGetFederationCreationBlockNumber(String response) {
+        Object[] objects = Bridge.GET_FEDERATION_CREATION_BLOCK_NUMBER.decodeResult(Hex.decode(getResult(response)));
+        return Long.valueOf(objects[0].toString());
+    }
+
+    public static Long decodeGetRetiringFederationCreationTime(String response) {
+        Object[] objects = Bridge.GET_RETIRING_FEDERATION_CREATION_TIME.decodeResult(Hex.decode(getResult(response)));
+        return Long.valueOf(objects[0].toString());
+    }
+
+    public static Long decodeGetRetiringFederationCreationBlockNumber(String response) {
+        Object[] objects = Bridge.GET_RETIRING_FEDERATION_CREATION_BLOCK_NUMBER.decodeResult(Hex.decode(getResult(response)));
+        return Long.valueOf(objects[0].toString());
+    }
 }

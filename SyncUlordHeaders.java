@@ -73,10 +73,15 @@ public class SyncUlordHeaders implements Runnable{
             while(true) {
                 int startIndex = getUldBlockChainBestChainHeight() + 1;
 
-                //Keep the ulord block headers in USC 10 blocks behind actual Ulord block headers.
-                //Approx 1hr behind ulord blockchain.
-                //blockCount = gets the ulord best block height - 10.
-                int blockCount = Integer.parseInt(UlordCli.getBlockCount(params)) - 10;
+                //Keep the ulord block headers in USC n blocks behind actual Ulord block headers.
+                // to avoid ulord chain reorganization.
+                int blockCount;
+                if(params instanceof TestNet3Params)
+                    blockCount = Integer.parseInt(UlordCli.getBlockCount(params)) - 12; // 30 minutes approx
+                else if( params instanceof RegTestParams)
+                    blockCount = Integer.parseInt(UlordCli.getBlockCount(params));
+                else
+                    blockCount = Integer.parseInt(UlordCli.getBlockCount(params)) - 144; // 6 hours approx
 
                 if((blockCount < startIndex)){
                     Thread.sleep((long)(1000*60*2.5)); //sleep for 2.5min.
