@@ -29,8 +29,6 @@ public class UscRpcExecutor {
         request.setEntity(entity);
 
         HttpResponse response = httpClient.execute(request);
-        request.releaseConnection();
-        ((CloseableHttpClient) httpClient).close();
         return EntityUtils.toString(response.getEntity());
     }
 }
