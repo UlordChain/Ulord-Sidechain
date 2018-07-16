@@ -91,7 +91,7 @@ public class ReleaseUlordTransaction {
                 throw new PrivateKeyNotFoundException();
             }
 
-            for (Map.Entry<Keccak256, UldTransaction> entry : uscTxsWaitingForSignatures.entrySet()) {
+             for (Map.Entry<Keccak256, UldTransaction> entry : uscTxsWaitingForSignatures.entrySet()) {
                 Keccak256 uscTxHash = entry.getKey();
                 UldTransaction utTx = entry.getValue();
 
@@ -188,6 +188,11 @@ public class ReleaseUlordTransaction {
                         int sigIndex = inputScript.getSigInsertionIndex(sighash, keys.get(k));
                         inputScript = ScriptBuilder.updateScriptWithSignature(inputScript, txSigs.get(i).encodeToUlord(), sigIndex, 1, 1);
                         input .setScriptSig(inputScript);
+                        if(!sendTx(signatures, keys.get(k), uscTxHash, federationAuthorizedAddress, 3)) {
+                            logger.debug("addSignature transaction failed");
+                            System.out.println("addSignature transaction failed");
+                            return;
+                        }
                         logger.debug("Tx input {} for tx {} signed.", i, uscTxHash);
                     } catch (IllegalStateException e) {
                         try {
@@ -221,8 +226,12 @@ public class ReleaseUlordTransaction {
                             throw e;
                         }
                         catch (IOException ex) {
-                            logger.error("Error in JSON format" + ex);
+                            logger.error("Error in JSON format " + ex);
                         }
+                    } catch (InterruptedException ie) {
+                        logger.error("Thread interrupt exception " + ie);
+                    } catch (IOException ex) {
+                        logger.error("Error in JSON format " + ex);
                     }
                 } else {
                     logger.warn("Input {} of tx {} already signed by this federator.", i, uscTxHash);
@@ -236,29 +245,18 @@ public class ReleaseUlordTransaction {
                     logger.info("Tx fully signed {}. Hex: {}", utTx, Hex.toHexString(utTx.ulordSerialize()));
                     System.out.println("Tx fully signed" + utTx +". Hex: " + Hex.toHexString(utTx.ulordSerialize()));
 
-                    if(!sendTx(signatures, keys.get(k), uscTxHash, federationAuthorizedAddress, 3)) {
-                        logger.debug("addSignature transaction failed, failed to release funds");
-                        System.out.println("addSignature transaction failed, failed to release funds");
-                        break;
-                    }
-
                     // Broadcast Ulord release transaction
-                    UlordCli.sendRawTransaction(params, Hex.toHexString(utTx.ulordSerialize()));
+                    String res = UlordCli.sendRawTransaction(params, Hex.toHexString(utTx.ulordSerialize()));
+                    logger.debug("Ulord Transaction txId: {} Broadcasted",  res);
+                    System.out.println("Ulord Transaction txId: " + res + " Broadcasted");
                     break;
                 } else {
                     // Add the signature to Ulord Transaction
                     logger.debug("Tx not yet fully signed {}", uscTxHash);
                     System.out.println("Tx not yet fully signed " + uscTxHash);
-
-                    if(!sendTx(signatures, keys.get(k), uscTxHash, federationAuthorizedAddress, 3)) {
-                        logger.debug("addSignature transaction failed");
-                        System.out.println("addSignature transaction failed");
-                    }
                 }
             } catch (IOException ex) {
                 logger.error("getMinimumGasPrice error: " + ex);
-            } catch (InterruptedException ie) {
-                logger.error("Exception in sendTx Thread " + ie);
             }
         }
     }
