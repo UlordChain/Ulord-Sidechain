@@ -21,7 +21,6 @@ package co.usc.peg;
 import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.crypto.TransactionSignature;
-import co.usc.ulordj.params.TestNet3Params;
 import co.usc.ulordj.script.Script;
 import co.usc.ulordj.script.ScriptBuilder;
 import co.usc.ulordj.script.ScriptChunk;
@@ -34,7 +33,7 @@ import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
 import co.usc.peg.utils.BridgeEventLogger;
-//import co.rsk.peg.utils.PartialMerkleTreeFormatUtils; //TODO:
+//import co.usc.peg.utils.PartialMerkleTreeFormatUtils; //TODO:
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.tuple.Pair;
 import org.ethereum.core.Block;
@@ -47,16 +46,13 @@ import org.slf4j.LoggerFactory;
 import org.spongycastle.util.encoders.Hex;
 
 import javax.annotation.Nullable;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static co.usc.ulordj.core.Utils.HEX;
 
 /**
  * Helper class to move funds from uld to usc and usc to uld
