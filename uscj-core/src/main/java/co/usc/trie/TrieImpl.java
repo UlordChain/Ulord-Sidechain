@@ -20,8 +20,6 @@ package co.usc.trie;
 
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
-import co.usc.crypto.Keccak256;
-import co.usc.panic.PanicProcessor;
 import org.ethereum.crypto.Keccak256Helper;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.util.RLP;
