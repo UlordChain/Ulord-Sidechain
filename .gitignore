@@ -93,3 +93,7 @@ database
 
 #tools
 uscj-core/src/main/java/tools
+
+#personals
+_*
+_*/*
