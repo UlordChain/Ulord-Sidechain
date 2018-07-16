@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2018 Ulord core team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Oscar Guindzberg
@@ -42,21 +44,43 @@ import java.util.List;
 public class BridgeUtils {
 
     private static final Logger logger = LoggerFactory.getLogger("BridgeUtils");
+    private static Map<Sha256Hash, Sha256Hash> parentMap = new HashMap<>();
 
     public static StoredBlock getStoredBlockAtHeight(UldBlockStore blockStore, int height) throws BlockStoreException {
         StoredBlock storedBlock = blockStore.getChainHead();
+        Sha256Hash blockHash = storedBlock.getHeader().getHash();
         int headHeight = storedBlock.getHeight();
+
         if (height > headHeight) {
             return null;
         }
         for (int i = 0; i < (headHeight - height); i++) {
-            if (storedBlock == null) {
+            if (blockHash == null) {
                 return null;
             }
 
-            Sha256Hash prevBlockHash = storedBlock.getHeader().getPrevBlockHash();
-            storedBlock = blockStore.get(prevBlockHash);
+            Sha256Hash prevBlockHash = parentMap.get(blockHash);
+
+            if (prevBlockHash == null) {
+                StoredBlock currentBlock = blockStore.get(blockHash);
+
+                if (currentBlock == null) {
+                    return null;
+                }
+
+                prevBlockHash = currentBlock.getHeader().getPrevBlockHash();
+                parentMap.put(blockHash, prevBlockHash);
+            }
+
+            blockHash = prevBlockHash;
         }
+
+        if (blockHash == null) {
+            return null;
+        }
+
+        storedBlock = blockStore.get(blockHash);
+
         if (storedBlock != null) {
             if (storedBlock.getHeight() != height) {
                 throw new IllegalStateException("Block height is " + storedBlock.getHeight() + " but should be " + headHeight);
