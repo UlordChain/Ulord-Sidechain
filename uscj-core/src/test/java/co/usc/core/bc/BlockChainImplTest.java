@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of Usc
+ * Copyright (C) 2016 - 2018 Ulord development team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -905,12 +905,9 @@ public class BlockChainImplTest {
         AdminInfo adminInfo = new SimpleAdminInfo();
 
         EthereumListener listener = new BlockExecutorTest.SimpleEthereumListener();
-
-        BlockChainImpl blockChain = new BlockChainImpl(config, repository, blockStore, receiptStore, null, listener, adminInfo, blockValidator);
         TransactionPoolImpl transactionPool = new TransactionPoolImpl(config, repository, blockStore, receiptStore, null, listener, 10, 100);
-        blockChain.setTransactionPool(transactionPool);
 
-        return blockChain;
+        return new BlockChainImpl(config, repository, blockStore, receiptStore, transactionPool, listener, adminInfo, blockValidator);
     }
 
     public static Block getGenesisBlock(BlockChainImpl blockChain) {
