@@ -1,3 +1,8 @@
+/*
+ * This file is part of Usc
+ * Copyright (C) 2016 - 2018 Ulord development team.
+ */
+
 package org.ethereum.util;
 
 import co.usc.blockchain.utils.BlockGenerator;
