@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of Usc
+ * Copyright (C) 2016 - 2018 Ulord development team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -62,21 +62,19 @@ public class ImportLightTest {
         ds.init();
         ReceiptStore receiptStore = new ReceiptStoreImpl(ds);
 
+        TransactionPoolImpl transactionPool = new TransactionPoolImpl(config, repository, null, receiptStore, null, listener, 10, 100);
+
         BlockChainImpl blockchain = new BlockChainImpl(
                 config, repository,
                 blockStore,
                 receiptStore,
-                null,
+                transactionPool,
                 listener,
                 new AdminInfo(),
                 new DummyBlockValidator()
         );
 
         blockchain.setNoValidation(true);
-
-        TransactionPoolImpl transactionPool = new TransactionPoolImpl(config, repository, null, receiptStore, null, listener, 10, 100);
-
-        blockchain.setTransactionPool(transactionPool);
 
         Repository track = repository.startTracking();
 
