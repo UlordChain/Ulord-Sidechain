@@ -163,6 +163,11 @@ public class FederationMain implements Runnable {
                         continue;
                     }
 
+                    // TODO: Transactions which do not spent from P2PKH and transactions who's value is less than the acceptable amount don't get registered in USC
+                    // TODO: These transaction are stuck in the multisignature address
+                    // TODO: The problem is since these transaction are not registered in USC, USC bridge doesn't create a return transaction
+                    // TODO: Find a way to return these transactions back to the sender.
+
                     // Here we can register Ulord transactions in USC
                     //logger.info("Transaction " + txid + " sent to USC");
                     if(!RegisterUlordTransaction.register(bridgeConstants, authorizedAddress, pwd, txid)) {
@@ -194,7 +199,7 @@ public class FederationMain implements Runnable {
                 ReleaseUlordTransaction.release(bridgeConstants, authorizedAddress, pwd);
 
                 if(params instanceof RegTestParams)
-                    Thread.sleep(1000 * 60 );
+                    Thread.sleep(1000 * 30 );
                 else
                     Thread.sleep(1000 * 60 * 5);
             } catch (Exception e) {

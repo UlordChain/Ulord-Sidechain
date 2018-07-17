@@ -224,8 +224,8 @@ public class ReleaseUlordTransaction {
 
                     // Broadcast Ulord release transaction
                     String res = UlordCli.sendRawTransaction(params, Hex.toHexString(utTx.ulordSerialize()));
-                    logger.debug("Ulord Transaction txId: {} Broadcasted",  res);
-                    System.out.println("Ulord Transaction txId: " + res + " Broadcasted");
+                    logger.debug("Ulord Transaction Broadcasted txId: {}",  res);
+                    System.out.println("Ulord Transaction Broadcasted txId: " + res );
                     break;
                 } else {
                     // Add the signature to Ulord Transaction
