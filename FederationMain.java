@@ -176,7 +176,8 @@ public class FederationMain implements Runnable {
                     }
                 }
 
-                for ( String key : processedTxs.keySet() ) {
+                Set<String> key = processedTxs.keySet();
+                for (int i = 0; i < key.size(); i++) {
                     // Remove unvisited transactions as the UTXO of this transaction is spent.
                     processedTxs.remove(key, false);
                 }
