@@ -95,10 +95,19 @@ public class ReleaseUlordTransaction {
                 Keccak256 uscTxHash = entry.getKey();
                 UldTransaction utTx = entry.getValue();
 
-//                System.out.println(Hex.toHexString(utTx.ulordSerialize()));
+
+                // Check if any vin spends from retiring federation to new federation
+//                 System.out.println("Ulord Transaction: " + Hex.toHexString(utTx.ulordSerialize()));
 //                List<TransactionInput> inputs = utTx.getInputs();
 //                for (TransactionInput input : inputs) {
-//                    // check if retiring federation input doesn't spend to active federation
+//                    System.out.println(input.getOutpoint().getIndex());
+//                    Sha256Hash parentTxHash = input.getConnectedTransaction().getHash();
+                    //TransactionOutput output = parentTx.getOutput(input.getOutpoint().getIndex());
+                    //Address inputAddressFromP2SH = output.getAddressFromP2SH(params);
+//                    if(inputAddressFromP2SH == null) {
+//                        continue;
+//                    }
+                    // check if retiring federation input doesn't spend to active federation
 //
 //                    Address inputAddressFromP2SH = input.getParentTransaction().getOutput(1).getAddressFromP2SH(params);
 //
@@ -195,39 +204,7 @@ public class ReleaseUlordTransaction {
                         }
                         logger.debug("Tx input {} for tx {} signed.", i, uscTxHash);
                     } catch (IllegalStateException e) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(UscRpc.getRetiringFederationSize());
-                            int fedSize = Integer.valueOf(jsonObject.getString("result").substring(2), 16);
-
-                            List<String> retiringFedPubKeys = new ArrayList<>();
-                            for (int j = 0; j < fedSize; j++) {
-                                String response = new JSONObject(UscRpc.getRetiringFederatorPublicKey(j)).getString("result");
-                                String pubKey = DataDecoder.decodeGetRetiringFederatorPublicKey(response);
-                                retiringFedPubKeys.add(pubKey);
-                            }
-
-                            jsonObject = new JSONObject(UscRpc.getFederationSize());
-                            fedSize = Integer.valueOf(jsonObject.getString("result").substring(2), 16);
-
-                            List<String> activeFedPubKeys = new ArrayList<>();
-                            for (int j = 0; j < fedSize; j++) {
-                                String response = new JSONObject(UscRpc.getFederatorPublicKey(j)).getString("result");
-                                String pubKey = DataDecoder.decodeGetFederatorPublicKey(response);
-                                activeFedPubKeys.add(pubKey);
-                            }
-
-                            if (retiringFedPubKeys.contains((keys.get(k).getPublicKeyAsHex())) && retiringFedPubKeys.size() != 0) {
-                                logger.debug("A member of the active federation is trying to sign a tx of the retiring one");
-                                break;
-                            } else if (activeFedPubKeys.contains(keys.get(k).getPublicKeyAsHex())) {
-                                logger.debug("A member of the retiring federation is trying to sign a tx of the active one");
-                                break;
-                            }
-                            throw e;
-                        }
-                        catch (IOException ex) {
-                            logger.error("Error in JSON format " + ex);
-                        }
+                        logger.debug("Failed to sign transaction. Wrong Federation is trying to sign the transaction");
                     } catch (InterruptedException ie) {
                         logger.error("Thread interrupt exception " + ie);
                     } catch (IOException ex) {
@@ -332,16 +309,28 @@ public class ReleaseUlordTransaction {
     private static List<UldECKey> getPrivateKeys(NetworkParameters params)
             throws IOException, PrivateKeyNotFoundException {
 
-        JSONObject jsonObject = new JSONObject(UscRpc.getFederationSize());
-        int fedSize = Integer.valueOf(jsonObject.getString("result").substring(2),16);
+        int fedSize = 0;
 
+        // Get Retiring Federation PublicKey
+        fedSize = DataDecoder.decodeGetRetiringFederationSize(UscRpc.getRetiringFederationSize());
         List<UldECKey> publicKeys = new ArrayList<>();
+
+        for (int i = 0; i < fedSize; i++) {
+            String res = UscRpc.getRetiringFederatorPublicKey(i);
+            String publicKey = DataDecoder.decodeGetRetiringFederatorPublicKey(res);
+            publicKeys.add(UldECKey.fromPublicOnly(Hex.decode(publicKey)));
+        }
+
+        // Get Active Federation PublicKey
+        fedSize = DataDecoder.decodeGetFederationSize(UscRpc.getFederationSize());
+
         for (int i = 0; i < fedSize; i++) {
             String response = new JSONObject(UscRpc.getFederatorPublicKey(i)).getString("result");
             String pubKey = DataDecoder.decodeGetFederatorPublicKey(response);
             publicKeys.add(UldECKey.fromPublicOnly(Hex.decode(pubKey)));
         }
 
+        // Get PrivateKeys
         boolean privateKeyFound = false;
         List<UldECKey> keys = new ArrayList<>();
         for (int i = 0; i < publicKeys.size(); i++) {

@@ -107,7 +107,8 @@ public class FederationMain implements Runnable {
                     System.out.println("getAddressUtxosResponse: " + res);
                     return;
                 }
-                addresses = DataDecoder.decodeGetFederationAddress(res);
+                addresses = new String[1];
+                addresses[0] = DataDecoder.decodeGetFederationAddress(res);
 
                 if(addresses == null) {
                     logger.error("No Federation address found.");

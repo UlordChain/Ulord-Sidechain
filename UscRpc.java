@@ -195,6 +195,10 @@ public class UscRpc {
         return call(PrecompiledContracts.BRIDGE_ADDR_STR, Hex.toHexString(Bridge.GET_FEDERATION_ADDRESS.encodeSignature()));
     }
 
+    public static String getFederationThreshold() throws IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetFederationThreshold());
+    }
+
     public static String gasPrice() throws IOException {
         String cmd = "{\"jsonrpc\":\"2.0\",\"method\":\"eth_gasPrice\",\"params\":[],\"id\":886}";
         return UscRpcExecutor.execute(cmd);
@@ -211,6 +215,14 @@ public class UscRpc {
 
     public static String getFederationSize() throws IOException {
         return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetFederationSize());
+    }
+
+    public static String getRetiringFederationAddress() throws  IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetRetiringFederationAddress());
+    }
+
+    public static String getRetiringFederationThreshold() throws  IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetRetiringFederationThreshold());
     }
 
     public static String getRetiringFederationSize() throws IOException {
@@ -235,5 +247,13 @@ public class UscRpc {
 
     public static String getFederationCreationTime() throws IOException {
         return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetFederationCreationTime());
+    }
+
+    public static String getPendingFederationPublicKey(int index) throws IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetPendingFederatorPublicKey(index));
+    }
+
+    public static String getFederationPublicKey(int index) throws IOException {
+        return call(PrecompiledContracts.BRIDGE_ADDR_STR, DataEncoder.encodeGetFederatorPublicKey(index));
     }
 }

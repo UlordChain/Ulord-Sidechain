@@ -27,14 +27,9 @@ public class DataDecoder {
         }
     }
 
-    public static String[] decodeGetFederationAddress(String response) {
+    public static String decodeGetFederationAddress(String response) {
         Object[] objects = Bridge.GET_FEDERATION_ADDRESS.decodeResult(Hex.decode(getResult(response)));
-
-        String[] addresses = new String[objects.length];
-        for (int i = 0; i < objects.length; i++) {
-            addresses[i] = objects[i].toString();
-        }
-        return addresses;
+        return objects[0].toString();
     }
 
     public static SortedMap<Keccak256, UldTransaction> decodeGetStateForUlordReleaseClient(String response, NetworkParameters params) {
@@ -65,7 +60,7 @@ public class DataDecoder {
     }
 
     public static String decodeGetPendingFederatorPublicKey(String response) {
-        Object[] objects = Bridge.ADD_FEDERATOR_PUBLIC_KEY.decodeResult(Hex.decode(getResult(response)));
+        Object[] objects = Bridge.GET_PENDING_FEDERATOR_PUBLIC_KEY.decodeResult(Hex.decode(getResult(response)));
         return Hex.toHexString((byte[])objects[0]);
     }
 
@@ -115,5 +110,10 @@ public class DataDecoder {
     public static Long decodeGetRetiringFederationCreationBlockNumber(String response) {
         Object[] objects = Bridge.GET_RETIRING_FEDERATION_CREATION_BLOCK_NUMBER.decodeResult(Hex.decode(getResult(response)));
         return Long.valueOf(objects[0].toString());
+    }
+
+    public static Integer decodeGetRetiringFederationThreshold(String response) {
+        Object[] objects = Bridge.GET_RETIRING_FEDERATION_THRESHOLD.decodeResult(Hex.decode(getResult(response)));
+        return Integer.valueOf(objects[0].toString());
     }
 }
