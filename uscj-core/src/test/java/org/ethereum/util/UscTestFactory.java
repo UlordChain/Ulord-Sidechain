@@ -1,3 +1,9 @@
+/*
+ * This file is part of Usc
+ * Copyright (C) 2016 - 2018 Ulord development team.
+ */
+
+
 package org.ethereum.util;
 
 import co.usc.blockchain.utils.BlockGenerator;
@@ -111,13 +117,11 @@ public class UscTestFactory {
                     config, getRepository(),
                     getBlockStore(),
                     getReceiptStore(),
-                    null, //circular dependency
+                    getTransactionPool(),
                     null,
                     null,
                     new DummyBlockValidator()
             );
-            TransactionPool transactionPool = getTransactionPool();
-            blockchain.setTransactionPool(transactionPool);
         }
 
         return blockchain;
