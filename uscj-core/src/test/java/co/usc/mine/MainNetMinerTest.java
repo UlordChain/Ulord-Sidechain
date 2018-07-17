@@ -21,6 +21,7 @@ import org.ethereum.core.ImportResult;
 import org.ethereum.core.TransactionPool;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.facade.EthereumImpl;
+import org.ethereum.util.UscTestFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,14 +44,17 @@ public class MainNetMinerTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
     private TestSystemProperties config;
+    private TransactionPool transactionPool;
 
     @Before
     public void setup() {
+        UscTestFactory factory = new UscTestFactory();
         config = new TestSystemProperties();
         config.setBlockchainConfig(new FallbackMainNetConfig());
         DIFFICULTY_CALCULATOR = new DifficultyCalculator(config);
         World world = new World();
         blockchain = world.getBlockChain();
+        transactionPool = factory.getTransactionPool();
 
     }
 
@@ -303,7 +307,7 @@ public class MainNetMinerTest {
                 ConfigUtils.getDefaultMiningConfig(),
                 blockchain.getRepository(),
                 this.blockchain.getBlockStore(),
-                this.blockchain.getTransactionPool(),
+                transactionPool,
                 DIFFICULTY_CALCULATOR,
                 new GasLimitCalculator(config),
                 unclesValidationRule,
