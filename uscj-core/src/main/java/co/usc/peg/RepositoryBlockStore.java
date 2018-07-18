@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2018 Ulord core team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,6 +29,9 @@ import org.ethereum.vm.DataWord;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Implementation of a ulordj blockstore that persists to USC's Repository
  * @author Oscar Guindzberg
@@ -36,6 +39,7 @@ import java.nio.charset.StandardCharsets;
 public class RepositoryBlockStore implements UldBlockStore{
 
     public static final String BLOCK_STORE_CHAIN_HEAD_KEY = "blockStoreChainHead";
+    private static Map<Sha256Hash, StoredBlock> knownBlocks = new HashMap<>();
 
     private final Repository repository;
     private final UscAddress contractAddress;
@@ -67,16 +71,25 @@ public class RepositoryBlockStore implements UldBlockStore{
         Sha256Hash hash = block.getHeader().getHash();
         byte[] ba = storedBlockToByteArray(block);
         repository.addStorageBytes(contractAddress, new DataWord(hash.toString()), ba);
+        knownBlocks.put(hash, block);
     }
 
     @Override
     public synchronized StoredBlock get(Sha256Hash hash) throws BlockStoreException {
+        StoredBlock storedBlock = knownBlocks.get(hash);
+
+        if (storedBlock != null) {
+            return storedBlock;
+        }
+
         byte[] ba = repository.getStorageBytes(contractAddress, new DataWord(hash.toString()));
         if (ba==null) {
             return null;
         }
-        
-        StoredBlock storedBlock = byteArrayToStoredBlock(ba);
+
+        storedBlock = byteArrayToStoredBlock(ba);
+        knownBlocks.put(hash, storedBlock);
+
         return storedBlock;
     }
 

@@ -21,6 +21,7 @@ package co.usc.mine;
 import co.usc.config.UscSystemProperties;
 import co.usc.core.Usc;
 import co.usc.panic.PanicProcessor;
+import co.usc.ulordj.core.NetworkParameters;
 import org.ethereum.config.blockchain.DevNetConfig;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.rpc.TypeConverter;
@@ -142,7 +143,7 @@ public class MinerClientImpl implements MinerClient {
         newBestBlockArrivedFromAnotherNode = false;
         work = minerServer.getWork();
 
-        //get the ulord RegTest NetworkParameters
+        //get the ulord testnet NetworkParameters
         co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
         //get the CoinbaseTransaction of UMMB
         co.usc.ulordj.core.UldTransaction ulordMergedMiningCoinbaseTransaction = MinerUtils.getUlordMergedMiningCoinbaseTransaction(ulordNetworkParameters, work);

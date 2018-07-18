@@ -38,6 +38,7 @@ import org.ethereum.db.ReceiptStore;
 import org.ethereum.facade.Ethereum;
 import org.ethereum.facade.EthereumImpl;
 import org.ethereum.rpc.TypeConverter;
+import org.ethereum.util.UscTestFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,11 +60,14 @@ public class MinerServerTest {
     private static final DifficultyCalculator DIFFICULTY_CALCULATOR = new DifficultyCalculator(config);
 
     private BlockChainImpl blockchain;
+    private TransactionPool transactionPool;
 
     @Before
     public void setUp() {
+        UscTestFactory factory = new UscTestFactory();
         World world = new World();
         blockchain = world.getBlockChain();
+        transactionPool = factory.getTransactionPool();
     }
 
     @Test
@@ -142,7 +146,7 @@ public class MinerServerTest {
                         ConfigUtils.getDefaultMiningConfig(),
                         blockchain.getRepository(),
                         blockchain.getBlockStore(),
-                        blockchain.getTransactionPool(),
+                        transactionPool,
                         DIFFICULTY_CALCULATOR,
                         new GasLimitCalculator(config),
                         unclesValidationRule,
@@ -205,7 +209,7 @@ public class MinerServerTest {
                         ConfigUtils.getDefaultMiningConfig(),
                         blockchain.getRepository(),
                         blockchain.getBlockStore(),
-                        blockchain.getTransactionPool(),
+                        transactionPool,
                         DIFFICULTY_CALCULATOR,
                         new GasLimitCalculator(config),
                         unclesValidationRule,
@@ -253,7 +257,7 @@ public class MinerServerTest {
                         ConfigUtils.getDefaultMiningConfig(),
                         blockchain.getRepository(),
                         blockchain.getBlockStore(),
-                        blockchain.getTransactionPool(),
+                        transactionPool,
                         DIFFICULTY_CALCULATOR,
                         new GasLimitCalculator(config),
                         unclesValidationRule,
@@ -304,7 +308,7 @@ public class MinerServerTest {
                         ConfigUtils.getDefaultMiningConfig(),
                         blockchain.getRepository(),
                         blockchain.getBlockStore(),
-                        blockchain.getTransactionPool(),
+                        transactionPool,
                         DIFFICULTY_CALCULATOR,
                         new GasLimitCalculator(config),
                         unclesValidationRule,
@@ -362,7 +366,7 @@ public class MinerServerTest {
                         ConfigUtils.getDefaultMiningConfig(),
                         blockchain.getRepository(),
                         blockchain.getBlockStore(),
-                        blockchain.getTransactionPool(),
+                        transactionPool,
                         DIFFICULTY_CALCULATOR,
                         new GasLimitCalculator(config),
                         unclesValidationRule,
@@ -412,7 +416,7 @@ public class MinerServerTest {
                         ConfigUtils.getDefaultMiningConfig(),
                         blockchain.getRepository(),
                         blockchain.getBlockStore(),
-                        blockchain.getTransactionPool(),
+                        transactionPool,
                         DIFFICULTY_CALCULATOR,
                         new GasLimitCalculator(config),
                         unclesValidationRule,
@@ -467,7 +471,7 @@ public class MinerServerTest {
                         ConfigUtils.getDefaultMiningConfig(),
                         blockchain.getRepository(),
                         this.blockchain.getBlockStore(),
-                        this.blockchain.getTransactionPool(),
+                        this.transactionPool,
                         DIFFICULTY_CALCULATOR,
                         new GasLimitCalculator(config),
                         unclesValidationRule,
@@ -504,7 +508,7 @@ public class MinerServerTest {
                         ConfigUtils.getDefaultMiningConfig(),
                         blockchain.getRepository(),
                         this.blockchain.getBlockStore(),
-                        this.blockchain.getTransactionPool(),
+                        this.transactionPool,
                         DIFFICULTY_CALCULATOR,
                         new GasLimitCalculator(config),
                         unclesValidationRule,
@@ -541,7 +545,7 @@ public class MinerServerTest {
                         ConfigUtils.getDefaultMiningConfig(),
                         blockchain.getRepository(),
                         this.blockchain.getBlockStore(),
-                        this.blockchain.getTransactionPool(),
+                        this.transactionPool,
                         DIFFICULTY_CALCULATOR,
                         new GasLimitCalculator(config),
                         unclesValidationRule,
@@ -582,7 +586,7 @@ public class MinerServerTest {
                         ConfigUtils.getDefaultMiningConfig(),
                         blockchain.getRepository(),
                         blockchain.getBlockStore(),
-                        blockchain.getTransactionPool(),
+                        transactionPool,
                         DIFFICULTY_CALCULATOR,
                         new GasLimitCalculator(config),
                         unclesValidationRule,

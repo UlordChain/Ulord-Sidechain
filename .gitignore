@@ -2,6 +2,7 @@
 ulord-testnet.conf
 usc-testnet.conf
 federation.conf
+usc-regtest.conf
 
 # resources
 build-info.properties
@@ -65,11 +66,7 @@ config/checkstyle/reports/
 
 # PMD
 config/pmd/reports/
-
 blocksminer1.txt
-
-blocksminer1.txt
-build-info.properties
 
 # Test File
 fileMonitor.txt
@@ -79,7 +76,6 @@ samples/tokenapp/node_modules/
 uscdump.json
 
 uscj-core/keyfiletest.txt
-uscj-core/java/nodeId.properties
 
 #GradleJARS
 uscj-core/libs/gradle-witness.jar

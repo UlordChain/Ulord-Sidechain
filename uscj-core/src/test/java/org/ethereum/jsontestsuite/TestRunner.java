@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of Usc
+ * Copyright (C) 2016 - 2018 Ulord development team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -109,21 +109,16 @@ public class TestRunner {
         EthereumListener listener = new CompositeEthereumListener();
 
         KeyValueDataSource ds = new HashMapDB();
+
         ds.init();
         ReceiptStore receiptStore = new ReceiptStoreImpl(ds);
 
-        BlockChainImpl blockchain = new BlockChainImpl(config, repository, blockStore, receiptStore, null, null, null, new DummyBlockValidator());
-        //BlockchainImpl blockchain = new BlockchainImpl(blockStore, repository, wallet, adminInfo, listener,
-        //        new CommonConfig().parentHeaderValidator(), receiptStore);
-
-        blockchain.setNoValidation(true);
-
         TransactionPoolImpl transactionPool = new TransactionPoolImpl(config, repository, null, receiptStore, null, listener, 10, 100);
+        BlockChainImpl blockchain = new BlockChainImpl(config, repository, blockStore, receiptStore, transactionPool, null, null, new DummyBlockValidator());
+        blockchain.setNoValidation(true);
 
         blockchain.setBestBlock(genesis);
         blockchain.setTotalDifficulty(genesis.getCumulativeDifficulty());
-
-        blockchain.setTransactionPool(transactionPool);
 
         /* 2 */ // Create block traffic list
         List<Block> blockTraffic = new ArrayList<>();

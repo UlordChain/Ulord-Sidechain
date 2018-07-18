@@ -113,6 +113,11 @@ public class UscSystemProperties extends SystemProperties {
         return new Account(ECKey.fromPrivate(HashUtil.keccak256(coinbaseSecret.getBytes(StandardCharsets.UTF_8))));
     }
 
+    public String getBlockChainName() {
+        return configFromFiles.hasPath("blockchain.config.name") ?
+                configFromFiles.getString("blockchain.config.name") : "main";
+    }
+
     public boolean isMinerClientEnabled() {
         return configFromFiles.hasPath("miner.client.enabled") ?
                 configFromFiles.getBoolean("miner.client.enabled") : false;

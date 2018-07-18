@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2018 Ulord core team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,8 +18,6 @@
 
 package co.usc.trie;
 
-import co.usc.crypto.Keccak256;
-import co.usc.panic.PanicProcessor;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
 import org.ethereum.crypto.Keccak256Helper;
@@ -1201,7 +1199,7 @@ public class TrieImpl implements Trie {
     }
 
     public Trie getSnapshotTo(Keccak256 hash) {
-        this.save();
+        //this.save();
 
         if (emptyHash.equals(hash)) {
             return new TrieImpl(this.store, this.isSecure);

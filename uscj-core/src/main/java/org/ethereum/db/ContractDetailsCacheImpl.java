@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2018 Ulord core team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -280,7 +280,15 @@ public class ContractDetailsCacheImpl implements ContractDetails {
         }
 
         for (DataWord key : bytesStorage.keySet()) {
-            origContract.putBytes(key, bytesStorage.get(key));
+            byte[] oldvalue = origContract.getBytes(key);
+            byte[] newvalue = bytesStorage.get(key);
+
+            if (Arrays.equals(oldvalue, newvalue)) {
+                continue;
+            }
+
+            origContract.putBytes(key, newvalue);
+
         }
 
         origContract.setCode(code);

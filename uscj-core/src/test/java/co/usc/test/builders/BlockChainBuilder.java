@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of Usc
+ * Copyright (C) 2016 - 2018 Ulord development team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -126,20 +126,18 @@ public class BlockChainBuilder {
         if (this.adminInfo == null)
             this.adminInfo = new AdminInfo();
 
-        BlockChainImpl blockChain = new BlockChainImpl(config, this.repository, this.blockStore, receiptStore, null, listener, this.adminInfo, blockValidator);
-
+        TransactionPoolImpl transactionPool;
+        if (withoutCleaner) {
+            transactionPool = new TransactionPoolImplNoCleaner(config, this.repository, this.blockStore, receiptStore, new ProgramInvokeFactoryImpl(), new BlockExecutorTest.SimpleEthereumListener(), 10, 100);
+        } else {
+            transactionPool = new TransactionPoolImpl(config, this.repository, this.blockStore, receiptStore, new ProgramInvokeFactoryImpl(), new BlockExecutorTest.SimpleEthereumListener(), 10, 100);
+        }
+        BlockChainImpl blockChain = new BlockChainImpl(config, this.repository, this.blockStore, receiptStore, transactionPool, listener, this.adminInfo, blockValidator);
         if (this.testing) {
             blockChain.setBlockValidator(new DummyBlockValidator());
             blockChain.setNoValidation(true);
         }
 
-        TransactionPoolImpl transactionPool;
-        if (withoutCleaner) {
-            transactionPool = new TransactionPoolImplNoCleaner(config, blockChain.getRepository(), blockChain.getBlockStore(), receiptStore, new ProgramInvokeFactoryImpl(), new BlockExecutorTest.SimpleEthereumListener(), 10, 100);
-        } else {
-            transactionPool = new TransactionPoolImpl(config, blockChain.getRepository(), blockChain.getBlockStore(), receiptStore, new ProgramInvokeFactoryImpl(), new BlockExecutorTest.SimpleEthereumListener(), 10, 100);
-        }
-        blockChain.setTransactionPool(transactionPool);
 
         if (this.genesis != null) {
             for (UscAddress addr : this.genesis.getPremine().keySet()) {
