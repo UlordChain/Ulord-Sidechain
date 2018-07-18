@@ -28,6 +28,7 @@ import org.ethereum.crypto.ECKey;
 import org.spongycastle.util.encoders.Hex;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,11 +44,11 @@ public class BridgeTestNetConstants extends BridgeConstants {
 
         List<UldECKey> genesisFederationPublicKeys = Lists.newArrayList(
             federator0PublicKey
-           // federator1PublicKey
         );
 
         // Currently set to:
-        // Wednesday, May 2, 2018 12:00:00 AM GMT+08:00
+        // Wednesday, Aug 1, 2018 12:00:00 AM GMT+08:00
+        //Instant genesisFederationAddressCreatedAt = Instant.ofEpochMilli(1533124800000L);
         Instant genesisFederationAddressCreatedAt = Instant.ofEpochMilli(1525262400);
 
         genesisFederation = new Federation(
