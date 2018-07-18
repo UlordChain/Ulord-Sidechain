@@ -91,42 +91,47 @@ public class ReleaseUlordTransaction {
                 throw new PrivateKeyNotFoundException();
             }
 
-             for (Map.Entry<Keccak256, UldTransaction> entry : uscTxsWaitingForSignatures.entrySet()) {
+            for (Map.Entry<Keccak256, UldTransaction> entry : uscTxsWaitingForSignatures.entrySet()) {
                 Keccak256 uscTxHash = entry.getKey();
                 UldTransaction utTx = entry.getValue();
 
 
                 // Check if any vin spends from retiring federation to new federation
-//                 System.out.println("Ulord Transaction: " + Hex.toHexString(utTx.ulordSerialize()));
 //                List<TransactionInput> inputs = utTx.getInputs();
+//                boolean isFromReitingToActiveFederation = false;
 //                for (TransactionInput input : inputs) {
-//                    System.out.println(input.getOutpoint().getIndex());
-//                    Sha256Hash parentTxHash = input.getConnectedTransaction().getHash();
-                    //TransactionOutput output = parentTx.getOutput(input.getOutpoint().getIndex());
-                    //Address inputAddressFromP2SH = output.getAddressFromP2SH(params);
-//                    if(inputAddressFromP2SH == null) {
-//                        continue;
-//                    }
-                    // check if retiring federation input doesn't spend to active federation
 //
-//                    Address inputAddressFromP2SH = input.getParentTransaction().getOutput(1).getAddressFromP2SH(params);
+//                    long index = input.getOutpoint().getIndex();
 //
-//                    if(!inputAddressFromP2SH.isP2SHAddress())
-//                        continue;
+//                    Sha256Hash prevTxHash = input.getOutpoint().getHash();
+//
+//                    String rawTransaction = UlordCli.getRawTransaction(params, prevTxHash.toString(), false);
+//
+//                    UldTransaction prevTx = new UldTransaction(params, Hex.decode(rawTransaction));
+//
+//                    Address fromAddress = prevTx.getOutput(index).getAddressFromP2SH(params);
 //
 //                    List<TransactionOutput> outputs = utTx.getOutputs();
-//                    for(TransactionOutput output : outputs) {
-//                        Address addressFromP2SH = output.getAddressFromP2SH(params);
+//                    Address toAddress = null;
+//                    for (TransactionOutput output : outputs) {
+//                         toAddress = output.getAddressFromP2SH(params);
+//                    }
+//                    if(fromAddress != null && toAddress != null) {
+//                        isFromReitingToActiveFederation = true;
+//                        logger.warn("Transaction is a migration Transaction");
+//                        System.out.println("Transaction is a migration Transaction");
 //                    }
 //                }
-
-
-                // TODO: Check if the transaction does not spends from retiring federation to active federation
+//
+//                if(isFromReitingToActiveFederation)
+//                    continue;
 
                 // Check there are at least N blocks on top of the supplied transaction
-                if(!validateTxDepth(uscTxHash, bridgeConstants)) { continue; }
+                if (!validateTxDepth(uscTxHash, bridgeConstants)) {
+                    continue;
+                }
 
-                List<UldECKey> privateKeys = getPrivateKeys(params);
+                List<UldECKey> privateKeys = getPrivateKeys(params, bridgeConstants);
 
                 procesSigning(params, privateKeys, utTx, uscTxHash, federationAuthorizedAddress);
 
@@ -306,12 +311,12 @@ public class ReleaseUlordTransaction {
         return false;
     }
 
-    private static List<UldECKey> getPrivateKeys(NetworkParameters params)
+    private static List<UldECKey> getPrivateKeys(NetworkParameters params, BridgeConstants bridgeConstants)
             throws IOException, PrivateKeyNotFoundException {
 
         int fedSize = 0;
 
-        // Get Retiring Federation PublicKey
+        // Get Retiring Federation PublicKeys
         fedSize = DataDecoder.decodeGetRetiringFederationSize(UscRpc.getRetiringFederationSize());
         List<UldECKey> publicKeys = new ArrayList<>();
 
@@ -321,7 +326,15 @@ public class ReleaseUlordTransaction {
             publicKeys.add(UldECKey.fromPublicOnly(Hex.decode(publicKey)));
         }
 
-        // Get Active Federation PublicKey
+//        if(fedSize <= 0) {
+//            // Get Genesis Federation PublicKeys
+//            List<UldECKey> genesisPublicKeys = bridgeConstants.getGenesisFederation().getPublicKeys();
+//            for (int i = 0; i < genesisPublicKeys.size(); i++) {
+//                publicKeys.add(genesisPublicKeys.get(i));
+//            }
+//        }
+
+        // Get Active Federation PublicKeys
         fedSize = DataDecoder.decodeGetFederationSize(UscRpc.getFederationSize());
 
         for (int i = 0; i < fedSize; i++) {
