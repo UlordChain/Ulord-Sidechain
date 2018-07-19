@@ -42,9 +42,6 @@ import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;
 import org.ethereum.db.TransactionInfo;
 import org.ethereum.facade.Ethereum;
-import org.ethereum.listener.CompositeEthereumListener;
-import org.ethereum.listener.EthereumListener;
-import org.ethereum.listener.EthereumListenerAdapter;
 import org.ethereum.net.client.Capability;
 import org.ethereum.net.client.ConfigCapabilities;
 import org.ethereum.net.server.Channel;
@@ -84,8 +81,6 @@ public class Web3Impl implements Web3 {
 
     private final String baseClientVersion = "UscJ";
 
-    CompositeEthereumListener compositeEthereumListener;
-
     long initialBlockNumber;
 
     private final MinerClient minerClient;
@@ -106,7 +101,7 @@ public class Web3Impl implements Web3 {
     private final PersonalModule personalModule;
     private final EthModule ethModule;
 
-    private FilterManager filterManager = new FilterManager();
+    private FilterManager filterManager;
     private TxPoolModule txPoolModule;
 
     protected Web3Impl(Ethereum eth,
@@ -145,32 +140,9 @@ public class Web3Impl implements Web3 {
         this.hashRateCalculator = hashRateCalculator;
         this.configCapabilities = configCapabilities;
         this.config = config;
+        filterManager = new FilterManager(eth);
         initialBlockNumber = this.blockchain.getBestBlock().getNumber();
-
-        compositeEthereumListener = new CompositeEthereumListener();
-
-        compositeEthereumListener.addListener(this.setupListener());
-
-        this.eth.addListener(compositeEthereumListener);
         personalModule.init(this.config);
-    }
-
-    public EthereumListener setupListener() {
-        return new EthereumListenerAdapter() {
-            @Override
-            public void onBlock(Block block, List<TransactionReceipt> receipts) {
-                logger.trace("Start onBlock");
-
-                filterManager.newBlockReceived(block);
-
-                logger.trace("End onBlock");
-            }
-
-            @Override
-            public void onPendingTransactionsReceived(List<Transaction> transactions) {
-                filterManager.newPendingTx(transactions);
-            }
-        };
     }
 
     @Override

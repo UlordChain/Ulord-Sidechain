@@ -125,7 +125,7 @@ public class Web3ImplLogsTest {
         Web3Impl web3 = createWeb3(eth, world.getBlockChain(), transactionPool , WalletFactory.createWallet());
 
         // TODO tricky link to listener
-        world.getBlockChain().setListener(web3.setupListener());
+        //world.getBlockChain().setListener(web3.setupListener());
 
         web3.personal_newAccountWithSeed("notDefault");
 
@@ -164,7 +164,7 @@ public class Web3ImplLogsTest {
         Web3Impl web3 = createWeb3(eth, world.getBlockChain(), transactionPool, WalletFactory.createWallet());
 
         // TODO tricky link to listener
-        world.getBlockChain().setListener(web3.setupListener());
+        //world.getBlockChain().setListener(web3.setupListener());
 
         web3.personal_newAccountWithSeed("notDefault");
 
@@ -204,7 +204,7 @@ public class Web3ImplLogsTest {
         Web3Impl web3 = createWeb3(eth, world.getBlockChain(), transactionPool, WalletFactory.createWallet());
 
         // TODO tricky link to listener
-        world.getBlockChain().setListener(web3.setupListener());
+        //world.getBlockChain().setListener(web3.setupListener());
 
         web3.personal_newAccountWithSeed("notDefault");
 
@@ -258,7 +258,7 @@ public class Web3ImplLogsTest {
         Web3Impl web3 = createWeb3(eth, world.getBlockChain(), transactionPool, WalletFactory.createWallet());
 
         // TODO tricky link to listener
-        blockChain.setListener(web3.setupListener());
+        //blockChain.setListener(web3.setupListener());
 
         web3.personal_newAccountWithSeed("notDefault");
 
@@ -471,7 +471,7 @@ public class Web3ImplLogsTest {
         Web3Impl web3 = createWeb3(eth, world.getBlockChain(), transactionPool, WalletFactory.createWallet());
 
         // TODO tricky link to listener
-        blockChain.setListener(web3.setupListener());
+        //blockChain.setListener(web3.setupListener());
 
         web3.personal_newAccountWithSeed("notDefault");
 
@@ -509,7 +509,7 @@ public class Web3ImplLogsTest {
         Web3Impl web3 = createWeb3(eth, world.getBlockChain(), transactionPool, WalletFactory.createWallet());
 
         // TODO tricky link to listener
-        blockChain.setListener(web3.setupListener());
+        //blockChain.setListener(web3.setupListener());
 
         web3.personal_newAccountWithSeed("notDefault");
 
@@ -561,7 +561,7 @@ public class Web3ImplLogsTest {
         Web3Impl web3 = createWeb3(eth, world.getBlockChain(), transactionPool, WalletFactory.createWallet());
 
         // TODO tricky link to listener
-        blockChain.setListener(web3.setupListener());
+        //blockChain.setListener(web3.setupListener());
 
         web3.personal_newAccountWithSeed("notDefault");
 
@@ -621,7 +621,7 @@ public class Web3ImplLogsTest {
         Web3Impl web3 = createWeb3(eth, world.getBlockChain(), transactionPool, WalletFactory.createWallet());
 
         // TODO tricky link to listener
-        world.getBlockChain().setListener(web3.setupListener());
+        //world.getBlockChain().setListener(web3.setupListener());
 
         web3.personal_newAccountWithSeed("notDefault");
 
