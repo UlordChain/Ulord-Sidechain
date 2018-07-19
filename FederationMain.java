@@ -49,14 +49,17 @@ public class FederationMain implements Runnable {
             bridgeConstants = BridgeMainNetConstants.getInstance();
         }
 
-        this.syncUlordHeadersAddress = config.getString("federation.syncUlordHeaders.address");
-        this.syncUlordHeadersPassword = config.getString("federation.syncUlordHeaders.userPassword");
-
-        this.pegAddress = config.getString("federation.peg.address");
-        this.pegPassword = config.getString("federation.peg.userPassword");
-
         this.isSyncUlordHeadersEnabled = config.getString("federation.syncUlordHeaders.enabled").equals("true");
+        if(this.isSyncUlordHeadersEnabled) {
+            this.syncUlordHeadersAddress = config.getString("federation.syncUlordHeaders.address");
+            this.syncUlordHeadersPassword = config.getString("federation.syncUlordHeaders.userPassword");
+        }
+
         this.isPegEnabled = config.getString("federation.peg.enabled").equals("true");
+        if(this.isPegEnabled) {
+            this.pegAddress = config.getString("federation.peg.address");
+            this.pegPassword = config.getString("federation.peg.userPassword");
+        }
     }
 
     public static void main(String[]  args) {
