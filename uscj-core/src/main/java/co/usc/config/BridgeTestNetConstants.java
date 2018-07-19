@@ -39,17 +39,21 @@ public class BridgeTestNetConstants extends BridgeConstants {
     BridgeTestNetConstants() {
         uldParamsString = NetworkParameters.ID_TESTNET;
 
-        UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("03392953c250719af7cb710389a9e0f5bb5c6a627cff6c5242b007e305d15068ca"));
-        //UldECKey federator1PublicKey = UldECKey.fromPublicOnly(Hex.decode("0364187e5be84f0dfb3ba9b4091aa8eb91e14ef8ff9b6179255f83f6da06d8c06e"));
+        UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("0239198147715180cca673ce61fdfee88f06515d2bb16c74d2e5c726c688dacbc0"));
+        UldECKey federator1PublicKey = UldECKey.fromPublicOnly(Hex.decode("02be2cb017862c83e989f26afaec79ba2b1d2c417a894f56e13f7a301797ab7b35"));
+        UldECKey federator2PublicKey = UldECKey.fromPublicOnly(Hex.decode("028fc93d435103f8caaf3bf59682d6fddc037cedb67e4f78efd9bc9a0538918cfc"));
+        UldECKey federator3PublicKey = UldECKey.fromPublicOnly(Hex.decode("03c281ca3cab2d273c5ee1ca50dd62f941d1bc04dc2ca79affb2606660f8fd54ea"));
 
         List<UldECKey> genesisFederationPublicKeys = Lists.newArrayList(
-            federator0PublicKey
+            federator0PublicKey,
+            federator1PublicKey,
+            federator2PublicKey,
+            federator3PublicKey
         );
 
         // Currently set to:
-        // Wednesday, Aug 1, 2018 12:00:00 AM GMT+08:00
-        //Instant genesisFederationAddressCreatedAt = Instant.ofEpochMilli(1533124800000L);
-        Instant genesisFederationAddressCreatedAt = Instant.ofEpochMilli(1525262400);
+        // Thursday, July 19, 2018 8:00:00 AM GMT+08:00
+        Instant genesisFederationAddressCreatedAt = Instant.ofEpochMilli(1531958400);
 
         genesisFederation = new Federation(
                 genesisFederationPublicKeys,
