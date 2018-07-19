@@ -789,7 +789,6 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             return 0;
         }
         Integer result = bridgeSupport.addLockWhitelistAddress(uscTx, addressBase58, maxTransferValue);
-        System.out.println("AddLockWhitelistAddress 1:Success, -1:Address already in Whitelist, -2:Invalid address, Result : " + result);
         return result;
     }
 

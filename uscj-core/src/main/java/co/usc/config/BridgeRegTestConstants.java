@@ -51,7 +51,7 @@ public class BridgeRegTestConstants extends BridgeConstants {
         federatorPrivateKeys = Lists.newArrayList(federator0PrivateKey, federator1PrivateKey, federator2PrivateKey);
         List<UldECKey> federatorPublicKeys = federatorPrivateKeys.stream().map(key -> UldECKey.fromPublicOnly(key.getPubKey())).collect(Collectors.toList());
 
-        Instant genesisFederationCreatedAt = ZonedDateTime.parse("2016-01-01T00:00:00Z").toInstant();
+        Instant genesisFederationCreatedAt = ZonedDateTime.parse("2018-08-01T00:00:00Z").toInstant();
 
         genesisFederation = new Federation(
                 federatorPublicKeys,

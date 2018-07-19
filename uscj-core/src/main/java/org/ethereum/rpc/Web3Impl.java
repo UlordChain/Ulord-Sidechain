@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2017 RSK Labs Ltd.
- * Copyright (C) 2016 - 2018  Ulord Core team.
+ * This file is part of Usc
+ * Copyright (C) 2016 - 2018 Ulord development team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -1145,7 +1145,7 @@ public class Web3Impl implements Web3 {
     public boolean evm_revert(String snapshotId) {
         try {
             int sid = stringHexToBigInteger(snapshotId).intValue();
-            return snapshotManager.revertToSnapshot(this.blockchain, sid);
+            return snapshotManager.revertToSnapshot(this.blockchain, this.transactionPool, sid);
         } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
             throw new JsonRpcInvalidParamException("invalid snapshot id " + snapshotId, e);
         } finally {
@@ -1157,7 +1157,7 @@ public class Web3Impl implements Web3 {
 
     @Override
     public void evm_reset() {
-        snapshotManager.resetSnapshots(this.blockchain);
+        snapshotManager.resetSnapshots(this.blockchain, this.transactionPool);
         if (logger.isDebugEnabled()) {
             logger.debug("evm_reset()");
         }
