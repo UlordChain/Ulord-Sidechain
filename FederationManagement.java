@@ -1,9 +1,8 @@
 package tools;
 
-import co.usc.core.Usc;
+import com.typesafe.config.Config;
 import org.ethereum.vm.PrecompiledContracts;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 
 import static tools.UscRpc.*;
@@ -14,7 +13,15 @@ public class FederationManagement {
 
     private static final String BRIDGE_ADDRESS = PrecompiledContracts.BRIDGE_ADDR_STR;
 
+    private static String changeAuthorizedAddress;
+    private static String changeAuthorizedPassword;
     public static void main(String[] args) {
+
+        FederationConfigLoader configLoader = new FederationConfigLoader();
+        Config config = configLoader.getConfigFromFiles();
+
+        changeAuthorizedAddress = config.getString("federation.changeAuthorizedAddress");
+        changeAuthorizedPassword = config.getString("federation.changeAuthorizedPassword");
 
         if(args.length < 1) {
             help();
@@ -74,32 +81,24 @@ public class FederationManagement {
                     break;
 
                 case "createFederation":
-                    if(args.length < 3) {
-                        System.out.println("createFederation <ChangeAuthorizedAddress> <UserPassword>");
-                        return;
-                    }
-                    response = createFederation(args[1], args[2]);
+                    response = createFederation();
                     break;
                 case "addFederatorPublicKey":
-                    if(args.length < 4) {
-                        System.out.println("addFederatorPublicKey <ChangeAuthorizedAddress> <UserPassword> <New Federator Publickey>");
+                    if(args.length < 2) {
+                        System.out.println("addFederatorPublicKey <New Federator Publickey>");
                         return;
                     }
-                    response = addFederatorPublicKey(args[1], args[2], args[3]);
+                    response = addFederatorPublicKey(args[2]);
                     break;
                 case "commitFederation":
-                    if(args.length < 4) {
-                        System.out.println("commitFederation <ChangeAuthorizedAddress> <UserPassword> <Pending Federation Hash>");
+                    if(args.length < 2) {
+                        System.out.println("commitFederation <Pending Federation Hash>");
                         return;
                     }
-                    response = commitFederation(args[1], args[2], args[3]);
+                    response = commitFederation(args[2]);
                     break;
                 case "rollbackFederation":
-                    if(args.length < 3) {
-                        System.out.println("rollbackFederation <ChangeAuthorizedAddress> <UserPassword>");
-                        return;
-                    }
-                    response = rollackFederation(args[1], args[2]);
+                    response = rollackFederation();
                     break;
 
                 case "getPendingFederationHash":
@@ -198,10 +197,10 @@ public class FederationManagement {
                         + "getRetiringFederationPublicKeys" + "\n"
                         + "getRetiringFederationCreationTime" + "\n"
                         + "getRetiringFederationCreationBlockNumber" + "\n"
-                        + "createFederation                     <ChangeAuthorizedAddress> <UserPassword>" + "\n"
-                        + "addFederatorPublicKey                <ChangeAuthorizedAddress> <UserPassword> <New Federator Publickey>" + "\n"
-                        + "commitFederation                     <ChangeAuthorizedAddress> <UserPassword> <Pending Federation Hash>" + "\n"
-                        + "rollbackFederation                   <ChangeAuthorizedAddress> <UserPassword>" + "\n"
+                        + "createFederation"                     + "\n"
+                        + "addFederatorPublicKey    <New Federator Publickey>" + "\n"
+                        + "commitFederation         <Pending Federation Hash>" + "\n"
+                        + "rollbackFederation" + "\n"
                         + "getPendingFederationHash" + "\n"
                         + "getPendingFederatorPublicKeys" + "\n"
                         + "getPendingFederationSize" + "\n"
@@ -209,20 +208,20 @@ public class FederationManagement {
         );
     }
 
-    private static String createFederation(String fedChangeAuthKey, String usrPwd) throws IOException, PrivateKeyNotFoundException {
-        if(!Utils.tryUnlockUscAccount(fedChangeAuthKey, usrPwd))
+    private static String createFederation() throws IOException, PrivateKeyNotFoundException {
+        if(!Utils.tryUnlockUscAccount(changeAuthorizedAddress, changeAuthorizedPassword))
             throw new PrivateKeyNotFoundException();
 
         String gasPrice = getMinimumGasPrice();
-        String gas = getGasForTx(fedChangeAuthKey, BRIDGE_ADDRESS, null, gasPrice, null, DataEncoder.encodeCreateFederation(), null);
-        return UscRpc.sendTransaction(fedChangeAuthKey, BRIDGE_ADDRESS, gas, gasPrice, null, DataEncoder.encodeCreateFederation(), null);
+        String gas = getGasForTx(changeAuthorizedAddress, BRIDGE_ADDRESS, null, gasPrice, null, DataEncoder.encodeCreateFederation(), null);
+        return UscRpc.sendTransaction(changeAuthorizedAddress, BRIDGE_ADDRESS, gas, gasPrice, null, DataEncoder.encodeCreateFederation(), null);
     }
 
-    private static String addFederatorPublicKey(String fedChangeAuthKey, String usrPwd, String publicKey) throws IOException, PrivateKeyNotFoundException {
-        if(!Utils.tryUnlockUscAccount(fedChangeAuthKey, usrPwd))
+    private static String addFederatorPublicKey(String publicKey) throws IOException, PrivateKeyNotFoundException {
+        if(!Utils.tryUnlockUscAccount(changeAuthorizedAddress, changeAuthorizedPassword))
             throw new PrivateKeyNotFoundException();
 
-        return UscRpc.sendTransaction(fedChangeAuthKey, BRIDGE_ADDRESS, null, getMinimumGasPrice(), null, DataEncoder.encodeAddFederatorPublicKey(publicKey), null);
+        return UscRpc.sendTransaction(changeAuthorizedAddress, BRIDGE_ADDRESS, null, getMinimumGasPrice(), null, DataEncoder.encodeAddFederatorPublicKey(publicKey), null);
     }
 
     private static String getPendingFederationHash() throws IOException {
@@ -230,22 +229,22 @@ public class FederationManagement {
         return DataDecoder.decodeGetPendingFederationHash(res);
     }
 
-    private static String commitFederation(String fedChangeAuthKey, String usrPwd, String pendingFedHash) throws IOException, PrivateKeyNotFoundException {
-        if(!Utils.tryUnlockUscAccount(fedChangeAuthKey, usrPwd))
+    private static String commitFederation(String pendingFedHash) throws IOException, PrivateKeyNotFoundException {
+        if(!Utils.tryUnlockUscAccount(changeAuthorizedAddress, changeAuthorizedPassword))
             throw new PrivateKeyNotFoundException();
 
         String gasPrice = getMinimumGasPrice();
-        String gas = getGasForTx(fedChangeAuthKey, BRIDGE_ADDRESS, null, gasPrice, null, DataEncoder.encodeCommitFederation(pendingFedHash), null);
-        return UscRpc.sendTransaction(fedChangeAuthKey, BRIDGE_ADDRESS, gas, gasPrice, null, DataEncoder.encodeCommitFederation(pendingFedHash), null);
+        String gas = getGasForTx(changeAuthorizedAddress, BRIDGE_ADDRESS, null, gasPrice, null, DataEncoder.encodeCommitFederation(pendingFedHash), null);
+        return UscRpc.sendTransaction(changeAuthorizedAddress, BRIDGE_ADDRESS, gas, gasPrice, null, DataEncoder.encodeCommitFederation(pendingFedHash), null);
     }
 
-    private static String rollackFederation(String fedChangeAuthKey, String usrPwd)  throws IOException, PrivateKeyNotFoundException {
-        if(!Utils.tryUnlockUscAccount(fedChangeAuthKey, usrPwd))
+    private static String rollackFederation()  throws IOException, PrivateKeyNotFoundException {
+        if(!Utils.tryUnlockUscAccount(changeAuthorizedAddress, changeAuthorizedPassword))
             throw new PrivateKeyNotFoundException();
 
         String gasPrice = getMinimumGasPrice();
-        String gas = getGasForTx(fedChangeAuthKey, BRIDGE_ADDRESS, null, gasPrice, null, DataEncoder.encodeRollbackFederation(), null);
-        return UscRpc.sendTransaction(fedChangeAuthKey, BRIDGE_ADDRESS, gas, gasPrice, null, DataEncoder.encodeRollbackFederation(), null);
+        String gas = getGasForTx(changeAuthorizedAddress, BRIDGE_ADDRESS, null, gasPrice, null, DataEncoder.encodeRollbackFederation(), null);
+        return UscRpc.sendTransaction(changeAuthorizedAddress, BRIDGE_ADDRESS, gas, gasPrice, null, DataEncoder.encodeRollbackFederation(), null);
     }
 
 

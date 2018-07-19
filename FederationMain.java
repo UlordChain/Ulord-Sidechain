@@ -26,10 +26,11 @@ public class FederationMain implements Runnable {
     private BridgeConstants bridgeConstants;
 
     private String paramName;
-    private String feePerkbAuthorizedAddress;
-    private String feePerkbAuthorizedPassword;
-    private String changeAuthorizedAddress;
-    private String changeAuthorizedPassword;
+    private String syncUlordHeadersAddress;
+    private String syncUlordHeadersPassword;
+    private String pegAddress;
+    private String pegPassword;
+
     private boolean isSyncUlordHeadersEnabled;
     private boolean isPegEnabled;
 
@@ -48,12 +49,11 @@ public class FederationMain implements Runnable {
             bridgeConstants = BridgeMainNetConstants.getInstance();
         }
 
+        this.syncUlordHeadersAddress = config.getString("federation.syncUlordHeaders.address");
+        this.syncUlordHeadersPassword = config.getString("federation.syncUlordHeaders.userPassword");
 
-        this.feePerkbAuthorizedAddress = config.getString("federation.feePerkbAuthorizedAddress");
-        this.feePerkbAuthorizedPassword = config.getString("federation.feePerkbAuthorizedPassword");
-
-        this.changeAuthorizedAddress = config.getString("federation.changeAuthorizedAddress");
-        this.changeAuthorizedPassword = config.getString("federation.changeAuthorizedPassword");
+        this.pegAddress = config.getString("federation.peg.address");
+        this.pegPassword = config.getString("federation.peg.userPassword");
 
         this.isSyncUlordHeadersEnabled = config.getString("federation.syncUlordHeaders.enabled").equals("true");
         this.isPegEnabled = config.getString("federation.peg.enabled").equals("true");
@@ -77,14 +77,14 @@ public class FederationMain implements Runnable {
                 }
             }
 
-            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.bridgeConstants, fedMain.feePerkbAuthorizedAddress, fedMain.feePerkbAuthorizedPassword));
+            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.bridgeConstants, fedMain.syncUlordHeadersAddress, fedMain.syncUlordHeadersPassword));
             syncUlordHeaders.start();
         }
     }
 
     @Override
     public void run() {
-        startPeg(bridgeConstants, changeAuthorizedAddress, changeAuthorizedPassword);
+        startPeg(bridgeConstants, pegAddress, pegPassword);
     }
 
 
