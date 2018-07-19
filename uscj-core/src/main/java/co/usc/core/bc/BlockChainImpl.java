@@ -84,7 +84,7 @@ public class BlockChainImpl implements Blockchain {
     private final Repository repository;
     private final BlockStore blockStore;
     private final ReceiptStore receiptStore;
-    private TransactionPool transactionPool;
+    private final TransactionPool transactionPool;
     private EthereumListener listener;
     private final AdminInfo adminInfo;
     private BlockValidator blockValidator;
@@ -118,11 +118,6 @@ public class BlockChainImpl implements Blockchain {
     @Override
     public Repository getRepository() {
         return repository;
-    }
-
-    // circular dependency
-    public void setTransactionPool(TransactionPool transactionPool) {
-        this.transactionPool = transactionPool;
     }
 
     @Override

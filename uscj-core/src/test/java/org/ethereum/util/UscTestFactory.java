@@ -13,6 +13,10 @@ import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.db.RepositoryImpl;
+import co.usc.net.BlockNodeInformation;
+import co.usc.net.BlockSyncService;
+import co.usc.net.NodeBlockProcessor;
+import co.usc.net.sync.SyncConfiguration;
 import co.usc.test.builders.AccountBuilder;
 import co.usc.test.builders.TransactionBuilder;
 import co.usc.trie.TrieStoreImpl;
@@ -43,6 +47,7 @@ public class UscTestFactory {
     private RepositoryImpl repository;
     private ProgramInvokeFactoryImpl programInvokeFactory;
     private ReversibleTransactionExecutor reversibleTransactionExecutor;
+    private NodeBlockProcessor blockProcessor;
 
     public UscTestFactory() {
         Genesis genesis = new BlockGenerator().getGenesisBlock();
@@ -116,13 +121,11 @@ public class UscTestFactory {
                     config, getRepository(),
                     getBlockStore(),
                     getReceiptStore(),
-                    null, //circular dependency
+                    getTransactionPool(),
                     null,
                     null,
                     new DummyBlockValidator()
             );
-            TransactionPool transactionPool = getTransactionPool();
-            blockchain.setTransactionPool(transactionPool);
         }
 
         return blockchain;
@@ -139,6 +142,18 @@ public class UscTestFactory {
         }
 
         return blockStore;
+    }
+
+    public NodeBlockProcessor getBlockProcessor() {
+        if (blockProcessor == null) {
+            co.usc.net.BlockStore store = new co.usc.net.BlockStore();
+            BlockNodeInformation nodeInformation = new BlockNodeInformation();
+            SyncConfiguration syncConfiguration = SyncConfiguration.IMMEDIATE_FOR_TESTING;
+            BlockSyncService blockSyncService = new BlockSyncService(config, store, getBlockchain(), nodeInformation, syncConfiguration);
+            this.blockProcessor = new NodeBlockProcessor(store, getBlockchain(), nodeInformation, blockSyncService, syncConfiguration);
+        }
+
+        return blockProcessor;
     }
 
     public TransactionPool getTransactionPool() {
