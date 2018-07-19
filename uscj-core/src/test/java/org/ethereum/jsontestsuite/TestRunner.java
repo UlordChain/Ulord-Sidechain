@@ -106,7 +106,7 @@ public class TestRunner {
         IndexedBlockStore blockStore = new IndexedBlockStore(new HashMap<>(), new HashMapDB(), null);
         blockStore.saveBlock(genesis, genesis.getCumulativeDifficulty(), true);
 
-        EthereumListener listener = new CompositeEthereumListener();
+        CompositeEthereumListener listener = new CompositeEthereumListener();
 
         KeyValueDataSource ds = new HashMapDB();
 
