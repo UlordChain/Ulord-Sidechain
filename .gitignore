@@ -1,7 +1,7 @@
 # .conf files
+federation.conf
 ulord-testnet.conf
 usc-testnet.conf
-federation.conf
 usc-regtest.conf
 
 # resources
