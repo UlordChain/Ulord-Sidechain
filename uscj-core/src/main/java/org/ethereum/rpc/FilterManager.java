@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2018 RSK Labs Ltd.
+ * This file is part of Usc
+ * Copyright (C) 2016 - 2018 Ulord development team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,6 +20,9 @@ package org.ethereum.rpc;
 
 import org.ethereum.core.Block;
 import org.ethereum.core.Transaction;
+import org.ethereum.core.TransactionReceipt;
+import org.ethereum.facade.Ethereum;
+import org.ethereum.listener.EthereumListenerAdapter;
 
 import javax.annotation.concurrent.GuardedBy;
 import java.util.*;
@@ -36,10 +39,25 @@ public class FilterManager {
 
     private final Object filterLock = new Object();
 
-    AtomicInteger filterCounter = new AtomicInteger(1);
+    private AtomicInteger filterCounter = new AtomicInteger(1);
 
     @GuardedBy("filterLock")
-    Map<Integer, Filter> installedFilters = new HashMap<>();
+    private Map<Integer, Filter> installedFilters = new HashMap<>();
+
+    public FilterManager(Ethereum eth) {
+        eth.addListener(new EthereumListenerAdapter() {
+            @Override
+            public void onBlock(Block block, List<TransactionReceipt> receipts) {
+                newBlockReceived(block);
+            }
+
+            @Override
+            public void onPendingTransactionsReceived(List<Transaction> transactions) {
+                newPendingTx(transactions);
+            }
+        });
+    }
+
 
     public int registerFilter(Filter filter) {
         synchronized (filterLock) {

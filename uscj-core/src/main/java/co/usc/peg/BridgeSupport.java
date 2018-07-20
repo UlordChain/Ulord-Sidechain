@@ -33,7 +33,7 @@ import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
 import co.usc.peg.utils.BridgeEventLogger;
-//import co.usc.peg.utils.PartialMerkleTreeFormatUtils; //TODO:
+//import co.usc.peg.utils.PartialMerkleTreeFormatUtils; //TODO: 
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.tuple.Pair;
 import org.ethereum.core.Block;
@@ -223,7 +223,7 @@ public class BridgeSupport {
     }
 
     /**
-     * In case of a lock tx: Transfers some SULDs to the sender of the uld tx and keeps track of the new UTXOs available for spending.
+     * In case of a lock tx: Transfers some SUTs to the sender of the uld tx and keeps track of the new UTXOs available for spending.
      * In case of a release tx: Keeps track of the change UTXOs, now available for spending.
      * @param uscTx The USC transaction
      * @param uldTx The ulord transaction
