@@ -70,6 +70,7 @@ blocksminer1.txt
 
 # Test File
 fileMonitor.txt
+uscj-core/java
 
 rpc-tests/node_modules/
 samples/tokenapp/node_modules/
@@ -96,4 +97,3 @@ uscj-core/src/main/java/tools
 
 #personals
 _*
-uscj-core/java
