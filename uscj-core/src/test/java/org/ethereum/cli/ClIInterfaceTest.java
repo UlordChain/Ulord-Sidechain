@@ -43,13 +43,13 @@ public class ClIInterfaceTest {
     @Test
     public void callTestWithCorrectInputParams() {
 
-        String[] inputParams = { "-listen", "3332", "-db", "java", "-reset", "on", "-rpc", "44444" };
+        String[] inputParams = { "-listen", "3332", "-db", "java", "-reset", "on", "-rpc", "58858" };
         Map<String, String> result = CLIInterface.call(config, inputParams);
 
         Assert.assertEquals(result.get(SystemProperties.PROPERTY_DB_DIR), "java");
         Assert.assertEquals(result.get(SystemProperties.PROPERTY_PEER_PORT), "3332");
         Assert.assertEquals(result.get(SystemProperties.PROPERTY_DB_RESET), "true");
-        Assert.assertEquals(result.get(SystemProperties.PROPERTY_RPC_PORT), "44444");
+        Assert.assertEquals(result.get(SystemProperties.PROPERTY_RPC_PORT), "58858");
         Assert.assertEquals(result.get(SystemProperties.PROPERTY_RPC_ENABLED), "true");
     }
 
@@ -66,7 +66,7 @@ public class ClIInterfaceTest {
     @Test
     public void callTestWrongPortFormat() {
 
-        String[] inputParams = { "-rpc", "-44444" };
+        String[] inputParams = { "-rpc", "-58858" };
         Map<String, String> result = CLIInterface.call(config, inputParams);
 
         Assert.assertEquals(result.get(SystemProperties.PROPERTY_RPC_ENABLED), "true");
