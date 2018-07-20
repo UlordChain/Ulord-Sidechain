@@ -33,7 +33,7 @@ public class UldTransactionFormatUtilsTest {
     @Test
     public void calculateUldTxHash() {
         UldTransaction uldTransaction = new UldTransaction(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
-        Assert.assertThat(UldTransactionFormatUtils.calculateUldTxHash(uldTransaction.bitcoinSerialize()), is(uldTransaction.getHash()));
+        Assert.assertThat(UldTransactionFormatUtils.calculateUldTxHash(uldTransaction.ulordSerialize()), is(uldTransaction.getHash()));
 
         byte[] rawUldTransaction = Hex.decode("020000000418bc858998739dbb7e7676435178dba5e71157b1537d415518d5c1fce6349018000000006a47304402204317903e40f8736858f87758e6" +
                 "8bf18372bc075bc928fd82aa8e6c03ae8ce9fb022074a59d7449cc753c5a6b10e70db20469076e2a8b950aa44624ee7ff70633f73201210316101490" +
@@ -54,7 +54,7 @@ public class UldTransactionFormatUtilsTest {
     @Test
     public void getInputsCount() {
         UldTransaction uldTransaction = new UldTransaction(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
-        Assert.assertThat(UldTransactionFormatUtils.getInputsCount(uldTransaction.bitcoinSerialize()), is(0L));
+        Assert.assertThat(UldTransactionFormatUtils.getInputsCount(uldTransaction.ulordSerialize()), is(0L));
 
         byte[] rawUldTransaction = Hex.decode("020000000418bc858998739dbb7e7676435178dba5e71157b1537d415518d5c1fce6349018000000006a47304402204317903e40f8736858f87758e6" +
                 "8bf18372bc075bc928fd82aa8e6c03ae8ce9fb022074a59d7449cc753c5a6b10e70db20469076e2a8b950aa44624ee7ff70633f73201210316101490" +
