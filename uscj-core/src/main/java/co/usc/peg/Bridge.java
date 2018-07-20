@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 Usc Development team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,6 +20,7 @@ package co.usc.peg;
 
 import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.core.*;
+import co.usc.ulordj.store.BlockStoreException;
 import co.usc.config.BridgeConstants;
 import co.usc.core.UscAddress;
 import co.usc.panic.PanicProcessor;
@@ -383,34 +384,18 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         }
     }
 
-    public void registerUldTransaction(Object[] args)
-    {
+    public void registerUldTransaction(Object[] args) {
         logger.trace("registerUldTransaction");
 
         byte[] uldTxSerialized = (byte[]) args[0];
-        UldTransaction uldTx;
-        try {
-            uldTx = new UldTransaction(bridgeConstants.getUldParams(),uldTxSerialized);
-        } catch (ProtocolException e) {
-            throw new BridgeIllegalArgumentException("Transaction could not be parsed " + Hex.toHexString(uldTxSerialized), e);
-        }
+
         int height = ((BigInteger)args[1]).intValue();
 
         byte[] pmtSerialized = (byte[]) args[2];
-        PartialMerkleTree pmt;
+
         try {
-            pmt = new PartialMerkleTree(bridgeConstants.getUldParams(),pmtSerialized, 0);
-        } catch (ProtocolException e) {
-            throw new BridgeIllegalArgumentException("PartialMerkleTree could not be parsed " + Hex.toHexString(pmtSerialized), e);
-        }
-        try {
-            pmt.getTxnHashAndMerkleRoot(new ArrayList<>());
-        } catch (VerificationException e) {
-            throw new BridgeIllegalArgumentException("PartialMerkleTree could not be parsed " + Hex.toHexString(pmtSerialized), e);
-        }
-        try {
-            bridgeSupport.registerUldTransaction(uscTx, uldTx, height, pmt);
-        } catch (Exception e) {
+            bridgeSupport.registerUldTransaction(uscTx, uldTxSerialized, height, pmtSerialized);
+        } catch (IOException | BlockStoreException e) {
             logger.warn("Exception in registerUldTransaction", e);
             throw new RuntimeException("Exception in registerUldTransaction", e);
         }

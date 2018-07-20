@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 Usc Development team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -277,11 +277,11 @@ public class BridgeSupportTest {
 
         BlockGenerator blockGenerator = new BlockGenerator();
         List<Block> blocks = blockGenerator.getSimpleBlockChain(blockGenerator.getGenesisBlock(), 10);
-        org.ethereum.core.Block rskCurrentBlock = blocks.get(9);
+        org.ethereum.core.Block uscCurrentBlock = blocks.get(9);
 
         List<LogInfo> eventLogs = new LinkedList<>();
         BridgeEventLogger eventLogger = new BridgeEventLoggerImpl(bridgeConstants, eventLogs);
-        BridgeSupport bridgeSupport = new BridgeSupport(config, track, eventLogger, PrecompiledContracts.BRIDGE_ADDR, rskCurrentBlock);
+        BridgeSupport bridgeSupport = new BridgeSupport(config, track, eventLogger, PrecompiledContracts.BRIDGE_ADDR, uscCurrentBlock);
 
         Transaction tx = Transaction.create(config, TO_ADDRESS, DUST_AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
         ECKey key = new ECKey();
@@ -336,11 +336,11 @@ public class BridgeSupportTest {
         BlockGenerator blockGenerator = new BlockGenerator();
         List<Block> blocks = blockGenerator.getSimpleBlockChain(blockGenerator.getGenesisBlock(), 10);
 
-        org.ethereum.core.Block rskCurrentBlock = blocks.get(9);
+        org.ethereum.core.Block uscCurrentBlock = blocks.get(9);
         Transaction tx = Transaction.create(config, TO_ADDRESS, DUST_AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
         tx.sign(new ECKey().getPrivKeyBytes());
 
-        BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), PrecompiledContracts.BRIDGE_ADDR, rskCurrentBlock);
+        BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), PrecompiledContracts.BRIDGE_ADDR, uscCurrentBlock);
 
         bridgeSupport.updateCollections(tx);
 
@@ -396,11 +396,11 @@ public class BridgeSupportTest {
         for (Block block : blocks)
             blockchain.getBlockStore().saveBlock(block, TEST_DIFFICULTY, true);
 
-        org.ethereum.core.Block rskCurrentBlock = blocks.get(9);
+        org.ethereum.core.Block uscCurrentBlock = blocks.get(9);
         Transaction tx = Transaction.create(config, TO_ADDRESS, DUST_AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
         tx.sign(new ECKey().getPrivKeyBytes());
 
-        BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), PrecompiledContracts.BRIDGE_ADDR, rskCurrentBlock);
+        BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), PrecompiledContracts.BRIDGE_ADDR, uscCurrentBlock);
 
         bridgeSupport.updateCollections(tx);
 
@@ -454,13 +454,13 @@ public class BridgeSupportTest {
         for (Block block : blocks)
             blockchain.getBlockStore().saveBlock(block, TEST_DIFFICULTY, true);
 
-        org.ethereum.core.Block rskCurrentBlock = blocks.get(9);
-        ReceiptStore rskReceiptStore = null;
-        org.ethereum.db.BlockStore rskBlockStore = blockchain.getBlockStore();
+        org.ethereum.core.Block uscCurrentBlock = blocks.get(9);
+        ReceiptStore uscReceiptStore = null;
+        org.ethereum.db.BlockStore uscBlockStore = blockchain.getBlockStore();
         Transaction tx = Transaction.create(config, TO_ADDRESS, DUST_AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
         tx.sign(new ECKey().getPrivKeyBytes());
 
-        BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), PrecompiledContracts.BRIDGE_ADDR, rskCurrentBlock);
+        BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), PrecompiledContracts.BRIDGE_ADDR, uscCurrentBlock);
 
         bridgeSupport.updateCollections(tx);
 
@@ -502,12 +502,12 @@ public class BridgeSupportTest {
 
         BlockGenerator blockGenerator = new BlockGenerator();
         // Old federation will be in migration age at block 35
-        org.ethereum.core.Block rskCurrentBlock = blockGenerator.createBlock(35, 1);
+        org.ethereum.core.Block uscCurrentBlock = blockGenerator.createBlock(35, 1);
         Transaction tx = Transaction.create(config, TO_ADDRESS, DUST_AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
 
         Repository repository = new RepositoryImpl(config);
         Repository track = repository.startTracking();
-        BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, rskCurrentBlock);
+        BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, uscCurrentBlock);
 
         // One MICROCOIN is less than half the fee per kb, which is the minimum funds to migrate,
         // and so it won't be removed from the old federation UTXOs list for migration.
@@ -570,7 +570,7 @@ public class BridgeSupportTest {
         for (Block block : blocks)
             blockchain.getBlockStore().saveBlock(block, TEST_DIFFICULTY, true);
 
-        org.ethereum.core.Block rskCurrentBlock = blocks.get(9);
+        org.ethereum.core.Block uscCurrentBlock = blocks.get(9);
 
         Repository repository = blockchain.getRepository();
         Repository track = repository.startTracking();
@@ -588,7 +588,7 @@ public class BridgeSupportTest {
         Transaction tx = Transaction.create(config, TO_ADDRESS, DUST_AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
         tx.sign(new ECKey().getPrivKeyBytes());
 
-        BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), PrecompiledContracts.BRIDGE_ADDR, rskCurrentBlock);
+        BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), PrecompiledContracts.BRIDGE_ADDR, uscCurrentBlock);
 
         bridgeSupport.updateCollections(tx);
 
@@ -657,13 +657,13 @@ public class BridgeSupportTest {
         for (Block block : blocks)
             blockchain.getBlockStore().saveBlock(block, TEST_DIFFICULTY, true);
 
-        org.ethereum.core.Block rskCurrentBlock = blocks.get(9);
-        Transaction rskTx = Transaction.create(config, TO_ADDRESS, DUST_AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
-        rskTx.sign(new ECKey().getPrivKeyBytes());
+        org.ethereum.core.Block uscCurrentBlock = blocks.get(9);
+        Transaction uscTx = Transaction.create(config, TO_ADDRESS, DUST_AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
+        uscTx.sign(new ECKey().getPrivKeyBytes());
 
-        BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, rskCurrentBlock);
+        BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, uscCurrentBlock);
 
-        bridgeSupport.updateCollections(rskTx);
+        bridgeSupport.updateCollections(uscTx);
         bridgeSupport.save();
 
         track.commit();
@@ -805,8 +805,8 @@ public class BridgeSupportTest {
         uldTx.addOutput(output);
 
         // Save uld tx to be signed
-        final Keccak256 rskTxHash = PegTestUtils.createHash3();
-        provider.getUscTxsWaitingForSignatures().put(rskTxHash, uldTx);
+        final Keccak256 uscTxHash = PegTestUtils.createHash3();
+        provider.getUscTxsWaitingForSignatures().put(uscTxHash, uldTx);
         provider.save();
         track.commit();
 
@@ -827,7 +827,7 @@ public class BridgeSupportTest {
         List derEncodedSigs = Collections.singletonList(sig.encodeToDER());
 
         UldECKey federatorPubKey = findPublicKeySignedBy(federation.getPublicKeys(), privateKeyToSignWith);
-        bridgeSupport.addSignature(1, federatorPubKey, derEncodedSigs, rskTxHash.getBytes());
+        bridgeSupport.addSignature(1, federatorPubKey, derEncodedSigs, uscTxHash.getBytes());
 
         Assert.assertEquals(1, eventLogs.size());
 
@@ -847,7 +847,7 @@ public class BridgeSupportTest {
         Assert.assertEquals(3, dataList.size());
         Assert.assertArrayEquals(uldTx.getHashAsString().getBytes(), dataList.get(0).getRLPData());
         Assert.assertArrayEquals(federatorPubKey.getPubKeyHash(), dataList.get(1).getRLPData());
-        Assert.assertArrayEquals(rskTxHash.getBytes(), dataList.get(2).getRLPData());
+        Assert.assertArrayEquals(uscTxHash.getBytes(), dataList.get(2).getRLPData());
     }
 
     @Test
@@ -1162,7 +1162,7 @@ public class BridgeSupportTest {
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
-        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx, 0, null);
+        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx.ulordSerialize(), 0, null);
         bridgeSupport.save();
 
         track.commit();
@@ -1193,7 +1193,7 @@ public class BridgeSupportTest {
 
         PartialMerkleTree pmt = new PartialMerkleTree(uldParams, bits, hashes, 1);
 
-        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx, 0, pmt);
+        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx.ulordSerialize(), 0, pmt.ulordSerialize());
         bridgeSupport.save();
 
         track.commit();
@@ -1224,7 +1224,7 @@ public class BridgeSupportTest {
 
         PartialMerkleTree pmt = new PartialMerkleTree(uldParams, bits, hashes, 1);
 
-        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx, -1, pmt);
+        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx.ulordSerialize(), -1, pmt.ulordSerialize());
         bridgeSupport.save();
 
         track.commit();
@@ -1257,7 +1257,7 @@ public class BridgeSupportTest {
 
         PartialMerkleTree pmt = new PartialMerkleTree(_networkParameters, bits, hashes, 1);
 
-        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx, 1, pmt);
+        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx.ulordSerialize(), 1, pmt.ulordSerialize());
         bridgeSupport.save();
 
         track.commit();
@@ -1305,7 +1305,7 @@ public class BridgeSupportTest {
 
         UldBlockChain.add(block);
 
-        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx, 1, pmt);
+        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx.ulordSerialize(), 1, pmt.ulordSerialize());
         bridgeSupport.save();
 
         track.commit();
@@ -1384,7 +1384,7 @@ public class BridgeSupportTest {
 
         UldBlockChain.add(block);
         ((SimpleBlockChain)UldBlockChain).useHighBlock();
-        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx, 1, pmt);
+        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx.ulordSerialize(), 1, pmt.ulordSerialize());
         bridgeSupport.save();
         ((SimpleBlockChain)UldBlockChain).useBlock();
 
@@ -1479,7 +1479,7 @@ public class BridgeSupportTest {
 
         UldBlockChain.add(block);
         ((SimpleBlockChain)UldBlockChain).useHighBlock();
-        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx, 1, pmt);
+        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx.ulordSerialize(), 1, pmt.ulordSerialize());
         bridgeSupport.save();
         ((SimpleBlockChain)UldBlockChain).useBlock();
 
@@ -1573,9 +1573,9 @@ public class BridgeSupportTest {
         UldBlockChain.add(block);
 
         ((SimpleBlockChain)UldBlockChain).useHighBlock();
-        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx1, 1, pmt);
-        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx2, 1, pmt);
-        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx3, 1, pmt);
+        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx1.ulordSerialize(), 1, pmt.ulordSerialize());
+        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx2.ulordSerialize(), 1, pmt.ulordSerialize());
+        bridgeSupport.registerUldTransaction(mock(Transaction.class), tx3.ulordSerialize(), 1, pmt.ulordSerialize());
         bridgeSupport.save();
         ((SimpleBlockChain)UldBlockChain).useBlock();
 
@@ -1686,14 +1686,14 @@ public class BridgeSupportTest {
 
         UldBlockChain.add(block);
 
-        Transaction rskTx1 = getMockedRskTxWithHash("aa");
-        Transaction rskTx2 = getMockedRskTxWithHash("bb");
-        Transaction rskTx3 = getMockedRskTxWithHash("cc");
+        Transaction uscTx1 = getMockedUscTxWithHash("aa");
+        Transaction uscTx2 = getMockedUscTxWithHash("bb");
+        Transaction uscTx3 = getMockedUscTxWithHash("cc");
 
         ((SimpleBlockChain)UldBlockChain).useHighBlock();
-        bridgeSupport.registerUldTransaction(rskTx1, tx1, 1, pmt);
-        bridgeSupport.registerUldTransaction(rskTx2, tx2, 1, pmt);
-        bridgeSupport.registerUldTransaction(rskTx3, tx3, 1, pmt);
+        bridgeSupport.registerUldTransaction(uscTx1, tx1.ulordSerialize(), 1, pmt.ulordSerialize());
+        bridgeSupport.registerUldTransaction(uscTx2, tx2.ulordSerialize(), 1, pmt.ulordSerialize());
+        bridgeSupport.registerUldTransaction(uscTx3, tx3.ulordSerialize(), 1, pmt.ulordSerialize());
         bridgeSupport.save();
         ((SimpleBlockChain)UldBlockChain).useBlock();
 
@@ -3070,7 +3070,7 @@ public class BridgeSupportTest {
         //new SimpleUldTransaction(uldParams, PegTestUtils.createHash());
     }
 
-    private Transaction getMockedRskTxWithHash(String s) {
+    private Transaction getMockedUscTxWithHash(String s) {
         byte[] hash = Keccak256Helper.keccak256(s);
         return new SimpleUldTransaction(hash);
     }

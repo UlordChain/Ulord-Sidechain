@@ -33,6 +33,7 @@ import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
 import co.usc.peg.utils.BridgeEventLogger;
+import co.usc.peg.utils.UldTransactionFormatUtils;
 //import co.usc.peg.utils.PartialMerkleTreeFormatUtils; //TODO: 
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.tuple.Pair;
@@ -226,19 +227,19 @@ public class BridgeSupport {
      * In case of a lock tx: Transfers some SUTs to the sender of the uld tx and keeps track of the new UTXOs available for spending.
      * In case of a release tx: Keeps track of the change UTXOs, now available for spending.
      * @param uscTx The USC transaction
-     * @param uldTx The ulord transaction
+     * @param uldTxSerialized The raw Uld tx
      * @param height The height of the ulord block that contains the tx
-     * @param pmt Partial Merklee Tree that proves the tx is included in the uld block
+     * @param pmtSerialized The raw partial Merkle tree
      * @throws BlockStoreException
      * @throws IOException
      */
-    public void registerUldTransaction(Transaction uscTx, UldTransaction uldTx, int height, PartialMerkleTree pmt) throws BlockStoreException, IOException {
+    public void registerUldTransaction(Transaction uscTx, byte[] uldTxSerialized, int height, byte[] pmtSerialized) throws IOException, BlockStoreException{
         Context.propagate(uldContext);
 
-        Federation federation = getActiveFederation();
+        Sha256Hash uldTxHash = UldTransactionFormatUtils.calculateUldTxHash(uldTxSerialized);
 
         // Check the tx was not already processed
-        if (provider.getUldTxHashesAlreadyProcessed().keySet().contains(uldTx.getHash())) {
+        if (provider.getUldTxHashesAlreadyProcessed().keySet().contains(uldTxHash)) {
             logger.warn("Supplied tx was already processed");
             return;
         }
@@ -249,19 +250,30 @@ public class BridgeSupport {
         }*/
 
         // Check the tx is in the partial merkle tree
-        List<Sha256Hash> hashesInPmt = new ArrayList<>();
-        Sha256Hash merkleRoot = pmt.getTxnHashAndMerkleRoot(hashesInPmt);
-        List<Sha256Hash> hashes = pmt.getHashes();
-        if (!hashes.contains(uldTx.getHash())) {
-            logger.warn("Supplied tx is not in the supplied partial merkle tree");
-            panicProcessor.panic("uldlock", "Supplied tx is not in the supplied partial merkle tree");
-            return;
+        Sha256Hash merkleRoot;
+        try {
+            PartialMerkleTree pmt = new PartialMerkleTree(bridgeConstants.getUldParams(), pmtSerialized, 0);
+            List<Sha256Hash> hashesInPmt = new ArrayList<>();
+            merkleRoot = pmt.getTxnHashAndMerkleRoot(hashesInPmt);
+            if (!hashesInPmt.contains(uldTxHash)) {
+                logger.warn("Supplied tx is not in the supplied partial merkle tree");
+                return;
+            }
+        } catch (VerificationException e) {
+            throw new BridgeIllegalArgumentException("PartialMerkleTree could not be parsed " + Hex.toHexString(pmtSerialized), e);
         }
+
 
         if (height < 0) {
             logger.warn("Height is " + height + " but should be greater than 0");
             panicProcessor.panic("uldlock", "Height is " + height + " but should be greater than 0");
             return;
+        }
+
+        if (UldTransactionFormatUtils.getInputsCount(uldTxSerialized) == 0) {
+            logger.warn("Tx {} has no inputs ", uldTxHash);
+            // this is the exception thrown by co.usc.ulordj.core.UldTransaction #verify when there are no inputs.
+            throw new VerificationException.EmptyInputsOrOutputs();
         }
 
         // Check there are at least N blocks on top of the supplied height
@@ -280,16 +292,12 @@ public class BridgeSupport {
             return;
         }
 
-        // Checks the transaction contents for sanity
+        UldTransaction uldTx = new UldTransaction(bridgeConstants.getUldParams(), uldTxSerialized);
         uldTx.verify();
-        if (uldTx.getInputs().isEmpty()) {
-            logger.warn("Tx has no inputs " + uldTx);
-            panicProcessor.panic("uldlock", "Tx has no inputs " + uldTx);
-            return;
-        }
 
         boolean locked = true;
 
+        Federation federation = getActiveFederation();
         // Specific code for lock/release/none txs
         if (BridgeUtils.isLockTx(uldTx, getLiveFederations(), uldContext, bridgeConstants)) {
             logger.debug("This is a lock tx {}", uldTx);
@@ -384,8 +392,6 @@ public class BridgeSupport {
             panicProcessor.panic("uldlock", "This is not a lock, a release nor a migration tx " + uldTx);
             return;
         }
-
-        Sha256Hash uldTxHash = uldTx.getHash();
 
         // Mark tx as processed on this block
         provider.getUldTxHashesAlreadyProcessed().put(uldTxHash, uscExecutionBlock.getNumber());
