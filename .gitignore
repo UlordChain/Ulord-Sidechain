@@ -1,7 +1,7 @@
 # .conf files
+federation.conf
 ulord-testnet.conf
 usc-testnet.conf
-federation.conf
 usc-regtest.conf
 
 # resources
@@ -70,6 +70,7 @@ blocksminer1.txt
 
 # Test File
 fileMonitor.txt
+uscj-core/java
 
 rpc-tests/node_modules/
 samples/tokenapp/node_modules/
@@ -93,3 +94,6 @@ database
 
 #tools
 uscj-core/src/main/java/tools
+
+#personals
+_*
