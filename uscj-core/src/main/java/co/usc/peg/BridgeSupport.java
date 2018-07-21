@@ -940,7 +940,7 @@ public class BridgeSupport {
      * Returns an array of block hashes known by the bridge contract. Federators can use this to find what is the latest block in the mainchain the bridge has.
      * @return a List of ulord block hashes
      */
-    public List<Sha256Hash> getUldBlockChainBlockLocator() throws IOException {
+    public List<Sha256Hash> getUldBlockchainBlockLocator() throws IOException {
         final int maxHashesToInform = 100;		
         List<Sha256Hash> blockLocator = new ArrayList<>();
         StoredBlock cursor = UldBlockChain.getChainHead();

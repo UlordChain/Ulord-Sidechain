@@ -176,13 +176,13 @@ public class BridgeSupportTest {
         Assert.assertEquals(0, bridgeSupport.getUldBlockStore().getChainHead().getHeight());
         Assert.assertEquals(_networkParameters.getGenesisBlock(), bridgeSupport.getUldBlockStore().getChainHead().getHeader());
 
-        List<Sha256Hash> locator = bridgeSupport.getUldBlockChainBlockLocator();
+        List<Sha256Hash> locator = bridgeSupport.getUldBlockchainBlockLocator();
         Assert.assertEquals(1, locator.size());
         Assert.assertEquals(_networkParameters.getGenesisBlock().getHash(), locator.get(0));
 
         List<UldBlock> blocks = createUldBlocks(_networkParameters, _networkParameters.getGenesisBlock(), 10);
         bridgeSupport.receiveHeaders(blocks.toArray(new UldBlock[]{}));
-        locator = bridgeSupport.getUldBlockChainBlockLocator();
+        locator = bridgeSupport.getUldBlockchainBlockLocator();
         Assert.assertEquals(6, locator.size());
         Assert.assertEquals(blocks.get(9).getHash(), locator.get(0));
         Assert.assertEquals(blocks.get(8).getHash(), locator.get(1));
@@ -194,7 +194,7 @@ public class BridgeSupportTest {
 
 
     @Test
-    public void testGetUldBlockChainBlockLocatorWithUldCheckpoints() throws Exception {
+    public void testGetUldBlockchainBlockLocatorWithUldCheckpoints() throws Exception {
         NetworkParameters _networkParameters = uldParams;
 
         Repository repository = new RepositoryImpl(config);
@@ -211,13 +211,13 @@ public class BridgeSupportTest {
         Assert.assertEquals(10, bridgeSupport.getUldBlockStore().getChainHead().getHeight());
         Assert.assertEquals(checkpoints.get(9), bridgeSupport.getUldBlockStore().getChainHead().getHeader());
 
-        List<Sha256Hash> locator = bridgeSupport.getUldBlockChainBlockLocator();
+        List<Sha256Hash> locator = bridgeSupport.getUldBlockchainBlockLocator();
         Assert.assertEquals(1, locator.size());
         Assert.assertEquals(checkpoints.get(9).getHash(), locator.get(0));
 
         List<UldBlock> blocks = createUldBlocks(_networkParameters, checkpoints.get(9), 10);
         bridgeSupport.receiveHeaders(blocks.toArray(new UldBlock[]{}));
-        locator = bridgeSupport.getUldBlockChainBlockLocator();
+        locator = bridgeSupport.getUldBlockchainBlockLocator();
         Assert.assertEquals(6, locator.size());
         Assert.assertEquals(blocks.get(9).getHash(), locator.get(0));
         Assert.assertEquals(blocks.get(8).getHash(), locator.get(1));

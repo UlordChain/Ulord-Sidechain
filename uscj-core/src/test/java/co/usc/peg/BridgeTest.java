@@ -416,7 +416,7 @@ public class BridgeTest {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
 
         try {
-            bridge.getUldBlockChainBestChainHeight(null);
+            bridge.getUldBlockchainBestChainHeight(null);
             Assert.fail();
         }
         catch (RuntimeException ex) {
@@ -429,7 +429,7 @@ public class BridgeTest {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
 
         try {
-            bridge.getUldBlockChainBlockLocator(null);
+            bridge.getUldBlockchainBlockLocator(null);
             Assert.fail();
         }
         catch (RuntimeException ex) {
