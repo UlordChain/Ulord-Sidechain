@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of Usc
+ * Copyright (C) 2016 - 2018 Ulord development team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,11 +38,18 @@ import org.ethereum.vm.PrecompiledContracts;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.mockito.invocation.InvocationOnMock;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.spongycastle.util.encoders.Hex;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.*;
@@ -54,6 +61,8 @@ import static org.mockito.Mockito.*;
 /**
  * Created by ajlopez on 6/8/2016.
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Bridge.class, BridgeUtils.class})
 public class BridgeTest {
 
     private static NetworkParameters networkParameters;
@@ -65,13 +74,49 @@ public class BridgeTest {
     private static final BigInteger GAS_LIMIT = new BigInteger("1000");
     private static final String DATA = "80af2871";
     private static TestSystemProperties config = new TestSystemProperties();
+    private static final String ERR_NOT_FROM_ACTIVE_OR_RETIRING_FED = "Sender is not part of the active or retiring federation";
+    private static ECKey fedECPrivateKey;
+
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         config.setBlockchainConfig(new RegTestConfig());
         bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         networkParameters = bridgeConstants.getUldParams();
+        UldECKey fedULDPrivateKey = ((BridgeRegTestConstants)bridgeConstants).getFederatorPrivateKeys().get(0);
+        fedECPrivateKey = ECKey.fromPrivate(fedULDPrivateKey.getPrivKey());
+
     }
+
+    @Test
+    public void callUpdateCollectionsWithSignatureNotFromFederation() throws IOException {
+        UldTransaction tx1 = createTransaction();
+
+        Repository repository = new RepositoryImpl(config);
+        Repository track = repository.startTracking();
+
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+
+        provider0.getReleaseTransactionSet().add(tx1, 1L);
+        provider0.save();
+
+        track.commit();
+
+        track = repository.startTracking();
+
+        Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
+        uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
+        Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
+        World world = new World();
+        bridge.init(uscTx, world.getBlockChain().getBestBlock(), track, world.getBlockChain().getBlockStore(), null, new LinkedList<>());
+        try {
+            bridge.execute(Bridge.UPDATE_COLLECTIONS.encode());
+            Assert.fail();
+        } catch (Exception ex) {
+            Assert.assertTrue(ex.getMessage().contains(ERR_NOT_FROM_ACTIVE_OR_RETIRING_FED));
+        }
+    }
+
 
     @Test
     public void callUpdateCollectionsWithTransactionsWaitingForConfirmation() throws IOException {
@@ -94,11 +139,11 @@ public class BridgeTest {
 
         track = repository.startTracking();
 
-        Transaction rskTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
-        rskTx.sign(new ECKey().getPrivKeyBytes());
+        Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
+        uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
         World world = new World();
-        bridge.init(rskTx, world.getBlockChain().getBestBlock(), track, world.getBlockChain().getBlockStore(), null, new LinkedList<>());
+        bridge.init(uscTx, world.getBlockChain().getBestBlock(), track, world.getBlockChain().getBlockStore(), null, new LinkedList<>());
 
         bridge.execute(Bridge.UPDATE_COLLECTIONS.encode());
 
@@ -134,13 +179,13 @@ public class BridgeTest {
         World world = new World();
         List<Block> blocks = new BlockGenerator().getSimpleBlockChain(world.getBlockChain().getBestBlock(), 10);
 
-        Transaction rskTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
-        rskTx.sign(new ECKey().getPrivKeyBytes());
+        Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
+        uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
 
         world.getBlockChain().getBlockStore().saveBlock(blocks.get(1), new BlockDifficulty(BigInteger.ONE), true);
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(rskTx, blocks.get(9), track, world.getBlockChain().getBlockStore(), null, new LinkedList<>());
+        bridge.init(uscTx, blocks.get(9), track, world.getBlockChain().getBlockStore(), null, new LinkedList<>());
 
         bridge.execute(Bridge.UPDATE_COLLECTIONS.encode());
 
@@ -153,12 +198,34 @@ public class BridgeTest {
     }
 
     @Test
-    public void sendNoBlockHeader() throws IOException {
+    public void sendNoRskTx() throws IOException {
         Repository repository = new RepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
         bridge.init(null, null, track, null, null, null);
+        try {
+            bridge.execute(Bridge.RECEIVE_HEADERS.encode());
+            Assert.fail();
+        } catch (Exception ex) {
+            Assert.assertTrue(ex.getMessage().contains("Rsk Transaction is null"));
+        }
+
+        track.commit();
+    }
+
+
+
+    @Test
+    public void sendNoBlockHeader() throws IOException {
+        Repository repository = new RepositoryImpl(config);
+        Repository track = repository.startTracking();
+
+        Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
+        uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
+
+        Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
+        bridge.init(uscTx, null, track, null, null, null);
 
         bridge.execute(Bridge.RECEIVE_HEADERS.encode());
 
@@ -170,8 +237,11 @@ public class BridgeTest {
         Repository repository = new RepositoryImpl(config);
         Repository track = repository.startTracking();
 
+        Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
+        uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
+
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, track, null, null, null);
+        bridge.init(uscTx, null, track, null, null, null);
 
         co.usc.ulordj.core.UldBlock block = new co.usc.ulordj.core.UldBlock(networkParameters, 1, PegTestUtils.createHash(), PegTestUtils.createHash(), 1, Utils.encodeCompactBits(networkParameters.getMaxTarget()), BigInteger.ONE, new ArrayList<>());
         co.usc.ulordj.core.UldBlock[] headers = new co.usc.ulordj.core.UldBlock[1];
@@ -200,6 +270,25 @@ public class BridgeTest {
         Assert.assertNull(bridge.execute(new byte[4]));
     }
 
+    @Test
+    public void receiveHeadersNotFromTheFederation() throws IOException {
+        Repository repository = new RepositoryImpl(config);
+        Repository track = repository.startTracking();
+
+        Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
+        uscTx.sign(new ECKey().getPrivKeyBytes());
+
+        Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
+        bridge.init(uscTx, null, track, null, null, null);
+        try {
+            bridge.execute(Bridge.RECEIVE_HEADERS.encode());
+            Assert.fail();
+        } catch (Exception ex) {
+            Assert.assertTrue(ex.getMessage().contains(ERR_NOT_FROM_ACTIVE_OR_RETIRING_FED));
+        }
+
+        track.commit();
+    }
 
     @Test
     public void receiveHeadersWithNonParseableHeader() throws Exception{
@@ -218,6 +307,196 @@ public class BridgeTest {
 
     }
 
+
+    @Test
+    public void receiveHeadersWithCorrectSizeHeaders() throws Exception {
+        Repository repository = new RepositoryImpl(config);
+        Repository track = repository.startTracking();
+
+        Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
+        uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
+
+        Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
+        bridge.init(uscTx, null, track, null, null, null);
+
+        final int numBlocks = 10;
+        co.usc.ulordj.core.UldBlock[] headers = new co.usc.ulordj.core.UldBlock[numBlocks];
+
+        for (int i = 0; i < numBlocks; i++) {
+            co.usc.ulordj.core.UldBlock block = new co.usc.ulordj.core.UldBlock(networkParameters, 1, PegTestUtils.createHash(), PegTestUtils.createHash(), 1, Utils.encodeCompactBits(networkParameters.getMaxTarget()), new BigInteger("1"), new ArrayList<>());
+            headers[i] = block;
+        }
+
+        byte[][] headersSerialized = new byte[headers.length][];
+
+        for (int i = 0; i < headers.length; i++) {
+            headersSerialized[i] = headers[i].ulordSerialize();
+        }
+
+        BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
+        PowerMockito.whenNew(BridgeSupport.class).withAnyArguments().thenReturn(bridgeSupportMock);
+
+        PowerMockito.mockStatic(BridgeUtils.class);
+        when(BridgeUtils.isFromFederateMember(any(), any())).thenReturn(true);
+
+        MessageSerializer serializer = bridgeConstants.getUldParams().getDefaultSerializer();
+        MessageSerializer spySerializer = Mockito.spy(serializer);
+
+        NetworkParameters uldParamsMock = mock(NetworkParameters.class);
+        BridgeConstants bridgeConstantsMock = mock(BridgeConstants.class);
+
+        when(bridgeConstantsMock.getUldParams()).thenReturn(uldParamsMock);
+        when(uldParamsMock.getDefaultSerializer()).thenReturn(spySerializer);
+
+        Whitebox.setInternalState(bridge, "bridgeConstants", bridgeConstantsMock);
+
+        bridge.execute(Bridge.RECEIVE_HEADERS.encode(new Object[]{headersSerialized}));
+
+        track.commit();
+
+        verify(bridgeSupportMock, times(1)).receiveHeaders(headers);
+        for (int i = 0; i < headers.length; i++) {
+            verify(spySerializer, times(1)).makeBlock(headersSerialized[i]);
+        }
+    }
+
+    @Test
+    public void receiveHeadersWithIncorrectSizeHeaders() throws Exception {
+        Repository repository = new RepositoryImpl(config);
+        Repository track = repository.startTracking();
+
+        Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
+        uscTx.sign(new ECKey().getPrivKeyBytes());
+
+        Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
+        bridge.init(uscTx, null, track, null, null, null);
+
+        final int numBlocks = 10;
+        co.usc.ulordj.core.UldBlock[] headers = new co.usc.ulordj.core.UldBlock[numBlocks];
+        byte[][] headersSerialized = new byte[headers.length][];
+
+        // Add a couple of transactions to the block so that it doesn't serialize as just the header
+        for (int i = 0; i < numBlocks; i++) {
+            co.usc.ulordj.core.UldBlock block = new co.usc.ulordj.core.UldBlock(
+                    networkParameters,
+                    1,
+                    PegTestUtils.createHash(),
+                    PegTestUtils.createHash(),
+                    1,
+                    Utils.encodeCompactBits(networkParameters.getMaxTarget()),
+                    new BigInteger("1"),
+                    new ArrayList<>()
+            );
+
+            UldECKey from = new UldECKey();
+            UldECKey to = new UldECKey();
+
+            // Coinbase TX
+            UldTransaction coinbaseTx = new UldTransaction(networkParameters);
+            coinbaseTx.addInput(Sha256Hash.ZERO_HASH, -1, ScriptBuilder.createOpReturnScript(new byte[0]));
+            block.addTransaction(coinbaseTx);
+
+            // Random TX
+            UldTransaction inputTx = new UldTransaction(networkParameters);
+            inputTx.addOutput((Coin.SATOSHI), from.toAddress(networkParameters));
+            UldTransaction outputTx = new UldTransaction(networkParameters);
+            outputTx.addInput(inputTx.getOutput(0));
+            outputTx.getInput(0).disconnect();
+            outputTx.addOutput(Coin.COIN, to.toAddress(networkParameters));
+            block.addTransaction(outputTx);
+
+            headers[i] = block;
+            headersSerialized[i] = block.ulordSerialize();
+
+            // Make sure we would be able to deserialize the block
+            Assert.assertEquals(block, networkParameters.getDefaultSerializer().makeBlock(headersSerialized[i]));
+        }
+
+        BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
+        PowerMockito.whenNew(BridgeSupport.class).withAnyArguments().thenReturn(bridgeSupportMock);
+
+        PowerMockito.mockStatic(BridgeUtils.class);
+        when(BridgeUtils.isFromFederateMember(any(), any())).thenReturn(true);
+
+        NetworkParameters uldParamsMock = mock(NetworkParameters.class);
+        BridgeConstants bridgeConstantsMock = mock(BridgeConstants.class);
+
+        when(bridgeConstantsMock.getUldParams()).thenReturn(uldParamsMock);
+
+        Whitebox.setInternalState(bridge, "bridgeConstants", bridgeConstantsMock);
+
+        bridge.execute(Bridge.RECEIVE_HEADERS.encode(new Object[]{headersSerialized}));
+
+        track.commit();
+
+        verify(bridgeSupportMock, never()).receiveHeaders(headers);
+        verify(uldParamsMock, never()).getDefaultSerializer();
+    }
+    public void registerUldTransactionNotFromFederation() throws Exception{
+        Repository repository = new RepositoryImpl(config);
+        Repository track = repository.startTracking();
+
+        Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
+        uscTx.sign(new ECKey().getPrivKeyBytes());
+
+        Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
+        bridge.init(uscTx, null, track, null, null, null);
+
+
+        byte[] data = Bridge.REGISTER_ULD_TRANSACTION.encode(new byte[3], 1, new byte[30]);
+
+        try {
+            bridge.execute(data);
+            Assert.fail();
+        } catch (Exception ex) {
+            Assert.assertTrue(ex.getMessage().contains(ERR_NOT_FROM_ACTIVE_OR_RETIRING_FED));
+        }
+    }
+
+    @Test
+    public void receiveHeadersWithHugeDeclaredTransactionsSize() {
+        Repository repository = new RepositoryImpl(config);
+        Repository track = repository.startTracking();
+
+        Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
+        uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
+
+        Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
+        bridge.init(uscTx, null, track, null, null, null);
+
+        NetworkParameters uldParams = RegTestParams.get();
+        UldBlock block = new UldBlock(uldParams, 1, PegTestUtils.createHash(), PegTestUtils.createHash(), 1, 1, new BigInteger("1"), new ArrayList<UldTransaction>()) {
+            @Override
+            protected void ulordSerializeToStream(OutputStream stream) throws IOException {
+                Utils.uint32ToByteStreamLE(getVersion(), stream);
+                stream.write(getPrevBlockHash().getReversedBytes());
+                stream.write(getMerkleRoot().getReversedBytes());
+                Utils.uint32ToByteStreamLE(getTimeSeconds(), stream);
+                Utils.uint32ToByteStreamLE(getDifficultyTarget(), stream);
+                Utils.uint32ToByteStreamLE(getNonce().longValue(), stream);
+
+                stream.write(new VarInt(Integer.MAX_VALUE).encode());
+            }
+
+            @Override
+            public byte[] ulordSerialize() {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                try {
+                    ulordSerializeToStream(baos);
+                } catch (IOException e) {
+                }
+                return baos.toByteArray();
+            }
+        };
+
+        Object[] objectArray = new Object[1];
+        objectArray[0] = block.ulordSerialize();
+
+        byte[] data = Bridge.RECEIVE_HEADERS.encode(new Object[]{objectArray});
+
+        Assert.assertNull(bridge.execute(data));
+
+    }
     @Test
     public void registerUldTransactionWithNonParseableTx() throws Exception{
         Repository repository = new RepositoryImpl(config);
@@ -298,6 +577,29 @@ public class BridgeTest {
     }
 
     @Test
+    public void addSignatureNotFromFederation() throws Exception{
+        Repository repository = new RepositoryImpl(config);
+        Repository track = repository.startTracking();
+
+        Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
+        uscTx.sign(new ECKey().getPrivKeyBytes());
+
+        Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
+        bridge.init(uscTx, null, track, null, null, null);
+
+        byte[] federatorPublicKeySerialized = new byte[3];
+        Object[] signaturesObjectArray = new Object[0];
+        byte[] uscTxHash = new byte[32];
+        byte[] data = Bridge.ADD_SIGNATURE.encode(federatorPublicKeySerialized, signaturesObjectArray, uscTxHash);
+
+        try {
+            bridge.execute(data);
+            Assert.fail();
+        } catch (Exception ex) {
+            Assert.assertTrue(ex.getMessage().contains(ERR_NOT_FROM_ACTIVE_OR_RETIRING_FED));
+        }
+    }
+    @Test
     public void addSignatureWithNonParseablePublicKey() throws Exception{
         Repository repository = new RepositoryImpl(config);
         Repository track = repository.startTracking();
@@ -306,8 +608,8 @@ public class BridgeTest {
 
         byte[] federatorPublicKeySerialized = new byte[3];
         Object[] signaturesObjectArray = new Object[0];
-        byte[] rskTxHash = new byte[32];
-        byte[] data = Bridge.ADD_SIGNATURE.encode(federatorPublicKeySerialized, signaturesObjectArray, rskTxHash);
+        byte[] uscTxHash = new byte[32];
+        byte[] data = Bridge.ADD_SIGNATURE.encode(federatorPublicKeySerialized, signaturesObjectArray, uscTxHash);
 
         Assert.assertNull(bridge.execute(data));
     }
@@ -321,8 +623,8 @@ public class BridgeTest {
 
         byte[] federatorPublicKeySerialized = new UldECKey().getPubKey();
         Object[] signaturesObjectArray = new Object[0];
-        byte[] rskTxHash = new byte[32];
-        byte[] data = Bridge.ADD_SIGNATURE.encode(federatorPublicKeySerialized, signaturesObjectArray, rskTxHash);
+        byte[] uscTxHash = new byte[32];
+        byte[] data = Bridge.ADD_SIGNATURE.encode(federatorPublicKeySerialized, signaturesObjectArray, uscTxHash);
 
         Assert.assertNull(bridge.execute(data));
     }
@@ -337,14 +639,14 @@ public class BridgeTest {
 
         byte[] federatorPublicKeySerialized = new UldECKey().getPubKey();
         Object[] signaturesObjectArray = new Object[]{new byte[3]};
-        byte[] rskTxHash = new byte[32];
-        byte[] data = Bridge.ADD_SIGNATURE.encode(federatorPublicKeySerialized, signaturesObjectArray, rskTxHash);
+        byte[] uscTxHash = new byte[32];
+        byte[] data = Bridge.ADD_SIGNATURE.encode(federatorPublicKeySerialized, signaturesObjectArray, uscTxHash);
 
         Assert.assertNull(bridge.execute(data));
     }
 
     @Test
-    public void addSignatureWithNonParseableRskTx() throws Exception{
+    public void addSignatureWithNonParseableUscTx() throws Exception{
         Repository repository = new RepositoryImpl(config);
         Repository track = repository.startTracking();
 
@@ -353,8 +655,8 @@ public class BridgeTest {
 
         byte[] federatorPublicKeySerialized = new UldECKey().getPubKey();
         Object[] signaturesObjectArray = new Object[]{new UldECKey().sign(Sha256Hash.ZERO_HASH).encodeToDER()};
-        byte[] rskTxHash = new byte[3];
-        byte[] data = Bridge.ADD_SIGNATURE.encode(federatorPublicKeySerialized, signaturesObjectArray, rskTxHash);
+        byte[] uscTxHash = new byte[3];
+        byte[] data = Bridge.ADD_SIGNATURE.encode(federatorPublicKeySerialized, signaturesObjectArray, uscTxHash);
 
         Assert.assertNull(bridge.execute(data));
     }
@@ -448,18 +750,18 @@ public class BridgeTest {
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
 
-        org.ethereum.core.Transaction rskTx = CallTransaction.createCallTransaction(
+        org.ethereum.core.Transaction uscTx = CallTransaction.createCallTransaction(
                 config, 0,
                 1,
                 1,
                 PrecompiledContracts.BRIDGE_ADDR,
                 0,
                 Bridge.UPDATE_COLLECTIONS);
-        rskTx.sign(((BridgeRegTestConstants)bridgeConstants).getFederatorPrivateKeys().get(0).getPrivKeyBytes());
+        uscTx.sign(((BridgeRegTestConstants)bridgeConstants).getFederatorPrivateKeys().get(0).getPrivKeyBytes());
 
-        Block rskExecutionBlock = new BlockGenerator().createChildBlock(Genesis.getInstance(config));
-        bridge.init(rskTx, rskExecutionBlock, null, null, null, null);
-        Assert.assertEquals(0, bridge.getGasForData(rskTx.getData()));
+        Block uscExecutionBlock = new BlockGenerator().createChildBlock(Genesis.getInstance(config));
+        bridge.init(uscTx, uscExecutionBlock, null, null, null, null);
+        Assert.assertEquals(0, bridge.getGasForData(uscTx.getData()));
 
         config.setBlockchainConfig(blockchainNetConfigOriginal);
     }
@@ -528,9 +830,9 @@ public class BridgeTest {
         config.setBlockchainConfig(new UnitTestBlockchainNetConfig());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        org.ethereum.core.Transaction rskTx;
+        org.ethereum.core.Transaction uscTx;
         if (function==null) {
-            rskTx = CallTransaction.createRawTransaction(
+            uscTx = CallTransaction.createRawTransaction(
                     config, 0,
                     1,
                     1,
@@ -538,7 +840,7 @@ public class BridgeTest {
                     0,
                     new byte[]{1,2,3});
         } else {
-            rskTx = CallTransaction.createCallTransaction(
+            uscTx = CallTransaction.createCallTransaction(
                     config, 0,
                     1,
                     1,
@@ -548,15 +850,15 @@ public class BridgeTest {
                     funcArgs);
         }
 
-        rskTx.sign(((BridgeRegTestConstants)bridgeConstants).getFederatorPrivateKeys().get(0).getPrivKeyBytes());
+        uscTx.sign(((BridgeRegTestConstants)bridgeConstants).getFederatorPrivateKeys().get(0).getPrivKeyBytes());
 
         BlockGenerator blockGenerator = new BlockGenerator();
-        Block rskExecutionBlock = blockGenerator.createChildBlock(Genesis.getInstance(config));
+        Block uscExecutionBlock = blockGenerator.createChildBlock(Genesis.getInstance(config));
         for (int i = 0; i < 20; i++) {
-            rskExecutionBlock = blockGenerator.createChildBlock(rskExecutionBlock);
+            uscExecutionBlock = blockGenerator.createChildBlock(uscExecutionBlock);
         }
-        bridge.init(rskTx, rskExecutionBlock, null, null, null, null);
-        Assert.assertEquals(expected, bridge.getGasForData(rskTx.getData()));
+        bridge.init(uscTx, uscExecutionBlock, null, null, null, null);
+        Assert.assertEquals(expected, bridge.getGasForData(uscTx.getData()));
 
         config.setBlockchainConfig(blockchainNetConfigOriginal);
     }
