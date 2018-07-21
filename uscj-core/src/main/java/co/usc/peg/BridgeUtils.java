@@ -205,7 +205,7 @@ public class BridgeUtils {
                );
     }
 
-    private static boolean isFromFederateMember(org.ethereum.core.Transaction uscTx, Federation federation) {
+    public static boolean isFromFederateMember(org.ethereum.core.Transaction uscTx, Federation federation) {
         return federation.hasMemberWithUscAddress(uscTx.getSender().getBytes());
     }
 
