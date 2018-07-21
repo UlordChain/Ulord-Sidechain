@@ -55,15 +55,11 @@ public class RegisterUlordTransaction {
 //        register(BridgeTestNetConstants.getInstance(), "674f05e1916abc32a38f40aa67ae6b503b565999", "abcd1234", "29ae1e72a00cdc394e52fa8341f9270a63356ff30e66520bfa75d77a5a1216f2");
 //    }
 
-    public static boolean register(BridgeConstants bridgeConstants, String changeAuthorizedAddress, String pwd, String utTxId) {
+    public static boolean register(BridgeConstants bridgeConstants, String authorizedAddress, String pwd, String utTxId) {
         try {
-            AddressBasedAuthorizer federationChangeAuthorizer = bridgeConstants.getFederationChangeAuthorizer();
-
-            if (!federationChangeAuthorizer.isAuthorized(new UscAddress(changeAuthorizedAddress)))
-                return false;
 
             // Try to unlock account
-            if (!Utils.tryUnlockUscAccount(changeAuthorizedAddress, pwd)) {
+            if (!Utils.tryUnlockUscAccount(authorizedAddress, pwd)) {
                 throw new PrivateKeyNotFoundException();
             }
 
@@ -121,7 +117,7 @@ public class RegisterUlordTransaction {
 
             String data = DataEncoder.encodeRegisterUlordTransaction(tx.ulordSerialize(), height, partialMerkleTree.ulordSerialize());
 
-            return sendTx(changeAuthorizedAddress, utTxId, data, 3);
+            return sendTx(authorizedAddress, utTxId, data, 3);
 
         } catch (Exception e) {
             logger.error(e.toString());

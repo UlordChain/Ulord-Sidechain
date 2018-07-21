@@ -143,6 +143,10 @@ public class SyncUlordHeaders implements Runnable{
                                     date = new Date();
                                     System.out.println(dateFormat.format(date) +": Ulord Block headers from " + (startIndex) + " to " + i + " sent to USC.");
                                     UscBestBlockHeightBeforeReceiveHeaders = Utils.getUscBestBlockHeight();
+
+                                    // Unlock account
+                                    UscRpc.unlockAccount(federationChangeAuthorizedAddress, federationChangeAuthorizedPassword);
+
                                     txHash = receiveHeaders(builder);
                                     System.out.println("Transaction ID: " + txHash);
                                     while(true){
