@@ -55,7 +55,7 @@ public enum BridgeMethods {
                     new String[]{}
             ),
             70000L,
-            (BridgeMethodExecutorVoid) Bridge::addSignature//Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::addSignature, "addSignature")
+            Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::addSignature, "addSignature")
     ),
     COMMIT_FEDERATION(
             CallTransaction.Function.fromSignature(
@@ -307,7 +307,7 @@ public enum BridgeMethods {
                     new String[]{}
             ),
             22000L,
-            (BridgeMethodExecutorVoid) Bridge::receiveHeaders//Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::receiveHeaders, "receiveHeaders")
+            Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::receiveHeaders, "receiveHeaders")
     ),
     REGISTER_ULD_TRANSACTION(
             CallTransaction.Function.fromSignature(
@@ -316,7 +316,7 @@ public enum BridgeMethods {
                     new String[]{}
             ),
             22000L,
-            (BridgeMethodExecutorVoid) Bridge::registerUldTransaction//Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::registerUldTransaction, "registerUldTransaction")
+            Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::registerUldTransaction, "registerUldTransaction")
     ),
     RELEASE_ULD(
             CallTransaction.Function.fromSignature(
@@ -361,7 +361,7 @@ public enum BridgeMethods {
                     new String[]{}
             ),
             48000L,
-            (BridgeMethodExecutorVoid) Bridge::updateCollections//Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::updateCollections, "updateCollections")
+            Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::updateCollections, "updateCollections")
     ),
     VOTE_FEE_PER_KB(
             CallTransaction.Function.fromSignature(
