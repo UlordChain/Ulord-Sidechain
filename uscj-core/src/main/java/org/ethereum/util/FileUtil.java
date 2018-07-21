@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of Usc
+ * Copyright (C) 2016 - 2018 Ulord development team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ public class FileUtil {
             }
 
             if (!file.setWritable(true)) {
-                LOGGER.error("File is not writable");
+                LOGGER.error(String.format("File %s is not writable",file));
             }
 
             boolean result = file.delete();
