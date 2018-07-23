@@ -26,6 +26,7 @@ import co.usc.ulordj.wallet.Wallet;
 import co.usc.config.BridgeConstants;
 import co.usc.core.UscAddress;
 import co.usc.peg.ulord.UscAllowUnconfirmedCoinSelector;
+import co.usc.util.MaxSizeHashMap;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Transaction;
@@ -44,7 +45,8 @@ import java.util.Map;
 public class BridgeUtils {
 
     private static final Logger logger = LoggerFactory.getLogger("BridgeUtils");
-    private static Map<Sha256Hash, Sha256Hash> parentMap = new HashMap<>();
+    private static final int MAX_MAP_PARENTS_SIZE = 8000;
+    private static Map<Sha256Hash, Sha256Hash> parentMap = new MaxSizeHashMap<>(MAX_MAP_PARENTS_SIZE);
 
     public static StoredBlock getStoredBlockAtHeight(UldBlockStore blockStore, int height) throws BlockStoreException {
         StoredBlock storedBlock = blockStore.getChainHead();

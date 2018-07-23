@@ -22,6 +22,7 @@ import co.usc.ulordj.core.*;
 import co.usc.ulordj.store.BlockStoreException;
 import co.usc.ulordj.store.UldBlockStore;
 import co.usc.core.UscAddress;
+import co.usc.util.MaxSizeHashMap;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Repository;
 import org.ethereum.vm.DataWord;
@@ -39,7 +40,8 @@ import java.util.Map;
 public class RepositoryBlockStore implements UldBlockStore{
 
     public static final String BLOCK_STORE_CHAIN_HEAD_KEY = "blockStoreChainHead";
-    private static Map<Sha256Hash, StoredBlock> knownBlocks = new HashMap<>();
+    private static final int MAX_SIZE_MAP_STORED_BLOCKS = 8000;
+    private static Map<Sha256Hash, StoredBlock> knownBlocks = new MaxSizeHashMap<>(MAX_SIZE_MAP_STORED_BLOCKS);
 
     private final Repository repository;
     private final UscAddress contractAddress;
