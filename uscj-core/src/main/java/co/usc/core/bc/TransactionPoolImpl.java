@@ -30,7 +30,6 @@ import org.ethereum.crypto.HashUtil;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;
 import org.ethereum.listener.CompositeEthereumListener;
-import org.ethereum.listener.EthereumListenerAdapter;
 import org.ethereum.util.ByteUtil;
 import org.ethereum.util.RLP;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactory;
@@ -125,7 +124,6 @@ public class TransactionPoolImpl implements TransactionPool {
         }
 
         this.cleanerFuture = this.cleanerTimer.scheduleAtFixedRate(this::cleanUp, this.outdatedTimeout, this.outdatedTimeout, TimeUnit.SECONDS);
-        this.listener.addListener(new OnBlockListener());
     }
 
     public void stop() {
@@ -473,12 +471,4 @@ public class TransactionPoolImpl implements TransactionPool {
             });
         }
     }
-
-    private class OnBlockListener extends EthereumListenerAdapter {
-        @Override
-        public void onBlock(Block block, List<TransactionReceipt> receipts) {
-            processBest(block);
-        }
-    }
-
 }
