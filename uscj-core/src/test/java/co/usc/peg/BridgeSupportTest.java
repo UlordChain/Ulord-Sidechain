@@ -682,7 +682,7 @@ public class BridgeSupportTest {
 
         BridgeConstants bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         Context uldContext = new Context(bridgeConstants.getUldParams());
-        UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
+        UldBlockstoreWithCache UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
         UldBlockChain UldBlockChain = new UldBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
@@ -708,7 +708,7 @@ public class BridgeSupportTest {
 
         BridgeConstants bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         Context uldContext = new Context(bridgeConstants.getUldParams());
-        UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
+        UldBlockstoreWithCache UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
         UldBlockChain UldBlockChain = new SimpleBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
@@ -1285,7 +1285,7 @@ public class BridgeSupportTest {
 
 
         Context uldContext = new Context(bridgeConstants.getUldParams());
-        UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
+        UldBlockstoreWithCache UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
         UldBlockChain UldBlockChain = new SimpleBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
@@ -1363,7 +1363,7 @@ public class BridgeSupportTest {
         tx.getInput(0).setScriptSig(scriptSig);
 
         Context uldContext = new Context(bridgeConstants.getUldParams());
-        UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
+        UldBlockstoreWithCache UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
         UldBlockChain UldBlockChain = new SimpleBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
@@ -1457,7 +1457,7 @@ public class BridgeSupportTest {
 
 
         Context uldContext = new Context(bridgeConstants.getUldParams());
-        UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
+        UldBlockstoreWithCache UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
         UldBlockChain UldBlockChain = new SimpleBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
@@ -1539,7 +1539,7 @@ public class BridgeSupportTest {
         tx3.addInput(PegTestUtils.createHash(), 0, ScriptBuilder.createInputScript(null, srcKey3));
 
         Context uldContext = new Context(bridgeConstants.getUldParams());
-        UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
+        UldBlockstoreWithCache UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
         UldBlockChain UldBlockChain = new SimpleBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
@@ -1662,7 +1662,7 @@ public class BridgeSupportTest {
         tx3.addInput(PegTestUtils.createHash(), 0, ScriptBuilder.createInputScript(null, srcKey3));
 
         Context uldContext = new Context(bridgeConstants.getUldParams());
-        UldBlockStore UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
+        UldBlockstoreWithCache UldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
         UldBlockChain UldBlockChain = new SimpleBlockChain(uldContext, UldBlockStore);
 
         BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());

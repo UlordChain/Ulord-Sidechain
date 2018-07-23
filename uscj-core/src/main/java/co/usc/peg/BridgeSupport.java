@@ -79,7 +79,7 @@ public class BridgeSupport {
 
     private final BridgeConstants bridgeConstants;
     private final Context uldContext;
-    private final UldBlockStore UldBlockStore;
+    private final UldBlockstoreWithCache UldBlockStore;
     private final UldBlockChain UldBlockChain;
     private final BridgeStorageProvider provider;
     private final Repository uscRepository;
@@ -121,7 +121,7 @@ public class BridgeSupport {
 
 
     // Used by unit tests
-    public BridgeSupport(UscSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeConstants bridgeConstants, BridgeStorageProvider provider, UldBlockStore UldBlockStore, UldBlockChain UldBlockChain) {
+    public BridgeSupport(UscSystemProperties config, Repository repository, BridgeEventLogger eventLogger, BridgeConstants bridgeConstants, BridgeStorageProvider provider, UldBlockstoreWithCache UldBlockStore, UldBlockChain UldBlockChain) {
         this.provider = provider;
         this.config = config;
         this.bridgeConstants = bridgeConstants;

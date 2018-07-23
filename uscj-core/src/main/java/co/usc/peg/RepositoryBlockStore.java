@@ -37,7 +37,7 @@ import java.util.Map;
  * Implementation of a ulordj blockstore that persists to USC's Repository
  * @author Oscar Guindzberg
  */
-public class RepositoryBlockStore implements UldBlockStore{
+public class RepositoryBlockStore implements UldBlockstoreWithCache{
 
     public static final String BLOCK_STORE_CHAIN_HEAD_KEY = "blockStoreChainHead";
     private static final int MAX_SIZE_MAP_STORED_BLOCKS = 8000;
@@ -86,6 +86,26 @@ public class RepositoryBlockStore implements UldBlockStore{
         
         StoredBlock storedBlock = byteArrayToStoredBlock(ba);
         knownBlocks.put(hash, storedBlock);
+        return storedBlock;
+    }
+
+    public synchronized StoredBlock getFromCache(Sha256Hash hash) throws BlockStoreException {
+        StoredBlock storedBlock = knownBlocks.get(hash);
+
+        if (storedBlock != null) {
+            return storedBlock;
+        }
+
+        byte[] ba = repository.getStorageBytes(contractAddress, new DataWord(hash.toString()));
+
+        if (ba==null) {
+            return null;
+        }
+
+        storedBlock = byteArrayToStoredBlock(ba);
+
+        knownBlocks.put(hash, storedBlock);
+
         return storedBlock;
     }
 
