@@ -40,7 +40,8 @@ import java.util.Map;
 public class RepositoryBlockStore implements UldBlockstoreWithCache{
 
     public static final String BLOCK_STORE_CHAIN_HEAD_KEY = "blockStoreChainHead";
-    private static final int MAX_SIZE_MAP_STORED_BLOCKS = 8000;
+    // power of 2 size that contains enough hashes to handle one year of hashes
+    private static final int MAX_SIZE_MAP_STORED_BLOCKS = 65535;
     private static Map<Sha256Hash, StoredBlock> knownBlocks = new MaxSizeHashMap<>(MAX_SIZE_MAP_STORED_BLOCKS);
 
     private final Repository repository;
