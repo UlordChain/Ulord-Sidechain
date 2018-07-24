@@ -82,7 +82,6 @@ uscj-core/keyfiletest.txt
 uscj-core/libs/gradle-witness.jar
 #uscj-core/libs/usc-gradle-witness.jar
 gradle/wrapper/gradle-wrapper.jar
-uscj-core/ulordj-thin/*
 
 #Classes
 classes/
