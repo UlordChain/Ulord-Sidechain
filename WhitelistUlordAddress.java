@@ -37,8 +37,15 @@ public class WhitelistUlordAddress {
     private static NetworkParameters params;
     public static void main(String[] args) {
 
+        try {
+            System.out.println(Integer.decode(new JSONObject(UscRpc.getUldBlockChainBestChainHeight()).getString("result")));
+        } catch ( IOException e) {
+
+        }
+
         if(args.length < 2) {
             System.out.println("<Ulord address to whitelist> <Max value in Satoshi>");
+            return;
         }
 
         FederationConfigLoader configLoader = new FederationConfigLoader();
@@ -144,9 +151,10 @@ public class WhitelistUlordAddress {
 
         while (!Utils.isTransactionMined(txId)) {
             Thread.sleep(1000 * 15); // Sleep to stop flooding rpc requests.
-            if (!Utils.isTransactionInMemPool(txId))
-                if(!sendTx(whitelistAuthorisedAddress, data, --tries))
-                    return false;
+            if (!Utils.isTransactionMined(txId)) // Check again because the transaction might have been mined after 15 seconds
+                if (!Utils.isTransactionInMemPool(txId))
+                    if(!sendTx(whitelistAuthorisedAddress, data, --tries))
+                        return false;
         }
         return true;
     }

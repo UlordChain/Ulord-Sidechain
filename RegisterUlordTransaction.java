@@ -242,9 +242,10 @@ public class RegisterUlordTransaction {
 
         while (!Utils.isTransactionMined(txId)) {
             Thread.sleep(1000 * 15); // Sleep to stop flooding rpc requests.
-            if (!Utils.isTransactionInMemPool(txId))
-                if(!sendTx(changeAuthorizedAddress, utTxId, data, --tries))
-                    return false;
+            if (!Utils.isTransactionMined(txId)) // Check again because the transaction might have been mined after 15 seconds
+                if (!Utils.isTransactionInMemPool(txId))
+                    if(!sendTx(changeAuthorizedAddress, utTxId, data, --tries))
+                        return false;
         }
         return true;
     }

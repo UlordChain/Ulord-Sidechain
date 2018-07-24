@@ -116,4 +116,9 @@ public class DataDecoder {
         Object[] objects = Bridge.GET_RETIRING_FEDERATION_THRESHOLD.decodeResult(Hex.decode(getResult(response)));
         return Integer.valueOf(objects[0].toString());
     }
+
+    public static Integer decodeGetUldBlockChainBestChainHeight(String response) {
+        Object[] objects = Bridge.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT.decodeResult(Hex.decode(getResult(response)));
+        return Integer.valueOf(objects[0].toString());
+    }
 }

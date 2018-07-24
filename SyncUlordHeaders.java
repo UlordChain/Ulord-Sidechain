@@ -38,10 +38,12 @@ import static tools.Utils.*;
 public class SyncUlordHeaders implements Runnable{
 
     NetworkParameters params;
-    String federationChangeAuthorizedAddress;
-    String federationChangeAuthorizedPassword;
+    private String federationChangeAuthorizedAddress;
+    private String federationChangeAuthorizedPassword;
+    private BridgeConstants bridgeConstants;
 
     public SyncUlordHeaders(BridgeConstants bridgeConstants, String authorizedAddress, String password){
+        this.bridgeConstants = bridgeConstants;
         if(bridgeConstants instanceof BridgeTestNetConstants)
             this.params = TestNet3Params.get();
         else if(bridgeConstants instanceof BridgeRegTestConstants)
@@ -75,13 +77,11 @@ public class SyncUlordHeaders implements Runnable{
 
                 //Keep the ulord block headers in USC n blocks behind actual Ulord block headers.
                 // to avoid ulord chain reorganization.
-                int blockCount;
+                int blockCount = Integer.parseInt(UlordCli.getBlockCount(params));
                 if(params instanceof TestNet3Params)
-                    blockCount = Integer.parseInt(UlordCli.getBlockCount(params)) - 12; // 30 minutes approx
-                else if( params instanceof RegTestParams)
-                    blockCount = Integer.parseInt(UlordCli.getBlockCount(params));
-                else
-                    blockCount = Integer.parseInt(UlordCli.getBlockCount(params)) - 144; // 6 hours approx
+                    blockCount -= 12; // 30 minutes approx
+                else if( params instanceof MainNetParams)
+                    blockCount -= 144; // 6 hours approx
 
                 if((blockCount < startIndex)){
                     Thread.sleep((long)(1000*60*2.5)); //sleep for 2.5min.

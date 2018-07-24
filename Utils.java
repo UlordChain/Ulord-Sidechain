@@ -61,16 +61,12 @@ public class Utils {
     public static boolean isTransactionInMemPool(String txId) {
         try {
             JSONObject jsonObj = new JSONObject(UscRpc.getTransactionByHash(txId));
-            if(jsonObj.toString().contains("error")) {
-                System.out.println(jsonObj.toString());
-                return false;
-            }
             String result = jsonObj.get("result").toString();
             if(result.equals("null"))
                 return false;
+
             return true;
         } catch(Exception ex){
-            System.out.println(ex);
             return false;
         }
     }
@@ -78,19 +74,13 @@ public class Utils {
     public static boolean isTransactionMined(String txId) {
         try {
             JSONObject jsonObj = new JSONObject(UscRpc.getTransactionByHash(txId));
-            if(jsonObj.toString().contains("error")) {
-                System.out.println(jsonObj.toString());
-                return false;
-            }
-
             String result = jsonObj.getJSONObject("result").get("blockNumber").toString();
 
-            if(!result.equals("null"))
-                return true;
+            if(result.equals("null"))
+                return false;
 
-            return false;
-        }catch(Exception ex){
-            System.out.println(ex);
+            return true;
+        } catch(Exception ex){
             return false;
         }
     }

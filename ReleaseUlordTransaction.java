@@ -270,9 +270,10 @@ public class ReleaseUlordTransaction {
 
         while (!Utils.isTransactionMined(txId)) {
             Thread.sleep(1000 * 15); // Sleep to stop flooding rpc requests.
-            if (!Utils.isTransactionInMemPool(txId))
-                if(!sendTx(signatures, key, uscTxHash, federationAuthorizedAddress,--tries))
-                    return false;
+            if (!Utils.isTransactionMined(txId)) // Check again because the transaction might have been mined after 15 seconds
+                if (!Utils.isTransactionInMemPool(txId))
+                    if(!sendTx(signatures, key, uscTxHash, federationAuthorizedAddress,--tries))
+                        return false;
         }
         return true;
     }
