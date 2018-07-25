@@ -1,6 +1,10 @@
+/*
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 Usc Development team.
+ */
+
 package co.usc.net.sync;
 
-import co.usc.core.BlockDifficulty;
 import co.usc.net.Status;
 
 import java.time.Clock;
@@ -19,25 +23,6 @@ public class SyncPeerStatus {
 
     public SyncPeerStatus() {
         this.updateActivity();
-    }
-
-    public int peerTotalDifficultyComparator(SyncPeerStatus other) {
-        BlockDifficulty ttd = this.status.getTotalDifficulty();
-        BlockDifficulty otd = other.status.getTotalDifficulty();
-
-        if (ttd == null && otd == null) {
-            return 0;
-        }
-
-        if (ttd == null) {
-            return -1;
-        }
-
-        if (otd == null) {
-            return 1;
-        }
-
-        return ttd.compareTo(otd);
     }
 
     private void updateActivity() {
