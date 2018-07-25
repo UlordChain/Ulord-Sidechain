@@ -36,6 +36,11 @@ public class UlordCli {
         return res;
     }
 
+    public static String getBlockHeaders(NetworkParameters params, String hash, int count, boolean verbose) throws IOException {
+        String res = UlordCliExecutor.execute(getNetworkCommand(params) + " getblockheaders "+ hash + " " + count + " " + verbose);
+        return res;
+    }
+
     public static String getRawTransaction(NetworkParameters params, String txId, boolean jsonFormat) throws IOException {
         int val = jsonFormat == true ? 1 : 0;
         String result = UlordCliExecutor.execute(getNetworkCommand(params) + " getrawtransaction " + txId + " " + val);

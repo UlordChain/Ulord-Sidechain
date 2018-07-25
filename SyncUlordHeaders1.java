@@ -1,9 +1,12 @@
 package tools;
 
+import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeTestNetConstants;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.params.MainNetParams;
 import co.usc.ulordj.params.TestNet3Params;
 import org.ethereum.vm.PrecompiledContracts;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -13,16 +16,17 @@ import java.util.Date;
 
 import static tools.Utils.getMinimumGasPrice;
 
-
 // This is in testing phase. Once enough testing is done this will replace the original SyncUlordHeaders.java file.
 
 public class SyncUlordHeaders1 {
-    private static long SYNC_DURATION = 1000 * 60 * 1; // every minute
-    private static int MAX_BLOCKS_PER_TX = 100;
+
+
+    private static long SYNC_DURATION = 1000 * 60 * 2; // 15 minutes so that other federations can sync together
+    private static BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
     private static NetworkParameters params = TestNet3Params.get();
 
     public static void main(String[] args) {
-        syncUlordHeaders("a13d7dbabac37d9b756f573ecd7c0e652ff043c5","abcd1234");
+        syncUlordHeaders("fd49721ba74f22de151542067a6bad24ae8a676f","abd1234");
     }
 
     private static void syncUlordHeaders(String authorizedAddress, String password) {
@@ -31,45 +35,37 @@ public class SyncUlordHeaders1 {
                 int chainHeight = DataDecoder.decodeGetUldBlockChainBestChainHeight(UscRpc.getUldBlockChainBestChainHeight()) + 1;  // Since zero index is genesis
                 int ulordHeight = Integer.parseInt(UlordCli.getBlockCount(params));
 
+                // Keep the ulord block headers in USC n blocks behind actual Ulord block headers.
+                // to avoid ulord chain reorganization.
                 if(params instanceof TestNet3Params)
-                    ulordHeight -= 12;
+                    ulordHeight -= 12;      // 30 minutes approx
                 else if (params instanceof MainNetParams)
-                    ulordHeight -= 144;
+                    ulordHeight -= 144;     // 6 hours approx
 
-                StringBuilder builder = new StringBuilder();
-                String line = null;
-                int counter = 0;
-                for (int i = 0; i < MAX_BLOCKS_PER_TX; ++i) {
-
-                    if((chainHeight + i) > ulordHeight)
-                        break;
-
-                    //getBlockHash gets the block hash for the given height.
-                    line = UlordCli.getBlockHash(params, chainHeight + i);
-
-                    //getBlockHeader gets the block header for the given block hash.
-                    line = UlordCli.getBlockHeader(params, line, false);
-
-                    if (line != null) {
-                        builder.append(line);
-                        builder.append(" ");
-                    }
-                    counter++;
-                }
-
-                if(builder.length() == 0) {
+                if(chainHeight > ulordHeight) {
                     Thread.sleep(SYNC_DURATION);
                     continue;
                 }
 
+                int  nblocks = bridgeConstants.getMaxUldHeadersPerUscBlock();
+                String ulordBlockHash = UlordCli.getBlockHash(params, chainHeight);
+
+                if((chainHeight + nblocks) > ulordHeight)
+                    nblocks = ulordHeight - (chainHeight - 1);
+
+                JSONArray ulordBlockHeaders = new JSONArray(UlordCli.getBlockHeaders(params, ulordBlockHash, nblocks, false));
+
+                String[] headersList = ulordBlockHeaders.toList().toArray(new String[0]);
+
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 Date date = new Date();
 
-                System.out.println(dateFormat.format(date) + ": Syncing ulord headers from " + chainHeight + " to " + (chainHeight + counter - 1));
+                System.out.println(dateFormat.format(date) + ": Syncing ulord headers from " + chainHeight + " to " + (chainHeight + headersList.length - 1));
+
                 // Unlock account
                 UscRpc.unlockAccount(authorizedAddress, password);
 
-                sendSyncUlordHeadersTransaction(authorizedAddress, builder, 1);
+                sendSyncUlordHeadersTransaction(authorizedAddress, headersList, 1);
 
                 System.out.println();
                 Thread.sleep(SYNC_DURATION);
@@ -79,7 +75,7 @@ public class SyncUlordHeaders1 {
         }
     }
 
-    private static boolean sendSyncUlordHeadersTransaction(String authorizedAddress, StringBuilder builder, int tries) throws InterruptedException, IOException {
+    private static boolean sendSyncUlordHeadersTransaction(String authorizedAddress, String[] headers, int tries) throws InterruptedException, IOException {
         if (tries <= 0)
             return false;
 
@@ -89,7 +85,7 @@ public class SyncUlordHeaders1 {
                 "0x0",
                 getMinimumGasPrice(),
                 null,
-                DataEncoder.encodeReceiveHeaders(builder.toString().split(" ")),
+                DataEncoder.encodeReceiveHeaders(headers),
                 null);
 
         JSONObject jsonObject = new JSONObject(sendTransactionResponse);
@@ -103,7 +99,7 @@ public class SyncUlordHeaders1 {
             Thread.sleep(1000 * 15); // Sleep to stop flooding rpc requests.
             if(!Utils.isTransactionMined(txId)) // Check again because the transaction might have been mined after 15 seconds
                 if (!Utils.isTransactionInMemPool(txId))
-                    if(!sendSyncUlordHeadersTransaction(authorizedAddress, builder, --tries))
+                    if(!sendSyncUlordHeadersTransaction(authorizedAddress, headers, --tries))
                         return false;
         }
         return true;
