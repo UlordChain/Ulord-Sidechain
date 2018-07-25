@@ -22,8 +22,8 @@ import co.usc.ulordj.core.Sha256Hash;
 import co.usc.ulordj.core.VarInt;
 
 public class UldTransactionFormatUtils {
-    private static int MIN_BLOCK_HEADER_SIZE = 144;
-    private static int MAX_BLOCK_HEADER_SIZE = 149;
+    private static int MIN_BLOCK_HEADER_SIZE = 140;
+    private static int MAX_BLOCK_HEADER_SIZE = 145;
 
     public static Sha256Hash calculateUldTxHash(byte[] uldTxSerialized) {
         return Sha256Hash.wrapReversed(Sha256Hash.hashTwice(uldTxSerialized));
@@ -34,8 +34,7 @@ public class UldTransactionFormatUtils {
         return inputsCounter.value;
     }
 
-//TODO：
-  /*  public static boolean isBlockHeaderSize(int size) {
+    public static boolean isBlockHeaderSize(int size) {
         return size >= MIN_BLOCK_HEADER_SIZE && size <= MAX_BLOCK_HEADER_SIZE;
-    }*/
+    }
 }
