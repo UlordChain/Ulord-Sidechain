@@ -1,9 +1,11 @@
 package tools;
 
 import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.BridgeTestNetConstants;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.params.MainNetParams;
+import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.params.TestNet3Params;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONArray;
@@ -18,18 +20,32 @@ import static tools.Utils.getMinimumGasPrice;
 
 // This is in testing phase. Once enough testing is done this will replace the original SyncUlordHeaders.java file.
 
-public class SyncUlordHeaders1 {
+public class SyncUlordHeaders1 implements Runnable {
 
+    private long SYNC_DURATION = 1000 * 60 * 2; // 15 minutes so that other federations can sync together
+    private BridgeConstants bridgeConstants;
+    private NetworkParameters params;
+    private String authorizedAddress;
+    private String password;
 
-    private static long SYNC_DURATION = 1000 * 60 * 2; // 15 minutes so that other federations can sync together
-    private static BridgeConstants bridgeConstants = BridgeTestNetConstants.getInstance();
-    private static NetworkParameters params = TestNet3Params.get();
-
-    public static void main(String[] args) {
-        syncUlordHeaders("fd49721ba74f22de151542067a6bad24ae8a676f","abd1234");
+    public SyncUlordHeaders1 (BridgeConstants bridgeConstants, String authorizedAddress, String password) {
+        this.authorizedAddress = authorizedAddress;
+        this.password = password;
+        this.bridgeConstants = bridgeConstants;
+        if(bridgeConstants instanceof BridgeTestNetConstants)
+            this.params = TestNet3Params.get();
+        else if(bridgeConstants instanceof BridgeRegTestConstants)
+            this.params = RegTestParams.get();
+        else
+            this.params = MainNetParams.get();
     }
 
-    private static void syncUlordHeaders(String authorizedAddress, String password) {
+    @Override
+    public void run() {
+        syncUlordHeaders();
+    }
+
+    private void syncUlordHeaders() {
         try {
             while (true) {
                 int chainHeight = DataDecoder.decodeGetUldBlockChainBestChainHeight(UscRpc.getUldBlockChainBestChainHeight()) + 1;  // Since zero index is genesis
@@ -104,4 +120,6 @@ public class SyncUlordHeaders1 {
         }
         return true;
     }
+
+
 }

@@ -80,7 +80,7 @@ public class FederationMain implements Runnable {
                 }
             }
 
-            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders(fedMain.bridgeConstants, fedMain.syncUlordHeadersAddress, fedMain.syncUlordHeadersPassword));
+            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders1(fedMain.bridgeConstants, fedMain.syncUlordHeadersAddress, fedMain.syncUlordHeadersPassword));
             syncUlordHeaders.start();
         }
     }
