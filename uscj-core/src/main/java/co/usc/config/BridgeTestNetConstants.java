@@ -68,7 +68,7 @@ public class BridgeTestNetConstants extends BridgeConstants {
 
         updateBridgeExecutionPeriod = 3 * 60 * 1000; // 3 minutes
 
-        maxUldHeadersPerUscBlock = 500;
+        maxUldHeadersPerUscBlock = 100;
 
         minimumLockTxValue = Coin.valueOf(1000000);
         minimumReleaseTxValue = Coin.valueOf(500000);
