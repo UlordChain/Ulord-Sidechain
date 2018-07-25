@@ -7,7 +7,7 @@ function downloadJar(){
 	if [ ! -d ./uscj-core/libs ]; then
 		mkdir ./uscj-core/libs
 	fi
-	wget https://github.com/UlordChain/ulordj-thin/releases/download/ulordj-thin-0.0.1/ulordj-thin-0.0.1-usc-1-bundled.jar -O ./uscj-core/libs/ulordj-thin-0.0.1-usc-1-bundled.jar 
+	curl -o ./uscj-core/libs/ulordj-thin-0.0.1-usc-1-bundled.jar -L https://github.com/UlordChain/ulordj-thin/releases/download/ulordj-thin-0.0.1/ulordj-thin-0.0.1-usc-1-bundled.jar
 }
 
 function platform() {
@@ -26,4 +26,3 @@ function platform() {
 downloadJar
 
 exit 0
-
