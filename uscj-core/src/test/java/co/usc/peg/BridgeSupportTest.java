@@ -1271,6 +1271,39 @@ public class BridgeSupportTest {
         Assert.assertTrue(provider2.getUldTxHashesAlreadyProcessed().isEmpty());
     }
 
+    @Test(expected = VerificationException.EmptyInputsOrOutputs.class)
+    public void registerUldTransactionWithoutInputs() throws IOException, BlockStoreException {
+        NetworkParameters uldParams = NetworkParameters.fromID(NetworkParameters.ID_REGTEST);
+        UldTransaction noInputsTx = new UldTransaction(uldParams);
+
+        byte[] bits = new byte[1];
+        bits[0] = 0x01;
+        List<Sha256Hash> hashes = new ArrayList<>();
+        hashes.add(noInputsTx.getHash());
+        PartialMerkleTree pmt = new PartialMerkleTree(uldParams, bits, hashes, 1);
+
+        int uldTxHeight = 2;
+
+        BridgeConstants bridgeConstants = mock(BridgeConstants.class);
+        doReturn(uldParams).when(bridgeConstants).getUldParams();
+        StoredBlock storedBlock = mock(StoredBlock.class);
+        doReturn(uldTxHeight - 1).when(storedBlock).getHeight();
+        UldBlockstoreWithCache uldBlockStore = mock(UldBlockstoreWithCache.class);
+        doReturn(storedBlock).when(uldBlockStore).getChainHead();
+
+        BridgeSupport bridgeSupport = new BridgeSupport(
+                mock(TestSystemProperties.class),
+                mock(Repository.class),
+                mock(BridgeEventLogger.class),
+                bridgeConstants,
+                mock(BridgeStorageProvider.class),
+                uldBlockStore,
+                null
+        );
+
+        bridgeSupport.registerUldTransaction(mock(Transaction.class), noInputsTx.ulordSerialize(), uldTxHeight, pmt.ulordSerialize());
+    }
+
     @Test
     public void registerUldTransactionTxNotLockNorReleaseTx() throws BlockStoreException, AddressFormatException, IOException {
         Repository repository = new RepositoryImpl(config);
