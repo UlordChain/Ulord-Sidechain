@@ -1,3 +1,21 @@
+/*
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018  Ulord Core team.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package co.usc.scoring;
 
 import co.usc.net.NodeID;
@@ -20,6 +38,7 @@ import java.util.stream.Collectors;
  * Created by ajlopez on 28/06/2017.
  */
 public class PeerScoringManager {
+    private final PeerScoring.Factory peerScoringFactory;
     private final ScoringCalculator scoringCalculator;
     private final PunishmentCalculator nodePunishmentCalculator;
     private final PunishmentCalculator ipPunishmentCalculator;
@@ -38,11 +57,17 @@ public class PeerScoringManager {
      * Creates and initialize the scoring manager
      * usually only one object per running node
      *
-     * @param nodePeersSize     maximum number of nodes to keep
-     * @param nodeParameters    nodes punishment parameters (@see PunishmentParameters)
-     * @param ipParameters      address punishment parameters
+     * @param peerScoringFactory     creates empty peer scorings
+     * @param nodePeersSize          maximum number of nodes to keep
+     * @param nodeParameters         nodes punishment parameters (@see PunishmentParameters)
+     * @param ipParameters           address punishment parameters
      */
-    public PeerScoringManager(int nodePeersSize, PunishmentParameters nodeParameters, PunishmentParameters ipParameters) {
+    public PeerScoringManager(
+            PeerScoring.Factory peerScoringFactory,
+            int nodePeersSize,
+            PunishmentParameters nodeParameters,
+            PunishmentParameters ipParameters) {
+        this.peerScoringFactory = peerScoringFactory;
         this.scoringCalculator = new ScoringCalculator();
         this.nodePunishmentCalculator = new PunishmentCalculator(nodeParameters);
         this.ipPunishmentCalculator = new PunishmentCalculator(ipParameters);
@@ -67,20 +92,12 @@ public class PeerScoringManager {
     public void recordEvent(NodeID id, InetAddress address, EventType event) {
         synchronized (accessLock) {
             if (id != null) {
-                if (!peersByNodeID.containsKey(id)) {
-                    peersByNodeID.put(id, new PeerScoring());
-                }
-
-                PeerScoring scoring = peersByNodeID.get(id);
+                PeerScoring scoring = peersByNodeID.computeIfAbsent(id, k -> peerScoringFactory.newInstance());
                 recordEvent(scoring, event, this.nodePunishmentCalculator);
             }
 
             if (address != null) {
-                if (!peersByAddress.containsKey(address)) {
-                    peersByAddress.put(address, new PeerScoring());
-                }
-
-                PeerScoring scoring = peersByAddress.get(address);
+                PeerScoring scoring = peersByAddress.computeIfAbsent(address, k -> peerScoringFactory.newInstance());
                 recordEvent(scoring, event, this.ipPunishmentCalculator);
             }
         }
@@ -227,7 +244,7 @@ public class PeerScoringManager {
                 return peersByNodeID.get(id);
             }
 
-            return new PeerScoring();
+            return peerScoringFactory.newInstance();
         }
     }
 
@@ -238,7 +255,7 @@ public class PeerScoringManager {
                 return peersByAddress.get(address);
             }
 
-            return new PeerScoring();
+            return peerScoringFactory.newInstance();
         }
     }
 

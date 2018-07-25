@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018  Ulord Core team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -31,10 +31,7 @@ import co.usc.rpc.modules.personal.PersonalModule;
 import co.usc.rpc.modules.personal.PersonalModuleWalletEnabled;
 import co.usc.rpc.modules.txpool.TxPoolModule;
 import co.usc.rpc.modules.txpool.TxPoolModuleImpl;
-import co.usc.scoring.EventType;
-import co.usc.scoring.PeerScoringInformation;
-import co.usc.scoring.PeerScoringManager;
-import co.usc.scoring.PunishmentParameters;
+import co.usc.scoring.*;
 import co.usc.test.World;
 import org.ethereum.rpc.Simples.SimpleUsc;
 import org.ethereum.rpc.exception.JsonRpcInvalidParamException;
@@ -391,6 +388,12 @@ public class Web3ImplScoringTest {
     }
 
     private static PeerScoringManager createPeerScoringManager() {
-        return new PeerScoringManager(100, new PunishmentParameters(10, 10, 1000), new PunishmentParameters(10, 10, 1000));
+        return new PeerScoringManager(
+                PeerScoring::new,
+                100,
+                new PunishmentParameters(10, 10, 1000),
+                new PunishmentParameters(10, 10, 1000)
+        );
+
     }
 }

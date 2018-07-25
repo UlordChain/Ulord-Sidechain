@@ -39,6 +39,7 @@ import co.usc.rpc.modules.txpool.TxPoolModule;
 import co.usc.rpc.netty.JsonRpcWeb3FilterHandler;
 import co.usc.rpc.netty.JsonRpcWeb3ServerHandler;
 import co.usc.rpc.netty.Web3HttpServer;
+import co.usc.scoring.PeerScoring;
 import co.usc.scoring.PeerScoringManager;
 import co.usc.scoring.PunishmentParameters;
 import co.usc.validators.ProofOfWorkRule;
@@ -93,8 +94,14 @@ public class UscFactory {
         int addressPunishmentIncrement = config.scoringAddressesPunishmentIncrement();
         long addressPunishmentMaximunDuration = config.scoringAddressesPunishmentMaximumDuration();
 
-        return new PeerScoringManager(nnodes, new PunishmentParameters(nodePunishmentDuration, nodePunishmentIncrement,
-                nodePunhishmentMaximumDuration), new PunishmentParameters(addressPunishmentDuration, addressPunishmentIncrement, addressPunishmentMaximunDuration));
+        boolean punishmentEnabled = config.scoringPunishmentEnabled();
+
+        return new PeerScoringManager(
+                () -> new PeerScoring(punishmentEnabled),
+                nnodes,
+                new PunishmentParameters(nodePunishmentDuration, nodePunishmentIncrement, nodePunhishmentMaximumDuration),
+                new PunishmentParameters(addressPunishmentDuration, addressPunishmentIncrement, addressPunishmentMaximunDuration)
+        );
     }
 
     @Bean
