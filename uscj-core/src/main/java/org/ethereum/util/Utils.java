@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 Usc Development team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -219,5 +219,16 @@ public class Utils {
         
         return false;
     }
+
+    public static void validateArrayAllegedSize(byte[] data, int allegedSize, int offset) {
+        validateArrayAllegedSize(data, Math.addExact(allegedSize, offset));
+    }
+
+    public static void validateArrayAllegedSize(byte[] data, int allegedSize) {
+        if (data.length < allegedSize) {
+            throw new IllegalArgumentException("The specified size exceeds the size of the payload");
+        }
+    }
+
 
 }
