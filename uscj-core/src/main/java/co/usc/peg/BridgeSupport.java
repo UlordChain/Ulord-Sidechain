@@ -34,7 +34,7 @@ import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
 import co.usc.peg.utils.BridgeEventLogger;
 import co.usc.peg.utils.UldTransactionFormatUtils;
-//import co.usc.peg.utils.PartialMerkleTreeFormatUtils; //TODO: 
+import co.usc.peg.utils.PartialMerkleTreeFormatUtils;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.tuple.Pair;
 import org.ethereum.core.Block;
@@ -244,10 +244,11 @@ public class BridgeSupport {
             return;
         }
 
-        //check the PMT size  TODO:
-       /* if (!PartialMerkleTreeFormatUtils.hasExpectedSize(pmtSerialized)) {
+        //check the PMT size
+        if (!PartialMerkleTreeFormatUtils.hasExpectedSize(pmtSerialized)) {
+            logger.warn("PartialMerkleTree doesn't have expected size");
             throw new BridgeIllegalArgumentException("PartialMerkleTree doesn't have expected size");
-        }*/
+        }
 
         // Check the tx is in the partial merkle tree
         Sha256Hash merkleRoot;

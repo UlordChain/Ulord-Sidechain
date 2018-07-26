@@ -26,6 +26,7 @@ import co.usc.core.UscAddress;
 import co.usc.panic.PanicProcessor;
 import co.usc.peg.utils.BridgeEventLogger;
 import co.usc.peg.utils.BridgeEventLoggerImpl;
+import co.usc.peg.utils.UldTransactionFormatUtils;
 import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.core.Block;
 import org.ethereum.core.CallTransaction;
@@ -303,10 +304,21 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     {
         logger.trace("receiveHeaders");
 
-        Object[] UldBlockSerializedArray = (Object[]) args[0];
-        UldBlock[] UldBlockArray = new UldBlock[UldBlockSerializedArray.length];
-        for (int i = 0; i < UldBlockSerializedArray.length; i++) {
-            byte[] UldBlockSerialized = (byte[]) UldBlockSerializedArray[i];
+        Object[] uldBlockSerializedArray = (Object[]) args[0];
+
+        // Before going and actually deserializing and calling the underlying function,
+        // check that all block headers passed in are actually block headers doing
+        // a simple size check. If this check fails, just fail.
+        if (Arrays.stream(uldBlockSerializedArray).anyMatch(bytes -> !UldTransactionFormatUtils.isBlockHeaderSize(((byte[])bytes).length))) {
+            // This exception type bypasses bridge teardown, signalling no work done
+            // and preventing the overhead of saving bridge storage
+            logger.warn("Unexpected ULD header(s) received (size mismatch). Aborting processing.");
+            throw new BridgeIllegalArgumentException("Unexpected ULD header(s) received (size mismatch). Aborting processing.");
+        }
+
+        UldBlock[] UldBlockArray = new UldBlock[uldBlockSerializedArray.length];
+        for (int i = 0; i < uldBlockSerializedArray.length; i++) {
+            byte[] UldBlockSerialized = (byte[]) uldBlockSerializedArray[i];
             try {
                 UldBlock header = bridgeConstants.getUldParams().getDefaultSerializer().makeBlock(UldBlockSerialized);
                 UldBlockArray[i] = header;
