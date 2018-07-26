@@ -78,9 +78,9 @@ uscdump.json
 uscj-core/keyfiletest.txt
 
 #GradleJARS
-uscj-core/libs/gradle-witness.jar
-#uscj-core/libs/usc-gradle-witness.jar
+uscj-core/libs/ulordj-thin-0.0.1-usc-1-bundled.jar
 gradle/wrapper/gradle-wrapper.jar
+uscj-core/ulordj-thin
 
 #Classes
 classes/
