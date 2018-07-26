@@ -71,7 +71,7 @@ public class Constants {
 
     private static final UscAddress BURN_ADDRESS = new UscAddress("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
 
-    private static final byte CHAIN_ID = 30;
+    private static final byte CHAIN_ID = 50;
 
     public byte[] fallbackMiningPubKey0 = Hex.decode("048571af74dbb0260f2c643c4793b7daf2b61cabbeb4fd6c3c78c271418ceaa5f51767718768f0eac49f66e06395a2c64dcdd9a0b13fbb10aec971cf4caf2e3fc3");
 

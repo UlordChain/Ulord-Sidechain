@@ -28,7 +28,7 @@ import co.usc.config.BridgeDevNetConstants;
 public class DevNetConfig extends TestNetAfterBridgeSyncConfig {
 
     public static class DevNetConstants extends TestNetConstants {
-        private static final byte CHAIN_ID = 32;
+        private static final byte CHAIN_ID = 52;
         @Override
         public BridgeConstants getBridgeConstants() {
             return BridgeDevNetConstants.getInstance();

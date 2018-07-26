@@ -133,7 +133,7 @@ def generatedResources = "$buildDir/generated-resources"
       }
 }
 
-task generateResources << {
+task generateResources doLast {
     mkdir generatedResources
     def generated = new File(generatedResources, 'build-info.properties')
     def commitHash = gitCommitHash()

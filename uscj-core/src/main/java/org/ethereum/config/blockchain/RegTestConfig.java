@@ -31,7 +31,7 @@ public class RegTestConfig extends GenesisConfig {
     public static class RegTestConstants extends GenesisConstants {
 
         private final BlockDifficulty minimumDifficulty = new BlockDifficulty(BigInteger.valueOf(1));
-        private static final byte CHAIN_ID = 33;
+        private static final byte CHAIN_ID = 53;
 
         @Override
         public BlockDifficulty getFallbackMiningDifficulty() { return BlockDifficulty.ZERO; }
