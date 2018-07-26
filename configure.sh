@@ -8,6 +8,7 @@ function downloadJar(){
 		mkdir ./uscj-core/libs
 	fi
 	curl -o ./uscj-core/libs/ulordj-thin-0.0.1-usc-1-bundled.jar -L https://github.com/UlordChain/ulordj-thin/releases/download/ulordj-thin-0.0.1/ulordj-thin-0.0.1-usc-1-bundled.jar
+	curl -o ./gradle/wrapper/gradle-wrapper.jar -Lhttps://deps.rsklabs.io/gradle-wrapper.jar
 }
 
 function platform() {
