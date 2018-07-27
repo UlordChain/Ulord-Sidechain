@@ -142,7 +142,6 @@ public class Remasc {
         BridgeSupport bridgeSupport = new BridgeSupport(
                 config,
                 processingRepository,
-                null,
                 PrecompiledContracts.BRIDGE_ADDR,
                 processingBlock
         );
