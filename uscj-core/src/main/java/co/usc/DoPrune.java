@@ -30,6 +30,7 @@ import org.ethereum.cli.CLIInterface;
 import org.ethereum.config.DefaultConfig;
 import org.ethereum.core.*;
 import org.ethereum.datasource.KeyValueDataSource;
+import org.ethereum.datasource.LevelDbDataSource;
 import org.ethereum.util.BuildInfo;
 import org.ethereum.vm.PrecompiledContracts;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static org.ethereum.datasource.DataSourcePool.closeDataSource;
 import static org.ethereum.datasource.DataSourcePool.levelDbByName;
 
 @Component
@@ -87,11 +89,13 @@ public class DoPrune {
         logger.info("Blockchain height {}", height);
 
         TrieImpl source = new TrieImpl(new TrieStoreImpl(levelDbByName(this.uscSystemProperties, dataSourceName)), true);
-        KeyValueDataSource targetDataSource = levelDbByName(this.uscSystemProperties, dataSourceName + "B");
+        String targetDataSourceName = dataSourceName + "B";
+        KeyValueDataSource targetDataSource = levelDbByName(this.uscSystemProperties, targetDataSourceName);
         TrieStore targetStore = new TrieStoreImpl(targetDataSource);
 
         this.processBlocks(height - blocksToProcess, source, contractAddress, targetStore);
 
+        closeDataSource(targetDataSourceName);
         targetDataSource.close();
     }
 
