@@ -78,18 +78,18 @@ public class BridgeSupport {
             "rollback"));
 
     private final BridgeConstants bridgeConstants;
-    private final Context uldContext;
-    private final UldBlockstoreWithCache uldBlockStore;
-    private final UldBlockChain uldBlockChain;
     private final BridgeStorageProvider provider;
     private final Repository uscRepository;
     private final UscSystemProperties config;
-
     private final BridgeEventLogger eventLogger;
+
+    private Context uldContext;
+    private UldBlockstoreWithCache uldBlockStore;
+    private UldBlockChain uldBlockChain;
     private org.ethereum.core.Block uscExecutionBlock;
     private StoredBlock initialUldStoredBlock;
 
-    // Used by remasc
+    /*// Used by remasc
     public BridgeSupport(UscSystemProperties config, Repository repository, UscAddress contractAddress, Block uscExecutionBlock) throws IOException, BlockStoreException {
         this.uscRepository = repository;
         this.provider = new BridgeStorageProvider(repository, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
@@ -143,7 +143,131 @@ public class BridgeSupport {
         this.uldBlockChain = uldBlockChain;
         this.uscRepository = repository;
         this.eventLogger = eventLogger;
+    }*/
+
+    // Used by remasc
+    public BridgeSupport(
+            UscSystemProperties config,
+            Repository repository,
+            UscAddress contractAddress,
+            Block uscExecutionBlock) {
+        this(
+                repository,
+                new BridgeStorageProvider(
+                        repository,
+                        contractAddress,
+                        config.getBlockchainConfig().getCommonConstants().getBridgeConstants()
+                ),
+                uscExecutionBlock,
+                config,
+                config.getBlockchainConfig().getCommonConstants().getBridgeConstants(),
+                null
+        );
+        this.uldContext = null;
+        this.uldBlockStore = null;
+        this.uldBlockChain = null;
     }
+
+    // Used by unit tests
+    public BridgeSupport(
+            UscSystemProperties config,
+            Repository repository,
+            BridgeEventLogger eventLogger,
+            BridgeConstants bridgeConstants,
+            BridgeStorageProvider provider,
+            UldBlockstoreWithCache uldBlockStore,
+            UldBlockChain uldBlockChain) {
+        this(
+                repository,
+                provider,
+                null,
+                config,
+                bridgeConstants,
+                eventLogger
+        );
+        this.uldContext = new Context(this.bridgeConstants.getUldParams());
+        this.uldBlockStore = uldBlockStore;
+        this.uldBlockChain = uldBlockChain;
+    }
+
+
+     // Used by bridge
+     public BridgeSupport(
+             UscSystemProperties config,
+             Repository repository,
+             BridgeEventLogger eventLogger,
+             UscAddress contractAddress,
+             Block uscExecutionBlock) throws IOException, BlockStoreException {
+         this(
+                 config,
+                 repository,
+                 eventLogger,
+                 new BridgeStorageProvider(
+                         repository,
+                         contractAddress,
+                         config.getBlockchainConfig().getCommonConstants().getBridgeConstants()
+                 ),
+                 uscExecutionBlock
+         );
+     }
+
+    // Used by unit tests and internal call
+    public BridgeSupport(
+            UscSystemProperties config,
+            Repository repository,
+            BridgeEventLogger eventLogger,
+            BridgeStorageProvider provider,
+            Block uscExecutionBlock) throws IOException, BlockStoreException {
+        this(
+                repository,
+                provider,
+                uscExecutionBlock,
+                config,
+                config.getBlockchainConfig().getCommonConstants().getBridgeConstants(),
+                eventLogger
+        );
+        this.uldContext = new Context(this.bridgeConstants.getUldParams());
+        this.uldBlockStore = buildRepositoryBlockStore();
+        this.uldBlockChain = new UldBlockChain(uldContext, uldBlockStore);
+        this.initialUldStoredBlock = this.getLowestBlock();
+    }
+
+
+    // this constructor has all common parameters, mostly dependencies that aren't instantiated here
+    private BridgeSupport(
+            Repository repository,
+            BridgeStorageProvider provider,
+            Block executionBlock,
+            UscSystemProperties config,
+            BridgeConstants bridgeConstants,
+            BridgeEventLogger eventLogger) {
+        this.uscRepository = repository;
+        this.provider = provider;
+        this.uscExecutionBlock = executionBlock;
+        this.config = config;
+        this.bridgeConstants = bridgeConstants;
+        this.eventLogger = eventLogger;
+    }
+
+
+    private RepositoryBlockStore buildRepositoryBlockStore() throws BlockStoreException, IOException {
+        NetworkParameters uldParams = this.bridgeConstants.getUldParams();
+        RepositoryBlockStore uldBlockStore = new RepositoryBlockStore(
+                this.config,
+                this.uscRepository,
+                PrecompiledContracts.BRIDGE_ADDR
+        );
+        if (uldBlockStore.getChainHead().getHeader().getHash().equals(uldParams.getGenesisBlock().getHash())) {
+            // We are building the blockstore for the first time, so we have not set the checkpoints yet.
+            long time = getActiveFederation().getCreationTime().toEpochMilli();
+            InputStream checkpoints = this.getCheckPoints();
+            if (time > 0 && checkpoints != null) {
+                CheckpointManager.checkpoint(uldParams, checkpoints, uldBlockStore, time);
+            }
+        }
+        return uldBlockStore;
+    }
+
 
     @VisibleForTesting
     InputStream getCheckPoints() {
