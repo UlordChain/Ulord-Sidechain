@@ -140,11 +140,7 @@ public class BridgeUtils {
             return false;
         }
         // This indicates that the tx is a P2PKH transaction which is the only one we support for now
-        if (tx.getInput(0).getScriptSig().getChunks().size() != 2) {
-            logger.warn("[btctx:{}] is not a valid lock tx and won't be processed!", Hex.toHexString(tx.getHash().getBytes()));
-            return false;
-        }
-        return true;
+        return tx.getInput(0).getScriptSig().getChunks().size() == 2;
     }
 
     /**
@@ -175,7 +171,7 @@ public class BridgeUtils {
 
         int valueSentToMeSignum = valueSentToMe.signum();
         if (valueSentToMe.isLessThan(bridgeConstants.getMinimumLockTxValue())) {
-            logger.warn("[uldtx:{}]Someone sent to the federation less than {} satoshis", Hex.toHexString(tx.getHash().getBytes()), bridgeConstants.getMinimumLockTxValue());
+            logger.warn("[uldtx:{}]Someone sent to the federation less than {} satoshis", tx.getHash(), bridgeConstants.getMinimumLockTxValue());
         }
         return (valueSentToMeSignum > 0 && !valueSentToMe.isLessThan(bridgeConstants.getMinimumLockTxValue()));
     }
