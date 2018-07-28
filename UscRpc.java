@@ -31,6 +31,17 @@ public class UscRpc {
         return UscRpcExecutor.execute(cmd);
     }
 
+    public static String getTransactionReceipt(String txId) throws IOException {
+        String cmd = "{" +
+                "\"jsonrpc\":\"2.0\", " +
+                "\"method\":\"eth_getTransactionByHash\", " +
+                "\"id\":\"881\", " +
+                "\"params\":[" +
+                "\"" + txId + "\"" +
+                "]}";
+        return UscRpcExecutor.execute(cmd);
+    }
+
     public static String estimateGas(@Nullable String from,
                                          @Nullable String to,
                                          @Nullable String gas,

@@ -22,7 +22,7 @@ import static tools.Utils.getMinimumGasPrice;
 
 public class SyncUlordHeaders1 implements Runnable {
 
-    private long SYNC_DURATION = 1000 * 60 * 2; // 15 minutes so that other federations can sync together
+    private long SYNC_DURATION = 1000 * 60 * 5; // 5 minutes so that other federations can sync together
     private BridgeConstants bridgeConstants;
     private NetworkParameters params;
     private String authorizedAddress;
@@ -46,8 +46,9 @@ public class SyncUlordHeaders1 implements Runnable {
     }
 
     private void syncUlordHeaders() {
-        try {
-            while (true) {
+
+        while (true) {
+            try {
                 int chainHeight = DataDecoder.decodeGetUldBlockChainBestChainHeight(UscRpc.getUldBlockChainBestChainHeight()) + 1;  // Since zero index is genesis
                 int ulordHeight = Integer.parseInt(UlordCli.getBlockCount(params));
 
@@ -84,10 +85,18 @@ public class SyncUlordHeaders1 implements Runnable {
                 sendSyncUlordHeadersTransaction(authorizedAddress, headersList, 1);
 
                 System.out.println();
-                Thread.sleep(SYNC_DURATION);
+
+            } catch (InterruptedException in) {
+                System.out.println("Sync Ulord headers thread closed " + in);
+            } catch (IOException io) {
+                System.out.println("RPC Exception: " + io);
+            } finally {
+                try {
+                    Thread.sleep(SYNC_DURATION);
+                } catch (InterruptedException iex) {
+                    System.out.println("Sync Ulord headers thread closed " + iex);
+                }
             }
-        } catch (Exception e) {
-            System.out.println(e);
         }
     }
 
