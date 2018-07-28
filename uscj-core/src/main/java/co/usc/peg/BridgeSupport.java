@@ -415,9 +415,9 @@ public class BridgeSupport {
         }
 
         // Check there are at least N blocks on top of the supplied height
-        int headHeight = uldBlockChain.getBestChainHeight();
-        if ((headHeight - height + 1) < bridgeConstants.getUld2UscMinimumAcceptableConfirmations()) {
-            logger.warn("At least " + bridgeConstants.getUld2UscMinimumAcceptableConfirmations() + " confirmations are required, but there are only " + (headHeight - height) + " confirmations");
+        int confirmations = uldBlockChain.getBestChainHeight() - height + 1;
+        if (confirmations < bridgeConstants.getUld2UscMinimumAcceptableConfirmations()) {
+            logger.warn("At least " + bridgeConstants.getUld2UscMinimumAcceptableConfirmations() + " confirmations are required, but there are only " + confirmations + " confirmations");
             return;
         }
 
@@ -439,8 +439,8 @@ public class BridgeSupport {
         // Specific code for lock/release/none txs
         if (BridgeUtils.isLockTx(uldTx, getLiveFederations(), uldContext, bridgeConstants)) {
             logger.debug("This is a lock tx {}", uldTx);
-            Script scriptSig = uldTx.getInput(0).getScriptSig();
-            if (scriptSig.getChunks().size() != 2) {
+            Optional<Script> scriptSig = BridgeUtils.getFirstInputScriptSig(uldTx);
+            if (!scriptSig.isPresent()) {
 			  logger.warn("[uldlock:{}] First input does not spend a Pay-to-PubkeyHash " + uldTx.getInput(0), uldTx.getHash());
               return;
             }
@@ -457,7 +457,7 @@ public class BridgeSupport {
             Coin totalAmount = amountToActive.add(amountToRetiring);
 
             // Get the sender public key
-            byte[] data = scriptSig.getChunks().get(1).data;
+            byte[] data = scriptSig.get().getChunks().get(1).data;
 
             // Tx is a lock tx, check whether the sender is whitelisted
             UldECKey senderUldKey = UldECKey.fromPublicOnly(data);

@@ -21,7 +21,6 @@ package co.usc.peg;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.script.Script;
 import co.usc.ulordj.store.BlockStoreException;
-import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.wallet.Wallet;
 import co.usc.config.BridgeConstants;
 import co.usc.core.UscAddress;
@@ -33,11 +32,12 @@ import org.ethereum.core.Transaction;
 import org.ethereum.vm.PrecompiledContracts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spongycastle.util.encoders.Hex;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Oscar Guindzberg
@@ -130,6 +130,36 @@ public class BridgeUtils {
         }
     }
 
+    /**
+     * Indicates whether a tx is a valid lock tx or not, checking the first input's script sig
+     * @param tx
+     * @return
+     */
+    public static boolean isValidLockTx(UldTransaction tx) {
+        if (tx.getInputs().size() == 0) {
+            return false;
+        }
+        // This indicates that the tx is a P2PKH transaction which is the only one we support for now
+        if (tx.getInput(0).getScriptSig().getChunks().size() != 2) {
+            logger.warn("[btctx:{}] is not a valid lock tx and won't be processed!", Hex.toHexString(tx.getHash().getBytes()));
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Will return a valid scriptsig for the first input
+     * @param tx
+     * @return
+     */
+    public static Optional<Script> getFirstInputScriptSig(UldTransaction tx) {
+        if (!isValidLockTx(tx)) {
+            return Optional.empty();
+        }
+        return Optional.of(tx.getInput(0).getScriptSig());
+    }
+
+
     public static boolean isLockTx(UldTransaction tx, List<Federation> federations, Context uldContext, BridgeConstants bridgeConstants) {
         // First, check tx is not a typical release tx (tx spending from the any of the federation addresses and
         // optionally sending some change to any of the federation addresses)
@@ -145,7 +175,7 @@ public class BridgeUtils {
 
         int valueSentToMeSignum = valueSentToMe.signum();
         if (valueSentToMe.isLessThan(bridgeConstants.getMinimumLockTxValue())) {
-            logger.warn("Someone sent to the federation less than {} satoshis", bridgeConstants.getMinimumLockTxValue());
+            logger.warn("[uldtx:{}]Someone sent to the federation less than {} satoshis", Hex.toHexString(tx.getHash().getBytes()), bridgeConstants.getMinimumLockTxValue());
         }
         return (valueSentToMeSignum > 0 && !valueSentToMe.isLessThan(bridgeConstants.getMinimumLockTxValue()));
     }
