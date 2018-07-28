@@ -37,12 +37,6 @@ public class WhitelistUlordAddress {
     private static NetworkParameters params;
     public static void main(String[] args) {
 
-        try {
-            System.out.println(Integer.decode(new JSONObject(UscRpc.getUldBlockChainBestChainHeight()).getString("result")));
-        } catch ( IOException e) {
-
-        }
-
         if(args.length < 2) {
             System.out.println("<Ulord address to whitelist> <Max value in Satoshi>");
             return;
