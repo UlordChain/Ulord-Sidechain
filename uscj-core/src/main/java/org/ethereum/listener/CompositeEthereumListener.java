@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018  Ulord Core team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,10 +33,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
-
 
 /**
  * @author Roman Mandeleil
@@ -46,10 +43,6 @@ import java.util.function.Consumer;
 public class CompositeEthereumListener implements EthereumListener {
     private static final Logger logger = LoggerFactory.getLogger("events");
     private static final PanicProcessor panicProcessor = new PanicProcessor();
-
-    // Using a single thread executor so we only execute one listener callback at a time.
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
-
 
     // Using a concurrent list
     // (the add and remove methods copy an internal array,
@@ -148,16 +141,12 @@ public class CompositeEthereumListener implements EthereumListener {
 
     private void scheduleListenerCallbacks(Consumer<EthereumListener> callback) {
         for (EthereumListener listener : listeners) {
-            listener.onLongSyncStarted();
-            executor.submit(() -> {
-                try {
-                    callback.accept(listener);
-                } catch (Exception e) {
-                    logger.error("Listener callback failed with exception", e);
-                    panicProcessor.panic("thread", String.format("Listener callback failed with exception %s", e.getMessage()));
-                }
-            });
+            try {
+                callback.accept(listener);
+            } catch (Throwable e) {
+                logger.error("Listener callback failed with exception", e);
+                panicProcessor.panic("thread", String.format("Listener callback failed with exception %s", e.getMessage()));
+            }
         }
     }
-
 }
