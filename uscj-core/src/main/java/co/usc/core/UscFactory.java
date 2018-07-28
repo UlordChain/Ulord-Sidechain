@@ -341,6 +341,11 @@ public class UscFactory {
         return new BlockStore();
     }
 
+    @Bean(name = "compositeEthereumListener")
+    public CompositeEthereumListener getCompositeEthereumListener() {
+        return new CompositeEthereumListener();
+    }
+
     @Bean
     public TransactionGateway getTransactionGateway(
             ChannelManager channelManager,
