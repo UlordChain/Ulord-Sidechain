@@ -42,16 +42,17 @@ public class EventDispatchThread {
 
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
+    private EventDispatchThread() {
+        // utility class can't be instantiated
+    }
+
     public static void invokeLater(final Runnable r) {
-        executor.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    r.run();
-                } catch (Exception e) {
-                    logger.error("EDT task exception", e);
-                    panicProcessor.panic("thread", String.format("EDT task exception %s", e.getMessage()));
-                }
+        executor.submit(() -> {
+            try {
+                r.run();
+            } catch (Exception e) {
+                logger.error("EDT task exception", e);
+                panicProcessor.panic("thread", String.format("EDT task exception %s", e.getMessage()));
             }
         });
     }
