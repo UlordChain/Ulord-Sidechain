@@ -30,6 +30,7 @@ import co.usc.validators.BlockValidationRule;
 import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockIdentifier;
+import org.ethereum.core.TransactionPool;
 import org.ethereum.core.Transaction;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.net.server.ChannelManager;
@@ -58,12 +59,15 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
     private final BlockProcessor blockProcessor;
     private final SyncProcessor syncProcessor;
     private final ChannelManager channelManager;
-    private final TransactionGateway transactionGateway;
+    private final TransactionPool transactionPool;
+    //private final TransactionGateway transactionGateway;
     private final PeerScoringManager peerScoringManager;
     private volatile long lastStatusSent = System.currentTimeMillis();
     private volatile long lastTickSent = System.currentTimeMillis();
 
     private BlockValidationRule blockValidationRule;
+
+    private TransactionNodeInformation transactionNodeInformation;
 
     private LinkedBlockingQueue<MessageTask> queue = new LinkedBlockingQueue<>();
     private Set<Keccak256> receivedMessages = Collections.synchronizedSet(new HashSet<Keccak256>());
@@ -78,7 +82,8 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
                               @Nonnull final BlockProcessor blockProcessor,
                               final SyncProcessor syncProcessor,
                               @Nullable final ChannelManager channelManager,
-                              @Nullable final TransactionGateway transactionGateway,
+                              //@Nullable final TransactionGateway transactionGateway,
+                              @Nullable final TransactionPool transactionPool,
                               final TxHandler txHandler,
                               @Nullable final PeerScoringManager peerScoringManager,
                               @Nonnull BlockValidationRule blockValidationRule) {
@@ -86,8 +91,10 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
         this.channelManager = channelManager;
         this.blockProcessor = blockProcessor;
         this.syncProcessor = syncProcessor;
-        this.transactionGateway = transactionGateway;
+        //this.transactionGateway = transactionGateway;
+        this.transactionPool = transactionPool;
         this.blockValidationRule = blockValidationRule;
+        this.transactionNodeInformation = new TransactionNodeInformation();
         this.txHandler = txHandler;
         this.cleanMsgTimestamp = System.currentTimeMillis();
         this.peerScoringManager = peerScoringManager;
@@ -433,13 +440,32 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
             }
         }
 
- 		List<Transaction> acceptedTxs = transactionGateway.receiveTransactionsFrom(txs, sender.getPeerNodeID());
+ 		//List<Transaction> acceptedTxs = transactionGateway.receiveTransactionsFrom(txs, sender.getPeerNodeID());
+        List<Transaction> acceptedTxs = txHandler.retrieveValidTxs(txs);
+
+        Metrics.processTxsMessage("txsValidated", acceptedTxs, sender.getPeerNodeID());
+        // TODO(mmarquez): Add all this logic to the TxHandler
+        acceptedTxs = transactionPool.addTransactions(acceptedTxs);
 
         Metrics.processTxsMessage("validTxsAddedToTransactionPool", acceptedTxs, sender.getPeerNodeID());
+
+        /* Relay all transactions to peers that don't have them */
+        relayTransactions(sender, acceptedTxs);
+        Metrics.processTxsMessage("validTxsRelayed", acceptedTxs, sender.getPeerNodeID());
 
         Metrics.processTxsMessage("finish", acceptedTxs, sender.getPeerNodeID());
 
         loggerMessageProcess.debug("Tx message process finished after [{}] nano.", System.nanoTime() - start);
+    }
+
+    private void relayTransactions(@Nonnull MessageChannel sender, List<Transaction> acceptedTxs) {
+        for (Transaction tx : acceptedTxs) {
+            Keccak256 txHash = tx.getHash();
+            transactionNodeInformation.addTransactionToNode(txHash, sender.getPeerNodeID());
+            final Set<NodeID> nodesToSkip = new HashSet<>(transactionNodeInformation.getNodesByTransaction(txHash));
+            final Set<NodeID> newNodes = channelManager.broadcastTransaction(tx, nodesToSkip);
+            newNodes.forEach(nodeID -> transactionNodeInformation.addTransactionToNode(txHash, nodeID));
+        }
     }
 
     private void recordEvent(MessageChannel sender, EventType event) {

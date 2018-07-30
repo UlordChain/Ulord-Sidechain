@@ -26,6 +26,7 @@ import org.ethereum.core.Transaction;
 import org.ethereum.listener.EthereumListener;
 
 import java.math.BigInteger;
+import java.util.concurrent.Future;
 
 /**
  * @author Roman Mandeleil
@@ -66,7 +67,8 @@ public interface Ethereum {
      * @param transaction submit transaction to the net, return option to wait for net
      *                    return this transaction as approved
      */
-     void submitTransaction(Transaction transaction);
+     //void submitTransaction(Transaction transaction);
+     Future<Transaction> submitTransaction(Transaction transaction);
 
     /**
      * Calculates a 'reasonable' Gas price based on statistics of the latest transaction's Gas prices
