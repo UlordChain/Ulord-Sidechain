@@ -10,6 +10,8 @@ import co.usc.ulordj.params.TestNet3Params;
 import org.ethereum.vm.PrecompiledContracts;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -22,7 +24,10 @@ import static tools.Utils.getMinimumGasPrice;
 
 public class SyncUlordHeaders1 implements Runnable {
 
-    private long SYNC_DURATION = 1000 * 60 * 5; // 5 minutes so that other federations can sync together
+    private static Logger logger = LoggerFactory.getLogger("SyncUlordHeaders");
+
+    private long SYNC_DURATION_AFTER_BRIDGE_SYNC = (long)(1000 * 60 * 2.5);
+    private long SYNC_DURATION_BEFORE_BRIDGE_SYNC = (long)(1000 * 60 * 8);
     private BridgeConstants bridgeConstants;
     private NetworkParameters params;
     private String authorizedAddress;
@@ -47,6 +52,7 @@ public class SyncUlordHeaders1 implements Runnable {
 
     private void syncUlordHeaders() {
 
+        int nblocks = 0;
         while (true) {
             try {
                 int chainHeight = DataDecoder.decodeGetUldBlockChainBestChainHeight(UscRpc.getUldBlockChainBestChainHeight()) + 1;  // Since zero index is genesis
@@ -60,11 +66,11 @@ public class SyncUlordHeaders1 implements Runnable {
                     ulordHeight -= 144;     // 6 hours approx
 
                 if(chainHeight > ulordHeight) {
-                    Thread.sleep(SYNC_DURATION);
+                    Thread.sleep(1000 * 15);
                     continue;
                 }
 
-                int  nblocks = bridgeConstants.getMaxUldHeadersPerUscBlock();
+                nblocks = bridgeConstants.getMaxUldHeadersPerUscBlock();
                 String ulordBlockHash = UlordCli.getBlockHash(params, chainHeight);
 
                 if((chainHeight + nblocks) > ulordHeight)
@@ -77,24 +83,26 @@ public class SyncUlordHeaders1 implements Runnable {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 Date date = new Date();
 
-                System.out.println(dateFormat.format(date) + ": Syncing ulord headers from " + chainHeight + " to " + (chainHeight + headersList.length - 1));
+                logger.info(dateFormat.format(date) + ": Syncing ulord headers from " + chainHeight + " to " + (chainHeight + headersList.length - 1));
 
                 // Unlock account
                 UscRpc.unlockAccount(authorizedAddress, password);
 
                 sendSyncUlordHeadersTransaction(authorizedAddress, headersList, 1);
 
-                System.out.println();
 
             } catch (InterruptedException in) {
-                System.out.println("Sync Ulord headers thread closed " + in);
+                logger.error("Sync Ulord headers thread closed " + in);
             } catch (IOException io) {
-                System.out.println("RPC Exception: " + io);
+                logger.error("RPC Exception: " + io);
             } finally {
                 try {
-                    Thread.sleep(SYNC_DURATION);
+                    if(nblocks > 25)
+                        Thread.sleep(SYNC_DURATION_BEFORE_BRIDGE_SYNC);
+                    else
+                        Thread.sleep(SYNC_DURATION_AFTER_BRIDGE_SYNC);
                 } catch (InterruptedException iex) {
-                    System.out.println("Sync Ulord headers thread closed " + iex);
+                    logger.error("Sync Ulord headers thread closed " + iex);
                 }
             }
         }
@@ -116,7 +124,7 @@ public class SyncUlordHeaders1 implements Runnable {
         JSONObject jsonObject = new JSONObject(sendTransactionResponse);
         String txId = jsonObject.get("result").toString();
 
-        System.out.println("SyncUlordHeaders Transaction ID: " + txId);
+        logger.info("Transaction ID: " + txId);
 
         Thread.sleep(1000 * 15);
 
@@ -129,6 +137,4 @@ public class SyncUlordHeaders1 implements Runnable {
         }
         return true;
     }
-
-
 }

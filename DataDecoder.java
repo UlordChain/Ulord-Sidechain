@@ -121,4 +121,14 @@ public class DataDecoder {
         Object[] objects = Bridge.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT.decodeResult(Hex.decode(getResult(response)));
         return Integer.valueOf(objects[0].toString());
     }
+
+    public static Boolean decodeIsUldTxHashAlreadyProcessed(String response) {
+        Object[] objects = Bridge.IS_ULD_TX_HASH_ALREADY_PROCESSED.decodeResult(Hex.decode(getResult(response)));
+        return Boolean.valueOf(objects[0].toString());
+    }
+
+    public static Integer decodeGetUldTxHashProcessedHeight(String response) {
+        Object[] objects = Bridge.GET_ULD_TX_HASH_PROCESSED_HEIGHT.decodeResult(Hex.decode(getResult(response)));
+        return Integer.valueOf(objects[0].toString());
+    }
 }

@@ -15,13 +15,14 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.*;
 
 import static tools.Utils.*;
 
 public class FederationMain implements Runnable {
 
-    private static Logger logger = LoggerFactory.getLogger("federation");
+    private static Logger logger = LoggerFactory.getLogger("FederationMain");
 
     private BridgeConstants bridgeConstants;
 
@@ -106,25 +107,21 @@ public class FederationMain implements Runnable {
             try {
                 String res = UscRpc.getFederationAddress();
                 if (res.contains("error")) {
-                    logger.error(res);
-                    System.out.println("getAddressUtxosResponse: " + res);
-                    return;
+                    throw new Exception("Failed to get Federation address: " + res);
                 }
+
                 addresses = new String[1];
                 addresses[0] = DataDecoder.decodeGetFederationAddress(res);
 
                 if(addresses == null) {
-                    logger.error("No Federation address found.");
-                    System.out.println("No Federation address found.");
-                    return;
+                    throw new Exception("No Federation address found.");
                 }
 
                 String getAddressUtxosResponse = UlordCli.getAddressUtxos(params, addresses);
                 if(getAddressUtxosResponse.contains("error")) {
-                    logger.error(getAddressUtxosResponse);
-                    System.out.println(getAddressUtxosResponse);
-                    return;
+                    throw new Exception("Failed to get Federation address UTXOs " + getAddressUtxosResponse);
                 }
+
                 JSONArray jsonArray = new JSONArray(getAddressUtxosResponse);
 
                 for ( String key : processedTxs.keySet() ) {
@@ -144,25 +141,23 @@ public class FederationMain implements Runnable {
                     }
 
                     String data = DataEncoder.encodeIsUldTxHashAlreadyProcessed(txid);
-                    JSONObject jsObj = new JSONObject(UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, data));
-                    logger.info(jsObj.toString());
-                    String result = jsObj.get("result").toString();
+                    String response = UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, data);
+                    boolean processed = DataDecoder.decodeIsUldTxHashAlreadyProcessed(response);
 
-                    if (result.substring(result.length() - 1, result.length()).equals("1")) {
+                    if (processed) {
                         data = DataEncoder.encodeGetUldTxHashProcessedHeight(txid);
-                        jsObj = new JSONObject(UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, data));
+                        response = UscRpc.call(PrecompiledContracts.BRIDGE_ADDR_STR, data);
+                        int uscHeight = DataDecoder.decodeGetUldTxHashProcessedHeight(response);
                         processedTxs.put(txid, true);   // Mark Transaction as processed here as out side this we are still not sure if the transaction was processed successfully
-                        logger.info("Transaction " + txid + " already processed at height: " +  Long.parseLong(jsObj.getString("result").substring(2),16));
-                        System.out.println("Transaction " + txid + " already processed at height: " +  Long.parseLong(jsObj.getString("result").substring(2),16));
+                        logger.info("Ulord Transaction " + txid + " already processed in USC at height: " +  uscHeight );
                         continue;
                     }
 
-                    JSONObject jsonObj = new JSONObject(UscRpc.getUldBlockChainBestChainHeight());
-                    int chainHeadHeight = Integer.decode(jsonObj.get("result").toString());
+                    response = UscRpc.getUldBlockChainBestChainHeight();
+                    int chainHeadHeight = DataDecoder.decodeGetUldBlockChainBestChainHeight(response);
                     int minAcceptableConfirmationHeight = height + bridgeConstants.getUld2UscMinimumAcceptableConfirmations();
                     if (chainHeadHeight < minAcceptableConfirmationHeight) {
-                        logger.info("Supplied transaction minimum acceptable confirmation height: " + minAcceptableConfirmationHeight + " is greater than Chainhead height " + chainHeadHeight);
-                        System.out.println("Supplied transaction minimum acceptable confirmation height: " + minAcceptableConfirmationHeight + " is greater than Chainhead height " + chainHeadHeight);
+                        logger.info("Supplied Ulord transaction minimum acceptable confirmation height: " + minAcceptableConfirmationHeight + " is greater than Chainhead height " + chainHeadHeight);
                         continue;
                     }
 
@@ -172,10 +167,8 @@ public class FederationMain implements Runnable {
                     // TODO: Find a way to return these transactions back to the sender.
 
                     // Here we can register Ulord transactions in USC
-                    //logger.info("Transaction " + txid + " sent to USC");
                     if(!RegisterUlordTransaction.register(bridgeConstants, authorizedAddress, pwd, txid)) {
                         logger.warn("Failed to register transaction: " + txid);
-                        System.out.println("Failed to register transaction: " + txid);
                     }
                 }
 
@@ -188,7 +181,8 @@ public class FederationMain implements Runnable {
                 // Try to unlock account
                 Utils.tryUnlockUscAccount(authorizedAddress, pwd);
 
-                String sendTxResponse = UscRpc.sendTransaction(authorizedAddress,
+                // Update Collections Transaction
+                UscRpc.sendTransaction(authorizedAddress,
                         PrecompiledContracts.BRIDGE_ADDR_STR,
                         "0x0",
                         getMinimumGasPrice(),
@@ -196,20 +190,21 @@ public class FederationMain implements Runnable {
                         DataEncoder.encodeUpdateCollections(),
                         null
                 );
-                logger.info(sendTxResponse);
-                System.out.println("UpdateCollections: " + sendTxResponse);
 
                 // Try to release any pending transaction.
                 ReleaseUlordTransaction.release(bridgeConstants, authorizedAddress, pwd);
 
-                if(params instanceof RegTestParams)
-                    Thread.sleep(1000 * 30 );
-                else
-                    Thread.sleep(1000 * 60 * 5);
             } catch (Exception e) {
-                logger.warn(e.toString());
-                System.out.println("FederationMain: " + e);
-                break;
+                logger.error(e.toString());
+            } finally {
+                try {
+                    if (params instanceof RegTestParams)
+                        Thread.sleep(1000 * 30);
+                    else
+                        Thread.sleep((long) (1000 * 60 * 2.5));
+                } catch (InterruptedException e) {
+                    logger.error("Thread Interrupted: " + e);
+                }
             }
         }
     }

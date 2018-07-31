@@ -47,9 +47,7 @@ import static tools.Utils.*;
 
 public class ReleaseUlordTransaction {
 
-    private static List<UldECKey> federationKeys = new ArrayList<>();
-
-    private static Logger logger = LoggerFactory.getLogger("releaseulordtransaction");
+    private static Logger logger = LoggerFactory.getLogger("ReleaseUlordTransaction");
 
     public static void release(BridgeConstants bridgeConstants, String federationAuthorizedAddress, String pwd) {
 
@@ -81,7 +79,6 @@ public class ReleaseUlordTransaction {
             uscTxsWaitingForSignatures = BridgeSerializationUtils.deserializeMap(rlpList.get(0).getRLPData(), params, false);
 
             logger.info(uscTxsWaitingForSignatures.size() + " transactions waiting for signatures");
-            System.out.println(uscTxsWaitingForSignatures.size() + " transactions waiting for signatures");
 
             if(uscTxsWaitingForSignatures.isEmpty())
                 return;
@@ -119,7 +116,6 @@ public class ReleaseUlordTransaction {
 //                    if(fromAddress != null && toAddress != null) {
 //                        isFromReitingToActiveFederation = true;
 //                        logger.warn("Transaction is a migration Transaction");
-//                        System.out.println("Transaction is a migration Transaction");
 //                    }
 //                }
 //
@@ -138,8 +134,7 @@ public class ReleaseUlordTransaction {
             }
         }
         catch (Exception e) {
-            logger.error(e.toString());
-            System.out.println("ReleaseUlordTransaction: " + e);
+            logger.error("Exception in ReleaseUlordTransaction: " + e.toString());
         }
     }
 
@@ -204,7 +199,6 @@ public class ReleaseUlordTransaction {
                         input .setScriptSig(inputScript);
                         if(!sendTx(signatures, keys.get(k), uscTxHash, federationAuthorizedAddress, 3)) {
                             logger.debug("addSignature transaction failed");
-                            System.out.println("addSignature transaction failed");
                             return;
                         }
                         logger.debug("Tx input {} for tx {} signed.", i, uscTxHash);
@@ -225,17 +219,14 @@ public class ReleaseUlordTransaction {
                 // Transaction Fully signed
                 if(hasEnoughSignatures(utTx)) {
                     logger.info("Tx fully signed {}. Hex: {}", utTx, Hex.toHexString(utTx.ulordSerialize()));
-                    System.out.println("Tx fully signed" + utTx +". Hex: " + Hex.toHexString(utTx.ulordSerialize()));
 
                     // Broadcast Ulord release transaction
                     String res = UlordCli.sendRawTransaction(params, Hex.toHexString(utTx.ulordSerialize()));
                     logger.debug("Ulord Transaction Broadcasted txId: {}",  res);
-                    System.out.println("Ulord Transaction Broadcasted txId: " + res );
                     break;
                 } else {
                     // Add the signature to Ulord Transaction
                     logger.debug("Tx not yet fully signed {}", uscTxHash);
-                    System.out.println("Tx not yet fully signed " + uscTxHash);
                 }
             } catch (IOException ex) {
                 logger.error("getMinimumGasPrice error: " + ex);
@@ -260,11 +251,9 @@ public class ReleaseUlordTransaction {
                 Hex.toHexString(Bridge.ADD_SIGNATURE.encode(key.getPubKey(), signatures, uscTxHash.getBytes())),
                 null
         );
-        logger.info(sendTransactionResponse);
         JSONObject jsonObject = new JSONObject(sendTransactionResponse);
         String txId = jsonObject.get("result").toString();
 
-        System.out.println("Add Signature tx id: " + txId);
         logger.info("Add Signature tx id: {}", txId);
         Thread.sleep(1000 * 15);
 
@@ -326,14 +315,6 @@ public class ReleaseUlordTransaction {
             String publicKey = DataDecoder.decodeGetRetiringFederatorPublicKey(res);
             publicKeys.add(UldECKey.fromPublicOnly(Hex.decode(publicKey)));
         }
-
-//        if(fedSize <= 0) {
-//            // Get Genesis Federation PublicKeys
-//            List<UldECKey> genesisPublicKeys = bridgeConstants.getGenesisFederation().getPublicKeys();
-//            for (int i = 0; i < genesisPublicKeys.size(); i++) {
-//                publicKeys.add(genesisPublicKeys.get(i));
-//            }
-//        }
 
         // Get Active Federation PublicKeys
         fedSize = DataDecoder.decodeGetFederationSize(UscRpc.getFederationSize());

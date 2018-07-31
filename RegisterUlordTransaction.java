@@ -48,12 +48,7 @@ import static tools.Utils.getMinimumGasPrice;
 
 public class RegisterUlordTransaction {
 
-    private static Logger logger = LoggerFactory.getLogger("registerulordtransaction");
-
-//    public static void main(String[]args){
-//        //registerUldTransaction <tx hex> <height> <merkletree>
-//        register(BridgeTestNetConstants.getInstance(), "674f05e1916abc32a38f40aa67ae6b503b565999", "abcd1234", "29ae1e72a00cdc394e52fa8341f9270a63356ff30e66520bfa75d77a5a1216f2");
-//    }
+    private static Logger logger = LoggerFactory.getLogger("RegisterUlordTransaction");
 
     public static boolean register(BridgeConstants bridgeConstants, String authorizedAddress, String pwd, String utTxId) {
         try {
@@ -74,8 +69,7 @@ public class RegisterUlordTransaction {
 
             String getRawTransactionResponse = UlordCli.getRawTransaction(params, utTxId, false);
             if(getRawTransactionResponse.contains("error")) {
-                logger.info(getRawTransactionResponse);
-                System.out.println(getRawTransactionResponse);
+                logger.info("Failed to get raw transaction: " + getRawTransactionResponse);
                 return false;
             }
             UldTransaction tx = new UldTransaction(params, Hex.decode(getRawTransactionResponse));
@@ -86,7 +80,6 @@ public class RegisterUlordTransaction {
                 // If not then the transaction is going to get rejected in BridgeSupport.
                 Script scriptSig = tx.getInput(0).getScriptSig();
                 if (scriptSig.getChunks().size() != 2) {
-                    System.out.println("[uldlock: {" + tx.getHash() + "}] First input does not spend a Pay-to-PubkeyHash " + tx.getInput(0));
                     logger.warn("[uldlock:{}] First input does not spend a Pay-to-PubkeyHash " + tx.getInput(0), tx.getHash());
                     return false;
                 }
@@ -100,15 +93,13 @@ public class RegisterUlordTransaction {
             // Check if there is N block on top of the given transaction in ulord chain
             int blockCount = Integer.parseInt(UlordCli.getBlockCount(params));
             if((blockCount - height) < bridgeConstants.getUld2UscMinimumAcceptableConfirmations()) {
-                System.out.println("No enough confirmations in Ulord for transaction: " + tx.getHash().toString());
                 logger.info("No enough confirmations in Ulord for transaction: " + tx.getHash().toString());
                 return false;
             }
 
             String getBlockResponse = UlordCli.getBlock(params, blockHash, false);
             if(getBlockResponse.contains("error")) {
-                logger.info(getBlockResponse);
-                System.out.println(getBlockResponse);
+                logger.info("Failed to get Ulord block: "  + getBlockResponse);
                 return false;
             }
             UldBlock block = new UldBlock(params, Hex.decode(getBlockResponse));
@@ -120,8 +111,7 @@ public class RegisterUlordTransaction {
             return sendTx(authorizedAddress, utTxId, data, 3);
 
         } catch (Exception e) {
-            logger.error(e.toString());
-            System.out.println("RegisterUlordTransaction: " + e);
+            logger.error("Exception in RegisterUlordTransaction" + e.toString());
             return false;
         }
     }
@@ -231,12 +221,12 @@ public class RegisterUlordTransaction {
         logger.info(sendTransactionResponse);
         JSONObject jsonObject = new JSONObject(sendTransactionResponse);
         if(jsonObject.toString().contains("error")) {
-            System.out.println(sendTransactionResponse);
+            logger.error("Error in send Transaction: " + sendTransactionResponse);
             return false;
         }
         String txId = jsonObject.get("result").toString();
 
-        System.out.println("RegisterUlordTransaction " + utTxId + ", Tx ID: " + txId);
+        logger.info("Registering Ulord Transaction {}, Usc Tx ID: {}", utTxId, txId);
 
         Thread.sleep(1000 * 15);
 
