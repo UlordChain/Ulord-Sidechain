@@ -80,9 +80,10 @@
     <logger name="org.ulordj" level="INFO"/>
     <logger name="metrics" level="INFO"/>
     <logger name="messageProcess" level="INFO"/>
-    <logger name="federation" level="INFO"/>
-    <logger name="releaseulordtransaction" level="INFO"/>
-    <logger name="registerulordtransaction" level="INFO"/>
+    <logger name="FederationMain" level="INFO"/>
+    <logger name="SyncUlordHeaders" level="INFO"/>
+    <logger name="RegisterUlordTransaction" level="INFO"/>
+    <logger name="ReleaseUlordTransaction" level="INFO"/>
 
     <root level="DEBUG">
         <appender-ref ref="stdout"/>
