@@ -790,11 +790,14 @@ public class NodeMessageHandlerTest {
     @Test
     public void processTransactionsMessage() throws UnknownHostException {
         PeerScoringManager scoring = createPeerScoringManager();
-		TransactionGateway transactionGateway = mock(TransactionGateway.class);
+        final SimpleChannelManager channelManager = new SimpleChannelManager();
+        TxHandler txmock = mock(TxHandler.class);
+        TransactionPool state = mock(TransactionPool.class);
+        Mockito.when(state.addTransactions(any())).thenAnswer(i -> i.getArguments()[0]);
         BlockProcessor blockProcessor = mock(BlockProcessor.class);
         Mockito.when(blockProcessor.hasBetterBlockToSync()).thenReturn(false);
 
-        final NodeMessageHandler handler = new NodeMessageHandler(config, blockProcessor, null, null, transactionGateway, null, scoring,
+        final NodeMessageHandler handler = new NodeMessageHandler(config, blockProcessor, null, channelManager, state, txmock, scoring,
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
 
         final SimpleMessageChannel sender = new SimpleMessageChannel();
@@ -803,13 +806,23 @@ public class NodeMessageHandlerTest {
         sender2.setPeerNodeID(new NodeID(new byte[] {2}));
 
         final List<Transaction> txs = TransactionUtils.getTransactions(10);
+        Mockito.when(txmock.retrieveValidTxs(any(List.class))).thenReturn(txs);
         final TransactionsMessage message = new TransactionsMessage(txs);
 
         handler.processMessage(sender, message);
-        Mockito.verify(transactionGateway, times(1)).receiveTransactionsFrom(txs, sender.getPeerNodeID());
+        Assert.assertNotNull(channelManager.getTransactions());
+        Assert.assertEquals(10, channelManager.getTransactions().size());
+        for (int k = 0; k < 10; k++)
+            Assert.assertSame(txs.get(k), channelManager.getTransactions().get(k));
+        Assert.assertNotNull(channelManager.getLastSkip());
+        Assert.assertEquals(1, channelManager.getLastSkip().size());
+        Assert.assertTrue(channelManager.getLastSkip().contains(sender.getPeerNodeID()));
 
 		handler.processMessage(sender2, message);
-        Mockito.verify(transactionGateway, times(1)).receiveTransactionsFrom(txs, sender2.getPeerNodeID());
+        Assert.assertNotNull(channelManager.getLastSkip());
+        Assert.assertEquals(2, channelManager.getLastSkip().size());
+        Assert.assertTrue(channelManager.getLastSkip().contains(sender.getPeerNodeID()));
+        Assert.assertTrue(channelManager.getLastSkip().contains(sender2.getPeerNodeID()));
 
 		Assert.assertFalse(scoring.isEmpty());
 
@@ -832,11 +845,12 @@ public class NodeMessageHandlerTest {
     public void processRejectedTransactionsMessage() throws UnknownHostException {
         PeerScoringManager scoring = createPeerScoringManager();
         final SimpleChannelManager channelManager = new SimpleChannelManager();
-        TransactionGateway transactionGateway = mock(TransactionGateway.class);
+        TxHandler txmock = mock(TxHandler.class);
+        TransactionPool state = mock(TransactionPool.class);
         BlockProcessor blockProcessor = mock(BlockProcessor.class);
         Mockito.when(blockProcessor.hasBetterBlockToSync()).thenReturn(false);
 
-        final NodeMessageHandler handler = new NodeMessageHandler(config, blockProcessor, null, channelManager, transactionGateway, null, scoring,
+        final NodeMessageHandler handler = new NodeMessageHandler(config, blockProcessor, null, channelManager, state, txmock, scoring,
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
 
         final SimpleMessageChannel sender = new SimpleMessageChannel();
@@ -847,6 +861,7 @@ public class NodeMessageHandlerTest {
         handler.processMessage(sender, message);
 
         Assert.assertNotNull(channelManager.getTransactions());
+        Mockito.when(txmock.retrieveValidTxs(any(List.class))).thenReturn(txs);
         Assert.assertEquals(0, channelManager.getTransactions().size());
 
         Assert.assertTrue(scoring.isEmpty());
@@ -863,11 +878,14 @@ public class NodeMessageHandlerTest {
     public void processTooMuchGasTransactionMessage() throws UnknownHostException {
         PeerScoringManager scoring = createPeerScoringManager();
         final SimpleChannelManager channelManager = new SimpleChannelManager();
-        TransactionGateway transactionGateway = mock(TransactionGateway.class);
+        final World world = new World();
+        final Blockchain blockchain = world.getBlockChain();
+        TransactionPool state = mock(TransactionPool.class);
         BlockProcessor blockProcessor = mock(BlockProcessor.class);
         Mockito.when(blockProcessor.hasBetterBlockToSync()).thenReturn(false);
 
-         final NodeMessageHandler handler = new NodeMessageHandler(config, blockProcessor, null, channelManager, transactionGateway, null, scoring,
+        TxHandler txHandler = new TxHandlerImpl(config, mock(CompositeEthereumListener.class), mock(RepositoryImpl.class), blockchain);
+        final NodeMessageHandler handler = new NodeMessageHandler(config, blockProcessor, null, channelManager, state, txHandler, scoring,
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
 
         final SimpleMessageChannel sender = new SimpleMessageChannel();
@@ -917,11 +935,13 @@ public class NodeMessageHandlerTest {
 
     @Test
     public void processTransactionsMessageUsingTransactionPool() throws UnknownHostException {
-        TransactionGateway transactionGateway = mock(TransactionGateway.class);
+        final SimpleTransactionPool transactionPool = new SimpleTransactionPool();
+        final SimpleChannelManager channelManager = new SimpleChannelManager();
+        TxHandler txmock = mock(TxHandler.class);
         BlockProcessor blockProcessor = mock(BlockProcessor.class);
         Mockito.when(blockProcessor.hasBetterBlockToSync()).thenReturn(false);
 
-        final NodeMessageHandler handler = new NodeMessageHandler(config, blockProcessor, null, null, transactionGateway, null, UscMockFactory.getPeerScoringManager(),
+        final NodeMessageHandler handler = new NodeMessageHandler(config, blockProcessor, null, channelManager, transactionPool, txmock, UscMockFactory.getPeerScoringManager(),
                 new ProofOfWorkRule(config).setFallbackMiningEnabled(false));
 
         final SimpleMessageChannel sender = new SimpleMessageChannel();
@@ -930,14 +950,24 @@ public class NodeMessageHandlerTest {
         sender2.setPeerNodeID(new NodeID(new byte[] {2}));
 
         final List<Transaction> txs = TransactionUtils.getTransactions(10);
+        Mockito.when(txmock.retrieveValidTxs(any(List.class))).thenReturn(txs);
         final TransactionsMessage message = new TransactionsMessage(txs);
 
         handler.processMessage(sender, message);
 
-        Mockito.verify(transactionGateway, times(1)).receiveTransactionsFrom(txs, sender.getPeerNodeID());
+        Assert.assertNotNull(channelManager.getTransactions());
+        Assert.assertEquals(10, channelManager.getTransactions().size());
+        for (int k = 0; k < 10; k++)
+            Assert.assertSame(txs.get(k), channelManager.getTransactions().get(k));
+
+        Assert.assertNotNull(channelManager.getLastSkip());
+        Assert.assertEquals(1, channelManager.getLastSkip().size());
+        Assert.assertTrue(channelManager.getLastSkip().contains(sender.getPeerNodeID()));
+        channelManager.setLastSkip(null);
         handler.processMessage(sender2, message);
 
-        Mockito.verify(transactionGateway, times(1)).receiveTransactionsFrom(txs, sender2.getPeerNodeID());
+
+        Assert.assertNull(channelManager.getLastSkip());
     }
 
     @Test

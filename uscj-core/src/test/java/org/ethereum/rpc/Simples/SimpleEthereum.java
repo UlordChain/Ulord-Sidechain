@@ -27,6 +27,7 @@ import org.ethereum.listener.GasPriceTracker;
 
 import javax.annotation.Nonnull;
 import java.math.BigInteger;
+import java.util.concurrent.Future;
 
 /**
  * Created by Ruben Altman on 09/06/2016.
@@ -72,8 +73,9 @@ public class SimpleEthereum implements Ethereum {
     }
 
     @Override
-    public void submitTransaction(Transaction transaction) {
+    public Future<Transaction> submitTransaction(Transaction transaction) {
         tx = transaction;
+        return null;
     }
 
 
