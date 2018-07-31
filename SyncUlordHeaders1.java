@@ -66,7 +66,6 @@ public class SyncUlordHeaders1 implements Runnable {
                     ulordHeight -= 144;     // 6 hours approx
 
                 if(chainHeight > ulordHeight) {
-                    Thread.sleep(1000 * 15);
                     continue;
                 }
 
