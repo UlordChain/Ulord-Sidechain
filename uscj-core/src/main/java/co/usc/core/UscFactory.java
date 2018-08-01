@@ -267,7 +267,7 @@ public class UscFactory {
     }
 
     @Bean
-    public EthHandlerFactoryImpl.UscWireProtocolFactory getRskWireProtocolFactory(PeerScoringManager peerScoringManager,
+    public EthHandlerFactoryImpl.UscWireProtocolFactory getUscWireProtocolFactory(PeerScoringManager peerScoringManager,
                                                                                   MessageHandler messageHandler,
                                                                                   Blockchain blockchain,
                                                                                   UscSystemProperties config,
@@ -332,7 +332,7 @@ public class UscFactory {
         int expirationTimePeerStatus = config.getExpirationTimePeerStatus();
         int maxSkeletonChunks = config.getMaxSkeletonChunks();
         int chunkSize = config.getChunkSize();
-        return new SyncConfiguration(expectedPeers, timeoutWaitingPeers, timeoutWaitingRequest,
+        return new  SyncConfiguration(expectedPeers, timeoutWaitingPeers, timeoutWaitingRequest,
                 expirationTimePeerStatus, maxSkeletonChunks, chunkSize);
     }
 
