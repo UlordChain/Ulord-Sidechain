@@ -43,6 +43,7 @@ import java.util.List;
 public class SnapshotManagerTest {
     private BlockChainImpl blockchain;
     private TransactionPool transactionPool;
+    private SnapshotManager manager;
 
     @Before
     public void setUp() {
@@ -51,22 +52,19 @@ public class SnapshotManagerTest {
         transactionPool = factory.getTransactionPool();
         // don't call start to avoid creating threads
         transactionPool.processBest(blockchain.getBestBlock());
+        manager = new SnapshotManager(blockchain, transactionPool);
     }
 
 
     @Test
     public void createWithNoSnapshot() {
-        SnapshotManager manager = new SnapshotManager();
-
         Assert.assertNotNull(manager.getSnapshots());
         Assert.assertTrue(manager.getSnapshots().isEmpty());
     }
 
     @Test
     public void takeSnapshotOnGenesis() {
-        SnapshotManager manager = new SnapshotManager();
-
-        int result = manager.takeSnapshot(blockchain);
+        int result = manager.takeSnapshot();
 
         Assert.assertEquals(1, result);
 
@@ -80,9 +78,7 @@ public class SnapshotManagerTest {
     public void takeSnapshotOnManyBlocks() {
         addBlocks(blockchain, 10);
 
-        SnapshotManager manager = new SnapshotManager();
-
-        int result = manager.takeSnapshot(blockchain);
+        int result = manager.takeSnapshot();
 
         Assert.assertEquals(1, result);
 
@@ -96,15 +92,13 @@ public class SnapshotManagerTest {
     public void takeTwoSnapshots() {
         addBlocks(blockchain, 10);
 
-        SnapshotManager manager = new SnapshotManager();
-
-        int result1 = manager.takeSnapshot(blockchain);
+        int result1 = manager.takeSnapshot();
 
         Assert.assertEquals(1, result1);
 
         addBlocks(blockchain, 10);
 
-        int result2 = manager.takeSnapshot(blockchain);
+        int result2 = manager.takeSnapshot();
 
         Assert.assertEquals(2, result2);
 
@@ -117,18 +111,14 @@ public class SnapshotManagerTest {
 
     @Test
     public void revertToNegativeSnapshot() {
-        SnapshotManager manager = new SnapshotManager();
-
-        Assert.assertFalse(manager.revertToSnapshot(null, null, -1));
+        Assert.assertFalse(manager.revertToSnapshot(-1));
     }
 
     @Test
     public void revertToNonExistentSnapshot() {
-        SnapshotManager manager = new SnapshotManager();
-
-        Assert.assertFalse(manager.revertToSnapshot(null, null, 0));
-        Assert.assertFalse(manager.revertToSnapshot(null, null, 1));
-        Assert.assertFalse(manager.revertToSnapshot(null, null, 10));
+        Assert.assertFalse(manager.revertToSnapshot(0));
+        Assert.assertFalse(manager.revertToSnapshot(1));
+        Assert.assertFalse(manager.revertToSnapshot(10));
     }
 
     @Test
@@ -137,15 +127,13 @@ public class SnapshotManagerTest {
 
         BlockChainStatus status = blockchain.getStatus();
 
-        SnapshotManager manager = new SnapshotManager();
-
-        int snapshotId = manager.takeSnapshot(blockchain);
+        int snapshotId = manager.takeSnapshot();
 
         addBlocks(blockchain, 20);
 
         Assert.assertEquals(30, blockchain.getStatus().getBestBlockNumber());
 
-        Assert.assertTrue(manager.revertToSnapshot(blockchain, transactionPool, snapshotId));
+        Assert.assertTrue(manager.revertToSnapshot(snapshotId));
 
         BlockChainStatus newStatus = blockchain.getStatus();
 
@@ -163,13 +151,11 @@ public class SnapshotManagerTest {
 
         BlockChainStatus status = blockchain.getStatus();
 
-        SnapshotManager manager = new SnapshotManager();
-
-        int snapshotId = manager.takeSnapshot(blockchain);
+        int snapshotId = manager.takeSnapshot();
 
         addBlocks(blockchain, 20);
 
-        manager.takeSnapshot(blockchain);
+        manager.takeSnapshot();
 
         Assert.assertEquals(2, manager.getSnapshots().size());
 
@@ -185,7 +171,7 @@ public class SnapshotManagerTest {
 
         Assert.assertEquals(30, blockchain.getStatus().getBestBlockNumber());
 
-        Assert.assertTrue(manager.revertToSnapshot(blockchain, transactionPool, snapshotId));
+        Assert.assertTrue(manager.revertToSnapshot(snapshotId));
 
         BlockChainStatus newStatus = blockchain.getStatus();
 
@@ -220,14 +206,13 @@ public class SnapshotManagerTest {
         Assert.assertFalse(transactionPool.getPendingTransactions().isEmpty());
         Assert.assertFalse(transactionPool.getPendingTransactions().isEmpty());
 
-        SnapshotManager manager = new SnapshotManager();
+        manager.takeSnapshot();
 
-        manager.takeSnapshot(blockchain);
         Assert.assertFalse(manager.getSnapshots().isEmpty());
-        Assert.assertTrue(manager.resetSnapshots(blockchain, transactionPool));
+        Assert.assertTrue(manager.resetSnapshots());
         Assert.assertTrue(manager.getSnapshots().isEmpty());
 
-        Assert.assertTrue(manager.resetSnapshots(blockchain, transactionPool));
+        Assert.assertTrue(manager.resetSnapshots());
 
         BlockChainStatus newStatus = blockchain.getStatus();
 
