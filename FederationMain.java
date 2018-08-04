@@ -190,7 +190,7 @@ public class FederationMain implements Runnable {
                 Utils.tryUnlockUscAccount(authorizedAddress, pwd);
 
                 // Update Collections Transaction
-                UscRpc.sendTransaction(authorizedAddress,
+                String updateCollectionsResp = UscRpc.sendTransaction(authorizedAddress,
                         PrecompiledContracts.BRIDGE_ADDR_STR,
                         gas,
                         gasPrice,
@@ -198,6 +198,7 @@ public class FederationMain implements Runnable {
                         DataEncoder.encodeUpdateCollections(),
                         null
                 );
+                logger.info("UpdateCollections Tx Response: " + updateCollectionsResp);
 
                 // Try to release any pending transaction.
                 ReleaseUlordTransaction.release(bridgeConstants, authorizedAddress, pwd, gas, gasPrice);

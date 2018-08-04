@@ -90,15 +90,20 @@ public class SyncUlordHeaders1 implements Runnable {
                 logger.info(dateFormat.format(date) + ": Syncing ulord headers from " + chainHeight + " to " + (chainHeight + headersList.length - 1));
 
                 // Unlock account
-                UscRpc.unlockAccount(authorizedAddress, password);
+                // Try to unlock account
+                if (!Utils.tryUnlockUscAccount(authorizedAddress, password)) {
+                    throw new PrivateKeyNotFoundException();
+                }
 
-                sendSyncUlordHeadersTransaction(authorizedAddress, gas, gasPrice, headersList, 1);
+                sendSyncUlordHeadersTransaction(authorizedAddress, password, gas, gasPrice, headersList, 1);
 
 
             } catch (InterruptedException in) {
                 logger.error("Sync Ulord headers thread closed " + in);
             } catch (IOException io) {
                 logger.error("RPC Exception: " + io);
+            } catch (PrivateKeyNotFoundException e) {
+                logger.error(e.getMessage());
             } finally {
                 try {
                     if(nblocks > 25)
@@ -112,7 +117,7 @@ public class SyncUlordHeaders1 implements Runnable {
         }
     }
 
-    private static boolean sendSyncUlordHeadersTransaction(String authorizedAddress, String gas, String gasPrice, String[] headers, int tries) throws InterruptedException, IOException {
+    private static boolean sendSyncUlordHeadersTransaction(String authorizedAddress, String password, String gas, String gasPrice, String[] headers, int tries) throws InterruptedException, IOException {
         if (tries <= 0)
             return false;
 
@@ -125,10 +130,11 @@ public class SyncUlordHeaders1 implements Runnable {
                 DataEncoder.encodeReceiveHeaders(headers),
                 null);
 
-        JSONObject jsonObject = new JSONObject(sendTransactionResponse);
-        String txId = jsonObject.get("result").toString();
+        logger.info("SyncUlordHeaders Tx Response: " + sendTransactionResponse);
 
-        logger.info("Transaction ID: " + txId);
+        JSONObject jsonObject = new JSONObject(sendTransactionResponse);
+
+        String txId = jsonObject.get("result").toString();
 
         Thread.sleep(1000 * 15);
 
@@ -136,7 +142,7 @@ public class SyncUlordHeaders1 implements Runnable {
             Thread.sleep(1000 * 15); // Sleep to stop flooding rpc requests.
             if(!Utils.isTransactionMined(txId)) // Check again because the transaction might have been mined after 15 seconds
                 if (!Utils.isTransactionInMemPool(txId))
-                    if(!sendSyncUlordHeadersTransaction(authorizedAddress, gas, gasPrice, headers, --tries))
+                    if(!sendSyncUlordHeadersTransaction(authorizedAddress, password, gas, gasPrice, headers, --tries))
                         return false;
         }
         return true;
