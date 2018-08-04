@@ -24,7 +24,7 @@ import static tools.Utils.getMinimumGasPrice;
 
 public class SyncUlordHeaders1 implements Runnable {
 
-    private static Logger logger = LoggerFactory.getLogger("SyncUlordHeaders");
+    private static Logger logger = LoggerFactory.getLogger("Federation.SyncUlordHeaders");
 
     private long SYNC_DURATION_AFTER_BRIDGE_SYNC = (long)(1000 * 60 * 2.5);
     private long SYNC_DURATION_BEFORE_BRIDGE_SYNC = (long)(1000 * 60 * 8);
@@ -32,11 +32,16 @@ public class SyncUlordHeaders1 implements Runnable {
     private NetworkParameters params;
     private String authorizedAddress;
     private String password;
+    private String gas;
+    private String gasPrice;
 
-    public SyncUlordHeaders1 (BridgeConstants bridgeConstants, String authorizedAddress, String password) {
+    public SyncUlordHeaders1 (BridgeConstants bridgeConstants, String authorizedAddress, String password, String gas, String gasPrice) {
         this.authorizedAddress = authorizedAddress;
         this.password = password;
         this.bridgeConstants = bridgeConstants;
+        this.gas = gas;
+        this.gasPrice = gasPrice;
+
         if(bridgeConstants instanceof BridgeTestNetConstants)
             this.params = TestNet3Params.get();
         else if(bridgeConstants instanceof BridgeRegTestConstants)
@@ -87,7 +92,7 @@ public class SyncUlordHeaders1 implements Runnable {
                 // Unlock account
                 UscRpc.unlockAccount(authorizedAddress, password);
 
-                sendSyncUlordHeadersTransaction(authorizedAddress, headersList, 1);
+                sendSyncUlordHeadersTransaction(authorizedAddress, gas, gasPrice, headersList, 1);
 
 
             } catch (InterruptedException in) {
@@ -107,15 +112,15 @@ public class SyncUlordHeaders1 implements Runnable {
         }
     }
 
-    private static boolean sendSyncUlordHeadersTransaction(String authorizedAddress, String[] headers, int tries) throws InterruptedException, IOException {
+    private static boolean sendSyncUlordHeadersTransaction(String authorizedAddress, String gas, String gasPrice, String[] headers, int tries) throws InterruptedException, IOException {
         if (tries <= 0)
             return false;
 
         String sendTransactionResponse = UscRpc.sendTransaction(
                 authorizedAddress,
                 PrecompiledContracts.BRIDGE_ADDR_STR,
-                "0x0",
-                getMinimumGasPrice(),
+                gas,
+                gasPrice,
                 null,
                 DataEncoder.encodeReceiveHeaders(headers),
                 null);
@@ -131,7 +136,7 @@ public class SyncUlordHeaders1 implements Runnable {
             Thread.sleep(1000 * 15); // Sleep to stop flooding rpc requests.
             if(!Utils.isTransactionMined(txId)) // Check again because the transaction might have been mined after 15 seconds
                 if (!Utils.isTransactionInMemPool(txId))
-                    if(!sendSyncUlordHeadersTransaction(authorizedAddress, headers, --tries))
+                    if(!sendSyncUlordHeadersTransaction(authorizedAddress, gas, gasPrice, headers, --tries))
                         return false;
         }
         return true;

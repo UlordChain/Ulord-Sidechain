@@ -48,9 +48,9 @@ import static tools.Utils.getMinimumGasPrice;
 
 public class RegisterUlordTransaction {
 
-    private static Logger logger = LoggerFactory.getLogger("RegisterUlordTransaction");
+    private static Logger logger = LoggerFactory.getLogger("Federation.RegisterUlordTransaction");
 
-    public static boolean register(BridgeConstants bridgeConstants, String authorizedAddress, String pwd, String utTxId) {
+    public static boolean register(BridgeConstants bridgeConstants, String authorizedAddress, String pwd, String gas, String gasPrice, String utTxId) {
         try {
 
             // Try to unlock account
@@ -108,7 +108,7 @@ public class RegisterUlordTransaction {
 
             String data = DataEncoder.encodeRegisterUlordTransaction(tx.ulordSerialize(), height, partialMerkleTree.ulordSerialize());
 
-            return sendTx(authorizedAddress, utTxId, data, 3);
+            return sendTx(authorizedAddress, gas, gasPrice, utTxId, data, 3);
 
         } catch (Exception e) {
             logger.error("Exception in RegisterUlordTransaction" + e.toString());
@@ -212,12 +212,12 @@ public class RegisterUlordTransaction {
         return retiringFederation;
     }
 
-    private static boolean sendTx(String changeAuthorizedAddress, String utTxId,String data, int tries) throws IOException, InterruptedException {
+    private static boolean sendTx(String changeAuthorizedAddress, String gas, String gasPrice, String utTxId,String data, int tries) throws IOException, InterruptedException {
 
         if (tries == 0)
             return false;
 
-        String sendTransactionResponse = UscRpc.sendTransaction(changeAuthorizedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, "0x0", getMinimumGasPrice(), null, data, null);
+        String sendTransactionResponse = UscRpc.sendTransaction(changeAuthorizedAddress, PrecompiledContracts.BRIDGE_ADDR_STR, gas, gasPrice, null, data, null);
         logger.info(sendTransactionResponse);
         JSONObject jsonObject = new JSONObject(sendTransactionResponse);
         if(jsonObject.toString().contains("error")) {
@@ -234,7 +234,7 @@ public class RegisterUlordTransaction {
             Thread.sleep(1000 * 15); // Sleep to stop flooding rpc requests.
             if (!Utils.isTransactionMined(txId)) // Check again because the transaction might have been mined after 15 seconds
                 if (!Utils.isTransactionInMemPool(txId))
-                    if(!sendTx(changeAuthorizedAddress, utTxId, data, --tries))
+                    if(!sendTx(changeAuthorizedAddress, gas, gasPrice, utTxId, data, --tries))
                         return false;
         }
         return true;

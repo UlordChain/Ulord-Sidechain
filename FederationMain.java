@@ -15,14 +15,11 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.*;
-
-import static tools.Utils.*;
 
 public class FederationMain implements Runnable {
 
-    private static Logger logger = LoggerFactory.getLogger("FederationMain");
+    private static Logger logger = LoggerFactory.getLogger("Federation.FederationMain");
 
     private BridgeConstants bridgeConstants;
 
@@ -31,6 +28,9 @@ public class FederationMain implements Runnable {
     private String syncUlordHeadersPassword;
     private String pegAddress;
     private String pegPassword;
+
+    private String gas;
+    private String gasPrice;
 
     private boolean isSyncUlordHeadersEnabled;
     private boolean isPegEnabled;
@@ -49,6 +49,14 @@ public class FederationMain implements Runnable {
         }else {
             bridgeConstants = BridgeMainNetConstants.getInstance();
         }
+
+        this.gas = config.getString("federation.gas");
+        this.gasPrice = config.getString("federation.gasPrice");
+
+        if(!gas.startsWith("0x"))
+            gas = "0x" + gas;
+        if(!gasPrice.startsWith("0x"))
+            gasPrice = "0x" + gasPrice;
 
         this.isSyncUlordHeadersEnabled = config.getString("federation.syncUlordHeaders.enabled").equals("true");
         if(this.isSyncUlordHeadersEnabled) {
@@ -81,7 +89,7 @@ public class FederationMain implements Runnable {
                 }
             }
 
-            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders1(fedMain.bridgeConstants, fedMain.syncUlordHeadersAddress, fedMain.syncUlordHeadersPassword));
+            Thread syncUlordHeaders = new Thread(new SyncUlordHeaders1(fedMain.bridgeConstants, fedMain.syncUlordHeadersAddress, fedMain.syncUlordHeadersPassword, fedMain.gas, fedMain.gasPrice));
             syncUlordHeaders.start();
         }
     }
@@ -167,7 +175,7 @@ public class FederationMain implements Runnable {
                     // TODO: Find a way to return these transactions back to the sender.
 
                     // Here we can register Ulord transactions in USC
-                    if(!RegisterUlordTransaction.register(bridgeConstants, authorizedAddress, pwd, txid)) {
+                    if(!RegisterUlordTransaction.register(bridgeConstants, authorizedAddress, pwd, gas, gasPrice, txid)) {
                         logger.warn("Failed to register transaction: " + txid);
                     }
                 }
@@ -184,15 +192,15 @@ public class FederationMain implements Runnable {
                 // Update Collections Transaction
                 UscRpc.sendTransaction(authorizedAddress,
                         PrecompiledContracts.BRIDGE_ADDR_STR,
-                        "0x0",
-                        getMinimumGasPrice(),
+                        gas,
+                        gasPrice,
                         null,
                         DataEncoder.encodeUpdateCollections(),
                         null
                 );
 
                 // Try to release any pending transaction.
-                ReleaseUlordTransaction.release(bridgeConstants, authorizedAddress, pwd);
+                ReleaseUlordTransaction.release(bridgeConstants, authorizedAddress, pwd, gas, gasPrice);
 
             } catch (Exception e) {
                 logger.error(e.toString());

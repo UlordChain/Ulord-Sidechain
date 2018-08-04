@@ -33,7 +33,7 @@ import static tools.Utils.getMinimumGasPrice;
 
 public class WhitelistUlordAddress {
 
-    private static Logger logger = LoggerFactory.getLogger("whitelistaddress");
+    private static Logger logger = LoggerFactory.getLogger("Federation.WhitelistUlordAddress");
     private static NetworkParameters params;
     public static void main(String[] args) {
 

@@ -47,9 +47,9 @@ import static tools.Utils.*;
 
 public class ReleaseUlordTransaction {
 
-    private static Logger logger = LoggerFactory.getLogger("ReleaseUlordTransaction");
+    private static Logger logger = LoggerFactory.getLogger("Federation.ReleaseUlordTransaction");
 
-    public static void release(BridgeConstants bridgeConstants, String federationAuthorizedAddress, String pwd) {
+    public static void release(BridgeConstants bridgeConstants, String federationAuthorizedAddress, String pwd, String gas, String gasPrice) {
 
         NetworkParameters params = null;
         if(bridgeConstants instanceof BridgeTestNetConstants) {
@@ -129,7 +129,7 @@ public class ReleaseUlordTransaction {
 
                 List<UldECKey> privateKeys = getPrivateKeys(params, bridgeConstants);
 
-                procesSigning(params, privateKeys, utTx, uscTxHash, federationAuthorizedAddress);
+                procesSigning(params, privateKeys, utTx, uscTxHash, federationAuthorizedAddress, gas, gasPrice);
 
             }
         }
@@ -138,7 +138,7 @@ public class ReleaseUlordTransaction {
         }
     }
 
-    private static void procesSigning(NetworkParameters params, List<UldECKey> keys, UldTransaction utTx, Keccak256 uscTxHash, String federationAuthorizedAddress) {
+    private static void procesSigning(NetworkParameters params, List<UldECKey> keys, UldTransaction utTx, Keccak256 uscTxHash, String federationAuthorizedAddress, String gas, String gasPrice) {
 
         for (int k = 0; k < keys.size(); k++) {
 
@@ -197,7 +197,7 @@ public class ReleaseUlordTransaction {
                         int sigIndex = inputScript.getSigInsertionIndex(sighash, keys.get(k));
                         inputScript = ScriptBuilder.updateScriptWithSignature(inputScript, txSigs.get(i).encodeToUlord(), sigIndex, 1, 1);
                         input .setScriptSig(inputScript);
-                        if(!sendTx(signatures, keys.get(k), uscTxHash, federationAuthorizedAddress, 3)) {
+                        if(!sendTx(signatures, keys.get(k), uscTxHash, federationAuthorizedAddress, gas, gasPrice, 3)) {
                             logger.debug("addSignature transaction failed");
                             return;
                         }
@@ -238,6 +238,8 @@ public class ReleaseUlordTransaction {
                                   UldECKey key,
                                   Keccak256 uscTxHash,
                                   String federationAuthorizedAddress,
+                                  String gas,
+                                  String gasPrice,
                                   int tries)
             throws IOException, InterruptedException {
         if (tries <= 0)
@@ -245,8 +247,8 @@ public class ReleaseUlordTransaction {
 
         String sendTransactionResponse = UscRpc.sendTransaction(federationAuthorizedAddress,
                 PrecompiledContracts.BRIDGE_ADDR_STR,
-                "0x0",
-                getMinimumGasPrice(),
+                gas,
+                gasPrice,
                 null,
                 Hex.toHexString(Bridge.ADD_SIGNATURE.encode(key.getPubKey(), signatures, uscTxHash.getBytes())),
                 null
@@ -261,7 +263,7 @@ public class ReleaseUlordTransaction {
             Thread.sleep(1000 * 15); // Sleep to stop flooding rpc requests.
             if (!Utils.isTransactionMined(txId)) // Check again because the transaction might have been mined after 15 seconds
                 if (!Utils.isTransactionInMemPool(txId))
-                    if(!sendTx(signatures, key, uscTxHash, federationAuthorizedAddress,--tries))
+                    if(!sendTx(signatures, key, uscTxHash, federationAuthorizedAddress, gas, gasPrice, --tries))
                         return false;
         }
         return true;
