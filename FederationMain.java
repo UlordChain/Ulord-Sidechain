@@ -19,7 +19,7 @@ import java.util.*;
 
 public class FederationMain implements Runnable {
 
-    private static Logger logger = LoggerFactory.getLogger("Federation.FederationMain");
+    private static Logger logger = LoggerFactory.getLogger("Federation");
 
     private BridgeConstants bridgeConstants;
 

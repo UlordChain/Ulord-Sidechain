@@ -48,7 +48,7 @@ import static tools.Utils.getMinimumGasPrice;
 
 public class RegisterUlordTransaction {
 
-    private static Logger logger = LoggerFactory.getLogger("Federation.RegisterUlordTransaction");
+    private static Logger logger = LoggerFactory.getLogger("Federation");
 
     public static boolean register(BridgeConstants bridgeConstants, String authorizedAddress, String pwd, String gas, String gasPrice, String utTxId) {
         try {

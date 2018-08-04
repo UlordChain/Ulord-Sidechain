@@ -24,7 +24,7 @@ import static tools.Utils.getMinimumGasPrice;
 
 public class SyncUlordHeaders1 implements Runnable {
 
-    private static Logger logger = LoggerFactory.getLogger("Federation.SyncUlordHeaders");
+    private static Logger logger = LoggerFactory.getLogger("Federation");
 
     private long SYNC_DURATION_AFTER_BRIDGE_SYNC = (long)(1000 * 60 * 2.5);
     private long SYNC_DURATION_BEFORE_BRIDGE_SYNC = (long)(1000 * 60 * 8);

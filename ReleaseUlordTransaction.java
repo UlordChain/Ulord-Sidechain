@@ -47,7 +47,7 @@ import static tools.Utils.*;
 
 public class ReleaseUlordTransaction {
 
-    private static Logger logger = LoggerFactory.getLogger("Federation.ReleaseUlordTransaction");
+    private static Logger logger = LoggerFactory.getLogger("Federation");
 
     public static void release(BridgeConstants bridgeConstants, String federationAuthorizedAddress, String pwd, String gas, String gasPrice) {
 
