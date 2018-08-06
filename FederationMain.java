@@ -187,7 +187,9 @@ public class FederationMain implements Runnable {
                 }
 
                 // Try to unlock account
-                Utils.tryUnlockUscAccount(authorizedAddress, pwd);
+                if(!Utils.tryUnlockUscAccount(authorizedAddress, pwd)) {
+                    throw new PrivateKeyNotFoundException();
+                }
 
                 // Update Collections Transaction
                 String updateCollectionsResp = UscRpc.sendTransaction(authorizedAddress,
