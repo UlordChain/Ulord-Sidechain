@@ -125,7 +125,7 @@ public abstract class SystemProperties {
             try (InputStream is = getClass().getResourceAsStream("/version.properties")) {
                 props.load(is);
             }
-            
+
             this.projectVersion = getProjectVersion(props);
             this.projectVersionModifier = getProjectVersionModifier(props);
 

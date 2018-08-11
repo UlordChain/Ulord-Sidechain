@@ -34,7 +34,6 @@ import co.usc.net.Metrics;
 import co.usc.net.discovery.UDPServer;
 import co.usc.net.handler.TxHandler;
 import co.usc.rpc.netty.Web3HttpServer;
-import org.ethereum.cli.CLIInterface;
 import org.ethereum.config.DefaultConfig;
 import org.ethereum.core.*;
 import org.ethereum.net.eth.EthVersion;
@@ -123,7 +122,6 @@ public class Start {
     public void startNode(String[] args) throws Exception {
         logger.info("Starting USC");
 
-        CLIInterface.call(uscSystemProperties, args);
         logger.info("Running {},  core version: {}-{}", uscSystemProperties.genesisInfo(), uscSystemProperties.projectVersion(), uscSystemProperties.projectVersionModifier());
         BuildInfo.printInfo();
 

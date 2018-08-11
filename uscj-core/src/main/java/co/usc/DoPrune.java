@@ -26,7 +26,6 @@ import co.usc.trie.Trie;
 import co.usc.trie.TrieImpl;
 import co.usc.trie.TrieStore;
 import co.usc.trie.TrieStoreImpl;
-import org.ethereum.cli.CLIInterface;
 import org.ethereum.config.DefaultConfig;
 import org.ethereum.core.*;
 import org.ethereum.datasource.KeyValueDataSource;
@@ -78,7 +77,6 @@ public class DoPrune {
         int blocksToProcess = DEFAULT_BLOCKS_TO_PROCESS;
         UscAddress contractAddress = DEFAULT_CONTRACT_ADDRESS;
 
-        CLIInterface.call(uscSystemProperties, args);
         logger.info("Running {},  core version: {}-{}", uscSystemProperties.genesisInfo(), uscSystemProperties.projectVersion(), uscSystemProperties.projectVersionModifier());
         BuildInfo.printInfo();
 
