@@ -122,8 +122,10 @@ public abstract class SystemProperties {
             validateConfig();
 
             Properties props = new Properties();
-            InputStream is = getClass().getResourceAsStream("/version.properties");
-            props.load(is);
+            try (InputStream is = getClass().getResourceAsStream("/version.properties")) {
+                props.load(is);
+            }
+            
             this.projectVersion = getProjectVersion(props);
             this.projectVersionModifier = getProjectVersionModifier(props);
 
