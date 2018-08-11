@@ -117,7 +117,7 @@ public class CLIInterface {
             }
 
             logger.info("Overriding config file with CLI options: " + cliOptions);
-            config.overrideParams(cliOptions);
+            //config.overrideParams(cliOptions);
 
         } catch (Exception e) {
             logger.error("Error parsing command line", e);

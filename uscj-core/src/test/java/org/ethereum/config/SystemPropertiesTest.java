@@ -32,7 +32,7 @@ public class SystemPropertiesTest {
     @Test
     public void punchBindIpTest() {
         TestSystemProperties config = new TestSystemProperties();
-        config.overrideParams("bind.address", "");
+       // config.overrideParams("bind.address", "");
         long st = System.currentTimeMillis();
         InetAddress ip = config.getBindAddress();
         long t = System.currentTimeMillis() - st;
@@ -44,7 +44,7 @@ public class SystemPropertiesTest {
     @Test
     public void externalIpTest() {
         TestSystemProperties config = new TestSystemProperties();
-        config.overrideParams("public.ip", "");
+       // config.overrideParams("public.ip", "");
         long st = System.currentTimeMillis();
         String ip = config.getPublicIp();
         long t = System.currentTimeMillis() - st;
