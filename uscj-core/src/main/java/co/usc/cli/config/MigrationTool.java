@@ -39,7 +39,7 @@ public class MigrationTool {
         );
 
         CliArgs<Migrator.MigratorOptions, Migrator.MigratorFlags> cliArgs = parser.parse(commandLineArgs);
-        
+
         MigratorConfiguration configuration = new MigratorConfiguration(
                 cliArgs.getOptions().get(Migrator.MigratorOptions.INPUT_FILE),
                 cliArgs.getOptions().get(Migrator.MigratorOptions.MIGRATION_FILE),
