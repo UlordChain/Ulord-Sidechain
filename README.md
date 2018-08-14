@@ -37,7 +37,7 @@ Before you can launch IntelliJ IDEA, there is an important step. Browse in your 
 When IntelliJ IDEA is launched you should have a window with different choices.
 
 1. Choose Import project.
-2. Browse in the RskJ downloaded code the file rskj\build.gradle and select it. Click NEXT.
+2. Browse in the USC downloaded code the file usc\build.gradle and select it. Click NEXT.
 3. Within the dialog select Use default gradle wrapper and then click Finish. Keep IntelliJ IDEA opened.
 
 EA Build/Run configuration
@@ -46,9 +46,9 @@ We need to create a new configuration profile to run the node from IDEA. Part of
 Next step is to create a new configuration profile on IDEA, that can be done by clicking on Run -> Edit Configurations. 
 We need to set the following fields
 Main Class: co.usc.Start
-VM Options: -Drsk.conf.file=/path-to-usc-conf/ulord-testnet.conf
+VM Options: -Dusc.conf.file=/path-to-usc-conf/ulord-testnet.conf
 Working directory: /path-to-code/Ulord-Sidechain
 Use classpath of module: uscj-core_main
 
 Congratulations! Now you are ready to build and run the node...
-JRE need to be set as: Default (1.8 - SDK of 'rsk-core_main' module)
+JRE need to be set as: Default (1.8 - SDK of 'usc-core_main' module)
