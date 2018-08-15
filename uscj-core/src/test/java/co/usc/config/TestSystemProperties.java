@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2018 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,12 @@
 
 package co.usc.config;
 
+import co.usc.cli.CliArgs;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
 public class TestSystemProperties extends UscSystemProperties {
-    private static final ConfigLoader TEST_LOADER = new ConfigLoader() {
+    private static final ConfigLoader TEST_LOADER = new ConfigLoader(CliArgs.empty()) {
         /**
          * Cache configurations that don't change so we don't read files multiple times.
          */
@@ -31,7 +32,7 @@ public class TestSystemProperties extends UscSystemProperties {
                 .withFallback(ConfigFactory.load("config/regtest"));
 
         @Override
-        public Config getConfigFromFiles() {
+        public Config getConfig() {
             return TEST_CONFIG;
         }
     };

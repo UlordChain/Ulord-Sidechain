@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -69,12 +69,12 @@ public class UpdateCollectionsTest extends BridgePerformanceTestCase {
     private void updateCollections_buildReleaseTxs(ExecutionStats stats, int numCases) throws IOException {
         final int minUTXOs = 1;
         final int maxUTXOs = 1000;
-        final int minMilliBtc = 1;
-        final int maxMilliBtc = 1000;
+        final int minMilliUld = 1;
+        final int maxMilliUld = 1000;
         final int minReleaseRequests = 1;
         final int maxReleaseRequests = 100;
-        final int minMilliReleaseBtc = 10;
-        final int maxMilliReleaseBtc = 2000;
+        final int minMilliReleaseUld = 10;
+        final int maxMilliReleaseUld = 2000;
 
         final NetworkParameters parameters = NetworkParameters.fromID(NetworkParameters.ID_REGTEST);
         BridgeStorageProviderInitializer storageInitializer = (BridgeStorageProvider provider, Repository repository, int executionIndex) -> {
@@ -85,7 +85,7 @@ public class UpdateCollectionsTest extends BridgePerformanceTestCase {
             try {
                 utxos = provider.getNewFederationUldUTXOs();
             } catch (Exception e) {
-                throw new RuntimeException("Unable to gather active federation btc utxos");
+                throw new RuntimeException("Unable to gather active federation uld utxos");
             }
 
             try {
@@ -101,13 +101,13 @@ public class UpdateCollectionsTest extends BridgePerformanceTestCase {
 
             for (int i = 0; i < numUTXOs; i++) {
                 Sha256Hash hash = Sha256Hash.wrap(HashUtil.sha256(BigInteger.valueOf(rnd.nextLong()).toByteArray()));
-                Coin value = Coin.MILLICOIN.multiply(Helper.randomInRange(minMilliBtc, maxMilliBtc));
+                Coin value = Coin.MILLICOIN.multiply(Helper.randomInRange(minMilliUld, maxMilliUld));
                 utxos.add(new UTXO(hash, 0, value, 1, false, federationScript));
             }
 
             // Generate some release requests to process
             for (int i = 0; i < Helper.randomInRange(minReleaseRequests, maxReleaseRequests); i++) {
-                Coin value = Coin.MILLICOIN.multiply(Helper.randomInRange(minMilliReleaseBtc, maxMilliReleaseBtc));
+                Coin value = Coin.MILLICOIN.multiply(Helper.randomInRange(minMilliReleaseUld, maxMilliReleaseUld));
                 queue.add(new UldECKey().toAddress(parameters), value);
             }
         };
@@ -159,22 +159,22 @@ public class UpdateCollectionsTest extends BridgePerformanceTestCase {
             // Generate some txs waiting for signatures
             Script genesisFederationScript = bridgeConstants.getGenesisFederation().getP2SHScript();
             for (int i = 0; i < Helper.randomInRange(minTxsWaitingForSigs, maxTxsWaitingForSigs); i++) {
-                Keccak256 rskHash = new Keccak256(HashUtil.keccak256(BigInteger.valueOf(rnd.nextLong()).toByteArray()));
-                UldTransaction btcTx = new UldTransaction(networkParameters);
+                Keccak256 uscHash = new Keccak256(HashUtil.keccak256(BigInteger.valueOf(rnd.nextLong()).toByteArray()));
+                UldTransaction uldTx = new UldTransaction(networkParameters);
                 Sha256Hash inputHash = Sha256Hash.wrap(HashUtil.sha256(BigInteger.valueOf(rnd.nextLong()).toByteArray()));
-                btcTx.addInput(inputHash, 0, genesisFederationScript);
-                btcTx.addOutput(Helper.randomCoin(Coin.CENT, minCentOutput, maxCentOutput), new UldECKey());
-                txsWaitingForSignatures.put(rskHash, btcTx);
+                uldTx.addInput(inputHash, 0, genesisFederationScript);
+                uldTx.addOutput(Helper.randomCoin(Coin.CENT, minCentOutput, maxCentOutput), new UldECKey());
+                txsWaitingForSignatures.put(uscHash, uldTx);
             }
 
             // Generate some txs waiting for confirmations
             for (int i = 0; i < Helper.randomInRange(minReleaseTxs, maxReleaseTxs); i++) {
-                UldTransaction btcTx = new UldTransaction(networkParameters);
+                UldTransaction uldTx = new UldTransaction(networkParameters);
                 Sha256Hash inputHash = Sha256Hash.wrap(HashUtil.sha256(BigInteger.valueOf(rnd.nextLong()).toByteArray()));
-                btcTx.addInput(inputHash, 0, genesisFederationScript);
-                btcTx.addOutput(Helper.randomCoin(Coin.CENT, minCentOutput, maxCentOutput), new UldECKey());
+                uldTx.addInput(inputHash, 0, genesisFederationScript);
+                uldTx.addOutput(Helper.randomCoin(Coin.CENT, minCentOutput, maxCentOutput), new UldECKey());
                 long blockNumber = Helper.randomInRange(minBlockNumber, maxBlockNumber);
-                txSet.add(btcTx, blockNumber);
+                txSet.add(uldTx, blockNumber);
             }
         };
 

@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,6 +26,7 @@ import co.usc.config.TestSystemProperties;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageProvider;
 import co.usc.peg.RepositoryBlockStore;
+import co.usc.config.TestSystemProperties;
 import org.ethereum.core.Repository;
 import org.ethereum.vm.PrecompiledContracts;
 import org.junit.Ignore;
@@ -36,18 +37,18 @@ import java.io.IOException;
 @Ignore
 public class UldBlockchainTest extends BridgePerformanceTestCase {
     @Test
-    public void getUldBlockChainBestChainHeight() throws IOException {
+    public void getUldBlockchainBestChainHeight() throws IOException {
         ABIEncoder abiEncoder = (int executionIndex) -> Bridge.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT.encode();
-        ExecutionStats stats = new ExecutionStats("getUldBlockChainBestChainHeight");
-        executeAndAverage("getUldBlockChainBestChainHeight", 200, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
+        ExecutionStats stats = new ExecutionStats("getUldBlockchainBestChainHeight");
+        executeAndAverage("getUldBlockchainBestChainHeight", 200, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
         BridgePerformanceTest.addStats(stats);
     }
 
     @Test
-    public void getUldBlockChainBlockLocator() throws IOException {
+    public void getUldBlockchainBlockLocator() throws IOException {
         ABIEncoder abiEncoder = (int executionIndex) -> Bridge.GET_ULD_BLOCKCHAIN_BLOCK_LOCATOR.encode();
-        ExecutionStats stats = new ExecutionStats("getUldBlockChainBlockLocator");
-        executeAndAverage("getUldBlockChainBlockLocator", 200, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
+        ExecutionStats stats = new ExecutionStats("getUldBlockchainBlockLocator");
+        executeAndAverage("getUldBlockchainBlockLocator", 200, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
         BridgePerformanceTest.addStats(stats);
     }
 
@@ -56,17 +57,17 @@ public class UldBlockchainTest extends BridgePerformanceTestCase {
         final int maxUldBlocks = 2000;
 
         return (BridgeStorageProvider provider, Repository repository, int executionIndex) -> {
-            UldBlockStore UldBlockStore = new RepositoryBlockStore(new TestSystemProperties(), repository, PrecompiledContracts.BRIDGE_ADDR);
-            Context btcContext = new Context(networkParameters);
-            UldBlockChain UldBlockChain;
+            UldBlockStore uldBlockStore = new RepositoryBlockStore(new TestSystemProperties(), repository, PrecompiledContracts.BRIDGE_ADDR);
+            Context uldContext = new Context(networkParameters);
+            UldBlockChain uldBlockChain;
             try {
-                UldBlockChain = new UldBlockChain(btcContext, UldBlockStore);
+                uldBlockChain = new UldBlockChain(uldContext, uldBlockStore);
             } catch (BlockStoreException e) {
-                throw new RuntimeException("Error initializing btc blockchain for tests");
+                throw new RuntimeException("Error initializing uld blockchain for tests");
             }
 
             int blocksToGenerate = Helper.randomInRange(minUldBlocks, maxUldBlocks);
-            Helper.generateAndAddBlocks(UldBlockChain, blocksToGenerate);
+            Helper.generateAndAddBlocks(uldBlockChain, blocksToGenerate);
         };
     }
 

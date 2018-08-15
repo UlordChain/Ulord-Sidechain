@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,6 +27,10 @@ import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageProvider;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.vm.VMPerformanceTest;
+import co.usc.config.TestSystemProperties;
+import co.usc.db.RepositoryImpl;
+import co.usc.db.RepositoryTrackWithBenchmarking;
+import co.usc.test.builders.BlockChainBuilder;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.Repository;
@@ -172,12 +176,12 @@ public abstract class BridgePerformanceTestCase {
             return (int executionIndex) -> randomInRange(min, max);
         }
 
-        public static UldBlock generateAndAddBlocks(UldBlockChain UldBlockChain, int blocksToGenerate) {
-            UldBlock block = UldBlockChain.getChainHead().getHeader();
-            int initialHeight = UldBlockChain.getBestChainHeight();
-            while ((UldBlockChain.getBestChainHeight() - initialHeight) < blocksToGenerate) {
+        public static UldBlock generateAndAddBlocks(UldBlockChain uldBlockChain, int blocksToGenerate) {
+            UldBlock block = uldBlockChain.getChainHead().getHeader();
+            int initialHeight = uldBlockChain.getBestChainHeight();
+            while ((uldBlockChain.getBestChainHeight() - initialHeight) < blocksToGenerate) {
                 block = generateUldBlock(block);
-                UldBlockChain.add(block);
+                uldBlockChain.add(block);
             }
             // Return the last generated block (useful)
             return block;
@@ -200,7 +204,7 @@ public abstract class BridgePerformanceTestCase {
                             UldBlock.BLOCK_VERSION_BIP66,
                             prevBlock.getHash(),
                             merkleRoot,
-                            prevBlock.getTimeSeconds() + (long)2.5,
+                            prevBlock.getTimeSeconds() + 10,
                             UldBlock.EASIEST_DIFFICULTY_TARGET,
                             nonce,
                             txs
@@ -208,7 +212,7 @@ public abstract class BridgePerformanceTestCase {
                     block.verifyHeader();
                     verified = true;
                 } catch (VerificationException e) {
-                    nonce = nonce.add(BigInteger.ONE);
+                    nonce.add(BigInteger.ONE);
                 }
             }
 

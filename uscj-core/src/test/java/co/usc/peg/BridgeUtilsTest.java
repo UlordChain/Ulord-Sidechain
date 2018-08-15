@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,6 +30,8 @@ import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.UscAddress;
 import co.usc.peg.ulord.UscAllowUnconfirmedCoinSelector;
+import co.usc.blockchain.utils.BlockGenerator;
+import co.usc.config.TestSystemProperties;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.core.Block;
 import org.ethereum.core.CallTransaction;
@@ -409,17 +411,17 @@ public class BridgeUtilsTest {
     private void isFreeBridgeTx(boolean expected, UscAddress destinationAddress, byte[] privKeyBytes) {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
 
-        org.ethereum.core.Transaction rskTx = CallTransaction.createCallTransaction(
+        org.ethereum.core.Transaction uscTx = CallTransaction.createCallTransaction(
                 config, 0,
                 1,
                 1,
                 destinationAddress,
                 0,
                 Bridge.UPDATE_COLLECTIONS);
-        rskTx.sign(privKeyBytes);
+        uscTx.sign(privKeyBytes);
 
-        Block rskExecutionBlock = new BlockGenerator().createChildBlock(Genesis.getInstance(config));
-        bridge.init(rskTx, rskExecutionBlock, null, null, null, null);
-        Assert.assertEquals(expected, BridgeUtils.isFreeBridgeTx(config, rskTx, rskExecutionBlock.getNumber()));
+        Block uscExecutionBlock = new BlockGenerator().createChildBlock(Genesis.getInstance(config));
+        bridge.init(uscTx, uscExecutionBlock, null, null, null, null);
+        assertEquals(expected, BridgeUtils.isFreeBridgeTx(config, uscTx, uscExecutionBlock.getNumber()));
     }
 }

@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,10 +19,8 @@
 
 package org.ethereum.config;
 
-import co.usc.config.ConfigLoader;
-import co.usc.config.GasLimitConfig;
-import co.usc.config.MiningConfig;
-import co.usc.config.UscSystemProperties;
+import co.usc.cli.CliArgs;
+import co.usc.config.*;
 import co.usc.core.DifficultyCalculator;
 import co.usc.core.NetworkStateExporter;
 import co.usc.crypto.Keccak256;
@@ -134,8 +132,8 @@ public class DefaultConfig {
     }
 
     @Bean
-    public UscSystemProperties uscSystemProperties() {
-        return new UscSystemProperties(new ConfigLoader());
+    public UscSystemProperties uscSystemProperties(CliArgs<NodeCliOptions, NodeCliFlags> cliArgs) {
+        return new UscSystemProperties(new ConfigLoader(cliArgs));
     }
 
     @Bean
@@ -208,10 +206,12 @@ public class DefaultConfig {
     @Bean
     public PeerExplorer peerExplorer(UscSystemProperties uscConfig) {
         ECKey key = uscConfig.getMyKey();
+        Integer networkId = uscConfig.networkId();
         Node localNode = new Node(key.getNodeId(), uscConfig.getPublicIp(), uscConfig.getPeerPort());
         NodeDistanceTable distanceTable = new NodeDistanceTable(KademliaOptions.BINS, KademliaOptions.BUCKET_SIZE, localNode);
         long msgTimeOut = uscConfig.peerDiscoveryMessageTimeOut();
         long refreshPeriod = uscConfig.peerDiscoveryRefreshPeriod();
+        long cleanPeriod = uscConfig.peerDiscoveryCleanPeriod();
         List<String> initialBootNodes = uscConfig.peerDiscoveryIPList();
         List<Node> activePeers = uscConfig.peerActive();
         if(CollectionUtils.isNotEmpty(activePeers)) {
@@ -220,7 +220,7 @@ public class DefaultConfig {
                 initialBootNodes.add(address.getHostName() + ":" + address.getPort());
             }
         }
-        return new PeerExplorer(initialBootNodes, localNode, distanceTable, key, msgTimeOut, refreshPeriod);
+        return new PeerExplorer(initialBootNodes, localNode, distanceTable, key, msgTimeOut, refreshPeriod, cleanPeriod, networkId);
     }
 
     @Bean

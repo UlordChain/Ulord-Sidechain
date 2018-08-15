@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,6 +22,7 @@ import co.usc.core.Coin;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Transaction;
 
+import javax.annotation.Nullable;
 import java.math.BigInteger;
 
 /**
@@ -30,9 +31,17 @@ import java.math.BigInteger;
 public class TxValidatorAccountBalanceValidator implements TxValidatorStep {
 
     @Override
-    public boolean validate(Transaction tx, AccountState state, BigInteger gasLimit, Coin minimumGasPrice, long bestBlockNumber, boolean isFreeTx) {
+    public boolean validate(Transaction tx, @Nullable AccountState state, BigInteger gasLimit, Coin minimumGasPrice, long bestBlockNumber, boolean isFreeTx) {
+        if (isFreeTx) {
+            return true;
+        }
+
+        if (state == null) {
+            return false;
+        }
+
         BigInteger txGasLimit = tx.getGasLimitAsInteger();
         Coin maximumPrice = tx.getGasPrice().multiply(txGasLimit);
-        return isFreeTx || state.getBalance().compareTo(maximumPrice) >= 0;
+        return state.getBalance().compareTo(maximumPrice) >= 0;
     }
 }

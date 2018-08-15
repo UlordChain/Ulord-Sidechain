@@ -2,8 +2,6 @@ package co.usc.net.sync;
 
 import co.usc.net.messages.MessageType;
 import co.usc.net.messages.MessageWithId;
-import co.usc.net.messages.MessageType;
-import co.usc.net.messages.MessageWithId;
 import com.google.common.annotations.VisibleForTesting;
 
 import java.util.HashMap;

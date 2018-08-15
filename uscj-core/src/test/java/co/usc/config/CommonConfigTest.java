@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,7 +19,6 @@
 package co.usc.config;
 
 import co.usc.core.DifficultyCalculator;
-import co.usc.db.RepositoryImpl;
 import co.usc.db.RepositoryImpl;
 import org.ethereum.config.CommonConfig;
 import org.ethereum.core.Repository;

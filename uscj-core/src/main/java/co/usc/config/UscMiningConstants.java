@@ -1,6 +1,6 @@
 /*
- * This file is part of Usc
- * Copyright (C) 2018 Ulord development team.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,7 +20,6 @@ package co.usc.config;
 
 /**
  * Created by ajlopez on 3/3/2016.
- * Update by Ulord development team 2018/04, from rsk_tag to usc_tag
  */
 public class UscMiningConstants {
     public static final byte[] USC_TAG = {'U','S','C','B','L','O','C','K',':'};

@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -92,5 +92,13 @@ public class TypeConverter {
      */
     public static String removeZeroX(String str) {
         return str.substring(2);
+    }
+
+    public static long JSonHexToLong(String x) {
+        if (!x.startsWith("0x")) {
+            throw new NumberFormatException("Incorrect hex syntax");
+        }
+        x = x.substring(2);
+        return Long.parseLong(x, 16);
     }
 }

@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,14 +20,19 @@ package co.usc.peg;
 
 import co.usc.ulordj.core.Address;
 import co.usc.ulordj.core.AddressFormatException;
+import co.usc.ulordj.core.UldECKey;
 import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.params.RegTestParams;
+import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.test.World;
 import co.usc.test.builders.BlockBuilder;
-import org.ethereum.config.BlockchainNetConfig;
+import co.usc.config.TestSystemProperties;
+import co.usc.test.World;
+import co.usc.test.builders.BlockBuilder;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
@@ -49,17 +54,21 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UscForksBridgeTest {
-    private static BlockchainNetConfig blockchainNetConfigOriginal;
+    private static BridgeConstants bridgeConstants;
+    private static ECKey fedECPrivateKey;
     private static TestSystemProperties config;
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         config = new TestSystemProperties();
         config.setBlockchainConfig(new RegTestConfig());
+        bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
+        UldECKey fedULDPrivateKey = ((BridgeRegTestConstants)bridgeConstants).getFederatorPrivateKeys().get(0);
+        fedECPrivateKey = ECKey.fromPrivate(fedULDPrivateKey.getPrivKey());
     }
 
     private Repository repository;
-    private ECKey keyHoldingRSKs;
+    //private ECKey keyHoldingUSCs;
     private ECKey whitelistManipulationKey;
     private Genesis genesis;
     private BlockChainImpl blockChain;
@@ -74,9 +83,9 @@ public class UscForksBridgeTest {
         whitelistManipulationKey = ECKey.fromPrivate(Hex.decode("3890187a3071327cee08467ba1b44ed4c13adb2da0d5ffcc0563c371fa88259c"));
 
         genesis = (Genesis)blockChain.getBestBlock();
-        keyHoldingRSKs = new ECKey();
+        //keyHoldingUSCs = new ECKey();
         co.usc.core.Coin balance = new co.usc.core.Coin(new BigInteger("10000000000000000000"));
-        repository.addBalance(new UscAddress(keyHoldingRSKs.getAddress()), balance);
+        repository.addBalance(new UscAddress(fedECPrivateKey.getAddress()), balance);
         genesis.setStateRoot(repository.getRoot());
         genesis.flushRLP();
 
@@ -84,9 +93,9 @@ public class UscForksBridgeTest {
 
         Transaction whitelistAddressTx = buildWhitelistTx();
         Transaction receiveHeadersTx = buildReceiveHeadersTx();
-        Transaction registerUldTransactionTx = buildRegisterUldTransactionTx();
+        Transaction registerUldtransactionTx = buildRegisterUldTransactionTx();
 
-        blockBase = buildBlock(genesis, whitelistAddressTx, receiveHeadersTx, registerUldTransactionTx);
+        blockBase = buildBlock(genesis, whitelistAddressTx, receiveHeadersTx, registerUldtransactionTx);
         Assert.assertEquals(ImportResult.IMPORTED_BEST, blockChain.tryToConnect(blockBase));
     }
 
@@ -234,11 +243,11 @@ public class UscForksBridgeTest {
         long value = 0;
         BigInteger gasPrice = BigInteger.valueOf(0);
         BigInteger gasLimit = BigInteger.valueOf(1000000);
-        Transaction rskTx = CallTransaction.createCallTransaction(config, nonce, gasPrice.longValue(),
+        Transaction uscTx = CallTransaction.createCallTransaction(config, nonce, gasPrice.longValue(),
                 gasLimit.longValue(), PrecompiledContracts.BRIDGE_ADDR, value,
                 Bridge.ADD_LOCK_WHITELIST_ADDRESS, new Object[]{ "mhxk5q8QdGFoaP4SJ3DPtXjrbxAgxjNm3C", BigInteger.valueOf(Coin.COIN.multiply(4).value) });
-        rskTx.sign(whitelistManipulationKey.getPrivKeyBytes());
-        return rskTx;
+        uscTx.sign(whitelistManipulationKey.getPrivKeyBytes());
+        return uscTx;
     }
 
 
@@ -253,11 +262,11 @@ public class UscForksBridgeTest {
         long value = 0;
         BigInteger gasPrice = BigInteger.valueOf(0);
         BigInteger gasLimit = BigInteger.valueOf(1000000);
-        Transaction rskTx = CallTransaction.createCallTransaction(config, nonce, gasPrice.longValue(),
+        Transaction uscTx = CallTransaction.createCallTransaction(config, nonce, gasPrice.longValue(),
                 gasLimit.longValue(), PrecompiledContracts.BRIDGE_ADDR, value,
                 Bridge.RECEIVE_HEADERS, new Object[]{headerArray});
-        rskTx.sign(keyHoldingRSKs.getPrivKeyBytes());
-        return rskTx;
+        uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
+        return uscTx;
     }
 
     private Transaction buildRegisterUldTransactionTx() {
@@ -271,39 +280,39 @@ public class UscForksBridgeTest {
         long value = 0;
         BigInteger gasPrice = BigInteger.valueOf(0);
         BigInteger gasLimit = BigInteger.valueOf(100000);
-        Transaction rskTx = CallTransaction.createCallTransaction(config, nonce, gasPrice.longValue(),
+        Transaction uscTx = CallTransaction.createCallTransaction(config, nonce, gasPrice.longValue(),
                 gasLimit.longValue(), PrecompiledContracts.BRIDGE_ADDR, value,
                 Bridge.REGISTER_ULD_TRANSACTION, txSerialized, blockHeight, pmtSerialized);
-        rskTx.sign(keyHoldingRSKs.getPrivKeyBytes());
-        return rskTx;
+        uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
+        return uscTx;
 
     }
 
 
     private Transaction buildReleaseTx() throws AddressFormatException {
-        String btcAddressString = "mhoDGMzHHDq2ZD6cFrKV9USnMfpxEtLwGm";
-        Address btcAddress = Address.fromBase58(RegTestParams.get(), btcAddressString);
+        String uldAddressString = "mhoDGMzHHDq2ZD6cFrKV9USnMfpxEtLwGm";
+        Address uldAddress = Address.fromBase58(RegTestParams.get(), uldAddressString);
         long nonce = 2;
         long value = 1000000000000000000l;
         BigInteger gasPrice = BigInteger.valueOf(0);
         BigInteger gasLimit = BigInteger.valueOf(100000);
-        Transaction rskTx = CallTransaction.createCallTransaction(config, nonce, gasPrice.longValue(),
+        Transaction uscTx = CallTransaction.createCallTransaction(config, nonce, gasPrice.longValue(),
                 gasLimit.longValue(), PrecompiledContracts.BRIDGE_ADDR, value,
                 Bridge.RELEASE_ULD);
-        rskTx.sign(keyHoldingRSKs.getPrivKeyBytes());
-        return rskTx;
+        uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
+        return uscTx;
     }
 
     private Transaction buildUpdateCollectionsTx() {
-        long nonce = 0;
+        long nonce = 3;
         long value = 0;
         BigInteger gasPrice = BigInteger.valueOf(0);
         BigInteger gasLimit = BigInteger.valueOf(100000);
-        Transaction rskTx = CallTransaction.createCallTransaction(config, nonce, gasPrice.longValue(),
+        Transaction uscTx = CallTransaction.createCallTransaction(config, nonce, gasPrice.longValue(),
                 gasLimit.longValue(), PrecompiledContracts.BRIDGE_ADDR, value,
                 Bridge.UPDATE_COLLECTIONS);
-        rskTx.sign(new ECKey().getPrivKeyBytes());
-        return rskTx;
+        uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
+        return uscTx;
     }
 
 
@@ -333,15 +342,15 @@ public class UscForksBridgeTest {
     }
 
     private BridgeState callGetStateForDebuggingTx() throws IOException, ClassNotFoundException {
-        Transaction rskTx = CallTransaction.createRawTransaction(config, 0,
+        Transaction uscTx = CallTransaction.createRawTransaction(config, 0,
                 Long.MAX_VALUE,
                 Long.MAX_VALUE,
                 PrecompiledContracts.BRIDGE_ADDR,
                 0,
                 Bridge.GET_STATE_FOR_DEBUGGING.encode(new Object[]{}));
-        rskTx.sign(new byte[32]);
+        uscTx.sign(new byte[32]);
 
-        TransactionExecutor executor = new TransactionExecutor(config, rskTx, 0, blockChain.getBestBlock().getCoinbase(), repository,
+        TransactionExecutor executor = new TransactionExecutor(config, uscTx, 0, blockChain.getBestBlock().getCoinbase(), repository,
                         blockChain.getBlockStore(), null, new ProgramInvokeFactoryImpl(), blockChain.getBestBlock())
                 .setLocalCall(true);
 

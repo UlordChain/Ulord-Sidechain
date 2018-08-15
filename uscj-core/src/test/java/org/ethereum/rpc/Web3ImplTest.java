@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,6 +29,8 @@ import co.usc.net.BlockProcessor;
 import co.usc.net.simples.SimpleBlockProcessor;
 import co.usc.rpc.ExecutionBlockRetriever;
 import co.usc.rpc.Web3UscImpl;
+import co.usc.rpc.modules.debug.DebugModule;
+import co.usc.rpc.modules.debug.DebugModuleImpl;
 import co.usc.rpc.modules.eth.EthModule;
 import co.usc.rpc.modules.eth.EthModuleSolidityDisabled;
 import co.usc.rpc.modules.eth.EthModuleSolidityEnabled;
@@ -88,7 +90,7 @@ public class Web3ImplTest {
 
         String clientVersion = web3.web3_clientVersion();
 
-        Assert.assertTrue("client version is not including rsk!", clientVersion.toLowerCase().contains("rsk"));
+        Assert.assertTrue("client version is not including usc!", clientVersion.toLowerCase().contains("usc"));
     }
 
     @Test
@@ -131,7 +133,7 @@ public class Web3ImplTest {
 
         // Function must apply the Keccak-256 algorithm
         // Result taken from https://emn178.github.io/online-tools/keccak_256.html
-        Assert.assertTrue("hash does not match", result.compareTo("0xc5a423621745e028981617bc22e774031868b50371259b941e6c01bb17626a1f") == 0);
+        Assert.assertTrue("hash does not match", result.compareTo("0x80553b6b348ae45ab8e8bf75e77064818c0a772f13cf8d3a175d3815aec59b56") == 0);
     }
 
     @Test
@@ -251,6 +253,7 @@ public class Web3ImplTest {
         MinerClient minerClient = new SimpleMinerClient();
         PersonalModule personalModule = new PersonalModuleWalletDisabled();
         TxPoolModule txPoolModule = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
+        DebugModule debugModule = new DebugModuleImpl(Web3Mocks.getMockMessageHandler());
         Web3 web3 = new Web3Impl(
                 ethMock,
                 blockchain,
@@ -263,6 +266,8 @@ public class Web3ImplTest {
                 personalModule,
                 null,
                 txPoolModule,
+                null,
+                debugModule,
                 Web3Mocks.getMockChannelManager(),
                 Web3Mocks.getMockRepository(),
                 null,
@@ -956,6 +961,8 @@ public class Web3ImplTest {
                 personalModule,
                 null,
                 null,
+                null,
+                null,
                 Web3Mocks.getMockChannelManager(),
                 Web3Mocks.getMockRepository(),
                 null,
@@ -1259,6 +1266,7 @@ public class Web3ImplTest {
         PersonalModuleWalletEnabled personalModule = new PersonalModuleWalletEnabled(config, eth, wallet, null);
         EthModule ethModule = new EthModule(config, blockchain, null, new ExecutionBlockRetriever(blockchain, null, null), new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, eth, wallet, null));
         TxPoolModule txPoolModule = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
+        DebugModule debugModule = new DebugModuleImpl(Web3Mocks.getMockMessageHandler());
         MinerClient minerClient = new SimpleMinerClient();
         ChannelManager channelManager = new SimpleChannelManager();
         return new Web3UscImpl(
@@ -1271,6 +1279,8 @@ public class Web3ImplTest {
                 personalModule,
                 ethModule,
                 txPoolModule,
+                null,
+                debugModule,
                 channelManager,
                 Web3Mocks.getMockRepository(),
                 null,
@@ -1309,6 +1319,7 @@ public class Web3ImplTest {
         Mockito.when(executor.executeTransaction(Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(res);
         EthModule ethModule = new EthModule(config, blockchain, executor, new ExecutionBlockRetriever(blockchain, null, null), new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, eth, wallet, transactionPool));
         TxPoolModule txPoolModule = new TxPoolModuleImpl(transactionPool);
+        DebugModule debugModule = new DebugModuleImpl(Web3Mocks.getMockMessageHandler());
         MinerClient minerClient = new SimpleMinerClient();
         ChannelManager channelManager = new SimpleChannelManager();
         return new Web3UscImpl(
@@ -1321,6 +1332,8 @@ public class Web3ImplTest {
                 personalModule,
                 ethModule,
                 txPoolModule,
+                null,
+                debugModule,
                 channelManager,
                 Web3Mocks.getMockRepository(),
                 null,
@@ -1347,6 +1360,7 @@ public class Web3ImplTest {
         EthModule ethModule = new EthModule(config, null, null, new ExecutionBlockRetriever(null, null, null), new EthModuleSolidityEnabled(new SolidityCompiler(systemProperties)), null);
         PersonalModule personalModule = new PersonalModuleWalletDisabled();
         TxPoolModule txPoolModule = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
+        DebugModule debugModule = new DebugModuleImpl(Web3Mocks.getMockMessageHandler());
         Web3Impl web3 = new Web3UscImpl(
                 eth,
                 null,
@@ -1357,6 +1371,8 @@ public class Web3ImplTest {
                 personalModule,
                 ethModule,
                 txPoolModule,
+                null,
+                debugModule,
                 Web3Mocks.getMockChannelManager(),
                 Web3Mocks.getMockRepository(),
                 null,
@@ -1397,6 +1413,7 @@ public class Web3ImplTest {
         TransactionPool transactionPool = Web3Mocks.getMockTransactionPool();
         EthModule ethModule = new EthModule(config, blockchain, null, new ExecutionBlockRetriever(blockchain, null, null), new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, eth, wallet, null));
         TxPoolModule txPoolModule = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
+        DebugModule debugModule = new DebugModuleImpl(Web3Mocks.getMockMessageHandler());
         Web3Impl web3 = new Web3UscImpl(
                 eth,
                 blockchain,
@@ -1407,6 +1424,8 @@ public class Web3ImplTest {
                 new PersonalModuleWalletDisabled(),
                 ethModule,
                 txPoolModule,
+                null,
+                debugModule,
                 Web3Mocks.getMockChannelManager(),
                 Web3Mocks.getMockRepository(),
                 null,
@@ -1419,7 +1438,7 @@ public class Web3ImplTest {
                 null
         );
 
-        String contract = "pragma solidity ^0.4.1; contract rsk { function multiply(uint a) returns(uint d) {   return a * 7;   } }";
+        String contract = "pragma solidity ^0.4.1; contract usc { function multiply(uint a) returns(uint d) {   return a * 7;   } }";
 
         Map<String, CompilationResultDTO> result = web3.eth_compileSolidity(contract);
 

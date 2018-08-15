@@ -1,8 +1,3 @@
-/*
- * This file is part of Usc
- * Copyright (C) 2016 - 2018 Ulord development team.
- */
-
 package org.ethereum.util;
 
 import co.usc.blockchain.utils.BlockGenerator;
@@ -10,6 +5,7 @@ import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.ReversibleTransactionExecutor;
 import co.usc.core.UscAddress;
+import co.usc.core.UscImpl;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.db.RepositoryImpl;
@@ -24,6 +20,8 @@ import co.usc.validators.DummyBlockValidator;
 import org.ethereum.core.*;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.*;
+import org.ethereum.listener.CompositeEthereumListener;
+import org.ethereum.listener.TestCompositeEthereumListener;
 import org.ethereum.rpc.TypeConverter;
 import org.ethereum.vm.program.ProgramResult;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl;
@@ -48,6 +46,9 @@ public class UscTestFactory {
     private ProgramInvokeFactoryImpl programInvokeFactory;
     private ReversibleTransactionExecutor reversibleTransactionExecutor;
     private NodeBlockProcessor blockProcessor;
+    private UscImpl uscImpl;
+    private CompositeEthereumListener compositeEthereumListener;
+    private ReceiptStoreImpl receiptStore;
 
     public UscTestFactory() {
         Genesis genesis = new BlockGenerator().getGenesisBlock();
@@ -122,7 +123,7 @@ public class UscTestFactory {
                     getBlockStore(),
                     getReceiptStore(),
                     getTransactionPool(),
-                    null,
+                    getCompositeEthereumListener(),
                     null,
                     new DummyBlockValidator()
             );
@@ -132,8 +133,12 @@ public class UscTestFactory {
     }
 
     public ReceiptStore getReceiptStore() {
-        HashMapDB receiptStore = new HashMapDB();
-        return new ReceiptStoreImpl(receiptStore);
+        if (receiptStore == null) {
+            HashMapDB inMemoryStore = new HashMapDB();
+            receiptStore = new ReceiptStoreImpl(inMemoryStore);
+        }
+
+        return receiptStore;
     }
 
     public BlockStore getBlockStore() {
@@ -161,7 +166,7 @@ public class UscTestFactory {
             transactionPool = new TransactionPoolImpl(
                     getBlockStore(),
                     getReceiptStore(),
-                    null,
+                    getCompositeEthereumListener(),
                     getProgramInvokeFactory(),
                     getRepository(),
                     config
@@ -192,5 +197,30 @@ public class UscTestFactory {
         }
 
         return reversibleTransactionExecutor;
+    }
+
+    public UscImpl getUscImpl() {
+        if (uscImpl == null) {
+            uscImpl = new UscImpl(
+                    null,
+                    null,
+                    getTransactionPool(),
+                    config,
+                    getCompositeEthereumListener(),
+                    getBlockProcessor(),
+                    getReversibleTransactionExecutor(),
+                    getBlockchain()
+            );
+        }
+
+        return uscImpl;
+    }
+
+    private CompositeEthereumListener getCompositeEthereumListener() {
+        if (compositeEthereumListener == null) {
+            compositeEthereumListener = new TestCompositeEthereumListener();
+        }
+
+        return compositeEthereumListener;
     }
 }

@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -181,14 +181,14 @@ public class BridgeSerializationUtilsTest {
 
         Federation deserializedFederation = BridgeSerializationUtils.deserializeFederation(sample, new Context(NetworkParameters.fromID(NetworkParameters.ID_REGTEST)));
 
-        Assert.assertEquals(5000, deserializedFederation.getCreationTime().toEpochMilli());
-        Assert.assertEquals(4, deserializedFederation.getNumberOfSignaturesRequired());
-        Assert.assertEquals(6, deserializedFederation.getPublicKeys().size());
+        assertEquals(5000, deserializedFederation.getCreationTime().toEpochMilli());
+        assertEquals(4, deserializedFederation.getNumberOfSignaturesRequired());
+        assertEquals(6, deserializedFederation.getPublicKeys().size());
         Assert.assertThat(deserializedFederation.getCreationBlockNumber(), is(42L));
         for (int i = 0; i < 6; i++) {
             Assert.assertTrue(Arrays.equals(publicKeyBytes[i], deserializedFederation.getPublicKeys().get(i).getPubKey()));
         }
-        Assert.assertEquals(NetworkParameters.fromID(NetworkParameters.ID_REGTEST), deserializedFederation.getUldParams());
+        assertEquals(NetworkParameters.fromID(NetworkParameters.ID_REGTEST), deserializedFederation.getUldParams());
     }
 
     @Test
@@ -274,7 +274,7 @@ public class BridgeSerializationUtilsTest {
 
         PendingFederation deserializedPendingFederation = BridgeSerializationUtils.deserializePendingFederation(sample);
 
-        Assert.assertEquals(6, deserializedPendingFederation.getPublicKeys().size());
+        assertEquals(6, deserializedPendingFederation.getPublicKeys().size());
         for (int i = 0; i < 6; i++) {
             Assert.assertTrue(Arrays.equals(publicKeyBytes[i], deserializedPendingFederation.getPublicKeys().get(i).getPubKey()));
         }
@@ -332,9 +332,9 @@ public class BridgeSerializationUtilsTest {
         AddressBasedAuthorizer mockAuthorizer = mock(AddressBasedAuthorizer.class);
         ABICallElection election;
         election = BridgeSerializationUtils.deserializeElection(null, mockAuthorizer);
-        Assert.assertEquals(0, election.getVotes().size());
+        assertEquals(0, election.getVotes().size());
         election = BridgeSerializationUtils.deserializeElection(new byte[]{}, mockAuthorizer);
-        Assert.assertEquals(0, election.getVotes().size());
+        assertEquals(0, election.getVotes().size());
     }
 
     @Test
@@ -394,7 +394,7 @@ public class BridgeSerializationUtilsTest {
 
         ABICallElection election = BridgeSerializationUtils.deserializeElection(sample, mockedAuthorizer);
 
-        Assert.assertEquals(3, election.getVotes().size());
+        assertEquals(3, election.getVotes().size());
         List<UscAddress> voters;
         ABICallSpec spec;
 

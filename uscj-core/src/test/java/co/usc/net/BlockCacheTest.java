@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@
 
 package co.usc.net;
 
+import co.usc.crypto.Keccak256;
 import co.usc.crypto.Keccak256;
 import org.ethereum.core.Block;
 import org.ethereum.crypto.HashUtil;

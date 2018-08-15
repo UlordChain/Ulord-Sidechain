@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +21,7 @@ package co.usc.rpc;
 import co.usc.config.TestSystemProperties;
 import co.usc.rpc.modules.personal.PersonalModule;
 import co.usc.rpc.modules.personal.PersonalModuleWalletDisabled;
+import co.usc.config.TestSystemProperties;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.TransactionPool;
 import org.ethereum.core.Repository;
@@ -44,8 +45,11 @@ public class Web3ImplRpcTest {
         PersonalModule pm = new PersonalModuleWalletDisabled();
         Repository repository = Web3Mocks.getMockRepository();
         Web3Impl web3 = new Web3UscImpl(eth, blockchain, transactionPool,
-                                        new TestSystemProperties(), null, null, pm, null, null,
-                                        null, repository, null, null, null, null, null, null, null, null);
+                            new TestSystemProperties(), null, null, pm,
+                            null, null, null,
+                            null, null, repository, null, null,
+                            null, null, null,
+                            null, null, null);
 
         Map<String, String> result = web3.rpc_modules();
 

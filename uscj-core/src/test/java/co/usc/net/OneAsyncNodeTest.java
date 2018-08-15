@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,6 +26,13 @@ import co.usc.net.simples.SimpleAsyncNode;
 import co.usc.net.sync.SyncConfiguration;
 import co.usc.test.World;
 import co.usc.validators.DummyBlockValidationRule;
+import co.usc.blockchain.utils.BlockGenerator;
+import co.usc.config.TestSystemProperties;
+import co.usc.core.DifficultyCalculator;
+import co.usc.net.messages.BlockMessage;
+import co.usc.net.simples.SimpleAsyncNode;
+import co.usc.net.sync.SyncConfiguration;
+import co.usc.test.World;
 import org.ethereum.core.Block;
 import org.ethereum.core.Blockchain;
 import org.ethereum.rpc.Simples.SimpleChannelManager;
@@ -52,7 +59,7 @@ public class OneAsyncNodeTest {
         NodeBlockProcessor processor = new NodeBlockProcessor(store, blockchain, nodeInformation, blockSyncService, syncConfiguration);
         SimpleChannelManager channelManager = new SimpleChannelManager();
         SyncProcessor syncProcessor = new SyncProcessor(config, blockchain, blockSyncService, UscMockFactory.getPeerScoringManager(), channelManager, syncConfiguration, new DummyBlockValidationRule(), new DifficultyCalculator(config));
-        NodeMessageHandler handler = new NodeMessageHandler(config, processor, syncProcessor, channelManager, null, null, UscMockFactory.getPeerScoringManager(), new DummyBlockValidationRule());
+        NodeMessageHandler handler = new NodeMessageHandler(config, processor, syncProcessor, channelManager, null, UscMockFactory.getPeerScoringManager(), new DummyBlockValidationRule());
 
         return new SimpleAsyncNode(handler, syncProcessor, channelManager);
     }

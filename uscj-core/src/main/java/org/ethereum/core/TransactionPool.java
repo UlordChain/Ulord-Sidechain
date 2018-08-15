@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,13 +19,11 @@
 
 package org.ethereum.core;
 
+import co.usc.core.bc.PendingState;
+
 import java.util.List;
 
-/**
- * @author Mikhail Kalinin
- * @since 28.09.2015
- */
-public interface TransactionPool extends org.ethereum.facade.TransactionPool {
+public interface TransactionPool {
 
     void start(Block initialBestBlock);
 
@@ -64,9 +62,16 @@ public interface TransactionPool extends org.ethereum.facade.TransactionPool {
 
     void removeTransactions(List<Transaction> txs);
 
-    // Returns a list of pending txs (ready to be executed)
+    /**
+     * @return list of pending transactions (ready to be executed)
+     */
     List<Transaction> getPendingTransactions();
 
     // Returns a list of queued txs (out of nonce sequence)
     List<Transaction> getQueuedTransactions();
+
+    /**
+     * @return pending state
+     */
+    PendingState getPendingState();
 }

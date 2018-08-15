@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2016 - 2018  Ulord Core team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,16 +25,18 @@ import co.usc.core.DifficultyCalculator;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.BlockChainStatus;
 import co.usc.mine.*;
+import co.usc.rpc.modules.debug.DebugModule;
+import co.usc.rpc.modules.debug.DebugModuleImpl;
 import co.usc.rpc.modules.personal.PersonalModule;
 import co.usc.rpc.modules.personal.PersonalModuleWalletDisabled;
 import co.usc.rpc.modules.txpool.TxPoolModule;
 import co.usc.rpc.modules.txpool.TxPoolModuleImpl;
 import co.usc.validators.BlockValidationRule;
 import co.usc.validators.ProofOfWorkRule;
-import org.ethereum.util.UscTestFactory;
 import org.ethereum.core.Block;
 import org.ethereum.core.Blockchain;
 import org.ethereum.rpc.Simples.SimpleEthereum;
+import org.ethereum.util.UscTestFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +57,6 @@ public class Web3ImplSnapshotTest {
         factory = new UscTestFactory();
         blockchain = factory.getBlockchain();
     }
-
 
     @Test
     public void takeFirstSnapshot() {
@@ -150,7 +151,6 @@ public class Web3ImplSnapshotTest {
         MinerServer minerServer = getMinerServerForTest(ethereum);
         Web3Impl web3 = createWeb3(ethereum, minerServer);
 
-
         String result = web3.evm_increaseTime("0x10");
 
         Assert.assertEquals("0x10", result);
@@ -162,7 +162,6 @@ public class Web3ImplSnapshotTest {
         SimpleEthereum ethereum = new SimpleEthereum();
         MinerServer minerServer = getMinerServerForTest(ethereum);
         Web3Impl web3 = createWeb3(ethereum, minerServer);
-
 
         String result = web3.evm_increaseTime("16");
 
@@ -200,6 +199,7 @@ public class Web3ImplSnapshotTest {
         MinerClientImpl minerClient = new MinerClientImpl(null, minerServer, config);
         PersonalModule pm = new PersonalModuleWalletDisabled();
         TxPoolModule tpm = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
+        DebugModule dm = new DebugModuleImpl(Web3Mocks.getMockMessageHandler());
 
         ethereum.repository = factory.getRepository();
         ethereum.blockchain = blockchain;
@@ -216,6 +216,8 @@ public class Web3ImplSnapshotTest {
                 pm,
                 null,
                 tpm,
+                null,
+                dm,
                 Web3Mocks.getMockChannelManager(),
                 ethereum.repository,
                 null,

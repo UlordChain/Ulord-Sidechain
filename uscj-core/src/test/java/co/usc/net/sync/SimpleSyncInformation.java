@@ -8,6 +8,7 @@ import co.usc.scoring.EventType;
 import co.usc.net.BlockProcessResult;
 import co.usc.net.MessageChannel;
 import co.usc.net.NodeID;
+import co.usc.scoring.EventType;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
 

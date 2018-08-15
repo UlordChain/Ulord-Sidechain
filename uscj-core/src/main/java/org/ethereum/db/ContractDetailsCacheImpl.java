@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2018 Ulord core team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -288,7 +288,6 @@ public class ContractDetailsCacheImpl implements ContractDetails {
             }
 
             origContract.putBytes(key, newvalue);
-
         }
 
         origContract.setCode(code);

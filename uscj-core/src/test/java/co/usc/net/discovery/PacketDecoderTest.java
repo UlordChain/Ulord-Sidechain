@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,7 +21,6 @@ package co.usc.net.discovery;
 //import co.usc.net.discovery.message.GetNodeMessage;
 //import co.usc.net.discovery.message.SendNodesMessage;
 import co.usc.net.discovery.message.*;
-import co.usc.net.discovery.message.*;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import org.ethereum.crypto.ECKey;
@@ -32,6 +31,7 @@ import org.spongycastle.util.encoders.Hex;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.OptionalInt;
 import java.util.UUID;
 
 /**
@@ -39,6 +39,7 @@ import java.util.UUID;
  */
 public class PacketDecoderTest {
 
+    private static final int NETWORK_ID = 1;
     private static final String KEY_1 = "bd1d20e480dfb1c9c07ba0bc8cf9052f89923d38b5128c5dbfc18d4eea38261f";
 
     @Test
@@ -51,22 +52,22 @@ public class PacketDecoderTest {
         PacketDecoder decoder = new PacketDecoder();
 
         //Decode Ping Message
-        PingPeerMessage nodeMessage = PingPeerMessage.create("localhost", 44035, check, key1);
+        PingPeerMessage nodeMessage = PingPeerMessage.create("localhost", 44035, check, key1, NETWORK_ID);
         InetSocketAddress sender = new InetSocketAddress("localhost", 44035);
         this.assertDecodedMessage(decoder.decodeMessage(ctx, nodeMessage.getPacket(), sender), sender, DiscoveryMessageType.PING);
 
         //Decode Pong Message
-        PongPeerMessage pongPeerMessage = PongPeerMessage.create("localhost", 44036, check, key1);
+        PongPeerMessage pongPeerMessage = PongPeerMessage.create("localhost", 44036, check, key1, NETWORK_ID);
         sender = new InetSocketAddress("localhost", 44036);
         this.assertDecodedMessage(decoder.decodeMessage(ctx, pongPeerMessage.getPacket(), sender), sender, DiscoveryMessageType.PONG);
 
         //Decode Find Node Message
-        FindNodePeerMessage findNodePeerMessage = FindNodePeerMessage.create(key1.getNodeId(), check, key1);
+        FindNodePeerMessage findNodePeerMessage = FindNodePeerMessage.create(key1.getNodeId(), check, key1, NETWORK_ID);
         sender = new InetSocketAddress("localhost", 44037);
         this.assertDecodedMessage(decoder.decodeMessage(ctx, findNodePeerMessage.getPacket(), sender), sender, DiscoveryMessageType.FIND_NODE);
 
         //Decode Neighbors Message
-        NeighborsPeerMessage neighborsPeerMessage = NeighborsPeerMessage.create(new ArrayList<>(), check, key1);
+        NeighborsPeerMessage neighborsPeerMessage = NeighborsPeerMessage.create(new ArrayList<>(), check, key1, NETWORK_ID);
         sender = new InetSocketAddress("localhost", 44038);
         this.assertDecodedMessage(decoder.decodeMessage(ctx, neighborsPeerMessage.getPacket(), sender), sender, DiscoveryMessageType.NEIGHBORS);
 

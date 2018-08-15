@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2016 - 2018 Usc Development team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -239,7 +239,6 @@ public abstract class SolidityType {
             if (encoded.length == 0) {
                 return new Object[0];
             }
-
             int len = IntType.decodeInt(encoded, origOffset).intValue();
             int offset = origOffset + IntType.INT_SIZE;
             // This is a lower bound check as we don't know the exact length of each element
@@ -373,7 +372,9 @@ public abstract class SolidityType {
     }
 
     public static class IntType extends SolidityType {
+
         public static final int INT_SIZE = 32;
+
         public IntType(String name) {
             super(name);
         }
@@ -421,8 +422,7 @@ public abstract class SolidityType {
 
         public static BigInteger decodeInt(byte[] encoded, int offset) {
             // This is here because getGasForData might send an empty payload which will produce an exception
-            // But currently the bridge would return the cost of RELEASE_BTC in this situation
-
+            // But currently the bridge would return the cost of RELEASE_ULD in this situation
             if (encoded.length == 0) {
                 return BigInteger.ZERO;
             }

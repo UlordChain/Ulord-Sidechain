@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
 package org.ethereum.vm;
 
 /**
- * The fundamental network cost unit. Paid for exclusively by SUT, which is converted
+ * The fundamental network cost unit. Paid for exclusively by SULD, which is converted
  * freely to and from Gas as required. Gas does not exist outside of the internal USC
  * computation engine; its price is set by the Transaction and miners are free to
  * ignore Transactions whose Gas price is too low.

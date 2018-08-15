@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@ package org.ethereum.core;
 
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
+import co.usc.core.bc.AccountInformationProvider;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.db.DetailsDataStore;
 import org.ethereum.vm.DataWord;
@@ -33,7 +34,7 @@ import java.util.Set;
  * @author Roman Mandeleil
  * @since 08.09.2014
  */
-public interface Repository {
+public interface Repository extends AccountInformationProvider {
 
     /**
      * Create a new account in the database
@@ -82,14 +83,6 @@ public interface Repository {
     BigInteger increaseNonce(UscAddress addr);
 
     /**
-     * Get current nonce of a given account
-     *
-     * @param addr of the account
-     * @return value of the nonce
-     */
-    BigInteger getNonce(UscAddress addr);
-
-    /**
      * Retrieve contract details for a given account from the database
      *
      * @param addr of the account
@@ -106,14 +99,6 @@ public interface Repository {
     void saveCode(UscAddress addr, byte[] code);
 
     /**
-     * Retrieve the code associated with an account
-     *
-     * @param addr of the account
-     * @return code in byte-array format
-     */
-    byte[] getCode(UscAddress addr);
-
-    /**
      * Put a value in storage of an account at a given key
      *
      * @param addr of the account
@@ -124,24 +109,7 @@ public interface Repository {
 
     void addStorageBytes(UscAddress addr, DataWord key, byte[] value);
 
-    /**
-     * Retrieve storage value from an account for a given key
-     *
-     * @param addr of the account
-     * @param key associated with this value
-     * @return data in the form of a <code>DataWord</code>
-     */
-    DataWord getStorageValue(UscAddress addr, DataWord key);
-
     byte[] getStorageBytes(UscAddress addr, DataWord key);
-
-    /**
-     * Retrieve balance of an account
-     *
-     * @param addr of the account
-     * @return balance of the account as a <code>BigInteger</code> value
-     */
-    Coin getBalance(UscAddress addr);
 
     /**
      * Add value to the balance of an account

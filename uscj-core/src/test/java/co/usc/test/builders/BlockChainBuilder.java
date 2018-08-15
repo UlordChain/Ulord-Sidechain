@@ -1,6 +1,6 @@
 /*
- * This file is part of Usc
- * Copyright (C) 2016 - 2018 Ulord development team.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,11 +28,14 @@ import co.usc.peg.RepositoryBlockStore;
 import co.usc.trie.TrieStoreImpl;
 import co.usc.validators.BlockValidator;
 import co.usc.validators.DummyBlockValidator;
+import co.usc.blockchain.utils.BlockGenerator;
+import co.usc.config.TestSystemProperties;
 import org.ethereum.core.*;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.datasource.KeyValueDataSource;
 import org.ethereum.db.*;
 import org.ethereum.listener.EthereumListener;
+import org.ethereum.listener.TestCompositeEthereumListener;
 import org.ethereum.manager.AdminInfo;
 import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl;
@@ -69,6 +72,11 @@ public class BlockChainBuilder {
 
     public BlockChainBuilder setBlocks(List<Block> blocks) {
         this.blocks = blocks;
+        return this;
+    }
+
+    public BlockChainBuilder setRepository(Repository repository) {
+        this.repository = repository;
         return this;
     }
 
@@ -126,18 +134,20 @@ public class BlockChainBuilder {
         if (this.adminInfo == null)
             this.adminInfo = new AdminInfo();
 
+
         TransactionPoolImpl transactionPool;
         if (withoutCleaner) {
-            transactionPool = new TransactionPoolImplNoCleaner(config, this.repository, this.blockStore, receiptStore, new ProgramInvokeFactoryImpl(), new BlockExecutorTest.SimpleEthereumListener(), 10, 100);
+            transactionPool = new TransactionPoolImplNoCleaner(config, this.repository, this.blockStore, receiptStore, new ProgramInvokeFactoryImpl(), new TestCompositeEthereumListener(), 10, 100);
         } else {
-            transactionPool = new TransactionPoolImpl(config, this.repository, this.blockStore, receiptStore, new ProgramInvokeFactoryImpl(), new BlockExecutorTest.SimpleEthereumListener(), 10, 100);
+            transactionPool = new TransactionPoolImpl(config, this.repository, this.blockStore, receiptStore, new ProgramInvokeFactoryImpl(), new TestCompositeEthereumListener(), 10, 100);
         }
+
         BlockChainImpl blockChain = new BlockChainImpl(config, this.repository, this.blockStore, receiptStore, transactionPool, listener, this.adminInfo, blockValidator);
+
         if (this.testing) {
             blockChain.setBlockValidator(new DummyBlockValidator());
             blockChain.setNoValidation(true);
         }
-
 
         if (this.genesis != null) {
             for (UscAddress addr : this.genesis.getPremine().keySet()) {

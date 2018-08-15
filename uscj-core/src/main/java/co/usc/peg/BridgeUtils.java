@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2018 Ulord core team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -44,6 +44,7 @@ import java.util.Optional;
 public class BridgeUtils {
 
     private static final Logger logger = LoggerFactory.getLogger("BridgeUtils");
+
     // power of 2 size that contains enough hashes to handle one year of hashes
     private static final int MAX_MAP_PARENTS_SIZE = 65535;
     private static Map<Sha256Hash, Sha256Hash> parentMap = new MaxSizeHashMap<>(MAX_MAP_PARENTS_SIZE);
@@ -51,11 +52,13 @@ public class BridgeUtils {
     public static StoredBlock getStoredBlockAtHeight(UldBlockstoreWithCache blockStore, int height) throws BlockStoreException {
         StoredBlock storedBlock = blockStore.getChainHead();
         Sha256Hash blockHash = storedBlock.getHeader().getHash();
+
         int headHeight = storedBlock.getHeight();
 
         if (height > headHeight) {
             return null;
         }
+
         for (int i = 0; i < (headHeight - height); i++) {
             if (blockHash == null) {
                 return null;
@@ -153,7 +156,6 @@ public class BridgeUtils {
         }
         return Optional.of(tx.getInput(0).getScriptSig());
     }
-
 
     public static boolean isLockTx(UldTransaction tx, List<Federation> federations, Context uldContext, BridgeConstants bridgeConstants) {
         // First, check tx is not a typical release tx (tx spending from the any of the federation addresses and

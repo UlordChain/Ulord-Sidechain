@@ -2,6 +2,7 @@ import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import java.util.jar.JarOutputStream
 
+
 plugins {
     id 'application'
 }
@@ -22,10 +23,10 @@ test {
         exceptionFormat "short"
     }
 
-   /* jacoco {
-        append = false
-        destinationFile = file("build/reports/jacoco/jacoco.exec")
-    }*/
+    /* jacoco {
+         append = false
+         destinationFile = file("build/reports/jacoco/jacoco.exec")
+     }*/
 
 }
 
@@ -71,10 +72,11 @@ ext {
     powermockitoVersion = '1.6.4'
     rskLllVersion = '0.0.2'
     logbackVersion = '1.2.2'
+    nettyVersion = '4.0.56.Final'
 }
 
 dependencies {
-    compile "io.netty:netty-all:4.0.30.Final"
+    compile "io.netty:netty-codec-http:$nettyVersion"
     compile "com.madgag.spongycastle:core:${scastleVersion}" // for SHA3 and SECP256K1
     compile "com.madgag.spongycastle:prov:${scastleVersion}" // for SHA3 and SECP256K1
     compile "org.iq80.leveldb:leveldb:${leveldbVersion}"
@@ -87,14 +89,12 @@ dependencies {
     compile ("org.springframework:spring-context:${springVersion}") {
         exclude group: 'commons-logging', module: 'commons-logging'
     }
-    compile "com.typesafe:config:1.3.1"
+    compile "com.typesafe:config:1.3.3"
     compile "org.mapdb:mapdb:2.0-beta13"
     compile fileTree(dir: 'libs', include: '*.jar')
-
+    compile 'com.github.briandilley.jsonrpc4j:jsonrpc4j:1.5.1'
     compile 'org.apache.httpcomponents:httpclient:4.5.5'
     compile 'org.json:json:20180130'
-
-    compile 'com.github.briandilley.jsonrpc4j:jsonrpc4j:1.5.1'
 
     runtime "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
     runtime "org.slf4j:log4j-over-slf4j:${slf4jVersion}"
@@ -115,25 +115,26 @@ dependencies {
     testCompile "org.awaitility:awaitility:3.0.0"
     testCompile 'commons-io:commons-io:2.5'
     testCompile 'commons-codec:commons-codec:1.10'
+    testCompile 'com.squareup.okhttp:okhttp-ws:2.7.2'
 }
 
 javadoc {
     options.author = true
-    options.header = "UscJ"
+    options.header = "Usc"
     options.addStringOption('-quiet')
     options.encoding = "UTF-8"
 }
 
 def generatedResources = "$buildDir/generated-resources"
-    sourceSets {
-      main {
+sourceSets {
+    main {
         resources {
             srcDirs += generatedResources
         }
-      }
+    }
 }
 
-task generateResources doLast {
+task generateResources << {
     mkdir generatedResources
     def generated = new File(generatedResources, 'build-info.properties')
     def commitHash = gitCommitHash()
@@ -219,7 +220,6 @@ tasks.withType(Tar) {
 artifacts {
     archives sourcesJar
     archives javadocJar
-    archives jar
     archives(generatePom.file) {
         type 'text'
         builtBy generatePom

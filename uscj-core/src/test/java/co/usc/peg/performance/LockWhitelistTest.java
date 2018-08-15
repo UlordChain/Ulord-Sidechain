@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,7 +19,6 @@
 package co.usc.peg.performance;
 
 import co.usc.ulordj.core.*;
-import co.usc.ulordj.params.TestNet3Params;
 import co.usc.ulordj.store.BlockStoreException;
 import co.usc.ulordj.store.UldBlockStore;
 import co.usc.config.TestSystemProperties;
@@ -28,10 +27,6 @@ import co.usc.peg.BridgeStorageProvider;
 import co.usc.peg.LockWhitelist;
 import co.usc.peg.RepositoryBlockStore;
 import co.usc.config.TestSystemProperties;
-import co.usc.peg.Bridge;
-import co.usc.peg.BridgeStorageProvider;
-import co.usc.peg.LockWhitelist;
-import co.usc.peg.RepositoryBlockStore;
 import org.ethereum.core.Repository;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.vm.PrecompiledContracts;
@@ -68,10 +63,6 @@ public class LockWhitelistTest extends BridgePerformanceTestCase {
 
     @Test
     public void addLockWhitelistAddress() throws IOException {
-
-        BigInteger val = BigInteger.valueOf(1_000_000_000);
-        System.out.println(Sha256Hash.bytesToHex(Bridge.ADD_LOCK_WHITELIST_ADDRESS.encode(new Object[]{"ufGHmxvSDsXMKUm23a76JrrjvQqhpfL5E3", val})));
-
         ExecutionStats stats = new ExecutionStats("addLockWhitelistAddress");
         executeTestCase(
                 (int executionIndex) -> {
@@ -132,17 +123,17 @@ public class LockWhitelistTest extends BridgePerformanceTestCase {
         final int maxUldBlocks = 1000;
 
         return (BridgeStorageProvider provider, Repository repository, int executionIndex) -> {
-            UldBlockStore UldBlockStore = new RepositoryBlockStore(new TestSystemProperties(), repository, PrecompiledContracts.BRIDGE_ADDR);
-            Context btcContext = new Context(networkParameters);
-            UldBlockChain UldBlockChain;
+            UldBlockStore uldBlockStore = new RepositoryBlockStore(new TestSystemProperties(), repository, PrecompiledContracts.BRIDGE_ADDR);
+            Context uldContext = new Context(networkParameters);
+            UldBlockChain uldBlockChain;
             try {
-                UldBlockChain = new UldBlockChain(btcContext, UldBlockStore);
+                uldBlockChain = new UldBlockChain(uldContext, uldBlockStore);
             } catch (BlockStoreException e) {
-                throw new RuntimeException("Error initializing btc blockchain for tests");
+                throw new RuntimeException("Error initializing uld blockchain for tests");
             }
 
             int blocksToGenerate = Helper.randomInRange(minUldBlocks, maxUldBlocks);
-            Helper.generateAndAddBlocks(UldBlockChain, blocksToGenerate);
+            Helper.generateAndAddBlocks(uldBlockChain, blocksToGenerate);
 
             lockWhitelist = provider.getLockWhitelist();
 

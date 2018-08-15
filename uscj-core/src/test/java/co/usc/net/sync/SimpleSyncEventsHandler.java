@@ -4,6 +4,7 @@ package co.usc.net.sync;
 import co.usc.net.NodeID;
 import co.usc.scoring.EventType;
 import co.usc.net.NodeID;
+import co.usc.scoring.EventType;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.core.BlockIdentifier;
 

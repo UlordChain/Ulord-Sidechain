@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -38,16 +38,16 @@ import java.util.*;
  * Created by mario on 27/09/2016.
  */
 public class BridgeState {
-    private final int UldBlockChainBestChainHeight;
+    private final int uldBlockchainBestChainHeight;
     private final Map<Sha256Hash, Long> uldTxHashesAlreadyProcessed;
     private final List<UTXO> activeFederationUldUTXOs;
     private final SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures;
     private final ReleaseRequestQueue releaseRequestQueue;
     private final ReleaseTransactionSet releaseTransactionSet;
 
-    private BridgeState(int UldBlockChainBestChainHeight, Map<Sha256Hash, Long> uldTxHashesAlreadyProcessed, List<UTXO> activeFederationUldUTXOs,
+    private BridgeState(int uldBlockchainBestChainHeight, Map<Sha256Hash, Long> uldTxHashesAlreadyProcessed, List<UTXO> activeFederationUldUTXOs,
                         SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures, ReleaseRequestQueue releaseRequestQueue, ReleaseTransactionSet releaseTransactionSet) {
-        this.UldBlockChainBestChainHeight = UldBlockChainBestChainHeight;
+        this.uldBlockchainBestChainHeight = uldBlockchainBestChainHeight;
         this.uldTxHashesAlreadyProcessed = uldTxHashesAlreadyProcessed;
         this.activeFederationUldUTXOs = activeFederationUldUTXOs;
         this.uscTxsWaitingForSignatures = uscTxsWaitingForSignatures;
@@ -55,8 +55,8 @@ public class BridgeState {
         this.releaseTransactionSet = releaseTransactionSet;
     }
 
-    public BridgeState(int UldBlockChainBestChainHeight, BridgeStorageProvider provider) throws IOException {
-        this(UldBlockChainBestChainHeight,
+    public BridgeState(int uldBlockchainBestChainHeight, BridgeStorageProvider provider) throws IOException {
+        this(uldBlockchainBestChainHeight,
                 provider.getUldTxHashesAlreadyProcessed(),
                 provider.getNewFederationUldUTXOs(),
                 provider.getUscTxsWaitingForSignatures(),
@@ -64,8 +64,8 @@ public class BridgeState {
                 provider.getReleaseTransactionSet());
     }
 
-    public int getUldBlockChainBestChainHeight() {
-        return this.UldBlockChainBestChainHeight;
+    public int getUldBlockchainBestChainHeight() {
+        return this.uldBlockchainBestChainHeight;
     }
 
     public Map<Sha256Hash, Long> getUldTxHashesAlreadyProcessed() {
@@ -91,7 +91,7 @@ public class BridgeState {
     @Override
     public String toString() {
         return "StateForDebugging{" + "\n" +
-                "UldBlockChainBestChainHeight=" + UldBlockChainBestChainHeight + "\n" +
+                "uldBlockchainBestChainHeight=" + uldBlockchainBestChainHeight + "\n" +
                 ", uldTxHashesAlreadyProcessed=" + uldTxHashesAlreadyProcessed + "\n" +
                 ", activeFederationUldUTXOs=" + activeFederationUldUTXOs + "\n" +
                 ", uscTxsWaitingForSignatures=" + uscTxsWaitingForSignatures + "\n" +
@@ -112,28 +112,28 @@ public class BridgeState {
         Map<String, Object> result = new HashedMap<>();
         result.put("uldTxHashesAlreadyProcessed", this.formatedAlreadyProcessedHashes());
         result.put("uscTxsWaitingForSignatures", this.toStringList(uscTxsWaitingForSignatures.keySet()));
-        result.put("UldBlockChainBestChainHeight", this.UldBlockChainBestChainHeight);
+        result.put("uldBlockchainBestChainHeight", this.uldBlockchainBestChainHeight);
         return result;
     }
 
     public byte[] getEncoded() throws IOException {
-        byte[] rlpUldBlockChainBestChainHeight = RLP.encodeBigInteger(BigInteger.valueOf(this.UldBlockChainBestChainHeight));
+        byte[] rlpUldBlockchainBestChainHeight = RLP.encodeBigInteger(BigInteger.valueOf(this.uldBlockchainBestChainHeight));
         byte[] rlpUldTxHashesAlreadyProcessed = RLP.encodeElement(BridgeSerializationUtils.serializeMapOfHashesToLong(uldTxHashesAlreadyProcessed));
         byte[] rlpActiveFederationUldUTXOs = RLP.encodeElement(BridgeSerializationUtils.serializeUTXOList(activeFederationUldUTXOs));
         byte[] rlpUscTxsWaitingForSignatures = RLP.encodeElement(BridgeSerializationUtils.serializeMap(uscTxsWaitingForSignatures));
         byte[] rlpReleaseRequestQueue = RLP.encodeElement(BridgeSerializationUtils.serializeReleaseRequestQueue(releaseRequestQueue));
         byte[] rlpReleaseTransactionSet = RLP.encodeElement(BridgeSerializationUtils.serializeReleaseTransactionSet(releaseTransactionSet));
 
-        return RLP.encodeList(rlpUldBlockChainBestChainHeight, rlpUldTxHashesAlreadyProcessed, rlpActiveFederationUldUTXOs, rlpUscTxsWaitingForSignatures, rlpReleaseRequestQueue, rlpReleaseTransactionSet);
+        return RLP.encodeList(rlpUldBlockchainBestChainHeight, rlpUldTxHashesAlreadyProcessed, rlpActiveFederationUldUTXOs, rlpUscTxsWaitingForSignatures, rlpReleaseRequestQueue, rlpReleaseTransactionSet);
     }
 
     public static BridgeState create(BridgeConstants bridgeConstants, byte[] data) throws IOException {
         RLPList rlpList = (RLPList)RLP.decode2(data).get(0);
 
-        byte[] UldBlockChainBestChainHeightBytes = rlpList.get(0).getRLPData();
-        int UldBlockChainBestChainHeight = UldBlockChainBestChainHeightBytes == null ? 0 : (new BigInteger(1, UldBlockChainBestChainHeightBytes)).intValue();
-        byte[] UldTxHashesAlreadyProcessedBytes = rlpList.get(1).getRLPData();
-        Map<Sha256Hash, Long> uldTxHashesAlreadyProcessed = BridgeSerializationUtils.deserializeMapOfHashesToLong(UldTxHashesAlreadyProcessedBytes);
+        byte[] uldBlockchainBestChainHeightBytes = rlpList.get(0).getRLPData();
+        int uldBlockchainBestChainHeight = uldBlockchainBestChainHeightBytes == null ? 0 : (new BigInteger(1, uldBlockchainBestChainHeightBytes)).intValue();
+        byte[] uldTxHashesAlreadyProcessedBytes = rlpList.get(1).getRLPData();
+        Map<Sha256Hash, Long> uldTxHashesAlreadyProcessed = BridgeSerializationUtils.deserializeMapOfHashesToLong(uldTxHashesAlreadyProcessedBytes);
         byte[] uldUTXOsBytes = rlpList.get(2).getRLPData();
         List<UTXO> uldUTXOs = BridgeSerializationUtils.deserializeUTXOList(uldUTXOsBytes);
         byte[] uscTxsWaitingForSignaturesBytes = rlpList.get(3).getRLPData();
@@ -144,7 +144,7 @@ public class BridgeState {
         ReleaseTransactionSet releaseTransactionSet = BridgeSerializationUtils.deserializeReleaseTransactionSet(releaseTransactionSetBytes, bridgeConstants.getUldParams());
 
         return new BridgeState(
-                UldBlockChainBestChainHeight,
+                uldBlockchainBestChainHeight,
                 uldTxHashesAlreadyProcessed,
                 uldUTXOs,
                 uscTxsWaitingForSignatures,

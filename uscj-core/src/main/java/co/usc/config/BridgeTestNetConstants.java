@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,7 +28,6 @@ import org.ethereum.crypto.ECKey;
 import org.spongycastle.util.encoders.Hex;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,14 +44,14 @@ public class BridgeTestNetConstants extends BridgeConstants {
         UldECKey federator3PublicKey = UldECKey.fromPublicOnly(Hex.decode("03c281ca3cab2d273c5ee1ca50dd62f941d1bc04dc2ca79affb2606660f8fd54ea"));
 
         List<UldECKey> genesisFederationPublicKeys = Lists.newArrayList(
-            federator0PublicKey,
-            federator1PublicKey,
-            federator2PublicKey,
-            federator3PublicKey
+                federator0PublicKey,
+                federator1PublicKey,
+                federator2PublicKey,
+                federator3PublicKey
         );
 
         // Currently set to:
-        // Thursday, July 19, 2018 8:00:00 AM GMT+08:00
+        // Wednesday, January 3, 2018 12:00:00 AM GMT-03:00
         Instant genesisFederationAddressCreatedAt = Instant.ofEpochMilli(1531958400);
 
         genesisFederation = new Federation(

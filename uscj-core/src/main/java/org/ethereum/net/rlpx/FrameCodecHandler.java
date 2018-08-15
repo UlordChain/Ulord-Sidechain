@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -53,7 +53,7 @@ public class FrameCodecHandler extends ByteToMessageCodec<FrameCodec.Frame> {
             return;
         }
 
-        loggerWire.trace("Decoding frame (" + in.readableBytes() + " bytes)");
+        loggerWire.trace("Decoding frame ({} bytes)", in.readableBytes());
         List<FrameCodec.Frame> frames = frameCodec.readFrames(in);
 
 
@@ -81,13 +81,11 @@ public class FrameCodecHandler extends ByteToMessageCodec<FrameCodec.Frame> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if (channel.isDiscoveryMode()) {
-            loggerNet.debug("FrameCodec failed: ", cause);
+            loggerNet.debug("FrameCodec failed: address {}", ctx.channel().remoteAddress(), cause);
+        } else if (cause instanceof IOException) {
+            loggerNet.info("FrameCodec failed: address {}", ctx.channel().remoteAddress(), cause);
         } else {
-            if (cause instanceof IOException) {
-                loggerNet.info(String.format("FrameCodec failed: %s", ctx.channel().remoteAddress()), cause);
-            } else {
-                loggerNet.error("FrameCodec failed: ", cause);
-            }
+            loggerNet.warn("FrameCodec failed: ", cause);
         }
         ctx.close();
     }

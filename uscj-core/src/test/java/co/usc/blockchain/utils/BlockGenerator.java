@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2016 - 2018 USC core team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -27,7 +27,7 @@ import co.usc.core.bc.BlockChainImpl;
 import co.usc.mine.MinimumGasPriceCalculator;
 import co.usc.peg.PegTestUtils;
 import co.usc.peg.simples.SimpleBlock;
-import co.usc.peg.simples.SimpleUldTransaction;
+import co.usc.peg.simples.SimpleUscTransaction;
 import co.usc.trie.Trie;
 import co.usc.trie.TrieImpl;
 import org.apache.commons.collections4.CollectionUtils;
@@ -225,7 +225,7 @@ public class BlockGenerator {
         List<Transaction> txs = new ArrayList<>();
 
         for (int ntx = 0; ntx < ntxs; ntx++) {
-            txs.add(new SimpleUldTransaction(null));
+            txs.add(new SimpleUscTransaction(null));
         }
 
         List<BlockHeader> uncles = new ArrayList<>();
@@ -294,7 +294,7 @@ public class BlockGenerator {
         List<Transaction> txs = new ArrayList<>();
 
         for (int ntx = 0; ntx < ntxs; ntx++) {
-            txs.add(new SimpleUldTransaction(null));
+            txs.add(new SimpleUscTransaction(null));
         }
 
         Coin previousMGP = parent.getMinimumGasPrice() != null ? parent.getMinimumGasPrice() : Coin.valueOf(10L);
@@ -329,7 +329,7 @@ public class BlockGenerator {
         List<Transaction> txs = new ArrayList<>();
 
         for (int ntx = 0; ntx < ntxs; ntx++) {
-            txs.add(new SimpleUldTransaction(PegTestUtils.createHash3().getBytes()));
+            txs.add(new SimpleUscTransaction(PegTestUtils.createHash3().getBytes()));
         }
 
         return new SimpleBlock(
@@ -454,7 +454,7 @@ public class BlockGenerator {
             List<Transaction> txs = new ArrayList<>();
 
             for (int ntx = 0; ntx < ntxs; ntx++) {
-                txs.add(new SimpleUldTransaction(null));
+                txs.add(new SimpleUscTransaction(null));
             }
 
             if (difficulty == null) {

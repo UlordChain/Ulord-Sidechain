@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,7 +21,7 @@ package co.usc.core;
 import co.usc.config.TestSystemProperties;
 import co.usc.db.RepositoryImpl;
 import co.usc.trie.TrieStoreImpl;
-import co.usc.db.ContractDetailsImpl;
+import co.usc.config.TestSystemProperties;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.ByteStreams;
@@ -123,7 +123,7 @@ public class NetworkStateExporterTest {
         repository.createAccount(addr1);
         repository.addBalance(addr1, Coin.valueOf(1L));
         repository.increaseNonce(addr1);
-        ContractDetails contractDetails = new ContractDetailsImpl(config);
+        ContractDetails contractDetails = new co.usc.db.ContractDetailsImpl(config);
         contractDetails.setCode(new byte[] {1, 2, 3, 4});
         contractDetails.put(DataWord.ZERO, DataWord.ONE);
         contractDetails.putBytes(DataWord.ONE, new byte[] {5, 6, 7, 8});

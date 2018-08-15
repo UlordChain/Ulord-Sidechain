@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,6 +24,10 @@ import co.usc.trie.TrieImpl;
 import co.usc.trie.TrieStore;
 import co.usc.trie.TrieStoreImpl;
 import co.usc.config.TestSystemProperties;
+import co.usc.trie.Trie;
+import co.usc.trie.TrieImpl;
+import co.usc.trie.TrieStore;
+import co.usc.trie.TrieStoreImpl;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.DataWord;

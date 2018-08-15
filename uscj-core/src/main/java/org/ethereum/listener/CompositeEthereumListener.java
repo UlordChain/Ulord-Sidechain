@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2016 - 2018  Ulord Core team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,6 @@ import org.ethereum.net.server.Channel;
 import org.ethereum.vm.trace.ProgramTrace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -39,7 +38,6 @@ import java.util.function.Consumer;
  * @author Roman Mandeleil
  * @since 12.11.2014
  */
-@Component(value = "compositeEthereumListener")
 public class CompositeEthereumListener implements EthereumListener {
     private static final Logger logger = LoggerFactory.getLogger("events");
     private static final PanicProcessor panicProcessor = new PanicProcessor();
@@ -67,15 +65,18 @@ public class CompositeEthereumListener implements EthereumListener {
     }
 
     @Override
+    public void onBestBlock(Block block, List<TransactionReceipt> receipts) {
+        scheduleListenerCallbacks(listener -> listener.onBestBlock(block, receipts));
+    }
+
+    @Override
     public void onRecvMessage(Channel channel, Message message) {
         scheduleListenerCallbacks(listener -> listener.onRecvMessage(channel, message));
     }
 
     @Override
     public void onPeerDisconnect(String host, long port) {
-        for (EthereumListener listener : listeners) {
-            listener.onPeerDisconnect(host, port);
-        }
+        scheduleListenerCallbacks(listener -> listener.onPeerDisconnect(host, port));
     }
 
     @Override
@@ -106,7 +107,6 @@ public class CompositeEthereumListener implements EthereumListener {
     @Override
     public void onVMTraceCreated(String transactionHash, ProgramTrace trace) {
         scheduleListenerCallbacks(listener -> listener.onVMTraceCreated(transactionHash, trace));
-
     }
 
     @Override

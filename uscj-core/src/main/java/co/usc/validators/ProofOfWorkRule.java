@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2016-2018  Ulord developers
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -125,30 +126,29 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = bridgeConstants.getUldParams();
         byte[] ulordMergedMiningCoinbaseTransactionCompressed = header.getUlordMergedMiningCoinbaseTransaction();
 
-        if (ulordMergedMiningCoinbaseTransactionCompressed==null) {
-			logger.warn("Compressed coinbase transaction does not exist. Header {}", header.getShortHash());
+        if (ulordMergedMiningCoinbaseTransactionCompressed == null) {
+            logger.warn("Compressed coinbase transaction does not exist. Header {}", header.getShortHash());
             return false;
         }
 
-        if (header.getUlordMergedMiningHeader()==null) {
-			logger.warn("Ulord merged mining header does not exist. Header {}", header.getShortHash());
+        if (header.getUlordMergedMiningHeader() == null) {
+            logger.warn("Ulord merged mining header does not exist. Header {}", header.getShortHash());
             return false;
         }
 
         byte[] pmtSerialized = header.getUlordMergedMiningMerkleProof();
         if (!PartialMerkleTreeFormatUtils.hasExpectedSize(pmtSerialized)) {
-			logger.warn("Partial merkle tree does not have the expected size. Header {}", header.getShortHash());
+            logger.warn("Partial merkle tree does not have the expected size. Header {}", header.getShortHash());
             return false;
         }
 
         UldBlock ulordMergedMiningBlock = ulordNetworkParameters.getDefaultSerializer().makeBlock(header.getUlordMergedMiningHeader());
-        PartialMerkleTree UlordMergedMiningMerkleBranch  = new PartialMerkleTree(ulordNetworkParameters, pmtSerialized, 0);
+        PartialMerkleTree ulordMergedMiningMerkleBranch  = new PartialMerkleTree(ulordNetworkParameters, pmtSerialized, 0);
 
         BigInteger target = DifficultyUtils.difficultyToTarget(header.getDifficulty());
+
         BigInteger ulordMergedMiningBlockHashBI = ulordMergedMiningBlock.getHash().toBigInteger();
 
-        //logger.info("ulordMergedMiningBlockHashBI: " + ulordMergedMiningBlockHashBI.toString(16));
-        //logger.info("PoW Target:                   " + target.toString(16));
         if (ulordMergedMiningBlockHashBI.compareTo(target) > 0) {
             logger.warn("Hash {} is higher than target {}", ulordMergedMiningBlockHashBI.toString(16), target.toString(16));
             return false;
@@ -207,7 +207,7 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         Sha256Hash ulordMergedMiningCoinbaseTransactionHash = Sha256Hash.wrapReversed(Sha256Hash.hash(ulordMergedMiningCoinbaseTransactionOneRoundOfHash));
 
         List<Sha256Hash> txHashesInTheMerkleBranch = new ArrayList<>();
-        Sha256Hash merkleRoot = UlordMergedMiningMerkleBranch.getTxnHashAndMerkleRoot(txHashesInTheMerkleBranch);
+        Sha256Hash merkleRoot = ulordMergedMiningMerkleBranch.getTxnHashAndMerkleRoot(txHashesInTheMerkleBranch);
         if (!merkleRoot.equals(ulordMergedMiningBlock.getMerkleRoot())) {
             logger.warn("ulord merkle root of ulord block does not match the merkle root of merkle branch");
             return false;

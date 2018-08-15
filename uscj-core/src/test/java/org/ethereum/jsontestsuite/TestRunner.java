@@ -1,6 +1,6 @@
 /*
- * This file is part of Usc
- * Copyright (C) 2016 - 2018 Ulord development team.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ import org.ethereum.jsontestsuite.model.BlockTck;
 import org.ethereum.jsontestsuite.validators.BlockHeaderValidator;
 import org.ethereum.jsontestsuite.validators.RepositoryValidator;
 import org.ethereum.listener.CompositeEthereumListener;
-import org.ethereum.listener.EthereumListener;
+import org.ethereum.listener.TestCompositeEthereumListener;
 import org.ethereum.util.ByteUtil;
 import org.ethereum.vm.DataWord;
 import org.ethereum.vm.LogInfo;
@@ -106,15 +106,16 @@ public class TestRunner {
         IndexedBlockStore blockStore = new IndexedBlockStore(new HashMap<>(), new HashMapDB(), null);
         blockStore.saveBlock(genesis, genesis.getCumulativeDifficulty(), true);
 
-        CompositeEthereumListener listener = new CompositeEthereumListener();
+        CompositeEthereumListener listener = new TestCompositeEthereumListener();
 
         KeyValueDataSource ds = new HashMapDB();
-
         ds.init();
         ReceiptStore receiptStore = new ReceiptStoreImpl(ds);
 
         TransactionPoolImpl transactionPool = new TransactionPoolImpl(config, repository, null, receiptStore, null, listener, 10, 100);
+
         BlockChainImpl blockchain = new BlockChainImpl(config, repository, blockStore, receiptStore, transactionPool, null, null, new DummyBlockValidator());
+
         blockchain.setNoValidation(true);
 
         blockchain.setBestBlock(genesis);

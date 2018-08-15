@@ -1,6 +1,6 @@
 /*
- * This file is part of UscJ
- * Copyright (C) 2017 USC Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -30,12 +30,12 @@ public class RemascConfig {
     // Number of blocks block reward is split into
     private long syntheticSpan;
 
-    // USC Labs address.
+    // USC labs address.
     // Note that his has to be a basic type (such as String) because RemascConfig
     // is deserialized automatically from JSON.
     private String uscLabsAddress;
 
-    // USC Labs cut. Available reward / uscLabsDivisor is what USC gets.
+    // USC labs cut. Available reward / uscLabsDivisor is what USC gets.
     private long uscLabsDivisor = 5;
 
     // Federation cut. Available reward / uscFederationDivisor is what Federation gets.
@@ -65,11 +65,11 @@ public class RemascConfig {
         return syntheticSpan;
     }
 
-    public UscAddress getuscLabsAddress() {
+    public UscAddress getUscLabsAddress() {
         return new UscAddress(this.uscLabsAddress);
     }
 
-    public long getuscLabsDivisor() {
+    public long getUscLabsDivisor() {
         return uscLabsDivisor;
     }
 

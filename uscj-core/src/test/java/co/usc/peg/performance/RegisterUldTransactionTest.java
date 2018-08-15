@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,6 +26,7 @@ import co.usc.config.TestSystemProperties;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageProvider;
 import co.usc.peg.RepositoryBlockStore;
+import co.usc.config.TestSystemProperties;
 import org.ethereum.core.Repository;
 import org.ethereum.vm.PrecompiledContracts;
 import org.junit.Ignore;
@@ -97,17 +98,17 @@ public class RegisterUldTransactionTest extends BridgePerformanceTestCase {
 
     private BridgeStorageProviderInitializer generateInitializerForLock(int minUldBlocks, int maxUldBlocks, int numberOfLockConfirmations, boolean markAsAlreadyProcessed) {
         return (BridgeStorageProvider provider, Repository repository, int executionIndex) -> {
-            UldBlockStore UldBlockStore = new RepositoryBlockStore(new TestSystemProperties(), repository, PrecompiledContracts.BRIDGE_ADDR);
-            Context btcContext = new Context(networkParameters);
-            UldBlockChain UldBlockChain;
+            UldBlockStore uldBlockStore = new RepositoryBlockStore(new TestSystemProperties(), repository, PrecompiledContracts.BRIDGE_ADDR);
+            Context uldContext = new Context(networkParameters);
+            UldBlockChain uldBlockChain;
             try {
-                UldBlockChain = new UldBlockChain(btcContext, UldBlockStore);
+                uldBlockChain = new UldBlockChain(uldContext, uldBlockStore);
             } catch (BlockStoreException e) {
-                throw new RuntimeException("Error initializing btc blockchain for tests");
+                throw new RuntimeException("Error initializing uld blockchain for tests");
             }
 
             int blocksToGenerate = Helper.randomInRange(minUldBlocks, maxUldBlocks);
-            UldBlock lastBlock = Helper.generateAndAddBlocks(UldBlockChain, blocksToGenerate);
+            UldBlock lastBlock = Helper.generateAndAddBlocks(uldBlockChain, blocksToGenerate);
 
             // Sender and amounts
             UldECKey from = new UldECKey();
@@ -139,10 +140,10 @@ public class RegisterUldTransactionTest extends BridgePerformanceTestCase {
             Sha256Hash merkleRoot = pmtOfLockTx.getTxnHashAndMerkleRoot(hashes);
 
             blockWithTx = Helper.generateUldBlock(lastBlock, Arrays.asList(txToLock), merkleRoot);
-            UldBlockChain.add(blockWithTx);
-            blockWithTxHeight = UldBlockChain.getBestChainHeight();
+            uldBlockChain.add(blockWithTx);
+            blockWithTxHeight = uldBlockChain.getBestChainHeight();
 
-            Helper.generateAndAddBlocks(UldBlockChain, numberOfLockConfirmations);
+            Helper.generateAndAddBlocks(uldBlockChain, numberOfLockConfirmations);
 
             // Marking as already processed
             if (markAsAlreadyProcessed) {

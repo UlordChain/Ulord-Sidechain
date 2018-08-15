@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2016 - 2018 USC development team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,6 +24,7 @@ import org.ethereum.facade.Ethereum;
 import org.ethereum.listener.CompositeEthereumListener;
 import org.ethereum.listener.EthereumListener;
 import org.ethereum.listener.GasPriceTracker;
+import org.ethereum.listener.TestCompositeEthereumListener;
 
 import javax.annotation.Nonnull;
 import java.math.BigInteger;
@@ -49,7 +50,7 @@ public class SimpleEthereum implements Ethereum {
     @Override
     public void addListener(EthereumListener listener) {
         if (this.listener == null) {
-            this.listener = new CompositeEthereumListener();
+            this.listener = new TestCompositeEthereumListener();
         }
         ((CompositeEthereumListener) this.listener).addListener(listener);
     }
@@ -75,7 +76,6 @@ public class SimpleEthereum implements Ethereum {
     public void submitTransaction(Transaction transaction) {
         tx = transaction;
     }
-
 
     public Repository getRepository() {
         return repository;

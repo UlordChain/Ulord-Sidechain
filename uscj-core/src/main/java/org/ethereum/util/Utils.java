@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2016 - 2018 Usc Development team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -219,6 +219,7 @@ public class Utils {
         
         return false;
     }
+
     public static void validateArrayAllegedSize(byte[] data, int offset, int allegedSize) {
         if (data.length < Math.addExact(allegedSize, offset)) {
             throw new IllegalArgumentException("The specified size exceeds the size of the payload");

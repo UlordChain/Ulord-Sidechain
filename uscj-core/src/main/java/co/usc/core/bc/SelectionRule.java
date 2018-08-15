@@ -3,7 +3,6 @@ package co.usc.core.bc;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.Coin;
 import co.usc.remasc.Sibling;
-import co.usc.remasc.Sibling;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.util.FastByteComparisons;

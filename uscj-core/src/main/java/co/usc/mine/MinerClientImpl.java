@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -143,17 +143,12 @@ public class MinerClientImpl implements MinerClient {
         newBestBlockArrivedFromAnotherNode = false;
         work = minerServer.getWork();
 
-        //get the ulord testnet NetworkParameters
         co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
-        //get the CoinbaseTransaction of UMMB
         co.usc.ulordj.core.UldTransaction ulordMergedMiningCoinbaseTransaction = MinerUtils.getUlordMergedMiningCoinbaseTransaction(ulordNetworkParameters, work);
-        //get the UMMB
         co.usc.ulordj.core.UldBlock ulordMergedMiningBlock = MinerUtils.getUlordMergedMiningBlock(ulordNetworkParameters, ulordMergedMiningCoinbaseTransaction);
 
-       //get the usc target
         BigInteger target = new BigInteger(1, TypeConverter.stringHexToByteArray(work.getTarget()));
         logger.info("Miner Client Target : " + target);
-
         boolean foundNonce = findNonce(ulordMergedMiningBlock, target);
 
         if (newBestBlockArrivedFromAnotherNode) {
@@ -214,8 +209,6 @@ public class MinerClientImpl implements MinerClient {
      */
     private boolean findNonce(@Nonnull final co.usc.ulordj.core.UldBlock ulordMergedMiningBlock,
                               @Nonnull final BigInteger target) {
-
-
         ulordMergedMiningBlock.setNonce(nextNonceToUse);
 
         while (!stop && !newBestBlockArrivedFromAnotherNode) {
@@ -225,7 +218,6 @@ public class MinerClientImpl implements MinerClient {
                 return true;
             }
             // No, so increment the nonce and try again.
-
             nextNonceToUse = nextNonceToUse.add(BigInteger.ONE);
             ulordMergedMiningBlock.setNonce(nextNonceToUse);
             if (ulordMergedMiningBlock.getNonce().mod(BigInteger.valueOf(100000)) == BigInteger.ZERO) {

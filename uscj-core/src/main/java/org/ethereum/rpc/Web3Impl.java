@@ -1,6 +1,6 @@
 /*
- * This file is part of Usc
- * Copyright (C) 2016 - 2018 Ulord development team.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,6 +22,7 @@ import co.usc.config.UscSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
 import co.usc.core.SnapshotManager;
+import co.usc.core.bc.AccountInformationProvider;
 import co.usc.crypto.Keccak256;
 import co.usc.metrics.HashRateCalculator;
 import co.usc.mine.MinerClient;
@@ -29,7 +30,9 @@ import co.usc.mine.MinerManager;
 import co.usc.mine.MinerServer;
 import co.usc.net.BlockProcessor;
 import co.usc.rpc.ModuleDescription;
+import co.usc.rpc.modules.debug.DebugModule;
 import co.usc.rpc.modules.eth.EthModule;
+import co.usc.rpc.modules.mnr.MnrModule;
 import co.usc.rpc.modules.personal.PersonalModule;
 import co.usc.rpc.modules.txpool.TxPoolModule;
 import co.usc.scoring.InvalidInetAddressException;
@@ -58,13 +61,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.util.encoders.Hex;
 
-//import java.math.BigDecimal;
 import java.math.BigInteger;
-//import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
-//import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.max;
 import static org.ethereum.rpc.TypeConverter.*;
@@ -78,9 +78,9 @@ public class Web3Impl implements Web3 {
 
     public Ethereum eth;
 
-    private final String baseClientVersion = "UscJ";
+    private final String baseClientVersion = "USC";
 
-    long initialBlockNumber;
+    private long initialBlockNumber;
 
     private final MinerClient minerClient;
     protected MinerServer minerServer;
@@ -103,26 +103,30 @@ public class Web3Impl implements Web3 {
     private final PersonalModule personalModule;
     private final EthModule ethModule;
     private final TxPoolModule txPoolModule;
+    private final MnrModule mnrModule;
+    private final DebugModule debugModule;
 
-
-    protected Web3Impl(Ethereum eth,
-                       Blockchain blockchain,
-                       TransactionPool transactionPool,
-                       BlockStore blockStore,
-                       ReceiptStore receiptStore,
-                       UscSystemProperties config,
-                       MinerClient minerClient,
-                       MinerServer minerServer,
-                       PersonalModule personalModule,
-                       EthModule ethModule,
-                       TxPoolModule txPoolModule,
-                       ChannelManager channelManager,
-                       Repository repository,
-                       PeerScoringManager peerScoringManager,
-                       PeerServer peerServer,
-                       BlockProcessor nodeBlockProcessor,
-                       HashRateCalculator hashRateCalculator,
-                       ConfigCapabilities configCapabilities) {
+    protected Web3Impl(
+            Ethereum eth,
+            Blockchain blockchain,
+            TransactionPool transactionPool,
+            BlockStore blockStore,
+            ReceiptStore receiptStore,
+            UscSystemProperties config,
+            MinerClient minerClient,
+            MinerServer minerServer,
+            PersonalModule personalModule,
+            EthModule ethModule,
+            TxPoolModule txPoolModule,
+            MnrModule mnrModule,
+            DebugModule debugModule,
+            ChannelManager channelManager,
+            Repository repository,
+            PeerScoringManager peerScoringManager,
+            PeerServer peerServer,
+            BlockProcessor nodeBlockProcessor,
+            HashRateCalculator hashRateCalculator,
+            ConfigCapabilities configCapabilities) {
         this.eth = eth;
         this.blockchain = blockchain;
         this.blockStore = blockStore;
@@ -134,6 +138,8 @@ public class Web3Impl implements Web3 {
         this.personalModule = personalModule;
         this.ethModule = ethModule;
         this.txPoolModule = txPoolModule;
+        this.mnrModule = mnrModule;
+        this.debugModule = debugModule;
         this.channelManager = channelManager;
         this.peerScoringManager = peerScoringManager;
         this.peerServer = peerServer;
@@ -144,6 +150,7 @@ public class Web3Impl implements Web3 {
         filterManager = new FilterManager(eth);
         snapshotManager = new SnapshotManager(blockchain, transactionPool);
         initialBlockNumber = this.blockchain.getBestBlock().getNumber();
+
         personalModule.init(this.config);
     }
 
@@ -155,14 +162,6 @@ public class Web3Impl implements Web3 {
     @Override
     public void stop() {
         hashRateCalculator.stop();
-    }
-
-    public static long JSonHexToLong(String x) throws Exception {
-        if (!x.startsWith("0x")) {
-            throw new Exception("Incorrect hex syntax");
-        }
-        x = x.substring(2);
-        return Long.parseLong(x, 16);
     }
 
     public int JSonHexToInt(String x) throws Exception {
@@ -310,9 +309,7 @@ public class Web3Impl implements Web3 {
         }
     }
 
-    //Change the eth hashrate from string to Biginteger
-    //Kwuaint@Ulord
-     @Override
+    @Override
     public BigInteger eth_hashrate() {
         BigInteger hashesPerHour = hashRateCalculator.calculateNodeHashRate(Duration.ofHours(1));
         BigInteger hashesPerSecond = hashesPerHour.divide(BigInteger.valueOf(Duration.ofHours(1).getSeconds()));
@@ -322,8 +319,6 @@ public class Web3Impl implements Web3 {
         return hashesPerSecond;
     }
 
-    //Change the eth_net hashrate from string to Biginteger
-    //Kwuaint@Ulord
     @Override
     public BigInteger eth_netHashrate() {
         BigInteger hashesPerHour = hashRateCalculator.calculateNetHashRate(Duration.ofHours(1));
@@ -357,11 +352,7 @@ public class Web3Impl implements Web3 {
 
     @Override
     public String eth_blockNumber() {
-        Block bestBlock;
-
-        synchronized (blockchain) {
-            bestBlock = blockchain.getBestBlock();
-        }
+        Block bestBlock = blockchain.getBestBlock();
 
         long b = 0;
         if (bestBlock != null) {
@@ -380,14 +371,14 @@ public class Web3Impl implements Web3 {
         *  String "latest"  - for the latest mined block
         *  String "pending"  - for the pending state/transactions
         */
-        Repository repository = getRepoByJsonBlockId(block);
+        AccountInformationProvider accountInformationProvider = getAccountInformationProvider(block);
 
-        if (repository == null) {
+        if (accountInformationProvider == null) {
             throw new NullPointerException();
         }
 
         UscAddress addr = new UscAddress(address);
-        BigInteger balance = repository.getBalance(addr).asBigInteger();
+        BigInteger balance = accountInformationProvider.getBalance(addr).asBigInteger();
 
         return toJsonHex(balance);
     }
@@ -406,13 +397,13 @@ public class Web3Impl implements Web3 {
 
         try {
             UscAddress addr = new UscAddress(address);
-            Repository repository = getRepoByJsonBlockId(blockId);
+            AccountInformationProvider accountInformationProvider = getAccountInformationProvider(blockId);
 
-            if(repository == null) {
+            if(accountInformationProvider == null) {
                 return null;
             }
 
-            DataWord storageValue = repository.
+            DataWord storageValue = accountInformationProvider.
                     getStorageValue(addr, new DataWord(stringHexToByteArray(storageIdx)));
             if (storageValue != null) {
                 return s = TypeConverter.toJsonHex(storageValue.getData());
@@ -432,10 +423,10 @@ public class Web3Impl implements Web3 {
         try {
             UscAddress addr = new UscAddress(address);
 
-            Repository repository = getRepoByJsonBlockId(blockId);
+            AccountInformationProvider accountInformationProvider = getAccountInformationProvider(blockId);
 
-            if (repository != null) {
-                BigInteger nonce = repository.getNonce(addr);
+            if (accountInformationProvider != null) {
+                BigInteger nonce = accountInformationProvider.getNonce(addr);
                 return s = TypeConverter.toJsonHex(nonce);
             } else {
                 return null;
@@ -473,22 +464,20 @@ public class Web3Impl implements Web3 {
     }
 
     public static Block getBlockByNumberOrStr(String bnOrId, Blockchain blockchain) throws Exception {
-        synchronized (blockchain) {
-            Block b;
+        Block b;
 
-            if (bnOrId.equals("latest")) {
-                b = blockchain.getBestBlock();
-            } else if (bnOrId.equals("earliest")) {
-                b = blockchain.getBlockByNumber(0);
-            } else if (bnOrId.equals("pending")) {
-                throw new JsonRpcUnimplementedMethodException("The method don't support 'pending' as a parameter yet");
-            } else {
-                long bn = JSonHexToLong(bnOrId);
-                b = blockchain.getBlockByNumber(bn);
-            }
-
-            return b;
+        if ("latest".equals(bnOrId)) {
+            b = blockchain.getBestBlock();
+        } else if ("earliest".equals(bnOrId)) {
+            b = blockchain.getBlockByNumber(0);
+        } else if ("pending".equals(bnOrId)) {
+            throw new JsonRpcUnimplementedMethodException("The method don't support 'pending' as a parameter yet");
+        } else {
+            long bn = JSonHexToLong(bnOrId);
+            b = blockchain.getBlockByNumber(bn);
         }
+
+        return b;
     }
 
     @Override
@@ -543,10 +532,10 @@ public class Web3Impl implements Web3 {
 
             UscAddress addr = new UscAddress(address);
 
-            Repository repository = getRepoByJsonBlockId(blockId);
+            AccountInformationProvider accountInformationProvider = getAccountInformationProvider(blockId);
 
-            if(repository != null) {
-                byte[] code = repository.getCode(addr);
+            if(accountInformationProvider != null) {
+                byte[] code = accountInformationProvider.getCode(addr);
                 s = TypeConverter.toJsonHex(code);
             }
 
@@ -1043,9 +1032,9 @@ public class Web3Impl implements Web3 {
         }
     }
 
-    private Repository getRepoByJsonBlockId(String id) {
+    private AccountInformationProvider getAccountInformationProvider(String id) {
         if ("pending".equalsIgnoreCase(id)) {
-            return transactionPool.getRepository();
+            return transactionPool.getPendingState();
         } else {
             Block block = getByJsonBlockId(id);
             if (block != null) {
@@ -1104,6 +1093,16 @@ public class Web3Impl implements Web3 {
     @Override
     public TxPoolModule getTxPoolModule() {
         return txPoolModule;
+    }
+
+    @Override
+    public MnrModule getMnrModule() {
+        return mnrModule;
+    }
+
+    @Override
+    public DebugModule getDebugModule() {
+        return debugModule;
     }
 
     @Override

@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2018 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,10 +19,10 @@
 package org.ethereum.rpc;
 
 import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
 import co.usc.core.UscAddress;
-import co.usc.test.World;
+import co.usc.core.bc.BlockChainImpl;
 import org.ethereum.core.Block;
+import org.ethereum.util.UscTestFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,8 +30,6 @@ import org.junit.Test;
  * Created by ajlopez on 17/01/2018.
  */
 public class LogFilterTest {
-    private final TestSystemProperties config = new TestSystemProperties();
-
     @Test
     public void noEvents() {
         LogFilter filter = new LogFilter(null, null, false, false);
@@ -58,12 +56,13 @@ public class LogFilterTest {
 
     @Test
     public void eventAfterBlockWithEvent() {
-        World world = Web3ImplLogsTest.getWorld3WithBlockWithEventInContractCreation(config);
-        Block block = world.getBlockChain().getBestBlock();
+        BlockChainImpl blockchain = new UscTestFactory().getBlockchain();
+        Web3ImplLogsTest.addEmptyBlockToBlockchain(blockchain);
+        Block block = blockchain.getBestBlock();
 
         AddressesTopicsFilter atfilter = new AddressesTopicsFilter(new UscAddress[0], null);
 
-        LogFilter filter = new LogFilter(atfilter, world.getBlockChain(), false, true);
+        LogFilter filter = new LogFilter(atfilter, blockchain, false, true);
 
         filter.newBlockReceived(block);
 
@@ -75,12 +74,13 @@ public class LogFilterTest {
 
     @Test
     public void twoEventsAfterTwoBlocksWithEventAndToLatestBlock() {
-        World world = Web3ImplLogsTest.getWorld3WithBlockWithEventInContractCreation(config);
-        Block block = world.getBlockChain().getBestBlock();
+        BlockChainImpl blockchain = new UscTestFactory().getBlockchain();
+        Web3ImplLogsTest.addEmptyBlockToBlockchain(blockchain);
+        Block block = blockchain.getBestBlock();
 
         AddressesTopicsFilter atfilter = new AddressesTopicsFilter(new UscAddress[0], null);
 
-        LogFilter filter = new LogFilter(atfilter, world.getBlockChain(), false, true);
+        LogFilter filter = new LogFilter(atfilter, blockchain, false, true);
 
         filter.newBlockReceived(block);
         filter.newBlockReceived(block);
@@ -93,12 +93,13 @@ public class LogFilterTest {
 
     @Test
     public void onlyOneEventAfterTwoBlocksWithEventAndFromLatestBlock() {
-        World world = Web3ImplLogsTest.getWorld3WithBlockWithEventInContractCreation(config);
-        Block block = world.getBlockChain().getBestBlock();
+        BlockChainImpl blockchain = new UscTestFactory().getBlockchain();
+        Web3ImplLogsTest.addEmptyBlockToBlockchain(blockchain);
+        Block block = blockchain.getBestBlock();
 
         AddressesTopicsFilter atfilter = new AddressesTopicsFilter(new UscAddress[0], null);
 
-        LogFilter filter = new LogFilter(atfilter, world.getBlockChain(), true, true);
+        LogFilter filter = new LogFilter(atfilter, blockchain, true, true);
 
         filter.newBlockReceived(block);
         filter.newBlockReceived(block);

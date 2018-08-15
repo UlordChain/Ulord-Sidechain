@@ -17,6 +17,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class PeerScoring {
     private final boolean punishmentEnabled;
+
     private final ReadWriteLock rwlock = new ReentrantReadWriteLock();
     private int[] counters = new int[EventType.values().length];
     private boolean goodReputation = true;
@@ -32,7 +33,6 @@ public class PeerScoring {
     public PeerScoring(boolean punishmentEnabled) {
         this.punishmentEnabled = punishmentEnabled;
     }
-
 
     /**
      * Records an event.
@@ -62,7 +62,6 @@ public class PeerScoring {
                     }
                     score--;
                     break;
-
                 case UNEXPECTED_MESSAGE:
                 case FAILED_HANDSHAKE:
                 case SUCCESSFUL_HANDSHAKE:

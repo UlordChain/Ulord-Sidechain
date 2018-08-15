@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,6 +41,10 @@ public class EthereumListenerAdapter implements EthereumListener {
 
     @Override
     public void onBlock(Block block, List<TransactionReceipt> receipts) {
+    }
+
+    @Override
+    public void onBestBlock(Block block, List<TransactionReceipt> receipts) {
     }
 
     @Override

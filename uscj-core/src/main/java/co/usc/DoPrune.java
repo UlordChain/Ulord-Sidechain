@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016-2018 The Usc developers.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,7 +19,6 @@
 package co.usc;
 
 import co.usc.config.UscSystemProperties;
-import co.usc.core.Usc;
 import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.trie.Trie;
@@ -27,7 +26,10 @@ import co.usc.trie.TrieImpl;
 import co.usc.trie.TrieStore;
 import co.usc.trie.TrieStoreImpl;
 import org.ethereum.config.DefaultConfig;
-import org.ethereum.core.*;
+import org.ethereum.core.AccountState;
+import org.ethereum.core.Block;
+import org.ethereum.core.Blockchain;
+import org.ethereum.core.Repository;
 import org.ethereum.datasource.KeyValueDataSource;
 import org.ethereum.util.BuildInfo;
 import org.ethereum.vm.PrecompiledContracts;
@@ -50,27 +52,25 @@ public class DoPrune {
     private static UscAddress DEFAULT_CONTRACT_ADDRESS = PrecompiledContracts.REMASC_ADDR;
     private static int DEFAULT_BLOCKS_TO_PROCESS = 5000;
 
-    private final Usc usc;
     private final UscSystemProperties uscSystemProperties;
     private final Blockchain blockchain;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(DefaultConfig.class);
         DoPrune runner = ctx.getBean(DoPrune.class);
-        runner.doPrune(args);
+        runner.doPrune();
         runner.stop();
     }
 
     @Autowired
-    public DoPrune(Usc usc,
-                   UscSystemProperties uscSystemProperties,
-                   Blockchain blockchain) {
-        this.usc = usc;
+    public DoPrune(
+            UscSystemProperties uscSystemProperties,
+            Blockchain blockchain) {
         this.uscSystemProperties = uscSystemProperties;
         this.blockchain = blockchain;
     }
 
-    public void doPrune(String[] args) throws Exception {
+    private void doPrune() {
         logger.info("Pruning Database");
 
         int blocksToProcess = DEFAULT_BLOCKS_TO_PROCESS;
@@ -96,7 +96,7 @@ public class DoPrune {
         targetDataSource.close();
     }
 
-    public void processBlocks(long from, TrieImpl sourceTrie, UscAddress contractAddress, TrieStore targetStore) {
+    private void processBlocks(long from, TrieImpl sourceTrie, UscAddress contractAddress, TrieStore targetStore) {
         long n = from;
 
         if (n <= 0) {
@@ -139,3 +139,4 @@ public class DoPrune {
         return "details-storage/" + contractAddress;
     }
 }
+

@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +19,7 @@
 package co.usc.config;
 
 import co.usc.core.UscAddress;
+import co.usc.db.PruneConfiguration;
 import co.usc.net.eth.MessageFilter;
 import co.usc.net.eth.MessageRecorder;
 import co.usc.net.eth.WriterMessageRecorder;
@@ -51,11 +52,22 @@ import java.util.List;
 public class UscSystemProperties extends SystemProperties {
     private static final Logger logger = LoggerFactory.getLogger("config");
 
-    public static final int PD_DEFAULT_REFRESH_PERIOD = 60000;
+    /** while timeout period is lower than clean period it doesn't affect much since
+    requests will be checked after a clean period.
+     **/
+    private static final int PD_DEFAULT_CLEAN_PERIOD = 15000; //miliseconds
+    private static final int PD_DEFAULT_TIMEOUT_MESSAGE = PD_DEFAULT_CLEAN_PERIOD - 1; //miliseconds
+    private static final int PD_DEFAULT_REFRESH_PERIOD = 60000; //miliseconds
+
     public static final int BLOCKS_FOR_PEERS_DEFAULT = 100;
     private static final String MINER_REWARD_ADDRESS_CONFIG = "miner.reward.address";
     private static final String MINER_COINBASE_SECRET_CONFIG = "miner.coinbase.secret";
     private static final int CHUNK_SIZE = 192;
+
+    // Prune default values
+    private static final int PRUNE_BLOCKS_TO_COPY_DEFAULT = 5000;
+    private static final int PRUNE_BLOCKS_TO_WAIT_DEFAULT = 10000;
+    private static final int PRUNE_BLOCKS_TO_AVOID_FORKS_DEFAULT = 100;
 
     //TODO: REMOVE THIS WHEN THE LocalBLockTests starts working with REMASC
     private boolean remascEnabled = true;
@@ -111,11 +123,6 @@ public class UscSystemProperties extends SystemProperties {
 
         String coinbaseSecret = configFromFiles.getString(MINER_COINBASE_SECRET_CONFIG);
         return new Account(ECKey.fromPrivate(HashUtil.keccak256(coinbaseSecret.getBytes(StandardCharsets.UTF_8))));
-    }
-
-    public String getBlockChainName() {
-        return configFromFiles.hasPath("blockchain.config.name") ?
-                configFromFiles.getString("blockchain.config.name") : "main";
     }
 
     public boolean isMinerClientEnabled() {
@@ -225,8 +232,7 @@ public class UscSystemProperties extends SystemProperties {
     }
 
     public int soLingerTime() {
-        return configFromFiles.hasPath("rpc.linger.time") ?
-                configFromFiles.getInt("rpc.linger.time") : -1;
+        return configFromFiles.getInt("rpc.providers.web.http.linger_time");
 
     }
 
@@ -261,7 +267,7 @@ public class UscSystemProperties extends SystemProperties {
 
     public long peerDiscoveryMessageTimeOut() {
         return configFromFiles.hasPath("peer.discovery.msg.timeout") ?
-                configFromFiles.getLong("peer.discovery.msg.timeout") : 30000;
+                configFromFiles.getLong("peer.discovery.msg.timeout") : PD_DEFAULT_TIMEOUT_MESSAGE;
     }
 
     public long peerDiscoveryRefreshPeriod() {
@@ -405,5 +411,32 @@ public class UscSystemProperties extends SystemProperties {
         }
 
         return vmConfig;
+    }
+
+    // New prune service properties
+
+    public boolean isPruneEnabled() {
+        return configFromFiles.hasPath("prune.enabled") ?
+                configFromFiles.getBoolean("prune.enabled") : false;
+    }
+
+    public int getPruneNoBlocksToCopy() {
+        return getInt("prune.blocks.toCopy", PRUNE_BLOCKS_TO_COPY_DEFAULT);
+    }
+
+    public int getPruneNoBlocksToWait() {
+        return getInt("prune.blocks.toWait", PRUNE_BLOCKS_TO_WAIT_DEFAULT);
+    }
+
+    public int getPruneNoBlocksToAvoidForks() {
+        return getInt("prune.blocks.toAvoidForks", PRUNE_BLOCKS_TO_AVOID_FORKS_DEFAULT);
+    }
+
+    public PruneConfiguration getPruneConfiguration() {
+        return new PruneConfiguration(this.getPruneNoBlocksToCopy(), this.getPruneNoBlocksToAvoidForks(), this.getPruneNoBlocksToWait());
+    }
+
+    public long peerDiscoveryCleanPeriod() {
+        return PD_DEFAULT_CLEAN_PERIOD;
     }
 }

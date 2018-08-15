@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -600,6 +600,7 @@ public class Transaction {
     }
 
     public static Transaction create(UscSystemProperties config, String to, BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, byte[] decodedData) {
+        // Condition added by usc team.
         if(gasLimit.equals(BigInteger.ZERO))
             return new Transaction(BigIntegers.asUnsignedByteArray(nonce),
                     BigIntegers.asUnsignedByteArray(gasPrice),
@@ -608,10 +609,9 @@ public class Transaction {
                     BigIntegers.asUnsignedByteArray(amount),
                     decodedData,
                     config.getBlockchainConfig().getCommonConstants().getChainId());
-
         return new Transaction(BigIntegers.asUnsignedByteArray(nonce),
                 BigIntegers.asUnsignedByteArray(gasPrice),
-                BigIntegers.asUnsignedByteArray(gasLimit),      // asUnsignedByteArray returns {} empty byte array if the gasLimit is set to 0
+                BigIntegers.asUnsignedByteArray(gasLimit),
                 to != null ? Hex.decode(to) : null,
                 BigIntegers.asUnsignedByteArray(amount),
                 decodedData,

@@ -1,6 +1,7 @@
 package co.usc.net;
 
 import co.usc.core.BlockDifficulty;
+import co.usc.core.BlockDifficulty;
 import org.ethereum.crypto.HashUtil;
 import org.junit.Assert;
 import org.junit.Test;

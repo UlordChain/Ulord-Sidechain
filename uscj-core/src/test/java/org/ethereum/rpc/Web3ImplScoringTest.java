@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2016 - 2018  Ulord Core team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,6 +24,8 @@ import co.usc.core.WalletFactory;
 import co.usc.net.NodeID;
 import co.usc.rpc.ExecutionBlockRetriever;
 import co.usc.rpc.Web3UscImpl;
+import co.usc.rpc.modules.debug.DebugModule;
+import co.usc.rpc.modules.debug.DebugModuleImpl;
 import co.usc.rpc.modules.eth.EthModule;
 import co.usc.rpc.modules.eth.EthModuleSolidityDisabled;
 import co.usc.rpc.modules.eth.EthModuleWalletEnabled;
@@ -356,6 +358,7 @@ public class Web3ImplScoringTest {
         PersonalModule pm = new PersonalModuleWalletEnabled(config, usc, wallet, null);
         EthModule em = new EthModule(config, world.getBlockChain(), null, new ExecutionBlockRetriever(world.getBlockChain(), null, null), new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, usc, wallet, null));
         TxPoolModule tpm = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
+        DebugModule dm = new DebugModuleImpl(Web3Mocks.getMockMessageHandler());
         return new Web3UscImpl(
                 usc,
                 world.getBlockChain(),
@@ -366,6 +369,8 @@ public class Web3ImplScoringTest {
                 pm,
                 em,
                 tpm,
+                null,
+                dm,
                 Web3Mocks.getMockChannelManager(),
                 usc.getRepository(),
                 peerScoringManager,
@@ -394,6 +399,5 @@ public class Web3ImplScoringTest {
                 new PunishmentParameters(10, 10, 1000),
                 new PunishmentParameters(10, 10, 1000)
         );
-
     }
 }

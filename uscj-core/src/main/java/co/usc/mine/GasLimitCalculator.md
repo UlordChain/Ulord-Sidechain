@@ -62,7 +62,7 @@ Therefore:
 - Is gas limit is still below the TargetGasLimit (genesis block limit, about 500000) then the decay value (step 2) is added back 
 
 
-## RskJ Implementation
+## USC Implementation
 
 - We follow the Eth implementation, but setting the minimum limit to 1.000.000, so that complex contracts can be executed from the beginning
 - Allowed gas limit can never go above a target

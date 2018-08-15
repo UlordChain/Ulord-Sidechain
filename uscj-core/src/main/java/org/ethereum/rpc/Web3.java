@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,14 +18,16 @@
 
 package org.ethereum.rpc;
 
+import co.usc.rpc.Web3DebugModule;
 import co.usc.rpc.Web3EthModule;
+import co.usc.rpc.Web3MnrModule;
 import co.usc.rpc.Web3TxPoolModule;
 import co.usc.scoring.PeerScoringInformation;
 
 import java.util.Arrays;
 import java.util.Map;
 
-public interface Web3 extends Web3TxPoolModule, Web3EthModule {
+public interface Web3 extends Web3TxPoolModule, Web3EthModule, Web3MnrModule, Web3DebugModule {
     class SyncingResult {
         public String startingBlock;
         public String currentBlock;

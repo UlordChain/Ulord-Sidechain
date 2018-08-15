@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,10 +24,8 @@ import co.usc.net.discovery.table.NodeDistanceTable;
 import co.usc.net.discovery.table.OperationResult;
 import co.usc.net.discovery.table.PeerDiscoveryRequestBuilder;
 import co.usc.util.IpUtils;
-import co.usc.net.discovery.message.*;
-import co.usc.net.discovery.table.NodeDistanceTable;
-import co.usc.net.discovery.table.OperationResult;
-import co.usc.net.discovery.table.PeerDiscoveryRequestBuilder;
+import co.usc.net.NodeID;
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.ethereum.crypto.ECKey;
@@ -51,12 +49,14 @@ public class PeerExplorer {
     private static final int MAX_NODES_PER_MSG = 20;
     private static final int MAX_NODES_TO_ASK = 24;
     private static final int MAX_NODES_TO_CHECK = 16;
+    private static final int RETRIES_COUNT = 3;
 
     private final Set<InetSocketAddress> bootNodes = ConcurrentHashMap.newKeySet();
     private final Map<String, PeerDiscoveryRequest> pendingPingRequests = new ConcurrentHashMap<>();
     private final Map<String, PeerDiscoveryRequest> pendingFindNodeRequests = new ConcurrentHashMap<>();
 
     private final Map<NodeID, Node> establishedConnections = new ConcurrentHashMap<>();
+    private final Integer networkId;
 
     private UDPChannel udpChannel;
 
@@ -74,15 +74,15 @@ public class PeerExplorer {
 
     private long requestTimeout;
 
-    public PeerExplorer(List<String> initialBootNodes, Node localNode, NodeDistanceTable distanceTable, ECKey key, long reqTimeOut, long refreshPeriod) {
+    public PeerExplorer(List<String> initialBootNodes, Node localNode, NodeDistanceTable distanceTable, ECKey key, long reqTimeOut, long updatePeriod, long cleanPeriod, Integer networkId) {
         this.localNode = localNode;
         this.key = key;
         this.distanceTable = distanceTable;
         this.updateEntryLock = new ReentrantLock();
-
+        this.networkId = networkId;
         loadInitialBootNodes(initialBootNodes);
 
-        this.cleaner = new PeerExplorerCleaner(this, refreshPeriod);
+        this.cleaner = new PeerExplorerCleaner(this, updatePeriod, cleanPeriod);
         this.challengeManager = new NodeChallengeManager();
         this.requestTimeout = reqTimeOut;
     }
@@ -113,6 +113,12 @@ public class PeerExplorer {
 
     public void handleMessage(DiscoveryEvent event) {
         DiscoveryMessageType type = event.getMessage().getMessageType();
+        //If this is not from my network ignore it. But if the messages do not
+        //have a networkId in the message yet, then just let them through, for now.
+        if (event.getMessage().getNetworkId().isPresent() &&
+                event.getMessage().getNetworkId().getAsInt() != this.networkId) {
+            return;
+        }
         if (type == DiscoveryMessageType.PING) {
             this.handlePingMessage(event.getAddressIp(), (PingPeerMessage) event.getMessage());
         }
@@ -200,7 +206,10 @@ public class PeerExplorer {
 
         InetSocketAddress localAddress = this.localNode.getAddress();
         String id = UUID.randomUUID().toString();
-        nodeMessage = PingPeerMessage.create(localAddress.getAddress().getHostAddress(), localAddress.getPort(), id, this.key);
+        nodeMessage = PingPeerMessage.create(
+                localAddress.getAddress().getHostAddress(),
+                localAddress.getPort(),
+                id, this.key, this.networkId);
         udpChannel.write(new DiscoveryEvent(nodeMessage, nodeAddress));
 
         PeerDiscoveryRequest request = PeerDiscoveryRequestBuilder.builder().messageId(id)
@@ -233,7 +242,7 @@ public class PeerExplorer {
 
     public PongPeerMessage sendPong(String ip, PingPeerMessage message) {
         InetSocketAddress localAddress = this.localNode.getAddress();
-        PongPeerMessage pongPeerMessage = PongPeerMessage.create(localAddress.getHostName(), localAddress.getPort(), message.getMessageId(), this.key);
+        PongPeerMessage pongPeerMessage = PongPeerMessage.create(localAddress.getHostName(), localAddress.getPort(), message.getMessageId(), this.key, this.networkId);
         InetSocketAddress nodeAddress = new InetSocketAddress(ip, message.getPort());
         udpChannel.write(new DiscoveryEvent(pongPeerMessage, nodeAddress));
 
@@ -243,7 +252,7 @@ public class PeerExplorer {
     public FindNodePeerMessage sendFindNode(Node node) {
         InetSocketAddress nodeAddress = node.getAddress();
         String id = UUID.randomUUID().toString();
-        FindNodePeerMessage findNodePeerMessage = FindNodePeerMessage.create(this.key.getNodeId(), id, this.key);
+        FindNodePeerMessage findNodePeerMessage = FindNodePeerMessage.create(this.key.getNodeId(), id, this.key, this.networkId);
         udpChannel.write(new DiscoveryEvent(findNodePeerMessage, nodeAddress));
         PeerDiscoveryRequest request = PeerDiscoveryRequestBuilder.builder().messageId(id).relatedNode(node)
                 .message(findNodePeerMessage).address(nodeAddress).expectedResponse(DiscoveryMessageType.NEIGHBORS)
@@ -255,7 +264,7 @@ public class PeerExplorer {
 
     public NeighborsPeerMessage sendNeighbors(InetSocketAddress nodeAddress, List<Node> nodes, String id) {
         List<Node> nodesToSend = getRandomizeLimitedList(nodes, MAX_NODES_PER_MSG, 5);
-        NeighborsPeerMessage sendNodesMessage = NeighborsPeerMessage.create(nodesToSend, id, this.key);
+        NeighborsPeerMessage sendNodesMessage = NeighborsPeerMessage.create(nodesToSend, id, this.key, networkId);
         udpChannel.write(new DiscoveryEvent(sendNodesMessage, nodeAddress));
         logger.debug(" [{}] Neighbors Sent to ip:[{}] port:[{}]", nodesToSend.size(), nodeAddress.getAddress().getHostAddress(), nodeAddress.getPort());
 
@@ -263,20 +272,23 @@ public class PeerExplorer {
     }
 
     public void purgeRequests() {
-        List<PeerDiscoveryRequest> oldPingRequests = this.removeExpiredRequests(this.pendingPingRequests);
-        this.resendExpiredPing(oldPingRequests);
-        this.removeConnections(oldPingRequests.stream().
-                filter(r -> r.getAttemptNumber() >= 3).collect(Collectors.toList()));
+        List<PeerDiscoveryRequest> oldPingRequests = removeExpiredRequests(this.pendingPingRequests);
+        removeExpiredChallenges(oldPingRequests);
+        resendExpiredPing(oldPingRequests);
+        removeConnections(oldPingRequests.stream().
+                filter(r -> r.getAttemptNumber() >= RETRIES_COUNT).collect(Collectors.toList()));
 
         removeExpiredRequests(this.pendingFindNodeRequests);
     }
 
-    public void cleanAndUpdate() {
+    public void clean() {
+        this.purgeRequests();
+    }
+
+    public void update() {
         List<Node> closestNodes = this.distanceTable.getClosestNodes(this.localNode.getId());
         this.askForMoreNodes(closestNodes);
         this.checkPeersPulse(closestNodes);
-
-        this.purgeRequests();
     }
 
     private void checkPeersPulse(List<Node> closestNodes) {
@@ -297,8 +309,12 @@ public class PeerExplorer {
         return requests;
     }
 
+    private void removeExpiredChallenges(List<PeerDiscoveryRequest> peerDiscoveryRequests) {
+        peerDiscoveryRequests.stream().forEach(r -> challengeManager.removeChallenge(r.getMessageId()));
+    }
+
     private void resendExpiredPing(List<PeerDiscoveryRequest> peerDiscoveryRequests) {
-        peerDiscoveryRequests.stream().filter(r -> r.getAttemptNumber() < 3)
+        peerDiscoveryRequests.stream().filter(r -> r.getAttemptNumber() < RETRIES_COUNT)
                 .forEach(r -> sendPing(r.getAddress(), r.getAttemptNumber() + 1));
     }
 
@@ -359,5 +375,10 @@ public class PeerExplorer {
         }
 
         return ret;
+    }
+
+    @VisibleForTesting
+    public NodeChallengeManager getChallengeManager() {
+        return challengeManager;
     }
 }

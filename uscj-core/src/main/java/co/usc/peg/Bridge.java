@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2016 - 2018 Usc Development team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,10 +18,10 @@
 
 package co.usc.peg;
 
-import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.store.BlockStoreException;
 import co.usc.config.BridgeConstants;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
 import co.usc.panic.PanicProcessor;
 import co.usc.peg.utils.BridgeEventLogger;
@@ -32,7 +32,6 @@ import org.ethereum.core.Block;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
-//import org.ethereum.crypto.ECKey;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;
 import org.ethereum.vm.DataWord;
@@ -43,7 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.util.encoders.Hex;
 
-//import javax.naming.AuthenticationException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -84,7 +82,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     public static final CallTransaction.Function GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT = BridgeMethods.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT.getFunction();
     // Returns an array of block hashes known by the bridge contract. Federators can use this to find what is the latest block in the mainchain the bridge has.
     // The goal of this function is to help synchronize bridge and federators blockchains.
-    // Protocol inspired by bitcoin sync protocol, see block locator in https://en.bitcoin.it/wiki/Protocol_documentation#getheaders
+    // Protocol inspired by ulord sync protocol, see block locator in https://en.ulord.it/wiki/Protocol_documentation#getheaders
     public static final CallTransaction.Function GET_ULD_BLOCKCHAIN_BLOCK_LOCATOR = BridgeMethods.GET_ULD_BLOCKCHAIN_BLOCK_LOCATOR.getFunction();
     // Returns the minimum amount of satoshis a user should send to the federation.
     public static final CallTransaction.Function GET_MINIMUM_LOCK_TX_VALUE = BridgeMethods.GET_MINIMUM_LOCK_TX_VALUE.getFunction();
@@ -142,7 +140,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     public static final CallTransaction.Function GET_LOCK_WHITELIST_ADDRESS = BridgeMethods.GET_LOCK_WHITELIST_ADDRESS.getFunction();
     // Adds the given address to the lock whitelist
     public static final CallTransaction.Function ADD_LOCK_WHITELIST_ADDRESS = BridgeMethods.ADD_LOCK_WHITELIST_ADDRESS.getFunction();
-    // Removes the given address from whitelist
+    // Adds the given address to the lock whitelist
     public static final CallTransaction.Function REMOVE_LOCK_WHITELIST_ADDRESS = BridgeMethods.REMOVE_LOCK_WHITELIST_ADDRESS.getFunction();
 
     public static final CallTransaction.Function SET_LOCK_WHITELIST_DISABLE_BLOCK_DELAY = BridgeMethods.SET_LOCK_WHITELIST_DISABLE_BLOCK_DELAY.getFunction();
@@ -157,7 +155,6 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     public static final DataWord UPDATE_COLLECTIONS_TOPIC = new DataWord("update_collections_topic".getBytes(StandardCharsets.UTF_8));
     public static final DataWord ADD_SIGNATURE_TOPIC = new DataWord("add_signature_topic".getBytes(StandardCharsets.UTF_8));
     public static final DataWord COMMIT_FEDERATION_TOPIC = new DataWord("commit_federation_topic".getBytes(StandardCharsets.UTF_8));
-
 
     private final UscSystemProperties config;
     private final BridgeConstants bridgeConstants;
@@ -190,7 +187,6 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             totalCost = functionCost;
         } else {
             functionCost = bridgeParsedData.bridgeMethod.getCost();
-
             int dataCost = data == null ? 0 : data.length * 2;
 
             totalCost = functionCost + dataCost;
@@ -218,7 +214,6 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
                 logger.warn("Invalid function signature {}.", Hex.toHexString(functionSignature));
                 return null;
             }
-
             bridgeParsedData.bridgeMethod = invokedMethod.get();
             try {
                 bridgeParsedData.args = bridgeParsedData.bridgeMethod.getFunction().decode(data);
@@ -232,8 +227,8 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
 
     // Parsed usc transaction data field
     private static class BridgeParsedData {
-        BridgeMethods bridgeMethod;
-        Object[] args;
+        public BridgeMethods bridgeMethod;
+        public Object[] args;
     }
 
     @Override
@@ -257,12 +252,10 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             this.bridgeSupport = setup();
 
             Optional<?> result;
-
             try {
                 // bridgeParsedData.function should be one of the CallTransaction.Function declared above.
                 // If the user tries to call an non-existent function, parseData() will return null.
                 result = bridgeParsedData.bridgeMethod.getExecutor().execute(this, bridgeParsedData.args);
-
             } catch (BridgeIllegalArgumentException ex) {
                 logger.warn("Error executing: {}", bridgeParsedData.bridgeMethod, ex);
                 return null;
@@ -274,12 +267,12 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         }
         catch(Exception ex) {
             logger.error(ex.getMessage(), ex);
-            panicProcessor.panic("bridge_execute", ex.getMessage());
+            panicProcessor.panic("bridgeexecute", ex.getMessage());
             throw new RuntimeException(String.format("Exception executing bridge: %s", ex.getMessage()), ex);
         }
     }
 
-    private BridgeSupport setup() throws Exception {
+    private BridgeSupport setup() {
         BridgeEventLogger eventLogger = new BridgeEventLoggerImpl(this.bridgeConstants, this.logs);
         return new BridgeSupport(this.config, repository, eventLogger, contractAddress, uscExecutionBlock);
     }
@@ -316,18 +309,18 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             throw new BridgeIllegalArgumentException("Unexpected ULD header(s) received (size mismatch). Aborting processing.");
         }
 
-        UldBlock[] UldBlockArray = new UldBlock[uldBlockSerializedArray.length];
+        UldBlock[] uldBlockArray = new UldBlock[uldBlockSerializedArray.length];
         for (int i = 0; i < uldBlockSerializedArray.length; i++) {
-            byte[] UldBlockSerialized = (byte[]) uldBlockSerializedArray[i];
+            byte[] uldBlockSerialized = (byte[]) uldBlockSerializedArray[i];
             try {
-                UldBlock header = bridgeConstants.getUldParams().getDefaultSerializer().makeBlock(UldBlockSerialized);
-                UldBlockArray[i] = header;
+                UldBlock header = bridgeConstants.getUldParams().getDefaultSerializer().makeBlock(uldBlockSerialized);
+                uldBlockArray[i] = header;
             } catch (ProtocolException e) {
-                throw new BridgeIllegalArgumentException("Block " + i + " could not be parsed " + Hex.toHexString(UldBlockSerialized), e);
+                throw new BridgeIllegalArgumentException("Block " + i + " could not be parsed " + Hex.toHexString(uldBlockSerialized), e);
             }
         }
         try {
-            bridgeSupport.receiveHeaders(UldBlockArray);
+            bridgeSupport.receiveHeaders(uldBlockArray);
         } catch (Exception e) {
             logger.warn("Exception adding header", e);
             throw new RuntimeException("Exception adding header", e);
@@ -338,11 +331,9 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         logger.trace("registerUldTransaction");
 
         byte[] uldTxSerialized = (byte[]) args[0];
-
         int height = ((BigInteger)args[1]).intValue();
 
         byte[] pmtSerialized = (byte[]) args[2];
-
         try {
             bridgeSupport.registerUldTransaction(uscTx, uldTxSerialized, height, pmtSerialized);
         } catch (IOException | BlockStoreException e) {
@@ -395,7 +386,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             throw new BridgeIllegalArgumentException("Invalid usc tx hash " + Hex.toHexString(uscTxHash));
         }
         try {
-            bridgeSupport.addSignature(uscExecutionBlock.getNumber(), federatorPublicKey, signatures, uscTxHash);
+            bridgeSupport.addSignature(federatorPublicKey, signatures, uscTxHash);
         } catch (BridgeIllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
@@ -433,7 +424,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         logger.trace("getUldBlockchainBestChainHeight");
 
         try {
-            return bridgeSupport.getUldBlockChainBestChainHeight();
+            return bridgeSupport.getUldBlockchainBestChainHeight();
         } catch (Exception e) {
             logger.warn("Exception in getUldBlockchainBestChainHeight", e);
             throw new RuntimeException("Exception in getUldBlockchainBestChainHeight", e);
@@ -495,7 +486,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     {
         logger.trace("getFederationAddress");
 
-        return bridgeSupport.getFederationAddress().toString();
+        return bridgeSupport.getFederationAddress().toBase58();
     }
 
     public Integer getFederationSize(Object[] args)
@@ -544,7 +535,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             return "";
         }
 
-        return address.toString();
+        return address.toBase58();
     }
 
     public Integer getRetiringFederationSize(Object[] args)
@@ -723,8 +714,8 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             logger.warn("Exception in addLockWhitelistAddress: {}", e.getMessage());
             return 0;
         }
-        Integer result = bridgeSupport.addLockWhitelistAddress(uscTx, addressBase58, maxTransferValue);
-        return result;
+
+        return bridgeSupport.addLockWhitelistAddress(uscTx, addressBase58, maxTransferValue);
     }
 
     public Integer removeLockWhitelistAddress(Object[] args)
@@ -742,7 +733,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         return bridgeSupport.removeLockWhitelistAddress(uscTx, addressBase58);
     }
 
-    public Integer setLockWhitelistDisableBlockDelay(Object[] args) {
+    public Integer setLockWhitelistDisableBlockDelay(Object[] args) throws IOException {
         logger.trace("setLockWhitelistDisableBlockDelay");
         BigInteger lockWhitelistDisableBlockDelay = (BigInteger) args[0];
         return bridgeSupport.setLockWhitelistDisableBlockDelay(uscTx, lockWhitelistDisableBlockDelay);
@@ -769,6 +760,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
 
         return bridgeSupport.getFeePerKb().getValue();
     }
+
 
     public static BridgeMethods.BridgeMethodExecutor activeAndRetiringFederationOnly(BridgeMethods.BridgeMethodExecutor decoratee, String funcName) {
         return (self, args) -> {

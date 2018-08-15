@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2016 - 2018 Usc Development team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -31,8 +31,8 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * Centralizes receiving and relaying/sending transactions, 
- * so we can only distribute information to nodes that don't already have it.
+ * Centralizes receiving and relaying transactions, so we can only distribute information to nodes that don't already
+ * have it.
  */
 public class TransactionGateway {
     private final ChannelManager channelManager;

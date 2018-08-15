@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2016 - 2018 USC development team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,7 +22,6 @@ import co.usc.config.UscSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.bc.BlockChainStatus;
 import co.usc.crypto.Keccak256;
-import co.usc.net.handler.TxHandler;
 import co.usc.net.messages.*;
 import co.usc.scoring.EventType;
 import co.usc.scoring.PeerScoringManager;
@@ -71,15 +70,12 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
 
     private volatile boolean stopped;
 
-    private TxHandler txHandler;
-
     @Autowired
     public NodeMessageHandler(UscSystemProperties config,
                               @Nonnull final BlockProcessor blockProcessor,
                               final SyncProcessor syncProcessor,
                               @Nullable final ChannelManager channelManager,
                               @Nullable final TransactionGateway transactionGateway,
-                              final TxHandler txHandler,
                               @Nullable final PeerScoringManager peerScoringManager,
                               @Nonnull BlockValidationRule blockValidationRule) {
         this.config = config;
@@ -88,7 +84,6 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
         this.syncProcessor = syncProcessor;
         this.transactionGateway = transactionGateway;
         this.blockValidationRule = blockValidationRule;
-        this.txHandler = txHandler;
         this.cleanMsgTimestamp = System.currentTimeMillis();
         this.peerScoringManager = peerScoringManager;
     }
@@ -193,6 +188,11 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
     @Override
     public void stop() {
         this.stopped = true;
+    }
+
+    @Override
+    public long getMessageQueueSize() {
+        return this.queue.size();
     }
 
     @Override
@@ -331,16 +331,16 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
     }
 
     private void relayBlock(@Nonnull MessageChannel sender, Block block) {
-        byte[] blockHashBytes = block.getHash().getBytes();
+        byte[] blockHash = block.getHash().getBytes();
         final BlockNodeInformation nodeInformation = this.blockProcessor.getNodeInformation();
-        final Set<NodeID> nodesWithBlock = nodeInformation.getNodesByBlock(blockHashBytes);
+        final Set<NodeID> nodesWithBlock = nodeInformation.getNodesByBlock(blockHash);
         final Set<NodeID> newNodes = this.syncProcessor.getKnownPeersNodeIDs().stream()
                 .filter(p -> !nodesWithBlock.contains(p))
                 .collect(Collectors.toSet());
 
 
         List<BlockIdentifier> identifiers = new ArrayList<>();
-        identifiers.add(new BlockIdentifier(blockHashBytes, block.getNumber()));
+        identifiers.add(new BlockIdentifier(blockHash, block.getNumber()));
         channelManager.broadcastBlockHash(identifiers, newNodes);
 
         Metrics.processBlockMessage("blockRelayed", block, sender.getPeerNodeID());
@@ -433,7 +433,7 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
             }
         }
 
- 		List<Transaction> acceptedTxs = transactionGateway.receiveTransactionsFrom(txs, sender.getPeerNodeID());
+        List<Transaction> acceptedTxs = transactionGateway.receiveTransactionsFrom(txs, sender.getPeerNodeID());
 
         Metrics.processTxsMessage("validTxsAddedToTransactionPool", acceptedTxs, sender.getPeerNodeID());
 

@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,10 +19,14 @@
 package co.usc.rpc;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.core.*;
+import co.usc.core.NetworkStateExporter;
 import co.usc.core.Usc;
+import co.usc.core.Wallet;
+import co.usc.core.WalletFactory;
 import co.usc.crypto.Keccak256;
 import co.usc.peg.PegTestUtils;
+import co.usc.rpc.modules.debug.DebugModule;
+import co.usc.rpc.modules.debug.DebugModuleImpl;
 import co.usc.rpc.modules.eth.EthModule;
 import co.usc.rpc.modules.eth.EthModuleSolidityDisabled;
 import co.usc.rpc.modules.eth.EthModuleWalletEnabled;
@@ -30,6 +34,7 @@ import co.usc.rpc.modules.personal.PersonalModule;
 import co.usc.rpc.modules.personal.PersonalModuleWalletEnabled;
 import co.usc.rpc.modules.txpool.TxPoolModule;
 import co.usc.rpc.modules.txpool.TxPoolModuleImpl;
+import co.usc.config.TestSystemProperties;
 import co.usc.core.WalletFactory;
 import org.ethereum.core.Block;
 import org.ethereum.core.Blockchain;
@@ -73,6 +78,7 @@ public class Web3UscImplTest {
         PersonalModule pm = new PersonalModuleWalletEnabled(config, usc, wallet, null);
         EthModule em = new EthModule(config, blockchain, null, new ExecutionBlockRetriever(blockchain, null, null), new EthModuleSolidityDisabled(), new EthModuleWalletEnabled(config, usc, wallet, null));
         TxPoolModule tpm = new TxPoolModuleImpl(Web3Mocks.getMockTransactionPool());
+        DebugModule dm = new DebugModuleImpl(Web3Mocks.getMockMessageHandler());
         Web3UscImpl web3 = new Web3UscImpl(
                 usc,
                 blockchain,
@@ -83,6 +89,8 @@ public class Web3UscImplTest {
                 pm,
                 em,
                 tpm,
+                null,
+                dm,
                 Web3Mocks.getMockChannelManager(),
                 Web3Mocks.getMockRepository(),
                 null,

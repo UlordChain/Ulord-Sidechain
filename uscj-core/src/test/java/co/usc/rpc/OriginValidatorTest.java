@@ -75,7 +75,7 @@ public class OriginValidatorTest {
     public void invalidRefererWithDifferentHost() throws URISyntaxException {
         OriginValidator validator = new OriginValidator("http://localhost");
 
-        Assert.assertFalse(validator.isValidReferer("http://rsk.co/index.html"));
+        Assert.assertFalse(validator.isValidReferer("http://usc.co/index.html"));
     }
 
     @Test
@@ -87,26 +87,26 @@ public class OriginValidatorTest {
 
     @Test
     public void allowDomain() throws URISyntaxException {
-        OriginValidator validator = new OriginValidator("https://rsk.co");
+        OriginValidator validator = new OriginValidator("https://usc.co");
 
         Assert.assertFalse(validator.isValidOrigin("http://localhost"));
-        Assert.assertTrue(validator.isValidOrigin("https://rsk.co"));
+        Assert.assertTrue(validator.isValidOrigin("https://usc.co"));
 
         Assert.assertFalse(validator.isValidReferer("http://localhost/index.html"));
-        Assert.assertTrue(validator.isValidReferer("https://rsk.co/index.html"));
+        Assert.assertTrue(validator.isValidReferer("https://usc.co/index.html"));
     }
 
     @Test()
     public void allowTwoDomains() throws URISyntaxException {
-        OriginValidator validator = new OriginValidator("https://rsk.co https://rsk.com.ar");
+        OriginValidator validator = new OriginValidator("https://usc.co https://usc.com.ar");
 
         Assert.assertFalse(validator.isValidOrigin("http://localhost"));
-        Assert.assertTrue(validator.isValidOrigin("https://rsk.co"));
-        Assert.assertTrue(validator.isValidOrigin("https://rsk.com.ar"));
+        Assert.assertTrue(validator.isValidOrigin("https://usc.co"));
+        Assert.assertTrue(validator.isValidOrigin("https://usc.com.ar"));
 
         Assert.assertFalse(validator.isValidReferer("http://localhost/index.html"));
-        Assert.assertTrue(validator.isValidReferer("https://rsk.co/index.html"));
-        Assert.assertTrue(validator.isValidReferer("https://rsk.com.ar/index.html"));
+        Assert.assertTrue(validator.isValidReferer("https://usc.co/index.html"));
+        Assert.assertTrue(validator.isValidReferer("https://usc.com.ar/index.html"));
     }
 
     @Test
@@ -114,12 +114,12 @@ public class OriginValidatorTest {
         OriginValidator validator = new OriginValidator("//");
 
         Assert.assertFalse(validator.isValidOrigin("http://localhost"));
-        Assert.assertFalse(validator.isValidOrigin("https://rsk.co"));
-        Assert.assertFalse(validator.isValidOrigin("https://rsk.com.ar"));
+        Assert.assertFalse(validator.isValidOrigin("https://usc.co"));
+        Assert.assertFalse(validator.isValidOrigin("https://usc.com.ar"));
 
         Assert.assertFalse(validator.isValidReferer("http://localhost/index.html"));
-        Assert.assertFalse(validator.isValidReferer("https://rsk.co/index.html"));
-        Assert.assertFalse(validator.isValidReferer("https://rsk.com.ar/index.html"));
+        Assert.assertFalse(validator.isValidReferer("https://usc.co/index.html"));
+        Assert.assertFalse(validator.isValidReferer("https://usc.com.ar/index.html"));
     }
 
     @Test
@@ -127,12 +127,12 @@ public class OriginValidatorTest {
         OriginValidator validator = new OriginValidator("");
 
         Assert.assertFalse(validator.isValidOrigin("http://localhost"));
-        Assert.assertFalse(validator.isValidOrigin("https://rsk.co"));
-        Assert.assertFalse(validator.isValidOrigin("https://rsk.com.ar"));
+        Assert.assertFalse(validator.isValidOrigin("https://usc.co"));
+        Assert.assertFalse(validator.isValidOrigin("https://usc.com.ar"));
 
         Assert.assertFalse(validator.isValidReferer("http://localhost/index.html"));
-        Assert.assertFalse(validator.isValidReferer("https://rsk.co/index.html"));
-        Assert.assertFalse(validator.isValidReferer("https://rsk.com.ar/index.html"));
+        Assert.assertFalse(validator.isValidReferer("https://usc.co/index.html"));
+        Assert.assertFalse(validator.isValidReferer("https://usc.com.ar/index.html"));
     }
 
     @Test
@@ -140,11 +140,11 @@ public class OriginValidatorTest {
         OriginValidator validator = new OriginValidator();
 
         Assert.assertFalse(validator.isValidOrigin("http://localhost"));
-        Assert.assertFalse(validator.isValidOrigin("https://rsk.co"));
-        Assert.assertFalse(validator.isValidOrigin("https://rsk.com.ar"));
+        Assert.assertFalse(validator.isValidOrigin("https://usc.co"));
+        Assert.assertFalse(validator.isValidOrigin("https://usc.com.ar"));
 
         Assert.assertFalse(validator.isValidReferer("http://localhost/index.html"));
-        Assert.assertFalse(validator.isValidReferer("https://rsk.co/index.html"));
-        Assert.assertFalse(validator.isValidReferer("https://rsk.com.ar/index.html"));
+        Assert.assertFalse(validator.isValidReferer("https://usc.co/index.html"));
+        Assert.assertFalse(validator.isValidReferer("https://usc.com.ar/index.html"));
     }
 }

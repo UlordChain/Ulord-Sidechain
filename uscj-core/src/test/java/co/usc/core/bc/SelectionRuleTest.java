@@ -1,6 +1,7 @@
 package co.usc.core.bc;
 
 import co.usc.blockchain.utils.BlockGenerator;
+import co.usc.blockchain.utils.BlockGenerator;
 import org.ethereum.core.Block;
 import org.ethereum.core.Blockchain;
 import org.ethereum.util.UscTestFactory;

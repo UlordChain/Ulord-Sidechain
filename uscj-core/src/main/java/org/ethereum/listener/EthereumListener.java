@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,6 +46,8 @@ public interface EthereumListener {
     void onRecvMessage(Channel channel, Message message);
 
     void onBlock(Block block, List<TransactionReceipt> receipts);
+
+    void onBestBlock(Block block, List<TransactionReceipt> receipts);
 
     void onPeerDisconnect(String host, long port);
 

@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,10 +18,16 @@
 
 package co.usc.peg.performance;
 
+import co.usc.ulordj.core.UldBlockChain;
+import co.usc.ulordj.core.Context;
 import co.usc.ulordj.core.Sha256Hash;
+import co.usc.ulordj.store.BlockStoreException;
+import co.usc.ulordj.store.UldBlockStore;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageProvider;
+import co.usc.peg.RepositoryBlockStore;
 import org.ethereum.core.Repository;
+import org.ethereum.vm.PrecompiledContracts;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.spongycastle.util.encoders.Hex;
@@ -47,38 +53,38 @@ public class LockTest extends BridgePerformanceTestCase {
     }
 
     @Test
-    public void isBtcTxHashAlreadyProcessed() throws IOException {
+    public void isUldTxHashAlreadyProcessed() throws IOException {
         ExecutionStats stats = new ExecutionStats("isUldTxHashAlreadyProcessed");
-        isBtcTxHashAlreadyProcessed_yes(100, stats);
-        isBtcTxHashAlreadyProcessed_no(100, stats);
+        isUldTxHashAlreadyProcessed_yes(100, stats);
+        isUldTxHashAlreadyProcessed_no(100, stats);
         BridgePerformanceTest.addStats(stats);
     }
 
-    private void isBtcTxHashAlreadyProcessed_yes(int times, ExecutionStats stats) {
+    private void isUldTxHashAlreadyProcessed_yes(int times, ExecutionStats stats) {
         ABIEncoder abiEncoder = (int executionIndex) -> Bridge.IS_ULD_TX_HASH_ALREADY_PROCESSED.encode(new Object[]{Hex.toHexString(randomHashInMap.getBytes())});
         executeAndAverage("isUldTxHashAlreadyProcessed-yes", times, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
     }
 
-    private void isBtcTxHashAlreadyProcessed_no(int times, ExecutionStats stats) {
+    private void isUldTxHashAlreadyProcessed_no(int times, ExecutionStats stats) {
         Sha256Hash hash = Sha256Hash.of(BigInteger.valueOf(new Random().nextLong()).toByteArray());
         ABIEncoder abiEncoder = (int executionIndex) -> Bridge.IS_ULD_TX_HASH_ALREADY_PROCESSED.encode(new Object[]{Hex.toHexString(hash.getBytes())});
         executeAndAverage("isUldTxHashAlreadyProcessed-no", times, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
     }
 
     @Test
-    public void getBtcTxHashProcessedHeight() throws IOException {
+    public void getUldTxHashProcessedHeight() throws IOException {
         ExecutionStats stats = new ExecutionStats("getUldTxHashProcessedHeight");
-        getBtcTxHashProcessedHeight_processed(100, stats);
-        getBtcTxHashProcessedHeight_notProcessed(100, stats);
+        getUldTxHashProcessedHeight_processed(100, stats);
+        getUldTxHashProcessedHeight_notProcessed(100, stats);
         BridgePerformanceTest.addStats(stats);
     }
 
-    private void getBtcTxHashProcessedHeight_processed(int times, ExecutionStats stats) {
+    private void getUldTxHashProcessedHeight_processed(int times, ExecutionStats stats) {
         ABIEncoder abiEncoder = (int executionIndex) -> Bridge.GET_ULD_TX_HASH_PROCESSED_HEIGHT.encode(new Object[]{Hex.toHexString(randomHashInMap.getBytes())});
         executeAndAverage("getUldTxHashProcessedHeight-processed", times, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);
     }
 
-    private void getBtcTxHashProcessedHeight_notProcessed(int times, ExecutionStats stats) {
+    private void getUldTxHashProcessedHeight_notProcessed(int times, ExecutionStats stats) {
         Sha256Hash hash = Sha256Hash.of(BigInteger.valueOf(new Random().nextLong()).toByteArray());
         ABIEncoder abiEncoder = (int executionIndex) -> Bridge.GET_ULD_TX_HASH_PROCESSED_HEIGHT.encode(new Object[]{Hex.toHexString(hash.getBytes())});
         executeAndAverage("getUldTxHashProcessedHeight-notProcessed", times, abiEncoder, buildInitializer(), Helper.getZeroValueRandomSenderTxBuilder(), Helper.getRandomHeightProvider(10), stats);

@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,15 +22,12 @@ import co.usc.net.discovery.message.DiscoveryMessageType;
 import co.usc.net.discovery.message.PingPeerMessage;
 import co.usc.net.discovery.message.PongPeerMessage;
 import co.usc.net.discovery.table.PeerDiscoveryRequestBuilder;
-import co.usc.net.discovery.message.DiscoveryMessageType;
-import co.usc.net.discovery.message.PingPeerMessage;
-import co.usc.net.discovery.message.PongPeerMessage;
-import co.usc.net.discovery.table.PeerDiscoveryRequestBuilder;
 import org.ethereum.crypto.ECKey;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.net.InetSocketAddress;
+import java.util.OptionalInt;
 import java.util.UUID;
 
 /**
@@ -38,12 +35,14 @@ import java.util.UUID;
  */
 public class PeerDiscoveryRequestTest {
 
+    public static final int NETWORK_ID = 1;
+
     @Test
     public void create() {
         ECKey key = new ECKey();
         String check = UUID.randomUUID().toString();
-        PingPeerMessage pingPeerMessage = PingPeerMessage.create("localhost", 80, check, key);
-        PongPeerMessage pongPeerMessage = PongPeerMessage.create("localhost", 80, check, key);
+        PingPeerMessage pingPeerMessage = PingPeerMessage.create("localhost", 80, check, key, NETWORK_ID);
+        PongPeerMessage pongPeerMessage = PongPeerMessage.create("localhost", 80, check, key, NETWORK_ID);
         InetSocketAddress address = new InetSocketAddress("localhost", 8080);
 
         PeerDiscoveryRequest request = PeerDiscoveryRequestBuilder.builder().messageId(check)

@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2016 - 2018 USC development team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -66,7 +66,7 @@ public interface Ethereum {
      * @param transaction submit transaction to the net, return option to wait for net
      *                    return this transaction as approved
      */
-     void submitTransaction(Transaction transaction);
+    void submitTransaction(Transaction transaction);
 
     /**
      * Calculates a 'reasonable' Gas price based on statistics of the latest transaction's Gas prices

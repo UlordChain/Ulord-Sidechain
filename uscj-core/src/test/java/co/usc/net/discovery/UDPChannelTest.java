@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,7 +19,6 @@
 package co.usc.net.discovery;
 
 import co.usc.net.discovery.message.PingPeerMessage;
-import co.usc.net.discovery.message.PingPeerMessage;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import org.ethereum.crypto.ECKey;
@@ -28,12 +27,15 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.net.InetSocketAddress;
+import java.util.OptionalInt;
 import java.util.UUID;
 
 /**
  * Created by mario on 15/02/17.
  */
 public class UDPChannelTest {
+
+    private static final int NETWORK_ID = 1;
 
     @Test
     public void create() {
@@ -60,7 +62,7 @@ public class UDPChannelTest {
     public void write() {
         String check = UUID.randomUUID().toString();
         ECKey key = new ECKey();
-        PingPeerMessage nodeMessage = PingPeerMessage.create("localhost", 80, check, key);
+        PingPeerMessage nodeMessage = PingPeerMessage.create("localhost", 80, check, key, NETWORK_ID);
 
         Channel channel = Mockito.mock(Channel.class);
         PeerExplorer peerExplorer = Mockito.mock(PeerExplorer.class);

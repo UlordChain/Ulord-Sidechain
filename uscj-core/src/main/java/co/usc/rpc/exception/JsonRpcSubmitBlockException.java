@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,14 +18,14 @@
 
 package co.usc.rpc.exception;
 
-import org.ethereum.rpc.exception.RskJsonRpcRequestException;
+import org.ethereum.rpc.exception.UscJsonRpcRequestException;
 
 /**
  * Designed to be used only when an error occurs at MinerServer.SubmitUlordBlock() method.
  *
  * @author martin.medina
  */
-public class JsonRpcSubmitBlockException extends RskJsonRpcRequestException {
+public class JsonRpcSubmitBlockException extends UscJsonRpcRequestException {
 
     public JsonRpcSubmitBlockException(String message) {
         super(JsonRpcApplicationDefinedErrorCodes.SUBMIT_BLOCK, message);

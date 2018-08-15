@@ -1,6 +1,6 @@
 /*
- * This file is part of Usc
- * Copyright (C) 2016 - 2018 Ulord development team.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,13 +26,15 @@ import co.usc.core.SnapshotManager;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.validators.BlockValidationRule;
 import co.usc.validators.ProofOfWorkRule;
+import co.usc.config.ConfigUtils;
+import co.usc.config.TestSystemProperties;
 import org.awaitility.Awaitility;
 import org.awaitility.Duration;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
 import org.ethereum.core.TransactionPool;
 import org.ethereum.db.BlockStore;
-import org.ethereum.listener.CompositeEthereumListener;
+import org.ethereum.listener.TestCompositeEthereumListener;
 import org.ethereum.rpc.Simples.SimpleEthereum;
 import org.ethereum.util.UscTestFactory;
 import org.junit.Assert;
@@ -62,12 +64,10 @@ public class MinerManagerTest {
         blockStore = factory.getBlockStore();
     }
 
-
     @Test
     public void refreshWorkRunOnce() {
-
-
         Assert.assertEquals(0, blockchain.getBestBlock().getNumber());
+
         MinerServerImpl minerServer = getMinerServer();
         MinerClientImpl minerClient = getMinerClient(minerServer);
 
@@ -87,8 +87,8 @@ public class MinerManagerTest {
 
     @Test
     public void refreshWorkRunTwice() {
-
         Assert.assertEquals(0, blockchain.getBestBlock().getNumber());
+
         MinerServerImpl minerServer = getMinerServer();
         MinerClientImpl minerClient = getMinerClient(minerServer);
 
@@ -116,7 +116,6 @@ public class MinerManagerTest {
         Assert.assertEquals(0, blockchain.getBestBlock().getNumber());
 
         MinerServerImpl minerServer = getMinerServer();
-
         MinerClientImpl minerClient = getMinerClient(minerServer);
 
         minerServer.buildBlockToMine(blockchain.getBestBlock(), false);
@@ -168,7 +167,7 @@ public class MinerManagerTest {
     public void mineBlockWhilePlayingBlocks() {
         Assert.assertEquals(0, blockchain.getBestBlock().getNumber());
 
-        UscImplForTest rsk = new UscImplForTest() {
+        UscImplForTest usc = new UscImplForTest() {
             @Override
             public boolean hasBetterBlockToSync() {
                 return false;
@@ -180,7 +179,7 @@ public class MinerManagerTest {
             }
         };
         MinerServerImpl minerServer = getMinerServer();
-        MinerClientImpl minerClient = getMinerClient(rsk, minerServer);
+        MinerClientImpl minerClient = getMinerClient(usc, minerServer);
 
         minerServer.buildBlockToMine(blockchain.getBestBlock(), false);
 
@@ -204,7 +203,6 @@ public class MinerManagerTest {
 
     @Test
     public void doWorkEvenWithoutMinerServer() {
-
         Assert.assertEquals(0, blockchain.getBestBlock().getNumber());
 
         MinerServerImpl minerServer = getMinerServer();
@@ -218,7 +216,6 @@ public class MinerManagerTest {
 
     @Test
     public void doWorkInThread() throws Exception {
-
         Assert.assertEquals(0, blockchain.getBestBlock().getNumber());
 
         MinerServerImpl minerServer = getMinerServer();
@@ -269,7 +266,6 @@ public class MinerManagerTest {
         snapshotManager.resetSnapshots();
         Assert.assertTrue(transactionPool.getPendingTransactions().isEmpty());
 
-
         manager.mineBlock(blockchain, minerClient, minerServer);
 
         Assert.assertTrue(transactionPool.getPendingTransactions().isEmpty());
@@ -277,7 +273,6 @@ public class MinerManagerTest {
 
     @Test
     public void mineBlockUsingTimeTravel() {
-
         Assert.assertEquals(0, blockchain.getBestBlock().getNumber());
 
         MinerManager manager = new MinerManager();
@@ -353,7 +348,7 @@ public class MinerManagerTest {
     private static class UscImplForTest extends UscImpl {
         public UscImplForTest() {
             super(null, null, null, null,
-                  new CompositeEthereumListener(), null, null, null);
+                  new TestCompositeEthereumListener(), null, null, null);
         }
     }
 }

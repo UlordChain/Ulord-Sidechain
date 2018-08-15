@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,12 +21,16 @@ package co.usc.jsontestsuite;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.DifficultyCalculator;
+import co.usc.config.TestSystemProperties;
+import co.usc.core.BlockDifficulty;
+import co.usc.core.DifficultyCalculator;
 import org.ethereum.config.net.MainNetConfig;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.jsontestsuite.DifficultyTestCase;
 import org.ethereum.jsontestsuite.DifficultyTestSuite;
 import org.ethereum.jsontestsuite.JSONReader;
 import org.json.simple.parser.ParseException;
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +74,7 @@ public class LocalBasicTest {
                 logger.info(" Difficulty without change test\n");
 
 
-            assertEquals(testCase.getExpectedDifficulty(),calc);
+            Assert.assertEquals(testCase.getExpectedDifficulty(),calc);
         }
     }
 

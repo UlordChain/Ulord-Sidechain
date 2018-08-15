@@ -1,8 +1,3 @@
-/*
- * This file is part of USC
- * Copyright (C) 2016 - 2018 Usc Development team.
- */
-
 package co.usc.net.sync;
 
 import co.usc.core.BlockDifficulty;

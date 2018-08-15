@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,6 +24,10 @@ import co.usc.core.bc.BlockChainImpl;
 import co.usc.mine.GasLimitCalculator;
 import co.usc.panic.PanicProcessor;
 import co.usc.config.TestSystemProperties;
+import co.usc.core.Coin;
+import co.usc.core.bc.BlockChainImpl;
+import co.usc.mine.GasLimitCalculator;
+import co.usc.panic.PanicProcessor;
 import org.ethereum.core.*;
 import org.ethereum.listener.EthereumListenerAdapter;
 import org.slf4j.Logger;

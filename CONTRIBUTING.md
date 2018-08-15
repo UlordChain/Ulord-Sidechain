@@ -77,7 +77,7 @@ This ensures that the injected dependency will always be in a consistent state a
 
 ```java
 public class SyncProcessor implements SyncEventsHandler {
-    private final RskSystemProperties config;
+    private final UscSystemProperties config;
     private final Blockchain blockchain;
 ```
 
@@ -130,7 +130,7 @@ A common pattern is to use `Objects::requireNonNull` on constructor parameters. 
 public PendingStateImpl(
         Blockchain blockChain,
         BlockStore blockStore,
-        RskSystemProperties config, ...) {
+        UscSystemProperties config, ...) {
     this.blockChain = Objects.requireNonNull(blockChain);
     this.blockStore = Objects.requireNonNull(blockStore, "null is bad");
     this.config = Objects.requireNonNull(config, () -> "don’t " + "use it");

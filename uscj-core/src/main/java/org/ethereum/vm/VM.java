@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -91,18 +91,17 @@ public class VM {
     private final PrecompiledContracts precompiledContracts;
 
     // Execution variables
-    Program program;
-    Stack stack;
-    OpCode op;
-    long oldMemSize ;
+    private Program program;
+    private Stack stack;
+    private OpCode op;
+    private long oldMemSize ;
 
-    String hint ;
+    private String hint ;
 
-    long memWords; // parameters for logging
-    long gasCost;
-    long gasBefore; // only for tracing
-    int stepBefore; // only for debugging
-    boolean isLogEnabled;
+    private long memWords; // parameters for logging
+    private long gasCost;
+    private long gasBefore; // only for tracing
+    private boolean isLogEnabled;
 
     public VM(VmConfig vmConfig, PrecompiledContracts precompiledContracts) {
         this.vmConfig = vmConfig;
@@ -1898,7 +1897,6 @@ public class VM {
 
                 if (vmConfig.dumpBlock() >= 0) {
                     gasBefore = program.getRemainingGas();
-                    stepBefore = program.getPC();
                     memWords = 0; // parameters for logging
                 }
 
@@ -1931,7 +1929,6 @@ public class VM {
 
     public void initDebugData() {
         gasBefore = 0;
-        stepBefore = 0;
         memWords = 0;
     }
 

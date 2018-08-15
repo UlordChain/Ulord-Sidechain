@@ -8,6 +8,13 @@ import co.usc.test.World;
 import co.usc.validators.BlockValidationRule;
 import co.usc.validators.DummyBlockValidationRule;
 import co.usc.validators.ProofOfWorkRule;
+import co.usc.config.TestSystemProperties;
+import co.usc.core.DifficultyCalculator;
+import co.usc.net.sync.SyncConfiguration;
+import co.usc.scoring.PeerScoringManager;
+import co.usc.test.World;
+import co.usc.validators.BlockValidationRule;
+import co.usc.validators.ProofOfWorkRule;
 import org.ethereum.core.Blockchain;
 import org.ethereum.net.server.ChannelManager;
 import org.ethereum.net.server.ChannelManagerImpl;
@@ -34,7 +41,7 @@ public class NodeMessageHandlerUtil {
         SyncProcessor syncProcessor = new SyncProcessor(config, blockchain, blockSyncService, UscMockFactory.getPeerScoringManager(), UscMockFactory.getChannelManager(), syncConfiguration, new DummyBlockValidationRule(), DIFFICULTY_CALCULATOR);
         NodeBlockProcessor processor = new NodeBlockProcessor(store, blockchain, nodeInformation, blockSyncService, syncConfiguration);
 
-        return new NodeMessageHandler(config, processor, syncProcessor, new SimpleChannelManager(), null, null, UscMockFactory.getPeerScoringManager(), validationRule);
+        return new NodeMessageHandler(config, processor, syncProcessor, new SimpleChannelManager(), null, UscMockFactory.getPeerScoringManager(), validationRule);
     }
 
     public static NodeMessageHandler createHandlerWithSyncProcessor() {
@@ -68,6 +75,6 @@ public class NodeMessageHandlerUtil {
         PeerScoringManager peerScoringManager = mock(PeerScoringManager.class);
         Mockito.when(peerScoringManager.hasGoodReputation(isA(NodeID.class))).thenReturn(true);
         SyncProcessor syncProcessor = new SyncProcessor(config, blockchain, blockSyncService, peerScoringManager, channelManager, syncConfiguration, blockValidationRule, DIFFICULTY_CALCULATOR);
-        return new NodeMessageHandler(config, processor, syncProcessor, channelManager, null, null, null, blockValidationRule);
+        return new NodeMessageHandler(config, processor, syncProcessor, channelManager, null, null, blockValidationRule);
     }
 }

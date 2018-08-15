@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -85,8 +85,8 @@ public class LockWhitelistTest {
     @Test
     public void add() {
         Address randomAddress = Address.fromBase58(
-                NetworkParameters.fromID(NetworkParameters.ID_TESTNET),
-                "ufGHmxvSDsXMKUm23a76JrrjvQqhpfL5E3"
+                NetworkParameters.fromID(NetworkParameters.ID_REGTEST),
+                "n3WzdjG7S2GjDbY1pJYxsY1VSQDkm4KDcm"
         );
 
         Assert.assertFalse(whitelist.isWhitelisted(randomAddress));

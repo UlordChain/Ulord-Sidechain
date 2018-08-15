@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,6 +23,7 @@ import co.usc.ulordj.core.NetworkParameters;
 import co.usc.ulordj.script.Script;
 import co.usc.ulordj.script.ScriptBuilder;
 import org.ethereum.crypto.ECKey;
+import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +48,7 @@ import static org.mockito.Matchers.any;
 public class FederationTest {
     private Federation federation;
     private List<UldECKey> sortedPublicKeys;
-    private List<byte[]> rskAddresses;
+    private List<byte[]> uscAddresses;
 
     @Before
     public void createFederation() {
@@ -72,8 +73,8 @@ public class FederationTest {
                 UldECKey.fromPrivate(BigInteger.valueOf(500)),
                 UldECKey.fromPrivate(BigInteger.valueOf(600)),
         }).stream().sorted(UldECKey.PUBKEY_COMPARATOR).collect(Collectors.toList());
-        rskAddresses = sortedPublicKeys.stream()
-                .map(FederationTest::getRskAddressFromUldKey)
+        uscAddresses = sortedPublicKeys.stream()
+                .map(FederationTest::getUscAddressFromUldKey)
                 .collect(Collectors.toList());
     }
 
@@ -228,7 +229,7 @@ public class FederationTest {
                 1L,
                 NetworkParameters.fromID(NetworkParameters.ID_REGTEST)
         );
-        Assert.assertThat(federation, is(not(otherFederation)));
+        Assert.assertThat(federation, is(CoreMatchers.not(otherFederation)));
     }
 
     @Test
@@ -302,14 +303,14 @@ public class FederationTest {
     }
 
     @Test
-    public void hasMemberWithRskAddress() {
+    public void hasMemberWithUscAddress() {
         for (int i = 0; i < federation.getPublicKeys().size(); i++) {
-            Assert.assertTrue(federation.hasMemberWithUscAddress(rskAddresses.get(i)));
+            Assert.assertTrue(federation.hasMemberWithUscAddress(uscAddresses.get(i)));
         }
 
         UldECKey nonFederateKey = UldECKey.fromPrivate(BigInteger.valueOf(1234));
-        byte[] nonFederateRskAddress = getRskAddressFromUldKey(nonFederateKey);
-        Assert.assertFalse(federation.hasMemberWithUscAddress(nonFederateRskAddress));
+        byte[] nonFederateUscAddress = getUscAddressFromUldKey(nonFederateKey);
+        Assert.assertFalse(federation.hasMemberWithUscAddress(nonFederateUscAddress));
     }
 
     @Test
@@ -317,7 +318,7 @@ public class FederationTest {
         Assert.assertEquals("4 of 6 signatures federation", federation.toString());
     }
 
-    private static byte[] getRskAddressFromUldKey(UldECKey UldECKey) {
-        return ECKey.fromPublicOnly(UldECKey.getPubKey()).getAddress();
+    private static byte[] getUscAddressFromUldKey(UldECKey uldECKey) {
+        return ECKey.fromPublicOnly(uldECKey.getPubKey()).getAddress();
     }
 }

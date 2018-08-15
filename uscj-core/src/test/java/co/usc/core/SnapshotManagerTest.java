@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2016 - 2018  Ulord Core team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,7 +24,6 @@ import co.usc.core.bc.BlockChainStatus;
 import co.usc.test.builders.AccountBuilder;
 import co.usc.test.builders.TransactionBuilder;
 import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.test.World;
 import co.usc.test.builders.AccountBuilder;
 import co.usc.test.builders.TransactionBuilder;
 import org.ethereum.core.*;
@@ -34,14 +33,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ajlopez on 15/04/2017.
  */
 public class SnapshotManagerTest {
+
     private BlockChainImpl blockchain;
+    private Repository repository;
     private TransactionPool transactionPool;
     private SnapshotManager manager;
 
@@ -49,12 +49,12 @@ public class SnapshotManagerTest {
     public void setUp() {
         UscTestFactory factory = new UscTestFactory();
         blockchain = factory.getBlockchain();
+        repository = factory.getRepository();
         transactionPool = factory.getTransactionPool();
         // don't call start to avoid creating threads
         transactionPool.processBest(blockchain.getBestBlock());
         manager = new SnapshotManager(blockchain, transactionPool);
     }
-
 
     @Test
     public void createWithNoSnapshot() {
@@ -159,13 +159,10 @@ public class SnapshotManagerTest {
 
         Assert.assertEquals(2, manager.getSnapshots().size());
 
-
         Assert.assertNotNull(transactionPool);
 
-        List<Transaction> txs = new ArrayList<>();
-        txs.add(createSampleTransaction());
-        txs.add(createSampleTransaction());
-        transactionPool.addTransactions(txs);
+        setUpSampleAccounts();
+        transactionPool.addTransaction(createSampleTransaction());
         Assert.assertFalse(transactionPool.getPendingTransactions().isEmpty());
         Assert.assertFalse(transactionPool.getPendingTransactions().isEmpty());
 
@@ -197,17 +194,13 @@ public class SnapshotManagerTest {
         BlockChainStatus status = blockchain.getStatus();
 
         Assert.assertEquals(10, status.getBestBlockNumber());
-        Assert.assertNotNull(transactionPool);
 
-        List<Transaction> txs = new ArrayList<>();
-        txs.add(createSampleTransaction());
-        txs.add(createSampleTransaction());
-        transactionPool.addTransactions(txs);
+        setUpSampleAccounts();
+        transactionPool.addTransaction(createSampleTransaction());
         Assert.assertFalse(transactionPool.getPendingTransactions().isEmpty());
         Assert.assertFalse(transactionPool.getPendingTransactions().isEmpty());
 
         manager.takeSnapshot();
-
         Assert.assertFalse(manager.getSnapshots().isEmpty());
         Assert.assertTrue(manager.resetSnapshots());
         Assert.assertTrue(manager.getSnapshots().isEmpty());
@@ -235,6 +228,18 @@ public class SnapshotManagerTest {
             blockchain.tryToConnect(block);
     }
 
+    private void setUpSampleAccounts() {
+        Repository track = repository.startTracking();
+
+        for (String name : new String[]{"sender", "receiver"}) {
+            Account account = new AccountBuilder().name(name).build();
+            track.createAccount(account.getAddress());
+            track.addBalance(account.getAddress(), Coin.valueOf(5000000));
+        }
+
+        track.commit();
+    }
+
     private static Transaction createSampleTransaction() {
         Account sender = new AccountBuilder().name("sender").build();
         Account receiver = new AccountBuilder().name("receiver").build();
@@ -242,6 +247,7 @@ public class SnapshotManagerTest {
         Transaction tx = new TransactionBuilder()
                 .sender(sender)
                 .receiver(receiver)
+                .gasPrice(BigInteger.valueOf(200))
                 .value(BigInteger.TEN)
                 .build();
 

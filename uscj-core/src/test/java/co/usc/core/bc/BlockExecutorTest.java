@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -26,7 +26,6 @@ import co.usc.test.builders.BlockChainBuilder;
 import co.usc.trie.TrieStoreImpl;
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
-import co.usc.db.RepositoryImpl;
 import co.usc.test.builders.BlockChainBuilder;
 import com.google.common.collect.Lists;
 import org.ethereum.core.*;
@@ -34,7 +33,7 @@ import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.crypto.cryptohash.Keccak256;
 import org.ethereum.datasource.HashMapDB;
-import org.ethereum.listener.CompositeEthereumListener;
+import org.ethereum.listener.TestCompositeEthereumListener;
 import org.ethereum.net.eth.message.StatusMessage;
 import org.ethereum.net.message.Message;
 import org.ethereum.net.p2p.HelloMessage;
@@ -622,9 +621,11 @@ public class BlockExecutorTest {
         }
     }
 
-    public static class SimpleEthereumListener extends CompositeEthereumListener {
+    public static class SimpleEthereumListener extends TestCompositeEthereumListener {
         private Block latestBlock;
         private List<TransactionReceipt> latestReceipts;
+        private Block bestBlock;
+        private List<TransactionReceipt> bestReceipts;
         private String latestTransactionHash;
         private String latestTrace;
         private TransactionExecutionSummary latestSummary;
@@ -664,6 +665,20 @@ public class BlockExecutorTest {
         @Override
         public void onRecvMessage(Channel channel, Message message) {
 
+        }
+
+        @Override
+        public void onBestBlock(Block block, List<TransactionReceipt> receipts) {
+            bestBlock = block;
+            bestReceipts = receipts;
+        }
+
+        public Block getBestBlock() {
+            return bestBlock;
+        }
+
+        public List<TransactionReceipt> getBestReceipts() {
+            return bestReceipts;
         }
 
         @Override

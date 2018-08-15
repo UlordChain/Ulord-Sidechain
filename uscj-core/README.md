@@ -3,7 +3,7 @@
 
 #### Compile, test and package
 
-Run `$ ../gradlew build`.
+Run `$ ../gradlew build`
 
  - find jar artifacts at `build/libs`
  - find unit test and code coverage reports at `build/reports`

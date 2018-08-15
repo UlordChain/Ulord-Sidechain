@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2016 - 2018  Ulord Core team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,36 +21,46 @@ package co.usc.core;
 import co.usc.config.UscSystemProperties;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.TransactionPoolImpl;
+import co.usc.rpc.*;
 import co.usc.metrics.HashRateCalculator;
 import co.usc.mine.MinerClient;
 import co.usc.mine.MinerServer;
 import co.usc.net.*;
 import co.usc.net.eth.UscWireProtocol;
-import co.usc.net.handler.TxHandler;
-import co.usc.net.handler.TxHandlerImpl;
 import co.usc.net.sync.SyncConfiguration;
-import co.usc.rpc.CorsConfiguration;
-import co.usc.rpc.Web3UscImpl;
+import co.usc.rpc.modules.debug.DebugModule;
 import co.usc.rpc.modules.eth.*;
+import co.usc.rpc.modules.mnr.MnrModule;
 import co.usc.rpc.modules.personal.PersonalModule;
 import co.usc.rpc.modules.personal.PersonalModuleWalletDisabled;
 import co.usc.rpc.modules.personal.PersonalModuleWalletEnabled;
 import co.usc.rpc.modules.txpool.TxPoolModule;
-import co.usc.rpc.netty.JsonRpcWeb3FilterHandler;
-import co.usc.rpc.netty.JsonRpcWeb3ServerHandler;
-import co.usc.rpc.netty.Web3HttpServer;
+import co.usc.rpc.netty.*;
 import co.usc.scoring.PeerScoring;
 import co.usc.scoring.PeerScoringManager;
 import co.usc.scoring.PunishmentParameters;
 import co.usc.validators.ProofOfWorkRule;
+import co.usc.net.*;
+import co.usc.net.eth.UscWireProtocol;
+import co.usc.net.sync.SyncConfiguration;
+import co.usc.rpc.*;
+import co.usc.rpc.modules.debug.DebugModule;
+import co.usc.rpc.modules.eth.*;
+import co.usc.rpc.modules.mnr.MnrModule;
+import co.usc.rpc.modules.personal.PersonalModule;
+import co.usc.rpc.modules.personal.PersonalModuleWalletDisabled;
+import co.usc.rpc.modules.personal.PersonalModuleWalletEnabled;
+import co.usc.rpc.modules.txpool.TxPoolModule;
+import co.usc.rpc.netty.*;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Blockchain;
-import org.ethereum.core.TransactionPool;
 import org.ethereum.core.Repository;
+import org.ethereum.core.TransactionPool;
 import org.ethereum.core.genesis.BlockChainLoader;
 import org.ethereum.datasource.KeyValueDataSource;
 import org.ethereum.datasource.LevelDbDataSource;
 import org.ethereum.db.ReceiptStore;
+import org.ethereum.facade.Ethereum;
 import org.ethereum.listener.CompositeEthereumListener;
 import org.ethereum.listener.EthereumListener;
 import org.ethereum.net.EthereumChannelInitializerFactory;
@@ -143,20 +153,17 @@ public class UscFactory {
     }
 
     @Bean
-    public TxHandler getTxHandler(UscSystemProperties config, CompositeEthereumListener compositeEthereumListener, Repository repository, Blockchain blockchain) {
-        return new TxHandlerImpl(config, compositeEthereumListener, repository, blockchain);
-    }
-
-    @Bean
     public Web3 getWeb3(Usc usc,
                         Blockchain blockchain,
                         TransactionPool transactionPool,
                         UscSystemProperties config,
                         MinerClient minerClient,
                         MinerServer minerServer,
+                        MnrModule mnrModule,
                         PersonalModule personalModule,
                         EthModule ethModule,
                         TxPoolModule txPoolModule,
+                        DebugModule debugModule,
                         ChannelManager channelManager,
                         Repository repository,
                         PeerScoringManager peerScoringManager,
@@ -177,6 +184,8 @@ public class UscFactory {
                 personalModule,
                 ethModule,
                 txPoolModule,
+                mnrModule,
+                debugModule,
                 channelManager,
                 repository,
                 peerScoringManager,
@@ -192,7 +201,7 @@ public class UscFactory {
 
     @Bean
     public JsonRpcWeb3FilterHandler getJsonRpcWeb3FilterHandler(UscSystemProperties uscSystemProperties) {
-        return new JsonRpcWeb3FilterHandler(uscSystemProperties.corsDomains(), uscSystemProperties.rpcAddress(), uscSystemProperties.rpcHost());
+        return new JsonRpcWeb3FilterHandler(uscSystemProperties.corsDomains(), uscSystemProperties.rpcHttpBindAddress(), uscSystemProperties.rpcHttpHost());
     }
 
     @Bean
@@ -201,12 +210,33 @@ public class UscFactory {
     }
 
     @Bean
+    public Web3WebSocketServer getWeb3WebSocketServer(
+            UscSystemProperties uscSystemProperties,
+            Ethereum ethereum,
+            JsonRpcWeb3ServerHandler serverHandler,
+            JsonRpcSerializer serializer) {
+        EthSubscriptionNotificationEmitter emitter = new EthSubscriptionNotificationEmitter(ethereum, serializer);
+        UscJsonRpcHandler jsonRpcHandler = new UscJsonRpcHandler(emitter, serializer);
+        return new Web3WebSocketServer(
+                uscSystemProperties.rpcWebSocketBindAddress(),
+                uscSystemProperties.rpcWebSocketPort(),
+                jsonRpcHandler,
+                serverHandler
+        );
+    }
+
+    @Bean
+    public JsonRpcSerializer getJsonRpcSerializer() {
+        return new JacksonBasedRpcSerializer();
+    }
+
+    @Bean
     public Web3HttpServer getWeb3HttpServer(UscSystemProperties uscSystemProperties,
                                             JsonRpcWeb3FilterHandler filterHandler,
                                             JsonRpcWeb3ServerHandler serverHandler) {
         return new Web3HttpServer(
-            uscSystemProperties.rpcAddress(),
-            uscSystemProperties.rpcPort(),
+            uscSystemProperties.rpcHttpBindAddress(),
+            uscSystemProperties.rpcHttpPort(),
             uscSystemProperties.soLingerTime(),
             true,
             new CorsConfiguration(uscSystemProperties.corsDomains()),
@@ -226,7 +256,7 @@ public class UscFactory {
                                         org.ethereum.core.Repository repository,
                                         UscSystemProperties config,
                                         ProgramInvokeFactory programInvokeFactory,
-                                        CompositeEthereumListener listener)  {
+                                        CompositeEthereumListener listener) {
         return new TransactionPoolImpl(
                 blockStore,
                 receiptStore,
@@ -332,7 +362,7 @@ public class UscFactory {
         int expirationTimePeerStatus = config.getExpirationTimePeerStatus();
         int maxSkeletonChunks = config.getMaxSkeletonChunks();
         int chunkSize = config.getChunkSize();
-        return new  SyncConfiguration(expectedPeers, timeoutWaitingPeers, timeoutWaitingRequest,
+        return new SyncConfiguration(expectedPeers, timeoutWaitingPeers, timeoutWaitingRequest,
                 expirationTimePeerStatus, maxSkeletonChunks, chunkSize);
     }
 

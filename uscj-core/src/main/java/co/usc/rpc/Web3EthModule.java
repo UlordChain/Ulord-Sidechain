@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2018 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,6 +23,7 @@ import org.ethereum.rpc.Web3;
 import org.ethereum.rpc.dto.CompilationResultDTO;
 import org.ethereum.rpc.dto.TransactionReceiptDTO;
 import org.ethereum.rpc.dto.TransactionResultDTO;
+
 import java.math.BigInteger;
 import java.util.Map;
 
@@ -65,7 +66,7 @@ public interface Web3EthModule {
 
     boolean eth_mining();
 
-    BigInteger  eth_hashrate();
+    BigInteger eth_hashrate();
 
     String eth_gasPrice();
 
@@ -127,7 +128,7 @@ public interface Web3EthModule {
 
     Object[] eth_getLogs(Web3.FilterRequest fr) throws Exception;
 
-    BigInteger  eth_netHashrate();
+    BigInteger eth_netHashrate();
 
     boolean eth_submitWork(String nonce, String header, String mince);
 

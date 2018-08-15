@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,9 +25,6 @@ import co.usc.ulordj.script.ScriptBuilder;
 import co.usc.ulordj.script.ScriptChunk;
 import co.usc.crypto.Keccak256;
 import co.usc.peg.*;
-import co.usc.peg.Bridge;
-import co.usc.peg.BridgeStorageProvider;
-import co.usc.peg.Federation;
 import org.ethereum.core.Repository;
 import org.ethereum.crypto.HashUtil;
 import org.junit.Ignore;
@@ -41,7 +38,7 @@ import java.util.*;
 @Ignore
 public class AddSignatureTest extends BridgePerformanceTestCase {
     private UldTransaction releaseTx;
-    private Keccak256 rskTxHash;
+    private Keccak256 uscTxHash;
     private UldECKey federatorThatSignsKey;
 
     // Keys for the regtest genesis federation, which
@@ -90,7 +87,7 @@ public class AddSignatureTest extends BridgePerformanceTestCase {
         return (int executionIndex) -> Bridge.ADD_SIGNATURE.encode(new Object[]{
                 federatorThatSignsKey.getPubKey(),
                 getSignaturesFor(releaseTx, federatorThatSignsKey),
-                rskTxHash.getBytes()
+                uscTxHash.getBytes()
             });
     }
 
@@ -134,11 +131,11 @@ public class AddSignatureTest extends BridgePerformanceTestCase {
             federatorThatSignsKey = keysSelection.get(index);
 
             // Random tx hash that we then use for the method call
-            rskTxHash = new Keccak256(HashUtil.keccak256(BigInteger.valueOf(new Random().nextLong()).toByteArray()));
+            uscTxHash = new Keccak256(HashUtil.keccak256(BigInteger.valueOf(new Random().nextLong()).toByteArray()));
 
             // Get the tx into the txs waiting for signatures
             try {
-                provider.getUscTxsWaitingForSignatures().put(rskTxHash, releaseTx);
+                provider.getUscTxsWaitingForSignatures().put(uscTxHash, releaseTx);
             } catch (IOException e) {
                 throw new RuntimeException("Exception while trying to gather txs waiting for signatures for storage initialization");
             }

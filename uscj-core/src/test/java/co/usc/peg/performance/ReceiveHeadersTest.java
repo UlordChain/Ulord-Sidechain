@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,9 +28,6 @@ import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageProvider;
 import co.usc.peg.RepositoryBlockStore;
 import co.usc.config.TestSystemProperties;
-import co.usc.peg.Bridge;
-import co.usc.peg.BridgeStorageProvider;
-import co.usc.peg.RepositoryBlockStore;
 import org.ethereum.core.Repository;
 import org.ethereum.vm.PrecompiledContracts;
 import org.junit.Ignore;
@@ -50,17 +47,17 @@ public class ReceiveHeadersTest extends BridgePerformanceTestCase {
         final int maxUldBlocks = 2000;
 
         BridgeStorageProviderInitializer storageInitializer = (BridgeStorageProvider provider, Repository repository, int executionIndex) -> {
-            UldBlockStore UldBlockStore = new RepositoryBlockStore(new TestSystemProperties(), repository, PrecompiledContracts.BRIDGE_ADDR);
-            Context btcContext = new Context(networkParameters);
-            UldBlockChain UldBlockChain;
+            UldBlockStore uldBlockStore = new RepositoryBlockStore(new TestSystemProperties(), repository, PrecompiledContracts.BRIDGE_ADDR);
+            Context uldContext = new Context(networkParameters);
+            UldBlockChain uldBlockChain;
             try {
-                UldBlockChain = new UldBlockChain(btcContext, UldBlockStore);
+                uldBlockChain = new UldBlockChain(uldContext, uldBlockStore);
             } catch (BlockStoreException e) {
                 throw new RuntimeException("Error initializing uld blockchain for tests");
             }
 
             int blocksToGenerate = Helper.randomInRange(minUldBlocks, maxUldBlocks);
-            UldBlock lastBlock = Helper.generateAndAddBlocks(UldBlockChain, blocksToGenerate);
+            UldBlock lastBlock = Helper.generateAndAddBlocks(uldBlockChain, blocksToGenerate);
             blockToTry = Helper.generateUldBlock(lastBlock);
         };
 
@@ -80,4 +77,6 @@ public class ReceiveHeadersTest extends BridgePerformanceTestCase {
 
         BridgePerformanceTest.addStats(stats);
     }
+
+
 }

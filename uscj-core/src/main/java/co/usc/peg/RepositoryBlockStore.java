@@ -1,6 +1,6 @@
 /*
  * This file is part of USC
- * Copyright (C) 2018 Ulord core team.
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,18 +29,17 @@ import org.ethereum.vm.DataWord;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Implementation of a ulordj blockstore that persists to USC's Repository
  * @author Oscar Guindzberg
  */
-public class RepositoryBlockStore implements UldBlockstoreWithCache{
+public class RepositoryBlockStore implements UldBlockstoreWithCache {
 
     public static final String BLOCK_STORE_CHAIN_HEAD_KEY = "blockStoreChainHead";
-    // power of 2 size that contains enough hashes to handle one year of hashes
+
+    // power of 2 size that contains enough hashes to handle one year of blocks
     private static final int MAX_SIZE_MAP_STORED_BLOCKS = 65535;
     private static Map<Sha256Hash, StoredBlock> knownBlocks = new MaxSizeHashMap<>(MAX_SIZE_MAP_STORED_BLOCKS);
 

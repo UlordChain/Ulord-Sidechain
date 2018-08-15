@@ -1,7 +1,6 @@
 /*
- * This file is part of Usc
- * Copyright (C) 2017 RSK Labs Ltd.
- * Copyright (C) 2018 Ulord developer team.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,8 +22,8 @@ import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.config.UscMiningConstants;
 import co.usc.core.Coin;
-import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.core.UscAddress;
+import co.usc.core.bc.PendingState;
 import co.usc.crypto.Keccak256;
 import co.usc.remasc.RemascTransaction;
 import org.ethereum.core.TransactionPool;
@@ -40,11 +39,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.*;
+import java.util.stream.Collectors;
 
-/**
- * Created by oscar on 26/09/2016.
- * Update by Ulord team for Ulord merge-mining 2018/04
- */
 public class MinerUtils {
 
     private static final Logger logger = LoggerFactory.getLogger("minerserver");
@@ -71,7 +67,6 @@ public class MinerUtils {
             throw new RuntimeException(e);
         }
         scriptPubKeyBytes.write(co.usc.ulordj.script.ScriptOpCodes.OP_CHECKSIG);
-        //Set the ulord coinbase output. Kwuaint@Ulord 2018/06/01
         coinbaseTransaction.addOutput(new co.usc.ulordj.core.TransactionOutput(params, coinbaseTransaction, co.usc.ulordj.core.Coin.valueOf(112, 96), scriptPubKeyBytes.toByteArray()));
         return coinbaseTransaction;
     }
@@ -110,7 +105,7 @@ public class MinerUtils {
             throw new RuntimeException(e);
         }
         scriptPubKeyBytes.write(co.usc.ulordj.script.ScriptOpCodes.OP_CHECKSIG);
-        coinbaseTransaction.addOutput(new co.usc.ulordj.core.TransactionOutput(params, coinbaseTransaction, co.usc.ulordj.core.Coin.ONE_COIN, scriptPubKeyBytes.toByteArray()));
+        coinbaseTransaction.addOutput(new co.usc.ulordj.core.TransactionOutput(params, coinbaseTransaction, co.usc.ulordj.core.Coin.valueOf(50, 0), scriptPubKeyBytes.toByteArray()));
         // add opreturn output with two tags
         ByteArrayOutputStream output2Bytes = new ByteArrayOutputStream();
         output2Bytes.write(co.usc.ulordj.script.ScriptOpCodes.OP_RETURN);
@@ -139,13 +134,9 @@ public class MinerUtils {
 
     public List<org.ethereum.core.Transaction> getAllTransactions(TransactionPool transactionPool) {
         //TODO: optimize this by considering GasPrice (order by GasPrice/Nonce)
-        TransactionPoolImpl.TransactionSortedSet ret = new TransactionPoolImpl.TransactionSortedSet();
-
-        List<org.ethereum.core.Transaction> pendingTransactions = new LinkedList<>(transactionPool.getPendingTransactions());
-
-        ret.addAll(pendingTransactions);
-
-        return new LinkedList<>(ret);
+        return transactionPool.getPendingTransactions().stream()
+                .sorted(PendingState.TRANSACTION_COMPARATOR)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
     public List<org.ethereum.core.Transaction> filterTransactions(List<Transaction> txsToRemove, List<Transaction> txs, Map<UscAddress, BigInteger> accountNonces, Repository originalRepo, Coin minGasPrice) {

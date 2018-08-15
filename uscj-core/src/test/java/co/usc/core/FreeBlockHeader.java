@@ -170,12 +170,12 @@ public class FreeBlockHeader {
     }
 
     public FreeBlockHeader(byte[] parentHash, byte[] unclesHash, byte[] coinbase,
-                           byte[] logsBloom, byte[] difficulty, byte[] number,
-                           byte[] gasLimit, byte[] gasUsed, byte[] timestamp,
-                           byte[] extraData,
-                           byte[] ulordMergedMiningHeader, byte[] ulordMergedMiningMerkleProof,
-                           byte[] ulordMergedMiningCoinbaseTransaction,
-                           byte[] minimumGasPrice,
+                       byte[] logsBloom, byte[] difficulty, byte[] number,
+                       byte[] gasLimit, byte[] gasUsed, byte[] timestamp,
+                       byte[] extraData,
+                       byte[] ulordMergedMiningHeader, byte[] ulordMergedMiningMerkleProof,
+                       byte[] ulordMergedMiningCoinbaseTransaction,
+                       byte[] minimumGasPrice,
                            byte[] uncleCount) {
         this.parentHash = parentHash;
         this.unclesHash = unclesHash;

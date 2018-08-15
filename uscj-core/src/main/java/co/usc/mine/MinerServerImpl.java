@@ -1,7 +1,6 @@
 /*
- * This file is part of Usc
- *  Copyright (c) 2016 - 2018 Ulord core team.
- * (derived from RSKJ library, Copyright (C) 2017 RSK Labs Ltd)
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -65,7 +64,6 @@ import java.util.stream.Collectors;
  * It builds blocks to mine and publishes blocks once a valid nonce was found by the miner.
  *
  * @author Oscar Guindzberg
- * @updated by Ulord Core team
  */
 
 @Component("MinerServer")
@@ -100,7 +98,7 @@ public class MinerServerImpl implements MinerServer {
     @GuardedBy("lock")
     private Block latestBlock;
     @GuardedBy("lock")
-    private Coin latestPaidFeesWithNotify;
+    private co.usc.core.Coin latestPaidFeesWithNotify;
     @GuardedBy("lock")
     private volatile MinerWork currentWork; // This variable can be read at anytime without the lock.
     private final Object lock = new Object();
@@ -136,7 +134,7 @@ public class MinerServerImpl implements MinerServer {
 
         blocksWaitingforPoW = createNewBlocksWaitingList();
 
-        latestPaidFeesWithNotify = Coin.ZERO;
+        latestPaidFeesWithNotify = co.usc.core.Coin.ZERO;
         latestParentHash = null;
         coinbaseAddress = miningConfig.getCoinbaseAddress();
         minFeesNotifyInDollars = BigDecimal.valueOf(miningConfig.getMinFeesNotifyInDollars());
@@ -352,7 +350,7 @@ public class MinerServerImpl implements MinerServer {
         newBlock.seal();
 
         if (!isValid(newBlock)) {
-            String message = "Invalid block supplied by miner: " + newBlock.getShortHash() + " " + newBlock.getShortHashForMergedMining() + " at height " + newBlock.getNumber();
+            String message = "Invalid fallback block supplied by miner: " + newBlock.getShortHash() + " " + newBlock.getShortHashForMergedMining() + " at height " + newBlock.getNumber();
             logger.error(message);
             return false;
         } else {
@@ -383,27 +381,27 @@ public class MinerServerImpl implements MinerServer {
     public SubmitBlockResult submitUlordBlockPartialMerkle(
             String blockHashForMergedMining,
             UldBlock blockWithHeaderOnly,
-            UldTransaction coinbaseTx,
+            UldTransaction coinbase,
             List<String> merkleHashes,
             int blockTxnCount) {
         logger.debug("Received merkle solution with hash {} for merged mining", blockHashForMergedMining);
 
         PartialMerkleTree ulordMergedMiningMerkleBranch = getUlordMergedMerkleBranchForCoinbase(blockWithHeaderOnly.getParams(), merkleHashes, blockTxnCount);
 
-        return processSolution(blockHashForMergedMining, blockWithHeaderOnly, coinbaseTx, ulordMergedMiningMerkleBranch, true);
+        return processSolution(blockHashForMergedMining, blockWithHeaderOnly, coinbase, ulordMergedMiningMerkleBranch, true);
     }
 
     @Override
     public SubmitBlockResult submitUlordBlockTransactions(
             String blockHashForMergedMining,
             UldBlock blockWithHeaderOnly,
-            UldTransaction coinbaseTx,
+            UldTransaction coinbase,
             List<String> txHashes) {
         logger.debug("Received tx solution with hash {} for merged mining", blockHashForMergedMining);
 
         PartialMerkleTree ulordMergedMiningMerkleBranch = getUlordMergedMerkleBranch(blockWithHeaderOnly.getParams(), txHashes);
 
-        return processSolution(blockHashForMergedMining, blockWithHeaderOnly, coinbaseTx, ulordMergedMiningMerkleBranch, true);
+        return processSolution(blockHashForMergedMining, blockWithHeaderOnly, coinbase, ulordMergedMiningMerkleBranch, true);
     }
 
     @Override
@@ -415,16 +413,16 @@ public class MinerServerImpl implements MinerServer {
         logger.debug("Received block with hash {} for merged mining", blockHashForMergedMining);
 
         //noinspection ConstantConditions
-        UldTransaction coinbaseTx = ulordMergedMiningBlock.getTransactions().get(0);
+        UldTransaction coinbase = ulordMergedMiningBlock.getTransactions().get(0);
         PartialMerkleTree ulordMergedMiningMerkleBranch = getUlordMergedMerkleBranch(ulordMergedMiningBlock);
 
-        return processSolution(blockHashForMergedMining, ulordMergedMiningBlock, coinbaseTx, ulordMergedMiningMerkleBranch, lastTag);
+        return processSolution(blockHashForMergedMining, ulordMergedMiningBlock, coinbase, ulordMergedMiningMerkleBranch, lastTag);
     }
 
     private SubmitBlockResult processSolution(
             String blockHashForMergedMining,
             UldBlock blockWithHeaderOnly,
-            UldTransaction coinbaseTx,
+            UldTransaction coinbase,
             PartialMerkleTree ulordMergedMiningMerkleBranch,
             boolean lastTag) {
         Block newBlock;
@@ -449,7 +447,7 @@ public class MinerServerImpl implements MinerServer {
         logger.info("Received block {} {}", newBlock.getNumber(), newBlock.getHash());
 
         newBlock.setUlordMergedMiningHeader(blockWithHeaderOnly.cloneAsHeader().ulordSerialize());
-        newBlock.setUlordMergedMiningCoinbaseTransaction(compressCoinbase(coinbaseTx.ulordSerialize(), lastTag));
+        newBlock.setUlordMergedMiningCoinbaseTransaction(compressCoinbase(coinbase.ulordSerialize(), lastTag));
         newBlock.setUlordMergedMiningMerkleProof(ulordMergedMiningMerkleBranch.ulordSerialize());
         newBlock.seal();
 
@@ -712,7 +710,7 @@ public class MinerServerImpl implements MinerServer {
 
         // note: integer divisions might truncate values
         BigInteger percentage = BigInteger.valueOf(100L + UscMiningConstants.NOTIFY_FEES_PERCENTAGE_INCREASE);
-        Coin minFeesNotify = latestPaidFeesWithNotify.multiply(percentage).divide(BigInteger.valueOf(100L));
+        co.usc.core.Coin minFeesNotify = latestPaidFeesWithNotify.multiply(percentage).divide(BigInteger.valueOf(100L));
         Coin feesPaidToMiner = block.getFeesPaidToMiner();
         BigDecimal feesPaidToMinerInDollars = new BigDecimal(feesPaidToMiner.asBigInteger()).multiply(gasUnitInDollars);
         return feesPaidToMiner.compareTo(minFeesNotify) > 0

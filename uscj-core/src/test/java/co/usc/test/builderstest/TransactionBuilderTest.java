@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,7 +20,6 @@ package co.usc.test.builderstest;
 
 import co.usc.test.builders.AccountBuilder;
 import co.usc.test.builders.TransactionBuilder;
-import co.usc.test.builders.AccountBuilder;
 import org.ethereum.core.Account;
 import org.ethereum.core.Transaction;
 import org.junit.Assert;

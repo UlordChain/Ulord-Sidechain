@@ -1,6 +1,6 @@
 /*
- * This file is part of Usc
- * Copyright (C) 2016 - 2018 Ulord development team.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -31,6 +31,8 @@ import co.usc.remasc.RemascTransaction;
 import co.usc.validators.BlockUnclesValidationRule;
 import co.usc.validators.BlockValidationRule;
 import co.usc.validators.ProofOfWorkRule;
+import co.usc.config.ConfigUtils;
+import co.usc.config.TestSystemProperties;
 import org.ethereum.core.*;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;
@@ -50,7 +52,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
@@ -66,7 +67,6 @@ public class MinerServerTest {
     private BlockStore blockStore;
     private TransactionPool transactionPool;
 
-
     @Before
     public void setUp() {
         UscTestFactory factory = new UscTestFactory();
@@ -74,7 +74,6 @@ public class MinerServerTest {
         repository = factory.getRepository();
         blockStore = factory.getBlockStore();
         transactionPool = factory.getTransactionPool();
-
     }
 
     @Test

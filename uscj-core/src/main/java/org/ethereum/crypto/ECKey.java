@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -86,8 +86,8 @@ import static org.ethereum.util.ByteUtil.bigIntegerToBytes;
  * this class so round-tripping preserves state. Unless you're working with old software or doing unusual things, you
  * can usually ignore the compressed/uncompressed distinction.</p>
  *
- * This code is borrowed from the Ulordj project and altered to fit Ethereum.<br>
- * See <a href="https://github.com/UlordChin/ulordj-thin">
+ * This code is borrowed from the ulordj project and altered to fit Ethereum.<br>
+ * See <a href="https://github.com/ulordj/ulordj/blob/master/core/src/main/java/com/google/ulord/core/ECKey.java">
  * ulordj on GitHub</a>.
  */
 public class ECKey implements Serializable {

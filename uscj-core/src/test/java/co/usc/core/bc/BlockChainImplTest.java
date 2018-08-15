@@ -1,6 +1,6 @@
 /*
- * This file is part of Usc
- * Copyright (C) 2016 - 2018 Ulord development team.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,6 +29,10 @@ import co.usc.test.builders.BlockChainBuilder;
 import co.usc.trie.TrieStoreImpl;
 import co.usc.validators.BlockValidator;
 import co.usc.validators.DummyBlockValidator;
+import co.usc.blockchain.utils.BlockGenerator;
+import co.usc.config.TestSystemProperties;
+import co.usc.test.builders.BlockBuilder;
+import co.usc.test.builders.BlockChainBuilder;
 import org.ethereum.core.*;
 import org.ethereum.core.genesis.GenesisLoader;
 import org.ethereum.crypto.HashUtil;
@@ -82,6 +86,24 @@ public class BlockChainImplTest {
     }
 
     @Test
+    public void onBestBlockTest() {
+        BlockChainImpl blockChain = createBlockChain();
+        Block genesis = BlockChainImplTest.getGenesisBlock(blockChain);
+        BlockExecutorTest.SimpleEthereumListener listener = ((BlockExecutorTest.SimpleEthereumListener) blockChain.getListener());
+        BlockGenerator blockGenerator = new BlockGenerator();
+        Block block1 = blockGenerator.createChildBlock(genesis,0,2l);
+        Block block1b = blockGenerator.createChildBlock(genesis,0,1l);
+
+        Assert.assertEquals(ImportResult.IMPORTED_BEST, blockChain.tryToConnect(genesis));
+        Assert.assertEquals(ImportResult.IMPORTED_BEST, blockChain.tryToConnect(block1));
+        Assert.assertEquals(block1.getHash(), listener.getBestBlock().getHash());
+        Assert.assertEquals(listener.getBestBlock().getHash(), listener.getLatestBlock().getHash());
+        Assert.assertEquals(ImportResult.IMPORTED_NOT_BEST, blockChain.tryToConnect(block1b));
+        Assert.assertNotEquals(listener.getBestBlock().getHash(), listener.getLatestBlock().getHash());
+        Assert.assertEquals(block1.getHash(), listener.getBestBlock().getHash());
+        Assert.assertEquals(block1b.getHash(), listener.getLatestBlock().getHash());
+    }
+    @Test
     public void addGenesisBlockUsingRepository() {
         BlockChainImpl blockChain = createBlockChain();
         Block genesis = BlockChainImplTest.getGenesisBlock(blockChain);
@@ -110,7 +132,7 @@ public class BlockChainImplTest {
 
 
     @Test
-    public void setStatusUsingRskGenesis() {
+    public void setStatusUsingUscGenesis() {
         BlockChainImpl blockChain = createBlockChain();
         Block genesis = BlockChainImplTest.getGenesisBlock(blockChain);
 
@@ -136,7 +158,7 @@ public class BlockChainImplTest {
     }
 
     @Test
-    public void setStatusUsingRskGenesisAndOldSetMethods() {
+    public void setStatusUsingUscGenesisAndOldSetMethods() {
         BlockChainImpl blockChain = createBlockChain();
         Block genesis = BlockChainImplTest.getGenesisBlock(blockChain);
 
@@ -905,8 +927,8 @@ public class BlockChainImplTest {
         AdminInfo adminInfo = new SimpleAdminInfo();
 
         CompositeEthereumListener listener = new BlockExecutorTest.SimpleEthereumListener();
-        TransactionPoolImpl transactionPool = new TransactionPoolImpl(config, repository, blockStore, receiptStore, null, listener, 10, 100);
 
+        TransactionPoolImpl transactionPool = new TransactionPoolImpl(config, repository, blockStore, receiptStore, null, listener, 10, 100);
         return new BlockChainImpl(config, repository, blockStore, receiptStore, transactionPool, listener, adminInfo, blockValidator);
     }
 

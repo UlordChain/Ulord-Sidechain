@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,13 +18,16 @@
 
 package co.usc.net.handler;
 
-//import co.usc.net.handler.txvalidator.*;
-import co.usc.net.handler.txvalidator.TxNotNullValidator;
-import co.usc.net.handler.txvalidator.TxValidatorGasLimitValidator;
-import co.usc.net.handler.txvalidator.TxValidatorNotRemascTxValidator;
-import co.usc.net.handler.txvalidator.TxValidatorStep;
-import org.ethereum.core.Transaction;
+import co.usc.config.UscSystemProperties;
+import co.usc.core.Coin;
+import co.usc.net.handler.txvalidator.*;
+import co.usc.net.handler.txvalidator.TxValidatorNonceRangeValidator;
+import org.ethereum.core.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spongycastle.util.BigIntegers;
 
+import javax.annotation.Nullable;
 import java.math.BigInteger;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,17 +38,43 @@ import java.util.List;
  * Add/remove checks here.
  */
 public class TxPendingValidator {
+    private static final Logger logger = LoggerFactory.getLogger("txpendingvalidator");
 
-    private List<TxValidatorStep> validatorSteps = new LinkedList<>();
+    private final List<TxValidatorStep> validatorSteps = new LinkedList<>();
 
-    public TxPendingValidator() {
+    private final UscSystemProperties config;
+
+    public TxPendingValidator(UscSystemProperties config) {
+        this.config = config;
+
         validatorSteps.add(new TxNotNullValidator());
         validatorSteps.add(new TxValidatorNotRemascTxValidator());
         validatorSteps.add(new TxValidatorGasLimitValidator());
+        validatorSteps.add(new TxValidatorAccountStateValidator());
+        validatorSteps.add(new TxValidatorNonceRangeValidator());
+        validatorSteps.add(new TxValidatorAccountBalanceValidator());
+        validatorSteps.add(new TxValidatorMinimuGasPriceValidator());
+        validatorSteps.add(new TxValidatorIntrinsicGasLimitValidator(config));
     }
 
-    public boolean isValid(Transaction tx, BigInteger gasLimit) {
-        return validatorSteps.stream()
-                .allMatch(v -> v.validate(tx, null, gasLimit, null, 0, false));
+    public boolean isValid(Transaction tx, Block executionBlock, @Nullable AccountState state) {
+        BigInteger blockGasLimit = BigIntegers.fromUnsignedByteArray(executionBlock.getGasLimit());
+        Coin minimumGasPrice = executionBlock.getMinimumGasPrice();
+        long bestBlockNumber = executionBlock.getNumber();
+        long basicTxCost = tx.transactionCost(config, executionBlock);
+
+        if (state == null && basicTxCost != 0) {
+            logger.trace("[tx={}, sender={}] account doesn't exist", tx.getHash(), tx.getSender());
+            return false;
+        }
+
+        for (TxValidatorStep step : validatorSteps) {
+            if (!step.validate(tx, state, blockGasLimit, minimumGasPrice, bestBlockNumber, basicTxCost == 0)) {
+                logger.info("[tx={}] {} failed", tx.getHash(), step.getClass());
+                return false;
+            }
+        }
+
+        return true;
     }
 }

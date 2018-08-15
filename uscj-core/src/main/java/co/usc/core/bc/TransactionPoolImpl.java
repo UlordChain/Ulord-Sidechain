@@ -1,6 +1,6 @@
 /*
- * This file is part of Usc
- * Copyright (C) 2016 - 2018 Ulord development team.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +19,7 @@
 package co.usc.core.bc;
 
 import co.usc.config.UscSystemProperties;
+import co.usc.core.Coin;
 import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.net.handler.TxPendingValidator;
@@ -29,7 +30,7 @@ import org.ethereum.core.*;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;
-import org.ethereum.listener.CompositeEthereumListener;
+import org.ethereum.listener.EthereumListener;
 import org.ethereum.util.ByteUtil;
 import org.ethereum.util.RLP;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactory;
@@ -63,7 +64,7 @@ public class TransactionPoolImpl implements TransactionPool {
     private final Repository repository;
     private final ReceiptStore receiptStore;
     private final ProgramInvokeFactory programInvokeFactory;
-    private final CompositeEthereumListener listener;
+    private final EthereumListener listener;
     private final int outdatedThreshold;
     private final int outdatedTimeout;
 
@@ -72,12 +73,11 @@ public class TransactionPoolImpl implements TransactionPool {
 
     private Block bestBlock;
 
-    private Repository poolRepository;
-    private final TxPendingValidator validator = new TxPendingValidator();
+    private final TxPendingValidator validator;
 
     public TransactionPoolImpl(BlockStore blockStore,
                                ReceiptStore receiptStore,
-                               CompositeEthereumListener listener,
+                               EthereumListener listener,
                                ProgramInvokeFactory programInvokeFactory,
                                Repository repository,
                                UscSystemProperties config) {
@@ -96,7 +96,7 @@ public class TransactionPoolImpl implements TransactionPool {
                                BlockStore blockStore,
                                ReceiptStore receiptStore,
                                ProgramInvokeFactory programInvokeFactory,
-                               CompositeEthereumListener listener,
+                               EthereumListener listener,
                                int outdatedThreshold,
                                int outdatedTimeout) {
         this.config = config;
@@ -108,7 +108,7 @@ public class TransactionPoolImpl implements TransactionPool {
         this.outdatedThreshold = outdatedThreshold;
         this.outdatedTimeout = outdatedTimeout;
 
-        this.poolRepository = repository.startTracking();
+        this.validator = new TxPendingValidator(config);
 
         if (this.outdatedTimeout > 0) {
             this.cleanerTimer = Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "TransactionPoolCleanerTimer"));
@@ -151,7 +151,17 @@ public class TransactionPoolImpl implements TransactionPool {
     }
 
     @Override
-    public synchronized Repository getRepository() { return this.poolRepository; }
+    public PendingState getPendingState() {
+        removeObsoleteTransactions(this.getCurrentBestBlockNumber(), this.outdatedThreshold, this.outdatedTimeout);
+        return new PendingState(
+            repository,
+            new TransactionSet(pendingTransactions),
+            (repository, tx) ->
+                new TransactionExecutor(
+                    config, tx, 0, bestBlock.getCoinbase(), repository,
+                    blockStore, receiptStore, programInvokeFactory, createFakePendingBlock(bestBlock))
+        );
+    }
 
     @Override
     public synchronized List<Transaction> addTransactions(final List<Transaction> txs) {
@@ -227,16 +237,18 @@ public class TransactionPoolImpl implements TransactionPool {
         transactionTimes.put(hash, timestampSeconds);
 
         BigInteger txnonce = tx.getNonceAsInteger();
-
-        if (!txnonce.equals(this.getNextNonceByAccount(tx.getSender()))) {
+        if (!txnonce.equals(getPendingState().getNonce(tx.getSender()))) {
             this.addQueuedTransaction(tx);
 
             return false;
         }
 
-        pendingTransactions.addTransaction(tx);
+        if (!senderCanPayPendingTransactionsAndNewTx(tx)) {
+            // discard this tx to prevent spam
+            return false;
+        }
 
-        executeTransaction(tx);
+        pendingTransactions.addTransaction(tx);
 
         if (listener != null) {
             EventDispatchThread.invokeLater(() -> {
@@ -246,20 +258,6 @@ public class TransactionPoolImpl implements TransactionPool {
         }
 
         return true;
-    }
-
-    private BigInteger getNextNonceByAccount(UscAddress account) {
-        BigInteger nextNonce = this.repository.getNonce(account);
-
-        for (Transaction tx : this.pendingTransactions.getTransactionsWithSender(account)) {
-            BigInteger txNonce = tx.getNonceAsInteger();
-
-            if (txNonce.compareTo(nextNonce) >= 0) {
-                nextNonce = txNonce.add(BigInteger.ONE);
-            }
-        }
-
-        return nextNonce;
     }
 
     @Override
@@ -281,7 +279,6 @@ public class TransactionPoolImpl implements TransactionPool {
 
         removeObsoleteTransactions(block.getNumber(), this.outdatedThreshold, this.outdatedTimeout);
 
-        updateState();
         bestBlock = block;
 
         if (listener != null) {
@@ -369,9 +366,7 @@ public class TransactionPoolImpl implements TransactionPool {
     @Override
     public synchronized List<Transaction> getPendingTransactions() {
         removeObsoleteTransactions(this.getCurrentBestBlockNumber(), this.outdatedThreshold, this.outdatedTimeout);
-        List<Transaction> ret = new ArrayList<>();
-        ret.addAll(pendingTransactions.getTransactions());
-        return ret;
+        return Collections.unmodifiableList(pendingTransactions.getTransactions());
     }
 
     @Override
@@ -380,32 +375,6 @@ public class TransactionPoolImpl implements TransactionPool {
         List<Transaction> ret = new ArrayList<>();
         ret.addAll(queuedTransactions.getTransactions());
         return ret;
-    }
-
-    public synchronized void updateState() {
-        logger.trace("update state");
-        poolRepository = repository.startTracking();
-
-        TransactionSortedSet sorted = new TransactionSortedSet();
-        sorted.addAll(pendingTransactions.getTransactions());
-
-        for (Transaction tx : sorted.toArray(new Transaction[0])) {
-            executeTransaction(tx);
-        }
-    }
-
-    private void executeTransaction(Transaction tx) {
-        logger.trace("Apply pending state tx: {} {}", toBI(tx.getNonce()), tx.getHash());
-
-        TransactionExecutor executor = new TransactionExecutor(
-                config, tx, 0, bestBlock.getCoinbase(), poolRepository,
-                blockStore, receiptStore, programInvokeFactory, createFakePendingBlock(bestBlock)
-        );
-
-        executor.init();
-        executor.execute();
-        executor.go();
-        executor.finalization();
     }
 
     private void addQueuedTransaction(Transaction tx) {
@@ -456,19 +425,33 @@ public class TransactionPoolImpl implements TransactionPool {
             return true;
         }
 
-        return validator.isValid(tx, bestBlock.getGasLimitAsInteger());
+        AccountState state = repository.getAccountState(tx.getSender());
+        return validator.isValid(tx, bestBlock, state);
     }
 
-    public static class TransactionSortedSet extends TreeSet<Transaction> {
-        public TransactionSortedSet() {
-            super((tx1, tx2) -> {
-                long nonceDiff = ByteUtil.byteArrayToLong(tx1.getNonce()) -
-                        ByteUtil.byteArrayToLong(tx2.getNonce());
-                if (nonceDiff != 0) {
-                    return nonceDiff > 0 ? 1 : -1;
-                }
-                return tx1.getHash().compareTo(tx2.getHash());
-            });
+    /**
+     * @param newTx a transaction to be added to the pending list (nonce = last pending nonce + 1)
+     * @return whether the sender balance is enough to pay for all pending transactions + newTx
+     */
+    private boolean senderCanPayPendingTransactionsAndNewTx(Transaction newTx) {
+        List<Transaction> transactions = pendingTransactions.getTransactionsWithSender(newTx.getSender());
+
+        Coin accumTxCost = Coin.ZERO;
+        for (Transaction t : transactions) {
+            accumTxCost = accumTxCost.add(getTxBaseCost(t));
         }
+
+        Coin costWithNewTx = accumTxCost.add(getTxBaseCost(newTx));
+        return costWithNewTx.compareTo(repository.getBalance(newTx.getSender())) <= 0;
+    }
+
+    private Coin getTxBaseCost(Transaction tx) {
+        Coin gasCost = tx.getValue();
+        if (bestBlock == null || tx.transactionCost(config, bestBlock) > 0) {
+            BigInteger gasLimit = new BigInteger(1, tx.getGasLimit());
+            gasCost = gasCost.add(tx.getGasPrice().multiply(gasLimit));
+        }
+
+        return gasCost;
     }
 }

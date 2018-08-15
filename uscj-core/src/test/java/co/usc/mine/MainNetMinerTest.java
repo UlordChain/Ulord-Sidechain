@@ -1,7 +1,3 @@
-/*
- * This file is part of Usc
- * Copyright (C) 2016 - 2018 Ulord development team.
- */
 package co.usc.mine;
 
 import co.usc.ulordj.core.NetworkParameters;
@@ -15,6 +11,9 @@ import co.usc.net.NodeBlockProcessor;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.validators.BlockUnclesValidationRule;
 import co.usc.validators.ProofOfWorkRule;
+import co.usc.config.ConfigUtils;
+import co.usc.config.TestSystemProperties;
+import co.usc.test.builders.BlockChainBuilder;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.Constants;
@@ -54,7 +53,6 @@ public class MainNetMinerTest {
     private NodeBlockProcessor blockProcessor;
     private Repository repository;
 
-
     @Before
     public void setup() {
         UscTestFactory factory = new UscTestFactory();
@@ -66,8 +64,6 @@ public class MainNetMinerTest {
         blockStore = factory.getBlockStore();
         blockProcessor = factory.getBlockProcessor();
         repository = factory.getRepository();
-
-
     }
 
     /*

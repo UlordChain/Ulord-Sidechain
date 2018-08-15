@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,6 +18,10 @@
 
 package co.usc.net.eth;
 
+import co.usc.blockchain.utils.BlockGenerator;
+import co.usc.config.TestSystemProperties;
+import co.usc.net.Status;
+import co.usc.net.messages.*;
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
 import co.usc.net.Status;
@@ -40,9 +44,9 @@ public class UscMessageTest {
     public void encodeDecodeGetBlockMessage() {
         Block block = new BlockGenerator().getBlock(1);
         GetBlockMessage message = new GetBlockMessage(block.getHash().getBytes());
-        UscMessage rskmessage = new UscMessage(config, message);
+        UscMessage uscmessage = new UscMessage(config, message);
 
-        byte[] encoded = rskmessage.getEncoded();
+        byte[] encoded = uscmessage.getEncoded();
 
         Eth62MessageFactory factory = new Eth62MessageFactory(config);
 
@@ -66,9 +70,9 @@ public class UscMessageTest {
         Block block = new BlockGenerator().getBlock(1);
         Status status = new Status(block.getNumber(), block.getHash().getBytes());
         StatusMessage message = new StatusMessage(status);
-        UscMessage rskmessage = new UscMessage(config, message);
+        UscMessage uscmessage = new UscMessage(config, message);
 
-        byte[] encoded = rskmessage.getEncoded();
+        byte[] encoded = uscmessage.getEncoded();
 
         Eth62MessageFactory factory = new Eth62MessageFactory(config);
 
@@ -92,9 +96,9 @@ public class UscMessageTest {
     public void encodeDecodeBlockMessage() {
         Block block = new BlockGenerator().getBlock(1);
         BlockMessage message = new BlockMessage(block);
-        UscMessage rskmessage = new UscMessage(config, message);
+        UscMessage uscmessage = new UscMessage(config, message);
 
-        byte[] encoded = rskmessage.getEncoded();
+        byte[] encoded = uscmessage.getEncoded();
 
         Eth62MessageFactory factory = new Eth62MessageFactory(config);
 

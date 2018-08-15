@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,6 +22,7 @@ import co.usc.ulordj.core.UldTransaction;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.config.TestSystemProperties;
 import co.usc.crypto.Keccak256;
+import co.usc.config.TestSystemProperties;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Assert;
 import org.junit.Test;
@@ -54,15 +55,15 @@ public class StateForFederatorTest {
         UldTransaction tx3 = new UldTransaction(NETWORK_PARAMETERS);
         UldTransaction tx4 = new UldTransaction(NETWORK_PARAMETERS);
 
-        SortedMap<Keccak256, UldTransaction> rskTxsWaitingForSignatures = new TreeMap<>();
-        rskTxsWaitingForSignatures.put(hash1, tx1);
-        rskTxsWaitingForSignatures.put(hash2, tx2);
+        SortedMap<Keccak256, UldTransaction> uscTxsWaitingForSignatures = new TreeMap<>();
+        uscTxsWaitingForSignatures.put(hash1, tx1);
+        uscTxsWaitingForSignatures.put(hash2, tx2);
 
-        SortedMap<Keccak256, Pair<UldTransaction, Long>> rskTxsWaitingForBroadcasting = new TreeMap<>();
-        rskTxsWaitingForBroadcasting.put(hash3, Pair.of(tx3, 3L));
-        rskTxsWaitingForBroadcasting.put(hash4, Pair.of(tx4, 4L));
+        SortedMap<Keccak256, Pair<UldTransaction, Long>> uscTxsWaitingForBroadcasting = new TreeMap<>();
+        uscTxsWaitingForBroadcasting.put(hash3, Pair.of(tx3, 3L));
+        uscTxsWaitingForBroadcasting.put(hash4, Pair.of(tx4, 4L));
 
-        StateForFederator stateForFederator = new StateForFederator(rskTxsWaitingForSignatures);
+        StateForFederator stateForFederator = new StateForFederator(uscTxsWaitingForSignatures);
 
         byte[] encoded = stateForFederator.getEncoded();
 

@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +21,8 @@ package org.ethereum.rpc;
 import co.usc.config.UscSystemProperties;
 import co.usc.mine.MinerClient;
 import co.usc.mine.MinerServer;
+import co.usc.net.MessageHandler;
+import co.usc.net.NodeMessageHandler;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.TransactionPool;
 import org.ethereum.core.Repository;
@@ -67,5 +69,9 @@ public class Web3Mocks {
 
     public static BlockStore getMockBlockStore() {
         return mock(BlockStore.class);
+    }
+
+    public static MessageHandler getMockMessageHandler() {
+        return mock(NodeMessageHandler.class);
     }
 }

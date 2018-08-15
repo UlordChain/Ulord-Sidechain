@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,22 +18,24 @@
 
 package co.usc.remasc;
 
-import co.usc.config.UscSystemProperties;
 import co.usc.ulordj.store.BlockStoreException;
 import co.usc.config.RemascConfig;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
 import co.usc.core.bc.SelectionRule;
-import co.usc.peg.BridgeSupport;
+import co.usc.config.RemascConfig;
+import co.usc.config.UscSystemProperties;
+import co.usc.core.Coin;
+import co.usc.core.UscAddress;
+import co.usc.core.bc.SelectionRule;
 import org.apache.commons.collections4.CollectionUtils;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
 import org.ethereum.db.BlockStore;
-import org.ethereum.db.RepositoryTrack;
 import org.ethereum.vm.LogInfo;
-import org.ethereum.vm.PrecompiledContracts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,28 +126,12 @@ public class Remasc {
         rewardBalance = rewardBalance.subtract(fullBlockReward);
         provider.setRewardBalance(rewardBalance);
 
-        // Pay RSK Labs cut
-        Coin payToUscLabs = fullBlockReward.divide(BigInteger.valueOf(remascConstants.getuscLabsDivisor()));
-        feesPayer.payMiningFees(processingBlockHeader.getHash().getBytes(), payToUscLabs, remascConstants.getuscLabsAddress(), logs);
+        // Pay USC labs cut
+        Coin payToUscLabs = fullBlockReward.divide(BigInteger.valueOf(remascConstants.getUscLabsDivisor()));
+        feesPayer.payMiningFees(processingBlockHeader.getHash().getBytes(), payToUscLabs, remascConstants.getUscLabsAddress(), logs);
         fullBlockReward = fullBlockReward.subtract(payToUscLabs);
 
-        // TODO to improve
-        // this type choreography is only needed because the RepositoryTrack support the
-        // get snapshot to method
-        Repository processingRepository = ((RepositoryTrack)repository).getOriginRepository().getSnapshotTo(processingBlockHeader.getStateRoot());
-        // TODO to improve
-        // and we need a RepositoryTrack to feed RemascFederationProvider
-        // because it supports the update of bytes (notably, RepositoryImpl don't)
-        // the update of bytes is needed, because BridgeSupport creation could alter
-        // the storage when getChainHead is null (specially in production)
-        processingRepository = processingRepository.startTracking();
-        BridgeSupport bridgeSupport = new BridgeSupport(
-                config,
-                processingRepository,
-                PrecompiledContracts.BRIDGE_ADDR,
-                processingBlock
-        );
-        RemascFederationProvider federationProvider = new RemascFederationProvider(bridgeSupport);
+        RemascFederationProvider federationProvider = new RemascFederationProvider(config, repository, processingBlock);
 
         Coin payToFederation = fullBlockReward.divide(BigInteger.valueOf(remascConstants.getFederationDivisor()));
 

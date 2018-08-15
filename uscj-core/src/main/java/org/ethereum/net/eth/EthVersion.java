@@ -1,6 +1,6 @@
 /*
- * This file is part of Usc
- * Copyright (C) 2016 - 2018 Ulord development team;
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,18 +27,13 @@ import java.util.List;
  *
  * @author Mikhail Kalinin
  * @since 14.08.2015
- * Update by Kwuaint Li @ 2018.05
  */
 public enum EthVersion {
 
-//for V63 support
-//Kwuaint@Ulord
     V62((byte) 62);
-    //V63((byte) 63);
 
     public static final byte LOWER = V62.getCode();
     public static final byte UPPER = V62.getCode();
-    //public static final byte UPPER = V63.getCode();
 
     private byte code;
 

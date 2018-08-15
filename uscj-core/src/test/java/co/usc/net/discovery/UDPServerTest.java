@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,8 +20,6 @@ package co.usc.net.discovery;
 
 import co.usc.net.discovery.table.KademliaOptions;
 import co.usc.net.discovery.table.NodeDistanceTable;
-import co.usc.net.discovery.table.KademliaOptions;
-import co.usc.net.discovery.table.NodeDistanceTable;
 import org.apache.commons.lang3.StringUtils;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.net.rlpx.Node;
@@ -31,6 +29,7 @@ import org.spongycastle.util.encoders.Hex;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -51,9 +50,11 @@ public class UDPServerTest {
     private static final int PORT_1 = 40305;
     private static final int PORT_2 = 40306;
     private static final int PORT_3 = 40307;
+    private static final int NETWORK_ID = 1;
 
     private static final long TIMEOUT = 30000;
-    private static final long REFRESH = 60000;
+    private static final long UPDATE = 60000;
+    private static final long CLEAN = 60000;
 
     @Test
     public void run3NodesFullTest() throws InterruptedException {
@@ -78,9 +79,9 @@ public class UDPServerTest {
         NodeDistanceTable distanceTable2 = new NodeDistanceTable(KademliaOptions.BINS, KademliaOptions.BUCKET_SIZE, node2);
         NodeDistanceTable distanceTable3 = new NodeDistanceTable(KademliaOptions.BINS, KademliaOptions.BUCKET_SIZE, node3);
 
-        PeerExplorer peerExplorer1 = new PeerExplorer(node1BootNode, node1, distanceTable1, key1, TIMEOUT, REFRESH);
-        PeerExplorer peerExplorer2 = new PeerExplorer(node2BootNode, node2, distanceTable2, key2, TIMEOUT, REFRESH);
-        PeerExplorer peerExplorer3 = new PeerExplorer(node3BootNode, node3, distanceTable3, key3, TIMEOUT, REFRESH);
+        PeerExplorer peerExplorer1 = new PeerExplorer(node1BootNode, node1, distanceTable1, key1, TIMEOUT, UPDATE, CLEAN, NETWORK_ID);
+        PeerExplorer peerExplorer2 = new PeerExplorer(node2BootNode, node2, distanceTable2, key2, TIMEOUT, UPDATE, CLEAN, NETWORK_ID);
+        PeerExplorer peerExplorer3 = new PeerExplorer(node3BootNode, node3, distanceTable3, key3, TIMEOUT, UPDATE, CLEAN, NETWORK_ID);
 
         Assert.assertEquals(0, peerExplorer1.getNodes().size());
         Assert.assertEquals(0, peerExplorer2.getNodes().size());
@@ -92,18 +93,24 @@ public class UDPServerTest {
 
         udpServer3.start();
         TimeUnit.SECONDS.sleep(2);
-        peerExplorer3.cleanAndUpdate();
+        peerExplorer3.update();
+        peerExplorer3.clean();
 
         udpServer2.start();
         TimeUnit.SECONDS.sleep(2);
-        peerExplorer2.cleanAndUpdate();
-        peerExplorer3.cleanAndUpdate();
+        peerExplorer2.update();
+        peerExplorer2.clean();
+        peerExplorer3.update();
+        peerExplorer3.clean();
 
         udpServer1.start();
         TimeUnit.SECONDS.sleep(2);
-        peerExplorer1.cleanAndUpdate();
-        peerExplorer2.cleanAndUpdate();
-        peerExplorer3.cleanAndUpdate();
+        peerExplorer1.update();
+        peerExplorer1.clean();
+        peerExplorer2.update();
+        peerExplorer2.clean();
+        peerExplorer3.update();
+        peerExplorer3.clean();
 
         TimeUnit.SECONDS.sleep(2);
 

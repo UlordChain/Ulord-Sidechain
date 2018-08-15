@@ -57,6 +57,7 @@ devnet-federator
 testnet1
 usc-database
 blocksminer
+database
 
 # Jacoco Reports
 jacocoHtml/

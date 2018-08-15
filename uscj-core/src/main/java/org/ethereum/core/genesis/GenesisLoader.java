@@ -1,6 +1,6 @@
 /*
- * This file is part of RskJ
- * Copyright (C) 2017 RSK Labs Ltd.
+ * This file is part of USC
+ * Copyright (C) 2016 - 2018 USC developer team.
  * (derived from ethereumJ library, Copyright (c) 2016 <ether.camp>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,12 +43,12 @@ import java.util.Map;
 public class GenesisLoader {
     private static final Logger logger = LoggerFactory.getLogger("genesisloader");
 
-    public static Genesis loadGenesis(UscSystemProperties config, String genesisFile, BigInteger initialNonce, boolean isRsk)  {
+    public static Genesis loadGenesis(UscSystemProperties config, String genesisFile, BigInteger initialNonce, boolean isUsc)  {
         InputStream is = GenesisLoader.class.getResourceAsStream("/genesis/" + genesisFile);
-        return loadGenesis(config, initialNonce, is, isRsk);
+        return loadGenesis(config, initialNonce, is, isUsc);
     }
 
-    public static Genesis loadGenesis(UscSystemProperties config, BigInteger initialNonce, InputStream genesisJsonIS, boolean isRsk)  {
+    public static Genesis loadGenesis(UscSystemProperties config, BigInteger initialNonce, InputStream genesisJsonIS, boolean isUsc)  {
         try {
 
             String json = new String(ByteStreams.toByteArray(genesisJsonIS));
@@ -58,7 +58,7 @@ public class GenesisLoader {
 
             GenesisJson genesisJson  = new ObjectMapper().readValue(json, type);
 
-            Genesis genesis = new GenesisMapper().mapFromJson(genesisJson, isRsk);
+            Genesis genesis = new GenesisMapper().mapFromJson(genesisJson, isUsc);
 
             Map<UscAddress, InitialAddressState> premine = generatePreMine(config, initialNonce, genesisJson.getAlloc());
             genesis.setPremine(premine);
