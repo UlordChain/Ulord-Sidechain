@@ -13,7 +13,7 @@
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <Target>System.out</Target>
         <encoder>
-            <pattern>%date{yyyy-MM-dd-HH:mm:ss.SSSS} %p [%c{1}]  %m%n</pattern>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss.SSSS} %p [%c{1}:%L]  %m%n</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>OFF</level>
@@ -25,7 +25,7 @@
         <file>./logs/usc.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>
-                %date{yyyy-MM-dd-HH:mm:ss.SSS} %p [%c{1}]  %m%n
+                %date{yyyy-MM-dd HH:mm:ss.SSS} %p [%c{1}:%L]  %m%n
             </Pattern>
         </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
