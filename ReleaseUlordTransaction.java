@@ -11,7 +11,6 @@ import co.usc.config.BridgeTestNetConstants;
 import co.usc.crypto.Keccak256;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeSerializationUtils;
-import co.usc.peg.Federation;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.crypto.TransactionSignature;
 import co.usc.ulordj.params.MainNetParams;
@@ -24,7 +23,6 @@ import org.ethereum.core.CallTransaction;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
 import org.ethereum.vm.PrecompiledContracts;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
-
-import static tools.Utils.*;
-
 
 // USC release txs follow these steps: First, they are waiting for coin selection (releaseRequestQueue),
 // then they are waiting for enough confirmations on the USC network (releaseTransactionSet),

@@ -4,6 +4,7 @@ import co.usc.crypto.Keccak256;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeSerializationUtils;
 import co.usc.ulordj.core.NetworkParameters;
+import co.usc.ulordj.core.Sha256Hash;
 import co.usc.ulordj.core.UldTransaction;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
@@ -130,5 +131,15 @@ public class DataDecoder {
     public static Integer decodeGetUldTxHashProcessedHeight(String response) {
         Object[] objects = Bridge.GET_ULD_TX_HASH_PROCESSED_HEIGHT.decodeResult(Hex.decode(getResult(response)));
         return Integer.valueOf(objects[0].toString());
+    }
+
+    public static String[] decodeGetUldBlockchainBlockLocator(String response) {
+        Object[] objects = Bridge.GET_ULD_BLOCKCHAIN_BLOCK_LOCATOR.decodeResult(Hex.decode(getResult(response)));
+        Object []obj = (Object[])objects[0];
+        String[] hashes = new String[obj.length];
+        for (int i = 0; i < obj.length; i++) {
+            hashes[i] = obj[i].toString();
+        }
+        return hashes;
     }
 }

@@ -72,6 +72,7 @@ public class FederationMain implements Runnable {
     }
 
     public static void main(String[]  args) {
+
         FederationMain fedMain = new FederationMain();
 
         if(fedMain.isPegEnabled) {

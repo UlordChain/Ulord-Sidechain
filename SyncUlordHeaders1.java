@@ -27,7 +27,7 @@ public class SyncUlordHeaders1 implements Runnable {
     private static Logger logger = LoggerFactory.getLogger("Federation");
 
     private long SYNC_DURATION_AFTER_BRIDGE_SYNC = (long)(1000 * 60 * 2.5);
-    private long SYNC_DURATION_BEFORE_BRIDGE_SYNC = (long)(1000 * 60 * 8);
+    private long SYNC_DURATION_BEFORE_BRIDGE_SYNC = (long)(1000 * 60 * 5);
     private BridgeConstants bridgeConstants;
     private NetworkParameters params;
     private String authorizedAddress;
