@@ -24,7 +24,6 @@ import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.Constants;
 import org.ethereum.core.BlockHeader;
-
 import java.math.BigInteger;
 
 import static org.ethereum.util.BIUtil.max;
@@ -78,12 +77,24 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
                                                          BlockDifficulty pd ,
                                                          int uncleCount) {
         int duration =constants.getDurationLimit();
-        BigInteger difDivisor = constants.getDifficultyBoundDivisor();
+
+        // Created Fork to reduce difficulty variation to 2% for testnet
+        // Friday, August 17, 2018 10:00:00 AM GMT+08:00
+        BigInteger difDivisor;
+        if(constants instanceof TestNetAfterBridgeSyncConfig.TestNetConstants) {
+            if(curBlockTS < 1534471200l)
+                difDivisor = constants.getDifficultyBoundDivisor();
+            else
+                difDivisor = BigInteger.valueOf(50);
+        } else {
+            difDivisor = constants.getDifficultyBoundDivisor();
+        }
+
         BlockDifficulty minDif = constants.getMinimumDifficulty();
-        return calcDifficultyWithTimeStamps(curBlockTS, parentBlockTS,pd,uncleCount,duration,difDivisor,minDif );
+        return calcDifficultyWithTimeStamps(constants, curBlockTS, parentBlockTS,pd,uncleCount,duration,difDivisor,minDif );
     }
 
-    public static BlockDifficulty calcDifficultyWithTimeStamps(long curBlockTS, long parentBlockTS,
+    public static BlockDifficulty calcDifficultyWithTimeStamps(Constants constants, long curBlockTS, long parentBlockTS,
                                                                BlockDifficulty pd, int uncleCount, int duration,
                                                                BigInteger difDivisor,
                                                                BlockDifficulty minDif ) {
@@ -93,8 +104,21 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
             return pd;
         }
 
-        int calcDur =(1+uncleCount)*duration;
-        int sign = 0;
+        int calcDur;
+
+        // Created Fork to reduce time 25% as Bitcoin and Ulord time difference is 25%
+        // Monday, August 20, 2018 10:00:00 AM GMT+08:00
+        if(constants instanceof TestNetAfterBridgeSyncConfig.TestNetConstants) {
+            if(curBlockTS > 1534734000l) {
+                calcDur = (int)((1 + uncleCount * 0.175) * duration);
+            } else {
+                calcDur = (1 + uncleCount) * duration;
+            }
+        } else {
+            calcDur = (int)((1 + uncleCount * 0.175) * duration);
+        }
+
+        int sign;
         if (calcDur>delta) {
             sign =1;
         }else if (calcDur<delta) { 
