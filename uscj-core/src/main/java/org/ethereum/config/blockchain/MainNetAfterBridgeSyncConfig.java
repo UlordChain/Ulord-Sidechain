@@ -14,6 +14,22 @@ public class MainNetAfterBridgeSyncConfig extends GenesisConfig {
         private static final BigInteger DIFFICULTY_BOUND_DIVISOR = BigInteger.valueOf(50);
         private static final byte CHAIN_ID = 50;
 
+        // 14 kilo evert 14 secs = 1 kilo/s.
+        private final BlockDifficulty fallbackMiningDifficulty = new BlockDifficulty(BigInteger.valueOf((long) 14E3));
+
+        // 0.5 kilo/s. This means that on reset difficulty will allow private mining.
+        //private final BlockDifficulty minimumDifficulty = new BlockDifficulty(BigInteger.valueOf((long) 14E3 / 2 ));
+
+        // For solo cpu mining
+        // 0.05 kilo/s. This means that on reset difficulty will allow private mining.
+        private final BlockDifficulty minimumDifficulty = new BlockDifficulty(BigInteger.valueOf((long) 14E2 / 2 ));
+
+        @Override
+        public BlockDifficulty getFallbackMiningDifficulty() { return fallbackMiningDifficulty; }
+
+        @Override
+        public BlockDifficulty getMinimumDifficulty() { return minimumDifficulty; }
+
         @Override
         public BridgeConstants getBridgeConstants() {
             return BridgeMainNetConstants.getInstance();
@@ -52,8 +68,8 @@ public class MainNetAfterBridgeSyncConfig extends GenesisConfig {
 
     @Override
     public BlockDifficulty calcDifficulty(BlockHeader curBlock, BlockHeader parent) {
-        // If more than 10 minutes, reset to original difficulty 0x00100000
-        if (curBlock.getTimestamp() >= parent.getTimestamp() + 600) {
+        // If more than 2.5 minutes, reset to original difficulty 0x00100000
+        if (curBlock.getTimestamp() >= parent.getTimestamp() + 150) {
             return getConstants().getMinimumDifficulty();
         }
 

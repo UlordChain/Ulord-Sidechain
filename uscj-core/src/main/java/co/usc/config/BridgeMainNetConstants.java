@@ -20,33 +20,33 @@ public class BridgeMainNetConstants extends BridgeConstants {
     BridgeMainNetConstants() {
         uldParamsString = NetworkParameters.ID_MAINNET;
 
-        UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("03b53899c390573471ba30e5054f78376c5f797fda26dde7a760789f02908cbad2"));
-        UldECKey federator1PublicKey = UldECKey.fromPublicOnly(Hex.decode("027319afb15481dbeb3c426bcc37f9a30e7f51ceff586936d85548d9395bcc2344"));
-        UldECKey federator2PublicKey = UldECKey.fromPublicOnly(Hex.decode("0355a2e9bf100c00fc0a214afd1bf272647c7824eb9cb055480962f0c382596a70"));
-        UldECKey federator3PublicKey = UldECKey.fromPublicOnly(Hex.decode("02566d5ded7c7db1aa7ee4ef6f76989fb42527fcfdcddcd447d6793b7d869e46f7"));
-        UldECKey federator4PublicKey = UldECKey.fromPublicOnly(Hex.decode("0294c817150f78607566e961b3c71df53a22022a80acbb982f83c0c8baac040adc"));
-        UldECKey federator5PublicKey = UldECKey.fromPublicOnly(Hex.decode("0372cd46831f3b6afd4c044d160b7667e8ebf659d6cb51a825a3104df6ee0638c6"));
-        UldECKey federator6PublicKey = UldECKey.fromPublicOnly(Hex.decode("0340df69f28d69eef60845da7d81ff60a9060d4da35c767f017b0dd4e20448fb44"));
-        UldECKey federator7PublicKey = UldECKey.fromPublicOnly(Hex.decode("02ac1901b6fba2c1dbd47d894d2bd76c8ba1d296d65f6ab47f1c6b22afb53e73eb"));
-        UldECKey federator8PublicKey = UldECKey.fromPublicOnly(Hex.decode("031aabbeb9b27258f98c2bf21f36677ae7bae09eb2d8c958ef41a20a6e88626d26"));
-        UldECKey federator9PublicKey = UldECKey.fromPublicOnly(Hex.decode("0245ef34f5ee218005c9c21227133e8568a4f3f11aeab919c66ff7b816ae1ffeea"));
-        UldECKey federator10PublicKey = UldECKey.fromPublicOnly(Hex.decode("02550cc87fa9061162b1dd395a16662529c9d8094c0feca17905a3244713d65fe8"));
-        UldECKey federator11PublicKey = UldECKey.fromPublicOnly(Hex.decode("02481f02b7140acbf3fcdd9f72cf9a7d9484d8125e6df7c9451cfa55ba3b077265"));
-        UldECKey federator12PublicKey = UldECKey.fromPublicOnly(Hex.decode("03f909ae15558c70cc751aff9b1f495199c325b13a9e5b934fd6299cd30ec50be8"));
-        UldECKey federator13PublicKey = UldECKey.fromPublicOnly(Hex.decode("02c6018fcbd3e89f3cf9c7f48b3232ea3638eb8bf217e59ee290f5f0cfb2fb9259"));
-        UldECKey federator14PublicKey = UldECKey.fromPublicOnly(Hex.decode("03b65694ccccda83cbb1e56b31308acd08e993114c33f66a456b627c2c1c68bed6"));
+        UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("0227f5a699b3298a5d48af12d883a7cd6733887e80532fd114b9c623de7d1d37ec"));
+//        UldECKey federator1PublicKey = UldECKey.fromPublicOnly(Hex.decode("027319afb15481dbeb3c426bcc37f9a30e7f51ceff586936d85548d9395bcc2344"));
+//        UldECKey federator2PublicKey = UldECKey.fromPublicOnly(Hex.decode("0355a2e9bf100c00fc0a214afd1bf272647c7824eb9cb055480962f0c382596a70"));
+//        UldECKey federator3PublicKey = UldECKey.fromPublicOnly(Hex.decode("02566d5ded7c7db1aa7ee4ef6f76989fb42527fcfdcddcd447d6793b7d869e46f7"));
+//        UldECKey federator4PublicKey = UldECKey.fromPublicOnly(Hex.decode("0294c817150f78607566e961b3c71df53a22022a80acbb982f83c0c8baac040adc"));
+//        UldECKey federator5PublicKey = UldECKey.fromPublicOnly(Hex.decode("0372cd46831f3b6afd4c044d160b7667e8ebf659d6cb51a825a3104df6ee0638c6"));
+//        UldECKey federator6PublicKey = UldECKey.fromPublicOnly(Hex.decode("0340df69f28d69eef60845da7d81ff60a9060d4da35c767f017b0dd4e20448fb44"));
+//        UldECKey federator7PublicKey = UldECKey.fromPublicOnly(Hex.decode("02ac1901b6fba2c1dbd47d894d2bd76c8ba1d296d65f6ab47f1c6b22afb53e73eb"));
+//        UldECKey federator8PublicKey = UldECKey.fromPublicOnly(Hex.decode("031aabbeb9b27258f98c2bf21f36677ae7bae09eb2d8c958ef41a20a6e88626d26"));
+//        UldECKey federator9PublicKey = UldECKey.fromPublicOnly(Hex.decode("0245ef34f5ee218005c9c21227133e8568a4f3f11aeab919c66ff7b816ae1ffeea"));
+//        UldECKey federator10PublicKey = UldECKey.fromPublicOnly(Hex.decode("02550cc87fa9061162b1dd395a16662529c9d8094c0feca17905a3244713d65fe8"));
+//        UldECKey federator11PublicKey = UldECKey.fromPublicOnly(Hex.decode("02481f02b7140acbf3fcdd9f72cf9a7d9484d8125e6df7c9451cfa55ba3b077265"));
+//        UldECKey federator12PublicKey = UldECKey.fromPublicOnly(Hex.decode("03f909ae15558c70cc751aff9b1f495199c325b13a9e5b934fd6299cd30ec50be8"));
+//        UldECKey federator13PublicKey = UldECKey.fromPublicOnly(Hex.decode("02c6018fcbd3e89f3cf9c7f48b3232ea3638eb8bf217e59ee290f5f0cfb2fb9259"));
+//        UldECKey federator14PublicKey = UldECKey.fromPublicOnly(Hex.decode("03b65694ccccda83cbb1e56b31308acd08e993114c33f66a456b627c2c1c68bed6"));
 
         List<UldECKey> genesisFederationPublicKeys = Lists.newArrayList(
-                federator0PublicKey, federator1PublicKey, federator2PublicKey,
+                federator0PublicKey /*, federator1PublicKey, federator2PublicKey,
                 federator3PublicKey, federator4PublicKey, federator5PublicKey,
                 federator6PublicKey, federator7PublicKey, federator8PublicKey,
                 federator9PublicKey, federator10PublicKey, federator11PublicKey,
-                federator12PublicKey, federator13PublicKey, federator14PublicKey
+                federator12PublicKey, federator13PublicKey, federator14PublicKey */
         );
 
         // Currently set to:
-        // Wednesday, January 3, 2018 12:00:00 AM GMT-03:00
-        Instant genesisFederationAddressCreatedAt = Instant.ofEpochMilli(1514948400l);
+        // Wednesday, September 5, 2018 9:00:00 AM GMT+08:00
+        Instant genesisFederationAddressCreatedAt = Instant.ofEpochMilli(1536116400l);
         
         genesisFederation = new Federation(
                 genesisFederationPublicKeys,
@@ -66,11 +66,10 @@ public class BridgeMainNetConstants extends BridgeConstants {
         minimumLockTxValue = Coin.valueOf(1000000);
         minimumReleaseTxValue = Coin.valueOf(800000);
 
-        // Keys generated with GenNodeKey using generators 'auth-a' through 'auth-e'
         List<ECKey> federationChangeAuthorizedKeys = Arrays.stream(new String[]{
-                "04e593d4cde25137b13f19462bc4c02e97ba2ed5a3860813497abf9b4eeb9259e37e0384d12cfd2d9a7a0ba606b31ee34317a9d7f4a8591c6bcf5dfd5563248b2f",
-                "045e7f2563e73d44d149c19cffca36e1898597dc759d76166b8104103c0d3f351a8a48e3a224544e9a649ad8ebcfdbd6c39744ddb85925f19c7e3fd48f07fc1c06",
-                "0441945e4e272936106f6200b36162f3510e8083535c15e175ac82deaf828da955b85fd72b7534f2a34cedfb45fa63b728cc696a2bd3c5d39ec799ec2618e9aa9f"
+                "04dfbe4afc74963cc7d561d1edd5c237ce5b9b2fa28ec747f8ffe1d18f060c6527b1efdb25b6d5bbff7ea921741e66558765198cefa037087aa9641d02630753bb",
+                "0428eb6d7995f75265b2f41ecb1c7bc6671eb22e8f15d856c81715f97b65068228e7cb3a2dd556b9d7117b09a4ce24d411afb50ce0de080f345fbd74984df19db1",
+                "04ef552498dfae3e8123091fbe3d00041117bb697feb0b882e4aae3a1965b39569193d665e77ef703dcf61fea51a87be3a6f36adc417b3a2ea27f3e8b5d593ef99"
         }).map(hex -> ECKey.fromPublicOnly(Hex.decode(hex))).collect(Collectors.toList());
 
         federationChangeAuthorizer = new AddressBasedAuthorizer(
@@ -78,9 +77,8 @@ public class BridgeMainNetConstants extends BridgeConstants {
                 AddressBasedAuthorizer.MinimumRequiredCalculation.MAJORITY
         );
 
-        // Key generated with GenNodeKey using generator 'auth-lock-whitelist'
         List<ECKey> lockWhitelistAuthorizedKeys = Arrays.stream(new String[]{
-                "041a2449e9d63409c5a8ea3a21c4109b1a6634ee88fd57176d45ea46a59713d5e0b688313cf252128a3e49a0b2effb4b413e5a2525a6fa5894d059f815c9d9efa6"
+                "0491ae7171182dc2b6568b8b072bbd1879dfff821465fd80e82b5d0ce02cfb371b2adb741674dedf32a57dd1003273419550e70330ffc7819578ef85fe1c2c58d0"
         }).map(hex -> ECKey.fromPublicOnly(Hex.decode(hex))).collect(Collectors.toList());
 
         lockWhitelistChangeAuthorizer = new AddressBasedAuthorizer(
@@ -94,9 +92,9 @@ public class BridgeMainNetConstants extends BridgeConstants {
         fundsMigrationAgeSinceActivationEnd = 10585L;
 
         List<ECKey> feePerKbAuthorizedKeys = Arrays.stream(new String[]{
-                "0448f51638348b034995b1fd934fe14c92afde783e69f120a46ee16eb6bdc2e4f6b5e37772094c68c0dea2b1be3d96ea9651a9eebda7304914c8047f4e3e251378",
-                "0484c66f75548baf93e322574adac4e4579b6a53f8d11fab640e14c90118e6983ef24b0de349a3e88f72e81e771ae1c897cef446fd7f4da71778c532aee3b6c41b",
-                "04bb6435dc1ea12da843ebe213893d136c1624acd681fff82551498ae00bf28e9323164b00daf925fa75177463b8254a2aae8a1713e4d851a84ea369c193e9ce51"
+                "04f457e334ec381960d4ed5f506b956c24d6bc9f6a3968076baf5154a5ab6959df36d0c8af778aae5b784eb8339e41d2ae9b2c8db5c2f59965be1b726320d806c3",
+                "045ade5c44820f2671872ee6f0fd1846ff01ca0da2a9c106097459ce9b47abe0e8b80966ffe423df2116a03bd0aee6c7a079f705f7676f6f88f5cb1db33ec99b93",
+                "04985aaaa7102adb1db40a360b28f54007214d406416a9d899326ca9b95fb708092d78bbbe42c6a6e4a4716faf36e79c44f9ca7783f2610509be1924657b704bfd"
         }).map(hex -> ECKey.fromPublicOnly(Hex.decode(hex))).collect(Collectors.toList());
 
         feePerKbChangeAuthorizer = new AddressBasedAuthorizer(
@@ -104,7 +102,7 @@ public class BridgeMainNetConstants extends BridgeConstants {
                 AddressBasedAuthorizer.MinimumRequiredCalculation.MAJORITY
         );
 
-        genesisFeePerKb = Coin.MILLICOIN.multiply(5);
+        genesisFeePerKb = Coin.MICROCOIN.multiply(5);
     }
 
     public static BridgeMainNetConstants getInstance() {
