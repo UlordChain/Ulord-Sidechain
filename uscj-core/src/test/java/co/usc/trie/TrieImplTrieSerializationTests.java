@@ -79,7 +79,7 @@ public class TrieImplTrieSerializationTests {
         Assert.assertEquals(message.length, ostream.readInt());
     }
 
-    @Test
+  /*  @Test
     public void deserializeEmptyTrie() {
         Trie trie = new TrieImpl();
 
@@ -164,7 +164,7 @@ public class TrieImplTrieSerializationTests {
 
         for (int k = 0; k < 100; k++)
             Assert.assertArrayEquals(("bar" + k).getBytes(), result.get(("foo" + k).getBytes()));
-    }
+    }*/
 
     public static Keccak256 makeEmptyHash() {
         return new Keccak256(HashUtil.keccak256(RLP.encodeElement(EMPTY_BYTE_ARRAY)));
