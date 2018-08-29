@@ -24,11 +24,6 @@ import co.usc.config.UscSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
 import co.usc.core.bc.SelectionRule;
-import co.usc.config.RemascConfig;
-import co.usc.config.UscSystemProperties;
-import co.usc.core.Coin;
-import co.usc.core.UscAddress;
-import co.usc.core.bc.SelectionRule;
 import org.apache.commons.collections4.CollectionUtils;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
@@ -137,9 +132,9 @@ public class Remasc {
 
         byte[] processingBlockHash = processingBlockHeader.getHash().getBytes();
         int nfederators = federationProvider.getFederationSize();
-        Coin[] payAndRemainderToFederator = payToFederation.divideAndRemainder(BigInteger.valueOf(nfederators));
-        Coin payToFederator = payAndRemainderToFederator[0];
-        Coin restToLastFederator = payAndRemainderToFederator[1];
+        Coin payToFederator = payToFederation.divide(BigInteger.valueOf(nfederators));
+        Coin restToLastFederator = payToFederation.subtract(payToFederator.multiply(BigInteger.valueOf(nfederators)));
+
 
         Coin paidToFederation = Coin.ZERO;
 
