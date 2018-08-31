@@ -4,7 +4,6 @@ import co.usc.net.discovery.message.DiscoveryMessageType;
 import co.usc.net.discovery.message.FindNodePeerMessage;
 import co.usc.net.discovery.message.PingPeerMessage;
 import co.usc.net.discovery.message.PongPeerMessage;
-import org.ethereum.crypto.ECKey;
 import org.junit.Assert;
 import org.junit.Test;
 
