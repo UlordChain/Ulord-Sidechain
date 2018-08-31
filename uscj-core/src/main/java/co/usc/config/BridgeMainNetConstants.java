@@ -5,6 +5,7 @@ import co.usc.ulordj.core.Coin;
 import co.usc.ulordj.core.NetworkParameters;
 import co.usc.peg.AddressBasedAuthorizer;
 import co.usc.peg.Federation;
+import co.usc.ulordj.params.MainNetParams;
 import com.google.common.collect.Lists;
 import org.ethereum.crypto.ECKey;
 import org.spongycastle.util.encoders.Hex;
@@ -57,7 +58,7 @@ public class BridgeMainNetConstants extends BridgeConstants {
 
         uld2UscMinimumAcceptableConfirmations = 100;
         uld2UscMinimumAcceptableConfirmationsOnUsc = 1000;
-        usc2UldMinimumAcceptableConfirmations = 4000;
+        usc2UldMinimumAcceptableConfirmations = 1000;
 
         updateBridgeExecutionPeriod = 3 * 60 * 1000; // 3 minutes
 
@@ -102,7 +103,7 @@ public class BridgeMainNetConstants extends BridgeConstants {
                 AddressBasedAuthorizer.MinimumRequiredCalculation.MAJORITY
         );
 
-        genesisFeePerKb = Coin.MICROCOIN.multiply(5);
+        genesisFeePerKb = Coin.MILLICOIN.multiply(5);
     }
 
     public static BridgeMainNetConstants getInstance() {

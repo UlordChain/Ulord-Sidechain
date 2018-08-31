@@ -107,7 +107,7 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
         int calcDur;
 
         // Created Fork to reduce time 25% as Bitcoin and Ulord time difference is 25%
-        // Monday, August 20, 2018 10:00:00 AM GMT+08:00
+        // Monday, August 20, 2018 11:00:00 AM GMT+08:00
         if(constants instanceof TestNetAfterBridgeSyncConfig.TestNetConstants) {
             if(curBlockTS > 1534734000l) {
                 calcDur = (int)((1 + uncleCount * 0.175) * duration);
