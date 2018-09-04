@@ -52,3 +52,5 @@ Use classpath of module: uscj-core_main
 
 Congratulations! Now you are ready to build and run the node...
 JRE need to be set as: Default (1.8 - SDK of 'usc-core_main' module)
+# Getting Started
+Information about compiling and running an USC node can be found in the [wiki](https://github.com/UlordChain/Ulord-Sidechain/wiki).
