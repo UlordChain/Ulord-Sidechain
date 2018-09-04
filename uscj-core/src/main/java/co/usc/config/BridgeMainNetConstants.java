@@ -21,9 +21,9 @@ public class BridgeMainNetConstants extends BridgeConstants {
     BridgeMainNetConstants() {
         uldParamsString = NetworkParameters.ID_MAINNET;
 
-        UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("0227f5a699b3298a5d48af12d883a7cd6733887e80532fd114b9c623de7d1d37ec"));
-//        UldECKey federator1PublicKey = UldECKey.fromPublicOnly(Hex.decode("027319afb15481dbeb3c426bcc37f9a30e7f51ceff586936d85548d9395bcc2344"));
-//        UldECKey federator2PublicKey = UldECKey.fromPublicOnly(Hex.decode("0355a2e9bf100c00fc0a214afd1bf272647c7824eb9cb055480962f0c382596a70"));
+        UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("02b8fe2d242f6c7aaa9c938331445acc3795c997a003cd84bba4d18b59ca0384b0"));
+        UldECKey federator1PublicKey = UldECKey.fromPublicOnly(Hex.decode("03d95d034084acca7563a0f4d83a8287b4f9d361caa0d5704f058c7363601c3a65"));
+        UldECKey federator2PublicKey = UldECKey.fromPublicOnly(Hex.decode("03830fca9518200abfdaa2d81d411805f512688c654127e45f5739c33d21019d76"));
 //        UldECKey federator3PublicKey = UldECKey.fromPublicOnly(Hex.decode("02566d5ded7c7db1aa7ee4ef6f76989fb42527fcfdcddcd447d6793b7d869e46f7"));
 //        UldECKey federator4PublicKey = UldECKey.fromPublicOnly(Hex.decode("0294c817150f78607566e961b3c71df53a22022a80acbb982f83c0c8baac040adc"));
 //        UldECKey federator5PublicKey = UldECKey.fromPublicOnly(Hex.decode("0372cd46831f3b6afd4c044d160b7667e8ebf659d6cb51a825a3104df6ee0638c6"));
@@ -38,7 +38,7 @@ public class BridgeMainNetConstants extends BridgeConstants {
 //        UldECKey federator14PublicKey = UldECKey.fromPublicOnly(Hex.decode("03b65694ccccda83cbb1e56b31308acd08e993114c33f66a456b627c2c1c68bed6"));
 
         List<UldECKey> genesisFederationPublicKeys = Lists.newArrayList(
-                federator0PublicKey /*, federator1PublicKey, federator2PublicKey,
+                federator0PublicKey , federator1PublicKey, federator2PublicKey /*,
                 federator3PublicKey, federator4PublicKey, federator5PublicKey,
                 federator6PublicKey, federator7PublicKey, federator8PublicKey,
                 federator9PublicKey, federator10PublicKey, federator11PublicKey,
@@ -56,7 +56,7 @@ public class BridgeMainNetConstants extends BridgeConstants {
                 getUldParams()
         );
 
-        uld2UscMinimumAcceptableConfirmations = 100;
+        uld2UscMinimumAcceptableConfirmations = 20;
         uld2UscMinimumAcceptableConfirmationsOnUsc = 1000;
         usc2UldMinimumAcceptableConfirmations = 1000;
 
