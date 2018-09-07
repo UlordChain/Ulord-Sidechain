@@ -18,11 +18,13 @@ public class MainNetAfterBridgeSyncConfig extends GenesisConfig {
         private final BlockDifficulty fallbackMiningDifficulty = new BlockDifficulty(BigInteger.valueOf((long) 14E3));
 
         // 0.5 kilo/s. This means that on reset difficulty will allow private mining.
-        private final BlockDifficulty minimumDifficulty = new BlockDifficulty(BigInteger.valueOf((long) 14E3 / 2 ));
+        //private final BlockDifficulty minimumDifficulty = new BlockDifficulty(BigInteger.valueOf((long) 14E3 / 2 ));
 
         // For solo cpu mining
         // 0.05 kilo/s. This means that on reset difficulty will allow private mining.
-        // private final BlockDifficulty minimumDifficulty = new BlockDifficulty(BigInteger.valueOf((long) 14E2 / 2 ));
+        //private final BlockDifficulty minimumDifficulty = new BlockDifficulty(BigInteger.valueOf((long) 14E2 / 2 ));
+
+        private final BlockDifficulty minimumDifficulty = new BlockDifficulty(BigInteger.valueOf(896));
 
         @Override
         public BlockDifficulty getFallbackMiningDifficulty() { return fallbackMiningDifficulty; }
