@@ -268,7 +268,7 @@ public class BridgeUtilsTest {
 
         Address randomAddress = Address.fromBase58(
             NetworkParameters.fromID(NetworkParameters.ID_REGTEST),
-            "n3PLxDiwWqa5uH7fSbHCxS6VAjD9Y7Rwkj"
+            "yiUay65tEQQNh1aiqw71pJ3geWghvV4fxb"
         );
         UldTransaction fromRetiringFederationTx = new UldTransaction(parameters);
         fromRetiringFederationTx.addOutput(Coin.COIN, randomAddress);
