@@ -84,6 +84,15 @@ public enum BridgeMethods {
             19000L,
             (BridgeMethodExecutorTyped) Bridge::getUldBlockchainBestChainHeight
     ),
+    GET_ULD_BLOCKCHAIN_INITIAL_BLOCK_HEIGHT(
+            CallTransaction.Function.fromSignature(
+                    "getUldBlockchainInitialBlockHeight",
+                    new String[]{},
+                    new String[]{"int"}
+            ),
+            19000L,
+            (BridgeMethodExecutorTyped) Bridge::getUldBlockchainInitialBlockHeight
+    ),
     GET_ULD_BLOCKCHAIN_BLOCK_LOCATOR(
             CallTransaction.Function.fromSignature(
                     "getUldBlockchainBlockLocator",
@@ -92,6 +101,15 @@ public enum BridgeMethods {
             ),
             76000L,
             (BridgeMethodExecutorTyped) Bridge::getUldBlockchainBlockLocator
+    ),
+    GET_ULD_BLOCKCHAIN_BLOCK_HASH_AT_DEPTH(
+            CallTransaction.Function.fromSignature(
+                    "getUldBlockchainBlockHashAtDepth",
+                    new String[]{"int256"},
+                    new String[]{"bytes"}
+            ),
+            76000L,
+            (BridgeMethodExecutorTyped) Bridge::getUldBlockchainBlockHashAtDepth
     ),
     GET_ULD_TX_HASH_PROCESSED_HEIGHT(
             CallTransaction.Function.fromSignature(
