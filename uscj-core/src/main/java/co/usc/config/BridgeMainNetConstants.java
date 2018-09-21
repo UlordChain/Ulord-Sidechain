@@ -21,33 +21,21 @@ public class BridgeMainNetConstants extends BridgeConstants {
     BridgeMainNetConstants() {
         uldParamsString = NetworkParameters.ID_MAINNET;
 
-        UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("02b8fe2d242f6c7aaa9c938331445acc3795c997a003cd84bba4d18b59ca0384b0"));
-        UldECKey federator1PublicKey = UldECKey.fromPublicOnly(Hex.decode("03d95d034084acca7563a0f4d83a8287b4f9d361caa0d5704f058c7363601c3a65"));
-        UldECKey federator2PublicKey = UldECKey.fromPublicOnly(Hex.decode("03830fca9518200abfdaa2d81d411805f512688c654127e45f5739c33d21019d76"));
-//        UldECKey federator3PublicKey = UldECKey.fromPublicOnly(Hex.decode("02566d5ded7c7db1aa7ee4ef6f76989fb42527fcfdcddcd447d6793b7d869e46f7"));
-//        UldECKey federator4PublicKey = UldECKey.fromPublicOnly(Hex.decode("0294c817150f78607566e961b3c71df53a22022a80acbb982f83c0c8baac040adc"));
-//        UldECKey federator5PublicKey = UldECKey.fromPublicOnly(Hex.decode("0372cd46831f3b6afd4c044d160b7667e8ebf659d6cb51a825a3104df6ee0638c6"));
-//        UldECKey federator6PublicKey = UldECKey.fromPublicOnly(Hex.decode("0340df69f28d69eef60845da7d81ff60a9060d4da35c767f017b0dd4e20448fb44"));
-//        UldECKey federator7PublicKey = UldECKey.fromPublicOnly(Hex.decode("02ac1901b6fba2c1dbd47d894d2bd76c8ba1d296d65f6ab47f1c6b22afb53e73eb"));
-//        UldECKey federator8PublicKey = UldECKey.fromPublicOnly(Hex.decode("031aabbeb9b27258f98c2bf21f36677ae7bae09eb2d8c958ef41a20a6e88626d26"));
-//        UldECKey federator9PublicKey = UldECKey.fromPublicOnly(Hex.decode("0245ef34f5ee218005c9c21227133e8568a4f3f11aeab919c66ff7b816ae1ffeea"));
-//        UldECKey federator10PublicKey = UldECKey.fromPublicOnly(Hex.decode("02550cc87fa9061162b1dd395a16662529c9d8094c0feca17905a3244713d65fe8"));
-//        UldECKey federator11PublicKey = UldECKey.fromPublicOnly(Hex.decode("02481f02b7140acbf3fcdd9f72cf9a7d9484d8125e6df7c9451cfa55ba3b077265"));
-//        UldECKey federator12PublicKey = UldECKey.fromPublicOnly(Hex.decode("03f909ae15558c70cc751aff9b1f495199c325b13a9e5b934fd6299cd30ec50be8"));
-//        UldECKey federator13PublicKey = UldECKey.fromPublicOnly(Hex.decode("02c6018fcbd3e89f3cf9c7f48b3232ea3638eb8bf217e59ee290f5f0cfb2fb9259"));
-//        UldECKey federator14PublicKey = UldECKey.fromPublicOnly(Hex.decode("03b65694ccccda83cbb1e56b31308acd08e993114c33f66a456b627c2c1c68bed6"));
+        UldECKey federator0PublicKey = UldECKey.fromPublicOnly(Hex.decode("02a8a2d41c40435fd16041e41d3512c5f6c73984a78c4460f4d97ee25141589192"));
+        UldECKey federator1PublicKey = UldECKey.fromPublicOnly(Hex.decode("03830fca9518200abfdaa2d81d411805f512688c654127e45f5739c33d21019d76"));
+        UldECKey federator2PublicKey = UldECKey.fromPublicOnly(Hex.decode("02b8fe2d242f6c7aaa9c938331445acc3795c997a003cd84bba4d18b59ca0384b0"));
+        UldECKey federator3PublicKey = UldECKey.fromPublicOnly(Hex.decode("0267ccf2dde9041aabdc65ccd50c3b32ae8587141e0eb17828bc07b9b4991afc2c"));
+        UldECKey federator4PublicKey = UldECKey.fromPublicOnly(Hex.decode("03d95d034084acca7563a0f4d83a8287b4f9d361caa0d5704f058c7363601c3a65"));
+        UldECKey federator5PublicKey = UldECKey.fromPublicOnly(Hex.decode("03d419e66c2f4ff4b8f68a1e2f91122e79c169aa049eea908fe28ba5aa4a748734"));
 
         List<UldECKey> genesisFederationPublicKeys = Lists.newArrayList(
-                federator0PublicKey , federator1PublicKey, federator2PublicKey /*,
-                federator3PublicKey, federator4PublicKey, federator5PublicKey,
-                federator6PublicKey, federator7PublicKey, federator8PublicKey,
-                federator9PublicKey, federator10PublicKey, federator11PublicKey,
-                federator12PublicKey, federator13PublicKey, federator14PublicKey */
+                federator0PublicKey , federator1PublicKey, federator2PublicKey,
+                federator3PublicKey, federator4PublicKey, federator5PublicKey
         );
 
         // Currently set to:
-        // Wednesday, September 5, 2018 9:00:00 AM GMT+08:00
-        Instant genesisFederationAddressCreatedAt = Instant.ofEpochMilli(1536116400l);
+        // Tuesday, September 25, 2018 9:00:00 AM GMT+08:00
+        Instant genesisFederationAddressCreatedAt = Instant.ofEpochMilli(1537837200L);
         
         genesisFederation = new Federation(
                 genesisFederationPublicKeys,
