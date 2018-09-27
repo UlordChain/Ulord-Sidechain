@@ -24,7 +24,7 @@
    "main": {
       "maturity" : 4000,
       "syntheticSpan" : 10,
-      "uscLabsDivisor" : 5,
+      "uscLabsDivisor" : 10,
       "punishmentDivisor" : 10,
       "publishersDivisor" : 10,
       "federationDivisor" : 100,
@@ -36,7 +36,7 @@
    "fallbackmain": {
       "maturity" : 4000,
       "syntheticSpan" : 10,
-      "uscLabsDivisor" : 5,
+      "uscLabsDivisor" : 10,
       "punishmentDivisor" : 10,
       "publishersDivisor" : 10,
       "federationDivisor" : 100,
