@@ -1,0 +1,12 @@
+[Unit]
+Description=USC Node
+
+[Service]
+Type=simple
+ExecStart=<JAVA_PATH> -Dlogback.configurationFile='/etc/usc/logback.xml' -cp /usr/share/usc/usc.jar co.usc.Start 2>&1 &
+ExecStop=/bin/kill -15 $(/bin/ps -U usc -o pid h)
+PIDFile=/var/run/usc.pid
+User=usc
+
+[Install]
+WantedBy=multi-user.target

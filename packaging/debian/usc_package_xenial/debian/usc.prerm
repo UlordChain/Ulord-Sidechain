@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+set -e
+
+CONF_PATH="/etc/usc"
+
+systemctl disable usc.service
+
+#DEBHELPER#

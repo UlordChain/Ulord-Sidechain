@@ -1,0 +1,9 @@
+#!/bin/bash -e
+set -e
+. /usr/share/debconf/confmodule
+
+db_capb backup
+
+db_beginblock
+db_endblock
+db_go || true

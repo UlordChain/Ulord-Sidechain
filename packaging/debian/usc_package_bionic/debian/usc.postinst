@@ -1,0 +1,67 @@
+#!/bin/bash -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+# Exit on error
+set -e
+
+NODE_SERVICE="/lib/systemd/system/usc.service"
+HOME_PATH="/var/lib/usc"
+JAR_PATH="/usr/share/usc"
+CONF_PATH="/etc/usc"
+LOG_PATH="/var/log/usc"
+
+JAVA=$(which java)
+SOLC_PATH=$(which solc || echo /bin/false)
+
+KEY_NODE_ID=$($JAVA -D-Dlogback.configurationFile='$CONF_PATH/logback.xml' -cp $JAR_PATH/usc.jar co.usc.GenNodeKeyId)
+PRIVATE_KEY=$(echo "$KEY_NODE_ID" | python3 -c "import sys, json; print(json.load(sys.stdin)['privateKey'])")
+PUBLIC_KEY=$(echo "$KEY_NODE_ID" | python3 -c "import sys, json; print(json.load(sys.stdin)['publicKey'])")
+ADDRESS=$(echo "$KEY_NODE_ID" | python3 -c "import sys, json; print(json.load(sys.stdin)['address'])")
+NODE_ID=$(echo "$KEY_NODE_ID" | python3 -c "import sys, json; print(json.load(sys.stdin)['nodeId'])")
+
+COINBASE_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+
+if [ ! -d $LOG_PATH ]; then
+	mkdir $LOG_PATH
+fi
+
+if [ ! -d $HOME_PATH ]; then
+	mkdir /var/lib/usc
+fi
+
+chown usc:usc $HOME_PATH -R
+chown usc:usc $LOG_PATH -R
+
+sed -i "s|<COINBASE_SECRET>|${COINBASE_SECRET}|g" $CONF_PATH/testnet.conf
+sed -i "s|<COINBASE_SECRET>|${COINBASE_SECRET}|g" $CONF_PATH/regtest.conf
+sed -i "s|<COINBASE_SECRET>|${COINBASE_SECRET}|g" $CONF_PATH/mainnet.conf
+sed -i "s|<PRIVATE_KEY>|${PRIVATE_KEY}|g" $CONF_PATH/testnet.conf
+sed -i "s|<PRIVATE_KEY>|${PRIVATE_KEY}|g" $CONF_PATH/regtest.conf
+sed -i "s|<PRIVATE_KEY>|${PRIVATE_KEY}|g" $CONF_PATH/mainnet.conf
+sed -i "s|<PUBLIC_KEY>|${PUBLIC_KEY}|g" $CONF_PATH/testnet.conf
+sed -i "s|<PUBLIC_KEY>|${PUBLIC_KEY}|g" $CONF_PATH/regtest.conf
+sed -i "s|<PUBLIC_KEY>|${PUBLIC_KEY}|g" $CONF_PATH/mainnet.conf
+sed -i "s|<ADDRESS>|${ADDRESS}|g" $CONF_PATH/testnet.conf
+sed -i "s|<ADDRESS>|${ADDRESS}|g" $CONF_PATH/regtest.conf
+sed -i "s|<ADDRESS>|${ADDRESS}|g" $CONF_PATH/mainnet.conf
+sed -i "s|<NODE_ID>|${NODE_ID}|g" $CONF_PATH/testnet.conf
+sed -i "s|<NODE_ID>|${NODE_ID}|g" $CONF_PATH/regtest.conf
+sed -i "s|<NODE_ID>|${NODE_ID}|g" $CONF_PATH/mainnet.conf
+sed -i "s|<SOLC_PATH>|${SOLC_PATH}|g" $CONF_PATH/testnet.conf
+sed -i "s|<SOLC_PATH>|${SOLC_PATH}|g" $CONF_PATH/regtest.conf
+sed -i "s|<SOLC_PATH>|${SOLC_PATH}|g" $CONF_PATH/mainnet.conf
+sed -i "s|<JAVA_PATH>|${JAVA}|g" $NODE_SERVICE
+
+systemctl enable usc.service
+
+if [ -f /etc/usc/node.conf ]; then
+	rm -f /etc/usc/node.conf
+fi
+ln -s $CONF_PATH/mainnet.conf $CONF_PATH/node.conf
+
+unzip $JAR_PATH/usc.jar libCryptoHello.so
+mv libCryptoHello.so /usr/lib/
+
+#DEBHELPER#

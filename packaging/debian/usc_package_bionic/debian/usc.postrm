@@ -1,0 +1,10 @@
+#!/bin/sh -e
+# Source debconf library.
+. /usr/share/debconf/confmodule
+ 
+# Exit on error
+set -e
+
+db_purge
+
+#DEBHELPER#

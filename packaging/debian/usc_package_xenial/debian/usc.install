@@ -1,0 +1,7 @@
+src/testnet.conf etc/usc
+src/regtest.conf etc/usc
+src/mainnet.conf etc/usc
+src/logback.xml etc/usc
+src/usc.jar usr/share/usc
+src/copyright usr/share/doc/usc
+src/usc.service lib/systemd/system
