@@ -27,7 +27,7 @@ function downloadJar(){
     fi
 
 	curl -o ./uscj-core/libs/ulordj-thin-0.0.1-usc-1-bundled.jar -L https://github.com/UlordChain/ulordj-thin/releases/download/ulordj-thin-0.0.1/ulordj-thin-0.0.1-usc-1-bundled.jar;
-
+    curl -o ./uscj-core/libs/libCryptoHello.so -L https://github.com/UlordChain/ulordj-thin/releases/download/ulordj-thin-0.0.1/libCryptoHello.so
 }
 
 function platform() {
