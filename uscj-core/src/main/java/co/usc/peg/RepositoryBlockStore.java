@@ -78,28 +78,18 @@ public class RepositoryBlockStore implements UldBlockstoreWithCache {
 
     @Override
     public synchronized StoredBlock get(Sha256Hash hash) throws BlockStoreException {
-        byte[] ba = repository.getStorageBytes(contractAddress, new DataWord(hash.toString()));
-
-        if (ba==null) {
-            return null;
-        }
-        
-        StoredBlock storedBlock = byteArrayToStoredBlock(ba);
-        knownBlocks.put(hash, storedBlock);
-        return storedBlock;
+        return getFromCache(hash);
     }
 
     public synchronized StoredBlock getFromCache(Sha256Hash hash) throws BlockStoreException {
-        StoredBlock storedBlock = knownBlocks.get(hash);
-
-        if (storedBlock != null) {
-            return storedBlock;
-        }
-
         byte[] ba = repository.getStorageBytes(contractAddress, new DataWord(hash.toString()));
-
         if (ba==null) {
             return null;
+        }
+
+        StoredBlock storedBlock = knownBlocks.get(hash);
+        if (storedBlock != null) {
+            return storedBlock;
         }
 
         storedBlock = byteArrayToStoredBlock(ba);
