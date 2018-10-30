@@ -152,8 +152,7 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
     }
 
     @Override
-    public boolean isRfs55() {
+    public boolean isUscIP89() {
         return false;
     }
-
 }

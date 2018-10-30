@@ -92,7 +92,7 @@ public enum BridgeMethods {
             ),
             19000L,
             (BridgeMethodExecutorTyped) Bridge::getUldBlockchainInitialBlockHeight,
-            (blockchainConfig -> blockchainConfig.isRfs55())
+            (blockchainConfig -> blockchainConfig.isUscIP89())
 
     ),
     GET_ULD_BLOCKCHAIN_BLOCK_LOCATOR(
@@ -112,7 +112,7 @@ public enum BridgeMethods {
             ),
             76000L,
             (BridgeMethodExecutorTyped) Bridge::getUldBlockchainBlockHashAtDepth,
-            (blockchainConfig -> blockchainConfig.isRfs55())
+            (blockchainConfig -> blockchainConfig.isUscIP89())
     ),
     GET_ULD_TX_HASH_PROCESSED_HEIGHT(
             CallTransaction.Function.fromSignature(
