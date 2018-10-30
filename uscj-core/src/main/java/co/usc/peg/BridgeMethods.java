@@ -102,7 +102,8 @@ public enum BridgeMethods {
                     new String[]{"string[]"}
             ),
             76000L,
-            (BridgeMethodExecutorTyped) Bridge::getUldBlockchainBlockLocator
+            (BridgeMethodExecutorTyped) Bridge::getUldBlockchainBlockLocator,
+            blockchainConfig -> !blockchainConfig.isUscIP89()
     ),
     GET_ULD_BLOCKCHAIN_BLOCK_HASH_AT_DEPTH(
             CallTransaction.Function.fromSignature(
