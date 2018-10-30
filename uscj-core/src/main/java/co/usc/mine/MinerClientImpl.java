@@ -21,7 +21,6 @@ package co.usc.mine;
 import co.usc.config.UscSystemProperties;
 import co.usc.core.Usc;
 import co.usc.panic.PanicProcessor;
-import co.usc.ulordj.core.NetworkParameters;
 import org.ethereum.config.blockchain.DevNetConfig;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.rpc.TypeConverter;

@@ -23,6 +23,7 @@ import co.usc.core.BlockDifficulty;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.Constants;
+import org.ethereum.config.blockchain.testnet.TestNetAfterBridgeSyncConfig;
 import org.ethereum.core.BlockHeader;
 import java.math.BigInteger;
 
@@ -69,6 +70,15 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
         long parentBlockTS =parent.getTimestamp();
 
         return calcDifficultyFortConstants(getConstants(),curBlockTS, parentBlockTS,pd,uncleCount);
+    }
+
+    public BlockDifficulty getBlockDifficulty(Constants constants, BlockHeader curBlockHeader, BlockHeader parent) {
+        BlockDifficulty pd = parent.getDifficulty();
+        int uncleCount = curBlockHeader.getUncleCount();
+        long curBlockTS = curBlockHeader.getTimestamp();
+        long parentBlockTS = parent.getTimestamp();
+
+        return calcDifficultyFortConstants(constants, curBlockTS, parentBlockTS, pd, uncleCount);
     }
 
     public static BlockDifficulty calcDifficultyFortConstants(Constants constants,

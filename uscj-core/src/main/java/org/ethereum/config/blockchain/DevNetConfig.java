@@ -21,6 +21,7 @@ package org.ethereum.config.blockchain;
 
 import co.usc.config.BridgeConstants;
 import co.usc.config.BridgeDevNetConstants;
+import org.ethereum.config.blockchain.testnet.TestNetAfterBridgeSyncConfig;
 //import org.ethereum.config.blockchain.testnet.TestNetAfterBridgeSyncConfig;
 
 /**
@@ -51,7 +52,7 @@ public class DevNetConfig extends TestNetAfterBridgeSyncConfig {
     }
 
     @Override
-    public boolean isRfs55() {
+    public boolean isUscIP89() {
         return true;
     }
 

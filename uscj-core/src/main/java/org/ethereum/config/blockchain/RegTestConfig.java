@@ -72,7 +72,7 @@ public class RegTestConfig extends GenesisConfig {
     }
 
     @Override
-    public boolean isRfs55() {
+    public boolean isUscIP89() {
         return true;
     }
 

@@ -17,12 +17,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ethereum.config.blockchain;
+package org.ethereum.config.blockchain.testnet;
 
 import co.usc.config.BridgeConstants;
 import co.usc.config.BridgeTestNetConstants;
 import co.usc.core.BlockDifficulty;
 import org.ethereum.config.Constants;
+import org.ethereum.config.blockchain.GenesisConfig;
 import org.ethereum.core.BlockHeader;
 
 import java.math.BigInteger;

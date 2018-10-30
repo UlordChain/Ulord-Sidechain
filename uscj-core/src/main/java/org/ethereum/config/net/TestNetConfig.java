@@ -20,9 +20,9 @@
 package org.ethereum.config.net;
 
 
-import org.ethereum.config.blockchain.TestNetAfterBridgeSyncConfig;
-import org.ethereum.config.blockchain.TestNetBeforeBridgeSyncConfig;
-import org.ethereum.config.blockchain.TestNetShakespeareConfig;
+import org.ethereum.config.blockchain.testnet.TestNetAfterBridgeSyncConfig;
+import org.ethereum.config.blockchain.testnet.TestNetBeforeBridgeSyncConfig;
+import org.ethereum.config.blockchain.testnet.TestNetShakespeareConfig;
 
 public class TestNetConfig extends AbstractNetConfig {
     public static final TestNetConfig INSTANCE = new TestNetConfig();
