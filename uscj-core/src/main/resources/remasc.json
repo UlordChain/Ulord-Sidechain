@@ -24,11 +24,11 @@
    "main": {
       "maturity" : 4000,
       "syntheticSpan" : 10,
-      "uscLabsDivisor" : 5,
+      "uscLabsDivisor" : 10,
       "punishmentDivisor" : 10,
       "publishersDivisor" : 10,
       "federationDivisor" : 100,
-      "uscLabsAddress" : "7aec90a41c1d1d02227d6c2c2dd31397fe3d457b",
+      "uscLabsAddress" : "44c079e24b1a000db08d363692194d7a547fe1b1",
       "lateUncleInclusionPunishmentDivisor": 20,
       "paidFeesMultiplier": 2,
       "paidFeesDivisor": 1
@@ -36,11 +36,11 @@
    "fallbackmain": {
       "maturity" : 4000,
       "syntheticSpan" : 10,
-      "uscLabsDivisor" : 5,
+      "uscLabsDivisor" : 10,
       "punishmentDivisor" : 10,
       "publishersDivisor" : 10,
       "federationDivisor" : 100,
-      "uscLabsAddress" : "7aec90a41c1d1d02227d6c2c2dd31397fe3d457b",
+      "uscLabsAddress" : "44c079e24b1a000db08d363692194d7a547fe1b1",
       "lateUncleInclusionPunishmentDivisor": 20,
       "paidFeesMultiplier": 2,
       "paidFeesDivisor": 1

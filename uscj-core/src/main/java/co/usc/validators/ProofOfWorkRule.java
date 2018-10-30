@@ -209,7 +209,8 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         List<Sha256Hash> txHashesInTheMerkleBranch = new ArrayList<>();
         Sha256Hash merkleRoot = ulordMergedMiningMerkleBranch.getTxnHashAndMerkleRoot(txHashesInTheMerkleBranch);
         if (!merkleRoot.equals(ulordMergedMiningBlock.getMerkleRoot())) {
-            logger.warn("ulord merkle root of ulord block does not match the merkle root of merkle branch");
+            logger.warn("ulord merkle root of ulord block does not match the merkle root of merkle branch, expected: {}, found: {}",
+                    merkleRoot.toString(), ulordMergedMiningBlock.getMerkleRoot());
             return false;
         }
         if (!txHashesInTheMerkleBranch.contains(ulordMergedMiningCoinbaseTransactionHash)) {
