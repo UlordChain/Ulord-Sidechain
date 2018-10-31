@@ -1,10 +1,9 @@
-package org.ethereum.config.blockchain.testnet;
+package org.ethereum.config.blockchain.mainnet;
 
 import co.usc.core.BlockDifficulty;
 import org.ethereum.core.BlockHeader;
 
-public class TestNetShakespeareConfig extends TestNetAfterBridgeSyncConfig {
-
+public class MainNetShakespeareConfig extends MainNetAfterBridgeSyncConfig {
     @Override
     public boolean isUscIP89() {
         return true;
@@ -19,7 +18,6 @@ public class TestNetShakespeareConfig extends TestNetAfterBridgeSyncConfig {
     public boolean isUscIP94() {
         return true;
     }
-
 
     @Override   // UscIP97
     public BlockDifficulty calcDifficulty(BlockHeader curBlock, BlockHeader parent) {

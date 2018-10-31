@@ -66,6 +66,7 @@ public class ProgramInvokeImpl implements ProgramInvoke {
     private boolean byTransaction = true;
     private boolean byTestingSuite = false;
     private int callDeep = 0;
+    private boolean isStaticCall = false;
 
     public ProgramInvokeImpl(DataWord address, DataWord origin, DataWord caller, DataWord balance,
                              DataWord gasPrice,
@@ -73,7 +74,8 @@ public class ProgramInvokeImpl implements ProgramInvoke {
                              DataWord callValue, byte[] msgData,
                              DataWord lastHash, DataWord coinbase, DataWord timestamp, DataWord number, DataWord transactionIndex, DataWord
                                      difficulty,
-                             DataWord gaslimit, Repository repository, int callDeep, BlockStore blockStore, boolean byTestingSuite) {
+                             DataWord gaslimit, Repository repository, int callDeep, BlockStore blockStore,
+                             boolean isStaticCall,boolean byTestingSuite) {
 
         // Transaction env
         this.address = address;
@@ -98,6 +100,7 @@ public class ProgramInvokeImpl implements ProgramInvoke {
         this.byTransaction = false;
         this.callDeep = callDeep;
         this.blockStore = blockStore;
+        this.isStaticCall = isStaticCall;
         this.byTestingSuite = byTestingSuite;
     }
 
@@ -290,6 +293,11 @@ public class ProgramInvokeImpl implements ProgramInvoke {
     @Override
     public boolean byTransaction() {
         return byTransaction;
+    }
+
+    @Override
+    public boolean isStaticCall() {
+        return isStaticCall;
     }
 
     @Override
