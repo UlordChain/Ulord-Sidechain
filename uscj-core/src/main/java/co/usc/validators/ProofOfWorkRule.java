@@ -55,12 +55,14 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
 
     private static final Logger logger = LoggerFactory.getLogger("blockvalidator");
 
+    private final UscSystemProperties config;
     private final BridgeConstants bridgeConstants;
     private final Constants constants;
     private boolean fallbackMiningEnabled = true;
 
     @Autowired
     public ProofOfWorkRule(UscSystemProperties config) {
+        this.config = config;
         this.bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         this.constants = config.getBlockchainConfig().getCommonConstants();
     }
@@ -75,8 +77,12 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         return isValid(block.getHeader());
     }
 
-    public static boolean isFallbackMiningPossible(Constants constants, BlockHeader header) {
+    public static boolean isFallbackMiningPossible(UscSystemProperties config, BlockHeader header) {
+        if (config.getBlockchainConfig().getConfigForBlock(header.getNumber()).isUscIP98()) {
+            return false;
+        }
 
+        Constants constants = config.getBlockchainConfig().getCommonConstants();
         if (header.getNumber() >= constants.getEndOfFallbackMiningBlockNumber()) {
             return false;
         }
@@ -106,7 +112,7 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
             return false;
         }
 
-        return isFallbackMiningPossible(constants, header);
+        return isFallbackMiningPossible(config, header);
 
     }
 

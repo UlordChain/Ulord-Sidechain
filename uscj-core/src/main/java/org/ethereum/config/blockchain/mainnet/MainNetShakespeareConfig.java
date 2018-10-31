@@ -19,6 +19,11 @@ public class MainNetShakespeareConfig extends MainNetAfterBridgeSyncConfig {
         return true;
     }
 
+    @Override
+    public boolean isUscIP98() {
+        return true;
+    }
+
     @Override   // UscIP97
     public BlockDifficulty calcDifficulty(BlockHeader curBlock, BlockHeader parent) {
         return getBlockDifficulty(getConstants(), curBlock, parent);
