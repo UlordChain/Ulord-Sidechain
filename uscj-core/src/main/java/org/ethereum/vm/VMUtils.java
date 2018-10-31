@@ -53,12 +53,12 @@ public final class VMUtils {
         }
     }
 
-    public static void saveProgramTraceFile(UscSystemProperties config, String txHash, ProgramTrace trace) throws IOException {
-        Path tracePath = Paths.get(config.databaseDir(), config.vmTraceDir());
+    public static void saveProgramTraceFile(String txHash, ProgramTrace trace, String databaseDir, String vmTraceDir, boolean vmTraceCompressed) throws IOException {
+        Path tracePath = Paths.get(databaseDir, vmTraceDir);
         File traceDir = tracePath.toFile();
         if (!traceDir.exists()) {
             traceDir.mkdirs();
         }
-        saveProgramTraceFile(tracePath, txHash, config.vmTraceCompressed(), trace);
+        saveProgramTraceFile(tracePath, txHash, vmTraceCompressed, trace);
     }
 }

@@ -30,6 +30,7 @@ import co.usc.mine.GasLimitCalculator;
 import co.usc.panic.PanicProcessor;
 import org.ethereum.core.*;
 import org.ethereum.listener.EthereumListenerAdapter;
+import org.ethereum.vm.PrecompiledContracts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.util.encoders.Hex;
@@ -91,9 +92,26 @@ public class MinerHelper {
 
         for (Transaction tx : block.getTransactionsList()) {
 
-            TransactionExecutor executor = new TransactionExecutor(config, tx, txindex++, block.getCoinbase(),
-                    track, null, null,
-                    null, block, new EthereumListenerAdapter(), totalGasUsed);
+            TransactionExecutor executor = new TransactionExecutor(
+                    tx,
+                    txindex++,
+                    block.getCoinbase(),
+                    track,
+                    null,
+                    null,
+                    null,
+                    block,
+                    new EthereumListenerAdapter(),
+                    totalGasUsed,
+                    config.getVmConfig(),
+                    config.getBlockchainConfig(),
+                    config.playVM(),
+                    config.isRemascEnabled(),
+                    config.vmTrace(),
+                    new PrecompiledContracts(config),
+                    config.databaseDir(),
+                    config.vmTraceDir(),
+                    config.vmTraceCompressed());
 
             executor.init();
             executor.execute();

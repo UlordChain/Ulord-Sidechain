@@ -31,8 +31,10 @@ import org.ethereum.crypto.HashUtil;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;
 import org.ethereum.listener.EthereumListener;
+import org.ethereum.listener.EthereumListenerAdapter;
 import org.ethereum.util.ByteUtil;
 import org.ethereum.util.RLP;
+import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,8 +160,26 @@ public class TransactionPoolImpl implements TransactionPool {
             new TransactionSet(pendingTransactions),
             (repository, tx) ->
                 new TransactionExecutor(
-                    config, tx, 0, bestBlock.getCoinbase(), repository,
-                    blockStore, receiptStore, programInvokeFactory, createFakePendingBlock(bestBlock))
+                        tx,
+                        0,
+                        bestBlock.getCoinbase(),
+                        repository,
+                        blockStore,
+                        receiptStore,
+                        programInvokeFactory,
+                        createFakePendingBlock(bestBlock),
+                        new EthereumListenerAdapter(),
+                        0,
+                        config.getVmConfig(),
+                        config.getBlockchainConfig(),
+                        config.playVM(),
+                        config.isRemascEnabled(),
+                        config.vmTrace(),
+                        new PrecompiledContracts(config),
+                        config.databaseDir(),
+                        config.vmTraceDir(),
+                        config.vmTraceCompressed()
+                )
         );
     }
 
@@ -447,7 +467,7 @@ public class TransactionPoolImpl implements TransactionPool {
 
     private Coin getTxBaseCost(Transaction tx) {
         Coin gasCost = tx.getValue();
-        if (bestBlock == null || tx.transactionCost(config, bestBlock) > 0) {
+        if (bestBlock == null || tx.transactionCost(bestBlock, config.getBlockchainConfig()) > 0) {
             BigInteger gasLimit = new BigInteger(1, tx.getGasLimit());
             gasCost = gasCost.add(tx.getGasPrice().multiply(gasLimit));
         }

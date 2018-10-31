@@ -212,21 +212,20 @@ public class BridgeUtils {
         return UldECKey.fromPublicOnly(pubKey).toAddress(networkParameters);
     }
 
-    public static boolean isFreeBridgeTx(SystemProperties config, Transaction uscTx, long blockNumber) {
-        BlockchainNetConfig blockchainConfig = config.getBlockchainConfig();
+    public static boolean isFreeBridgeTx(Transaction uscTx, long blockNumber, BlockchainNetConfig netConfig) {
         UscAddress receiveAddress = uscTx.getReceiveAddress();
         if (receiveAddress.equals(UscAddress.nullAddress())) {
             return false;
         }
 
-        BridgeConstants bridgeConstants = blockchainConfig.getCommonConstants().getBridgeConstants();
+        BridgeConstants bridgeConstants = netConfig.getCommonConstants().getBridgeConstants();
 
         // Temporary assumption: if areBridgeTxsFree() is true then the current federation
         // must be the genesis federation.
         // Once the original federation changes, txs are always paid.
         return PrecompiledContracts.BRIDGE_ADDR.equals(receiveAddress) &&
-               blockchainConfig.getConfigForBlock(blockNumber).areBridgeTxsFree() &&
-               uscTx.acceptTransactionSignature(config.getBlockchainConfig().getCommonConstants().getChainId()) &&
+               netConfig.getConfigForBlock(blockNumber).areBridgeTxsFree() &&
+               uscTx.acceptTransactionSignature(netConfig.getCommonConstants().getChainId()) &&
                (
                        isFromFederateMember(uscTx, bridgeConstants.getGenesisFederation()) ||
                        isFromFederationChangeAuthorizedSender(uscTx, bridgeConstants) ||

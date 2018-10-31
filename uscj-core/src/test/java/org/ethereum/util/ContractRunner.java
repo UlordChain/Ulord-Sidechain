@@ -2,6 +2,7 @@ package org.ethereum.util;
 
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockChainImpl;
@@ -12,7 +13,9 @@ import org.ethereum.core.*;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.db.ReceiptStore;
+import org.ethereum.listener.EthereumListenerAdapter;
 import org.ethereum.rpc.TypeConverter;
+import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.program.ProgramResult;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl;
 
@@ -106,9 +109,27 @@ public class ContractRunner {
 
     private TransactionExecutor executeTransaction(Transaction transaction) {
         Repository track = repository.startTracking();
-        TransactionExecutor executor = new TransactionExecutor(new TestSystemProperties(), transaction, 0, UscAddress.nullAddress(),
-                                                               repository, blockStore, receiptStore,
-                                                               new ProgramInvokeFactoryImpl(), blockchain.getBestBlock());
+        UscSystemProperties config = new TestSystemProperties();
+        TransactionExecutor executor = new TransactionExecutor(
+                transaction,
+                0,
+                UscAddress.nullAddress(),
+                repository,
+                blockStore,
+                receiptStore,
+                new ProgramInvokeFactoryImpl(),
+                blockchain.getBestBlock(),
+                new EthereumListenerAdapter(),
+                0,
+                config.getVmConfig(),
+                config.getBlockchainConfig(),
+                config.playVM(),
+                config.isRemascEnabled(),
+                config.vmTrace(),
+                new PrecompiledContracts(config),
+                config.databaseDir(),
+                config.vmTraceDir(),
+                config.vmTraceCompressed());
         executor.init();
         executor.execute();
         executor.go();

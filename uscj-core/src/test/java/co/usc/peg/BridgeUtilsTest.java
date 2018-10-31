@@ -422,6 +422,6 @@ public class BridgeUtilsTest {
 
         Block uscExecutionBlock = new BlockGenerator().createChildBlock(Genesis.getInstance(config));
         bridge.init(uscTx, uscExecutionBlock, null, null, null, null);
-        assertEquals(expected, BridgeUtils.isFreeBridgeTx(config, uscTx, uscExecutionBlock.getNumber()));
+        Assert.assertEquals(expected, BridgeUtils.isFreeBridgeTx(uscTx, uscExecutionBlock.getNumber(), config.getBlockchainConfig()));
     }
 }
