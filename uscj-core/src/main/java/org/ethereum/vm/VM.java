@@ -21,6 +21,7 @@ package org.ethereum.vm;
 
 import co.usc.config.VmConfig;
 import co.usc.core.UscAddress;
+import org.ethereum.config.BlockchainConfig;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.MessageCall.MsgType;
@@ -1074,6 +1075,10 @@ public class VM {
     }
 
     protected void doLOG(){
+        if (program.isStaticCall() && program.getBlockchainConfig().isUscIP91()) {
+            throw Program.ExceptionHelper.modificationException();
+        }
+
         DataWord size;
         long sizeLong;
         long newMemSize ;
@@ -1215,6 +1220,10 @@ public class VM {
     }
 
     protected void doSSTORE() {
+        if (program.isStaticCall() && program.getBlockchainConfig().isUscIP91()) {
+            throw Program.ExceptionHelper.modificationException();
+        }
+
         if (computeGas) {
             DataWord newValue = stack.get(stack.size() - 2);
             DataWord oldValue = program.storageLoad(stack.peek());
@@ -1354,6 +1363,10 @@ public class VM {
     }
 
     protected void doCREATE(){
+        if (program.isStaticCall() && program.getBlockchainConfig().isUscIP91()) {
+            throw Program.ExceptionHelper.modificationException();
+        }
+
         DataWord size;
         long sizeLong;
         long newMemSize ;
@@ -1545,6 +1558,10 @@ public class VM {
     }
 
     protected void doSUICIDE(){
+        if (program.isStaticCall() && program.getBlockchainConfig().isUscIP91()) {
+            throw Program.ExceptionHelper.modificationException();
+        }
+
         if (computeGas) {
             gasCost = GasCost.SUICIDE;
             DataWord suicideAddressWord = stack.get(stack.size() - 1);
@@ -1617,6 +1634,7 @@ public class VM {
 
     protected void executeOpcode() {
         // Execute operation
+        BlockchainConfig config = program.getBlockchainConfig();
         switch (op.val()) {
             /**
              * Stop and Arithmetic Operations
@@ -1831,13 +1849,23 @@ public class VM {
             case OpCodes.OP_CALLCODE:
             case OpCodes.OP_DELEGATECALL: doCALL();
             break;
+            case OpCodes.OP_STATICCALL:
+                if (!config.isUscIP91()) {
+                    throw Program.ExceptionHelper.invalidOpCode(program.getCurrentOp());
+                }
+                doCALL();
+            break;
             case OpCodes.OP_RETURN: doRETURN();
             break;
             case OpCodes.OP_REVERT: doREVERT();
             break;
             case OpCodes.OP_SUICIDE: doSUICIDE();
             break;
-            case OpCodes.OP_CODEREPLACE: doCODEREPLACE();
+            case OpCodes.OP_CODEREPLACE:
+                if (config.isUscIP94()) {
+                    throw Program.ExceptionHelper.invalidOpCode(program.getCurrentOp());
+                }
+                doCODEREPLACE();
             break;
             case OpCodes.OP_DUPN: doDUPN();
                 break;

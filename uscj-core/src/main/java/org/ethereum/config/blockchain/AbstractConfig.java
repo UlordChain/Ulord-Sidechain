@@ -170,4 +170,14 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
     public boolean isUscIP90() {
         return false;
     }
+
+    @Override
+    public boolean isUscIP91() {
+        return false;
+    }
+
+    @Override
+    public boolean isUscIP94() {
+        return false;
+    }
 }
