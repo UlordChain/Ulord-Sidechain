@@ -32,6 +32,8 @@ import co.usc.config.TestSystemProperties;
 import co.usc.test.builders.BlockChainBuilder;
 import org.ethereum.core.*;
 import org.ethereum.db.ReceiptStore;
+import org.ethereum.vm.PrecompiledContracts;
+import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,9 +86,30 @@ public class World {
     public NodeBlockProcessor getBlockProcessor() { return this.blockProcessor; }
 
     public BlockExecutor getBlockExecutor() {
+        final ProgramInvokeFactoryImpl programInvokeFactory = new ProgramInvokeFactoryImpl();
+        final TestSystemProperties config = new TestSystemProperties();
         if (this.blockExecutor == null)
-            this.blockExecutor = new BlockExecutor(new TestSystemProperties(), this.getRepository(), null, this.getBlockChain().getBlockStore(), null);
-
+            this.blockExecutor = new BlockExecutor(this.getRepository(), (tx1, txindex1, coinbase, track1, block1, totalGasUsed1) -> new TransactionExecutor(
+                    tx1,
+                    txindex1,
+                    block1.getCoinbase(),
+                    track1,
+                    this.getBlockChain().getBlockStore(),
+                    null,
+                    programInvokeFactory,
+                    block1,
+                    null,
+                    totalGasUsed1,
+                    config.getVmConfig(),
+                    config.getBlockchainConfig(),
+                    config.playVM(),
+                    config.isRemascEnabled(),
+                    config.vmTrace(),
+                    new PrecompiledContracts(config),
+                    config.databaseDir(),
+                    config.vmTraceDir(),
+                    config.vmTraceCompressed()
+            ));
         return this.blockExecutor;
     }
 

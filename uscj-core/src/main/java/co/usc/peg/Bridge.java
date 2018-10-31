@@ -191,7 +191,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
 
     @Override
     public long getGasForData(byte[] data) {
-        if (BridgeUtils.isFreeBridgeTx(config, uscTx, uscExecutionBlock.getNumber())) {
+        if (BridgeUtils.isFreeBridgeTx(uscTx, uscExecutionBlock.getNumber(), config.getBlockchainConfig())) {
             return 0;
         }
 

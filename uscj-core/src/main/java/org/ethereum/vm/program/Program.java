@@ -1587,6 +1587,10 @@ public class Program {
             }
             byte[] out = contract.execute(data);
 
+            if (getBlockchainConfig().isUscIP90()) {
+                this.returnDataBuffer = out;
+            }
+
             this.memorySave(msg.getOutDataOffs().intValue(), out);
             this.stackPushOne();
             track.commit();

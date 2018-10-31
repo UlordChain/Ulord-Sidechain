@@ -20,6 +20,7 @@ package co.usc.remasc;
 
 import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
+import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.core.Block;
 import org.ethereum.core.Transaction;
 import org.ethereum.util.ByteUtil;
@@ -60,7 +61,7 @@ public class RemascTransaction extends Transaction {
     }
 
     @Override
-    public long transactionCost(UscSystemProperties config, Block block) {
+    public long transactionCost(Block block, BlockchainNetConfig netConfig) {
         // RemascTransaction does not pay any fees
         return 0;
     }

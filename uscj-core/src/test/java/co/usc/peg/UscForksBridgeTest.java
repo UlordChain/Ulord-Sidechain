@@ -36,6 +36,7 @@ import co.usc.test.builders.BlockBuilder;
 import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
+import org.ethereum.listener.EthereumListenerAdapter;
 import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.program.ProgramResult;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl;
@@ -342,6 +343,7 @@ public class UscForksBridgeTest {
     }
 
     private BridgeState callGetStateForDebuggingTx() throws IOException, ClassNotFoundException {
+        TestSystemProperties systemProperties = new TestSystemProperties();
         Transaction uscTx = CallTransaction.createRawTransaction(config, 0,
                 Long.MAX_VALUE,
                 Long.MAX_VALUE,
@@ -350,8 +352,26 @@ public class UscForksBridgeTest {
                 Bridge.GET_STATE_FOR_DEBUGGING.encode(new Object[]{}));
         uscTx.sign(new byte[32]);
 
-        TransactionExecutor executor = new TransactionExecutor(config, uscTx, 0, blockChain.getBestBlock().getCoinbase(), repository,
-                        blockChain.getBlockStore(), null, new ProgramInvokeFactoryImpl(), blockChain.getBestBlock())
+        TransactionExecutor executor = new TransactionExecutor(
+                uscTx,
+                0,
+                blockChain.getBestBlock().getCoinbase(),
+                repository,
+                blockChain.getBlockStore(),
+                null,
+                new ProgramInvokeFactoryImpl(),
+                blockChain.getBestBlock(),
+                new EthereumListenerAdapter(),
+                0,
+                systemProperties.getVmConfig(),
+                systemProperties.getBlockchainConfig(),
+                systemProperties.playVM(),
+                systemProperties.isRemascEnabled(),
+                systemProperties.vmTrace(),
+                new PrecompiledContracts(systemProperties),
+                systemProperties.databaseDir(),
+                systemProperties.vmTraceDir(),
+                systemProperties.vmTraceCompressed())
                 .setLocalCall(true);
 
         executor.init();

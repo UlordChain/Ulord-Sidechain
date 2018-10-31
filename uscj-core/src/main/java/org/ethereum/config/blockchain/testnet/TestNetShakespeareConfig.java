@@ -14,8 +14,14 @@ public class TestNetShakespeareConfig extends TestNetAfterBridgeSyncConfig {
     public boolean isUscIP90() {
         return true;
     }
+
     @Override
     public boolean isUscIP91() {
+        return true;
+    }
+
+    @Override
+    public boolean isUscIP93() {
         return true;
     }
 
