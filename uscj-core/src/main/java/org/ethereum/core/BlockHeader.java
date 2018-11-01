@@ -24,6 +24,7 @@ import co.usc.core.BlockDifficulty;
 import co.usc.crypto.Keccak256;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
+import org.ethereum.config.SystemProperties;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
@@ -399,22 +400,27 @@ public class BlockHeader {
     }
 
     public Keccak256 getHash() {
-        return new Keccak256(HashUtil.keccak256(getEncoded()));
+        return new Keccak256(HashUtil.keccak256(getEncoded(
+                true,
+                !SystemProperties.DONOTUSE_blockchainConfig.getConfigForBlock(getNumber()).isUscIP92()
+        )));
     }
 
     public byte[] getEncoded() {
-        return this.getEncoded(true); // with nonce
+        // the encoded block header must include all fields, even the Ulord PMT and coinbase which are not used for
+        // calculating USCIP92 block hashes
+        return this.getEncoded(true, true);
     }
 
     public byte[] getEncodedWithoutNonceMergedMiningFields() {
-        return this.getEncoded(false);
+        return this.getEncoded(false,false);
     }
 
     public Coin getMinimumGasPrice() {
         return this.minimumGasPrice;
     }
 
-    public byte[] getEncoded(boolean withMergedMiningFields) {
+    public byte[] getEncoded(boolean withMergedMiningFields, boolean withMerkleProofAndCoinbase) {
         byte[] parentHash = RLP.encodeElement(this.parentHash);
 
         byte[] unclesHash = RLP.encodeElement(this.unclesHash);
@@ -435,14 +441,15 @@ public class BlockHeader {
         byte[] receiptTrieRoot = RLP.encodeElement(this.receiptTrieRoot);
 
         byte[] logsBloom = RLP.encodeElement(this.logsBloom);
-        byte[] difficulty = RLP.encodeElement(this.difficultyRaw);
+        //byte[] difficulty = RLP.encodeElement(this.difficultyRaw);
+        byte[] difficulty = encodeBlockDifficulty(this.difficulty);
         byte[] number = RLP.encodeBigInteger(BigInteger.valueOf(this.number));
         byte[] gasLimit = RLP.encodeElement(this.gasLimit);
         byte[] gasUsed = RLP.encodeBigInteger(BigInteger.valueOf(this.gasUsed));
         byte[] timestamp = RLP.encodeBigInteger(BigInteger.valueOf(this.timestamp));
         byte[] extraData = RLP.encodeElement(this.extraData);
         byte[] paidFees = RLP.encodeCoin(this.paidFees);
-        byte[] mgp = RLP.encodeElement(this.minimumGasPriceRaw);
+        byte[] mgp = RLP.encodeSignedCoinNonNullZero(this.minimumGasPrice);
         List<byte[]> fieldToEncodeList = Lists.newArrayList(parentHash, unclesHash, coinbase,
                 stateRoot, txTrieRoot, receiptTrieRoot, logsBloom, difficulty, number,
                 gasLimit, gasUsed, timestamp, extraData, paidFees, mgp);
@@ -453,14 +460,24 @@ public class BlockHeader {
         if (withMergedMiningFields && hasMiningFields()) {
             byte[] ulordMergedMiningHeader = RLP.encodeElement(this.ulordMergedMiningHeader);
             fieldToEncodeList.add(ulordMergedMiningHeader);
-            byte[] ulordMergedMiningMerkleProof = RLP.encodeElement(this.ulordMergedMiningMerkleProof);
-            fieldToEncodeList.add(ulordMergedMiningMerkleProof);
-            byte[] ulordMergedMiningCoinbaseTransaction = RLP.encodeElement(this.ulordMergedMiningCoinbaseTransaction);
-            fieldToEncodeList.add(ulordMergedMiningCoinbaseTransaction);
+            if(withMerkleProofAndCoinbase){
+                byte[] ulordMergedMiningMerkleProof = RLP.encodeElement(this.ulordMergedMiningMerkleProof);
+                fieldToEncodeList.add(ulordMergedMiningMerkleProof);
+                byte[] ulordMergedMiningCoinbaseTransaction = RLP.encodeElement(this.ulordMergedMiningCoinbaseTransaction);
+                fieldToEncodeList.add(ulordMergedMiningCoinbaseTransaction);
+            }
+
         }
 
 
         return RLP.encodeList(fieldToEncodeList.toArray(new byte[][]{}));
+    }
+
+    /**
+     * This is here to override specific non-minimal instances such as the mainnet Genesis
+     */
+    protected byte[] encodeBlockDifficulty(BlockDifficulty difficulty) {
+        return RLP.encodeBlockDifficulty(difficulty);
     }
 
     // Warning: This method does not use the object's attributes
@@ -586,7 +603,7 @@ public class BlockHeader {
     }
 
     public byte[] getHashForMergedMining() {
-        return HashUtil.keccak256(getEncoded(false));
+        return HashUtil.keccak256(getEncoded(false,false));
     }
 
     public String getShortHash() {

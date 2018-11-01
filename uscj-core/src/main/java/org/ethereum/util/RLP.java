@@ -582,6 +582,18 @@ public class RLP {
         return encodeBigInteger(coin.asBigInteger());
     }
 
+    public static byte[] encodeSignedCoinNonNullZero(@CheckForNull Coin coin) {
+        if (coin == null) {
+            return encodeElement(null);
+        }
+
+        if (Coin.ZERO.equals(coin)) {
+            return new byte[]{0};
+        }
+
+        return encodeElement(coin.getBytes());
+    }
+
     public static byte[] encodeBlockDifficulty(BlockDifficulty difficulty) {
         return encodeElement(difficulty.getBytes());
     }

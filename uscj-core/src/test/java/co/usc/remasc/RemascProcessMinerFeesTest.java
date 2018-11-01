@@ -31,7 +31,7 @@ import co.usc.test.builders.BlockChainBuilder;
 import co.usc.blockchain.utils.BlockGenerator;
 import com.google.common.collect.Lists;
 import org.ethereum.TestUtils;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.ethereum.config.net.RegTestConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.Keccak256Helper;

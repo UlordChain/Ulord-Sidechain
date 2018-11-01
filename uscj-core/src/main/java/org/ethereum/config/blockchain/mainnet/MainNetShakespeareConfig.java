@@ -20,6 +20,11 @@ public class MainNetShakespeareConfig extends MainNetAfterBridgeSyncConfig {
     }
 
     @Override
+    public boolean isUscIP92() {
+        return true;
+    }
+
+    @Override
     public boolean isUscIP93() {
         return true;
     }

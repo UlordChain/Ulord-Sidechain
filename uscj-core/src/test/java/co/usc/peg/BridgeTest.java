@@ -37,7 +37,7 @@ import co.usc.db.RepositoryImpl;
 import co.usc.peg.ulord.SimpleUldTransaction;
 import co.usc.test.World;
 import org.ethereum.config.BlockchainNetConfig;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;
@@ -95,7 +95,7 @@ public class BridgeTest {
 
     @BeforeClass
     public static void setUpBeforeClass() {
-        config.setBlockchainConfig(new RegTestConfig());
+        config.setBlockchainConfig(new RegTestGenesisConfig());
         bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         networkParameters = bridgeConstants.getUldParams();
         UldECKey fedULDPrivateKey = ((BridgeRegTestConstants)bridgeConstants).getFederatorPrivateKeys().get(0);

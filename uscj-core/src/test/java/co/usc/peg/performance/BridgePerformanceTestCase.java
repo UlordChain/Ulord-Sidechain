@@ -31,7 +31,7 @@ import co.usc.config.TestSystemProperties;
 import co.usc.db.RepositoryImpl;
 import co.usc.db.RepositoryTrackWithBenchmarking;
 import co.usc.test.builders.BlockChainBuilder;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.ethereum.config.net.RegTestConfig;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;

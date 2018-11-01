@@ -32,7 +32,7 @@ import co.usc.core.UscAddress;
 import co.usc.peg.ulord.UscAllowUnconfirmedCoinSelector;
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.core.Block;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.core.Genesis;
@@ -344,7 +344,7 @@ public class BridgeUtilsTest {
 
     @Test
     public void isFreeBridgeTxFreeTxDisabled() {
-        config.setBlockchainConfig(new RegTestConfig() {
+        config.setBlockchainConfig(new RegTestGenesisConfig() {
             @Override
             public boolean areBridgeTxsFree() {
                 return false;

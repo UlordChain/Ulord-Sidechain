@@ -23,7 +23,7 @@ import co.usc.config.VmConfig;
 import co.usc.config.TestSystemProperties;
 import co.usc.config.VmConfig;
 import org.ethereum.config.BlockchainConfig;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.vm.DataWord;
 import org.ethereum.vm.OpCode;
 import org.ethereum.vm.PrecompiledContracts;
@@ -59,7 +59,7 @@ public class VMPerformanceTest {
     private final TestSystemProperties config = new TestSystemProperties();
     private final VmConfig vmConfig = config.getVmConfig();
     private final PrecompiledContracts precompiledContracts = new PrecompiledContracts(config);
-    private final BlockchainConfig blockchainConfig = new RegTestConfig();
+    private final BlockchainConfig blockchainConfig = new RegTestGenesisConfig();
     private ProgramInvokeMockImpl invoke;
     private Program program;
     ThreadMXBean thread;

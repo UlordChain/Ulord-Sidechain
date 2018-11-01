@@ -1,10 +1,9 @@
-package org.ethereum.config.blockchain.testnet;
+package org.ethereum.config.blockchain.regtest;
 
 import co.usc.core.BlockDifficulty;
 import org.ethereum.core.BlockHeader;
 
-public class TestNetShakespeareConfig extends TestNetAfterBridgeSyncConfig {
-
+public class RegTestShakespeareConfig extends RegTestGenesisConfig {
     @Override
     public boolean isUscIP89() {
         return true;

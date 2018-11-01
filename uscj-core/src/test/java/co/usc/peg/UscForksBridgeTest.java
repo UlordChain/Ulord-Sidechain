@@ -33,7 +33,7 @@ import co.usc.test.builders.BlockBuilder;
 import co.usc.config.TestSystemProperties;
 import co.usc.test.World;
 import co.usc.test.builders.BlockBuilder;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.listener.EthereumListenerAdapter;
@@ -62,7 +62,7 @@ public class UscForksBridgeTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         config = new TestSystemProperties();
-        config.setBlockchainConfig(new RegTestConfig());
+        config.setBlockchainConfig(new RegTestGenesisConfig());
         bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         UldECKey fedULDPrivateKey = ((BridgeRegTestConstants)bridgeConstants).getFederatorPrivateKeys().get(0);
         fedECPrivateKey = ECKey.fromPrivate(fedULDPrivateKey.getPrivKey());

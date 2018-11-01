@@ -50,7 +50,7 @@ import co.usc.scoring.PunishmentParameters;
 import co.usc.test.World;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.validators.ProofOfWorkRule;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.net.server.Channel;
@@ -82,7 +82,7 @@ public class NodeMessageHandlerTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         config = new TestSystemProperties();
-        config.setBlockchainConfig(new RegTestConfig());
+        config.setBlockchainConfig(new RegTestGenesisConfig());
     }
 
     @Test

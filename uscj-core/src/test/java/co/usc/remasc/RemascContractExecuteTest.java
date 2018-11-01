@@ -22,7 +22,7 @@ import co.usc.config.RemascConfig;
 import co.usc.config.RemascConfigFactory;
 import co.usc.config.TestSystemProperties;
 import org.ethereum.config.BlockchainNetConfig;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.program.Program;
 import org.junit.BeforeClass;
@@ -39,7 +39,7 @@ public class RemascContractExecuteTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         config = new TestSystemProperties();
-        config.setBlockchainConfig(new RegTestConfig());
+        config.setBlockchainConfig(new RegTestGenesisConfig());
         remascConfig = new RemascConfigFactory(RemascContract.REMASC_CONFIG).createRemascConfig("regtest");
     }
 

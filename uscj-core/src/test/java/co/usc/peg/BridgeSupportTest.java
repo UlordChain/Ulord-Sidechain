@@ -48,7 +48,7 @@ import co.usc.peg.simples.SimpleUscTransaction;
 import co.usc.peg.simples.SimpleWallet;
 import co.usc.test.builders.BlockChainBuilder;
 import com.google.common.collect.Lists;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.config.net.TestNetConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
@@ -124,7 +124,7 @@ public class BridgeSupportTest {
     @Before
     public void setUpOnEachTest(){
         config = new TestSystemProperties();
-        config.setBlockchainConfig(new RegTestConfig());
+        config.setBlockchainConfig(new RegTestGenesisConfig());
         bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         uldParams = bridgeConstants.getUldParams();
     }

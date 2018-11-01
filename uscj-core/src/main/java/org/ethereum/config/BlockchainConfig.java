@@ -47,6 +47,8 @@ public interface BlockchainConfig {
 
     boolean isUscIP91();
 
+    boolean isUscIP92();
+
     boolean isUscIP93();
 
     boolean isUscIP94();
