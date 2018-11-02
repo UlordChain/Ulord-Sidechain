@@ -33,4 +33,8 @@ public interface TrieStore {
     byte[] serialize();
 
     byte[] retrieveValue(byte[] hash);
+
+    interface Pool {
+        TrieStore getInstanceFor(String name);
+    }
 }

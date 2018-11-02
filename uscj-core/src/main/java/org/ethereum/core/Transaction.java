@@ -68,30 +68,21 @@ public class Transaction {
 
     public static final int DATAWORD_LENGTH = 32;
 
+    /* whether this is a local call transaction */
+    private boolean isLocalCall;
+
     /* SHA3 hash of the RLP encoded transaction */
     private byte[] hash;
 
     /* a counter used to make sure each transaction can only be processed once */
     private byte[] nonce;
 
-    /**
-     * The amount to transfer.
-     * Note that valueRaw is saved to perform {@link #validate()} and {@link #getEncoded()},
-     * but once validated a Transaction should only rely on value.
-     * */
-    private byte[] valueRaw;
     private Coin value;
 
     /* the address of the destination account
      * In creation transaction the receive address is - 0 */
     private UscAddress receiveAddress;
 
-    /**
-     * The amount to pay as a transaction fee to the miner for each unit of gas.
-     * Note that gasPriceRaw is saved to perform {@link #validate()} and {@link #getEncoded()},
-     * but once validated a Transaction should only rely on gasPrice.
-     * */
-    private byte[] gasPriceRaw;
     private Coin gasPrice;
 
     /* the amount of "gas" to allow for the computation.
@@ -127,7 +118,9 @@ public class Transaction {
 
     protected Transaction(byte[] rawData) {
         this.rlpEncoded = rawData;
-        parsed = false;
+        rlpParse();
+        // clear it so we always re-encode the received data
+        this.rlpEncoded = null;
     }
 
     /* creation contract tx
@@ -148,18 +141,13 @@ public class Transaction {
     public Transaction(byte[] nonce, byte[] gasPriceRaw, byte[] gasLimit, byte[] receiveAddress, byte[] valueRaw, byte[] data,
                        byte chainId) {
         this.nonce = ByteUtil.cloneBytes(nonce);
-        this.gasPriceRaw = ByteUtil.cloneBytes(gasPriceRaw);
-        this.gasPrice = RLP.parseCoin(this.gasPriceRaw);
+        this.gasPrice = RLP.parseCoinNonNullZero(ByteUtil.cloneBytes(gasPriceRaw));
         this.gasLimit = ByteUtil.cloneBytes(gasLimit);
         this.receiveAddress = RLP.parseUscAddress(ByteUtil.cloneBytes(receiveAddress));
-        if (valueRaw == null || ByteUtil.isSingleZero(valueRaw)) {
-            this.valueRaw = EMPTY_BYTE_ARRAY;
-        } else {
-            this.valueRaw = ByteUtil.cloneBytes(valueRaw);
-        }
-        this.value = RLP.parseCoin(this.valueRaw);
+        this.value = RLP.parseCoinNullZero(ByteUtil.cloneBytes(valueRaw));
         this.data = ByteUtil.cloneBytes(data);
         this.chainId = chainId;
+        this.isLocalCall = false;
 
         parsed = true;
     }
@@ -221,10 +209,10 @@ public class Transaction {
         if (gasLimit.length > DATAWORD_LENGTH) {
             throw new RuntimeException("Gas Limit is not valid");
         }
-        if (gasPriceRaw != null && gasPriceRaw.length > DATAWORD_LENGTH) {
+        if (gasPrice != null && gasPrice.getBytes().length > DATAWORD_LENGTH) {
             throw new RuntimeException("Gas Price is not valid");
         }
-        if (valueRaw != null && valueRaw.length > DATAWORD_LENGTH) {
+        if (value.getBytes().length > DATAWORD_LENGTH) {
             throw new RuntimeException("Value is not valid");
         }
         if (getSignature() != null) {
@@ -244,12 +232,10 @@ public class Transaction {
         List<RLPElement> transaction = (RLPList)RLP.decode2(rlpEncoded).get(0);
 
         this.nonce = transaction.get(0).getRLPData();
-        this.gasPriceRaw = transaction.get(1).getRLPData();
-        this.gasPrice = RLP.parseCoin(this.gasPriceRaw);
+        this.gasPrice = RLP.parseCoinNonNullZero(transaction.get(1).getRLPData());
         this.gasLimit = transaction.get(2).getRLPData();
         this.receiveAddress = RLP.parseUscAddress(transaction.get(3).getRLPData());
-        this.valueRaw = transaction.get(4).getRLPData();
-        this.value = RLP.parseCoin(this.valueRaw);
+        this.value = RLP.parseCoinNullZero(transaction.get(4).getRLPData());
         this.data = transaction.get(5).getRLPData();
         // only parse signature in case tx is signed
         if (transaction.get(6).getRLPData() != null) {
@@ -494,10 +480,10 @@ public class Transaction {
         } else {
             toEncodeNonce = RLP.encodeElement(this.nonce);
         }
-        byte[] toEncodeGasPrice = RLP.encodeElement(this.gasPriceRaw);
+        byte[] toEncodeGasPrice = RLP.encodeCoinNonNullZero(this.gasPrice);
         byte[] toEncodeGasLimit = RLP.encodeElement(this.gasLimit);
         byte[] toEncodeReceiveAddress = RLP.encodeUscAddress(this.receiveAddress);
-        byte[] toEncodeValue = RLP.encodeElement(this.valueRaw);
+        byte[] toEncodeValue = RLP.encodeCoinNullZero(this.value);
         byte[] toEncodeData = RLP.encodeElement(this.data);
 
         // Since EIP-155 use chainId for v
@@ -529,10 +515,10 @@ public class Transaction {
         } else {
             toEncodeNonce = RLP.encodeElement(this.nonce);
         }
-        byte[] toEncodeGasPrice = RLP.encodeElement(this.gasPriceRaw);
+        byte[] toEncodeGasPrice = RLP.encodeCoinNonNullZero(this.gasPrice);
         byte[] toEncodeGasLimit = RLP.encodeElement(this.gasLimit);
         byte[] toEncodeReceiveAddress = RLP.encodeUscAddress(this.receiveAddress);
-        byte[] toEncodeValue = RLP.encodeElement(this.valueRaw);
+        byte[] toEncodeValue = RLP.encodeCoinNonNullZero(this.value);
         byte[] toEncodeData = RLP.encodeElement(this.data);
 
         byte[] v;
@@ -623,4 +609,11 @@ public class Transaction {
         return data == null ? ZERO_BYTE_ARRAY : data;
     }
 
+    public boolean isLocalCallTransaction() {
+        return isLocalCall;
+    }
+
+    public void setLocalCallTransaction(boolean isLocalCall) {
+        this.isLocalCall = isLocalCall;
+    }
 }

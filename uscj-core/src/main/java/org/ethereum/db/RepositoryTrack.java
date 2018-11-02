@@ -23,6 +23,7 @@ import co.usc.config.UscSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
 import co.usc.db.ContractDetailsImpl;
+import co.usc.trie.TrieStore;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
@@ -54,15 +55,16 @@ public class RepositoryTrack implements Repository {
     private final Map<UscAddress, AccountState> cacheAccounts = new HashMap<>();
     private final Map<UscAddress, ContractDetails> cacheDetails = new HashMap<>();
 
-    private final UscSystemProperties config;
     private final DetailsDataStore dds;
+    private final Repository repository;
+    private final TrieStore.Pool trieStorePool;
+    private final int memoryStorageLimit;
 
-    Repository repository;
-
-    public RepositoryTrack(UscSystemProperties config, Repository repository) {
-        this.config = config;
+    public RepositoryTrack(Repository repository, TrieStore.Pool trieStorePool, int memoryStorageLimit) {
         this.repository = repository;
-        dds = new DetailsDataStore(this.config, new DatabaseImpl(new HashMapDB()));
+        this.trieStorePool = trieStorePool;
+        this.memoryStorageLimit = memoryStorageLimit;
+        this.dds = new DetailsDataStore(new DatabaseImpl(new HashMapDB()), trieStorePool, memoryStorageLimit);
     }
 
     @Override
@@ -327,7 +329,7 @@ public class RepositoryTrack implements Repository {
     public Repository startTracking() {
         logger.debug("start tracking");
 
-        return new RepositoryTrack(config, this);
+        return new RepositoryTrack(this, trieStorePool, memoryStorageLimit);
     }
 
 

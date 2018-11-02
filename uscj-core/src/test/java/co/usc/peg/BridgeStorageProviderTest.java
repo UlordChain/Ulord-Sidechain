@@ -18,6 +18,12 @@
 
 package co.usc.peg;
 
+import co.usc.config.UscSystemProperties;
+import co.usc.db.TrieStorePoolOnMemory;
+import co.usc.peg.whitelist.LockWhitelist;
+import co.usc.peg.whitelist.LockWhitelistEntry;
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
+import co.usc.peg.whitelist.UnlimitedWhiteListEntry;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.crypto.TransactionSignature;
 import co.usc.ulordj.script.ScriptBuilder;
@@ -28,6 +34,7 @@ import co.usc.crypto.Keccak256;
 import co.usc.db.RepositoryImpl;
 import co.usc.config.TestSystemProperties;
 import co.usc.db.RepositoryImpl;
+import org.apache.commons.lang3.tuple.Pair;
 import org.ethereum.core.Repository;
 import org.ethereum.vm.DataWord;
 import org.ethereum.vm.PrecompiledContracts;
@@ -52,6 +59,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -63,12 +71,13 @@ import static org.mockito.Mockito.when;
 public class BridgeStorageProviderTest {
     private final TestSystemProperties config = new TestSystemProperties();
     private final NetworkParameters networkParameters = config.getBlockchainConfig().getCommonConstants().getBridgeConstants().getUldParams();
+    private final BridgeStorageConfiguration bridgeStorageConfigurationAtHeightZero = BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(0));
     private int transactionOffset;
 
     @Test
     public void createInstance() throws IOException {
-        Repository repository = new RepositoryImpl(config);
-        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        Repository repository = createRepositoryImpl(config);
+        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Map<Sha256Hash, Long> processed = provider.getUldTxHashesAlreadyProcessed();
 
@@ -98,10 +107,10 @@ public class BridgeStorageProviderTest {
 
     @Test
     public void createSaveAndRecreateInstance() throws IOException {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         provider0.getUldTxHashesAlreadyProcessed();
         provider0.getReleaseRequestQueue();
         provider0.getReleaseTransactionSet();
@@ -123,7 +132,7 @@ public class BridgeStorageProviderTest {
         Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("newFederationUldUTXOs".getBytes())));
         Assert.assertNotNull(repository.getStorageBytes(contractAddress, new DataWord("oldFederationUldUTXOs".getBytes())));
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Map<Sha256Hash, Long> processed = provider.getUldTxHashesAlreadyProcessed();
 
@@ -161,10 +170,10 @@ public class BridgeStorageProviderTest {
         Sha256Hash hash1 = PegTestUtils.createHash();
         Sha256Hash hash2 = PegTestUtils.createHash();
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         provider0.getUldTxHashesAlreadyProcessed().put(hash1, 1L);
         provider0.getUldTxHashesAlreadyProcessed().put(hash2, 1L);
         provider0.save();
@@ -172,7 +181,7 @@ public class BridgeStorageProviderTest {
 
         track = repository.startTracking();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Map<Sha256Hash, Long> processed = provider.getUldTxHashesAlreadyProcessed();
         Set<Sha256Hash> processedHashes = processed.keySet();
@@ -190,10 +199,10 @@ public class BridgeStorageProviderTest {
         Keccak256 hash2 = PegTestUtils.createHash3();
         Keccak256 hash3 = PegTestUtils.createHash3();
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         provider0.getUscTxsWaitingForSignatures().put(hash1, tx1);
         provider0.getUscTxsWaitingForSignatures().put(hash2, tx2);
         provider0.getUscTxsWaitingForSignatures().put(hash3, tx3);
@@ -203,7 +212,7 @@ public class BridgeStorageProviderTest {
 
         track = repository.startTracking();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         SortedMap<Keccak256, UldTransaction> signatures = provider.getUscTxsWaitingForSignatures();
 
@@ -223,14 +232,14 @@ public class BridgeStorageProviderTest {
         Sha256Hash hash1 = PegTestUtils.createHash();
         Sha256Hash hash2 = PegTestUtils.createHash();
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         BridgeConstants bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         // Federation is the genesis federation ATM
         Federation federation = bridgeConstants.getGenesisFederation();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         provider0.getNewFederationUldUTXOs().add(new UTXO(hash1, 1, Coin.COIN, 0, false, ScriptBuilder.createOutputScript(federation.getAddress())));
         provider0.getNewFederationUldUTXOs().add(new UTXO(hash2, 2, Coin.ONE_COIN, 0, false, ScriptBuilder.createOutputScript(federation.getAddress())));
         provider0.save();
@@ -238,7 +247,7 @@ public class BridgeStorageProviderTest {
 
         track = repository.startTracking();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         List<UTXO> utxos = provider.getNewFederationUldUTXOs();
 
@@ -253,7 +262,7 @@ public class BridgeStorageProviderTest {
         Federation newFederation = new Federation(Arrays.asList(new UldECKey[]{UldECKey.fromPrivate(BigInteger.valueOf(100))}), Instant.ofEpochMilli(1000), 0L, NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
         PowerMockito.mockStatic(BridgeSerializationUtils.class);
         Repository repositoryMock = mock(Repository.class);
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         Whitebox.setInternalState(storageProvider, "uldContext", contextMock);
 
         when(repositoryMock.getStorageBytes(any(UscAddress.class), any(DataWord.class))).then((InvocationOnMock invocation) -> {
@@ -287,7 +296,7 @@ public class BridgeStorageProviderTest {
         Context contextMock = mock(Context.class);
         PowerMockito.mockStatic(BridgeSerializationUtils.class);
         Repository repositoryMock = mock(Repository.class);
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         Whitebox.setInternalState(storageProvider, "uldContext", contextMock);
 
         when(repositoryMock.getStorageBytes(any(UscAddress.class), any(DataWord.class))).then((InvocationOnMock invocation) -> {
@@ -317,7 +326,7 @@ public class BridgeStorageProviderTest {
         List<Integer> serializeCalls = new ArrayList<>();
         PowerMockito.mockStatic(BridgeSerializationUtils.class);
         Repository repositoryMock = mock(Repository.class);
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         PowerMockito.when(BridgeSerializationUtils.serializeFederation(any(Federation.class))).then((InvocationOnMock invocation) -> {
             Federation federation = invocation.getArgumentAt(0, Federation.class);
@@ -354,7 +363,7 @@ public class BridgeStorageProviderTest {
         ABICallElection electionMock = mock(ABICallElection.class);
         PowerMockito.mockStatic(BridgeSerializationUtils.class);
         Repository repositoryMock = mock(Repository.class);
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         when(repositoryMock.getStorageBytes(any(UscAddress.class), any(DataWord.class))).then((InvocationOnMock invocation) -> {
             calls.add(0);
@@ -386,7 +395,7 @@ public class BridgeStorageProviderTest {
         ABICallElection electionMock = mock(ABICallElection.class);
         PowerMockito.mockStatic(BridgeSerializationUtils.class);
         Repository repositoryMock = mock(Repository.class);
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         when(repositoryMock.getStorageBytes(any(UscAddress.class), any(DataWord.class))).then((InvocationOnMock invocation) -> {
             calls.add(0);
@@ -415,7 +424,7 @@ public class BridgeStorageProviderTest {
         List<Integer> serializeCalls = new ArrayList<>();
         PowerMockito.mockStatic(BridgeSerializationUtils.class);
         Repository repositoryMock = mock(Repository.class);
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         PowerMockito.when(BridgeSerializationUtils.serializeElection(any(ABICallElection.class))).then((InvocationOnMock invocation) -> {
             ABICallElection election = invocation.getArgumentAt(0, ABICallElection.class);
@@ -446,95 +455,173 @@ public class BridgeStorageProviderTest {
     }
 
     @Test
-    public void getLockWhitelist_nonNullBytes() throws IOException {
+    public void getLockWhitelist_nonNullBytes() {
         List<Integer> calls = new ArrayList<>();
-        LockWhitelist whitelistMock = mock(LockWhitelist.class);
+        LockWhitelist whitelistMock = new LockWhitelist(new HashMap<>());
+        LockWhitelistEntry oneOffEntry = new OneOffWhiteListEntry(getUldAddress("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), Coin.COIN);
+        LockWhitelistEntry unlimitedEntry = new UnlimitedWhiteListEntry(getUldAddress("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"));
+        whitelistMock.put(oneOffEntry.address(), oneOffEntry);
+        whitelistMock.put(unlimitedEntry.address(), unlimitedEntry);
         PowerMockito.mockStatic(BridgeSerializationUtils.class);
         Repository repositoryMock = mock(Repository.class);
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        // Overriding BridgeStorageConfiguration to make sure it serializes the unlimited whitelist data
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants(),
+                BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(500)));
         Context contextMock = mock(Context.class);
         when(contextMock.getParams()).thenReturn(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
-        Whitebox.setInternalState(storageProvider, "uldContext", contextMock);
+        Whitebox.setInternalState(storageProvider, "btcContext", contextMock);
 
-        when(repositoryMock.getStorageBytes(any(UscAddress.class), any(DataWord.class))).then((InvocationOnMock invocation) -> {
-            calls.add(0);
-            UscAddress contractAddress = invocation.getArgumentAt(0, UscAddress.class);
-            DataWord address = invocation.getArgumentAt(1, DataWord.class);
-            // Make sure the bytes are got from the correct address in the repo
-            Assert.assertTrue(Arrays.equals(new byte[]{(byte)0xaa, (byte)0xbb, (byte)0xcc, (byte)0xdd}, contractAddress.getBytes()));
-            Assert.assertEquals(new DataWord("lockWhitelist".getBytes(StandardCharsets.UTF_8)), address);
-            return new byte[]{(byte)0xaa};
-        });
-        PowerMockito.when(BridgeSerializationUtils.deserializeLockWhitelist(any(byte[].class), any(NetworkParameters.class))).then((InvocationOnMock invocation) -> {
-            calls.add(0);
-            byte[] data = invocation.getArgumentAt(0, byte[].class);
-            NetworkParameters parameters = invocation.getArgumentAt(1, NetworkParameters.class);
-            Assert.assertEquals(NetworkParameters.fromID(NetworkParameters.ID_REGTEST), parameters);
-            // Make sure we're deserializing what just came from the repo with the correct AddressBasedAuthorizer
-            Assert.assertTrue(Arrays.equals(new byte[]{(byte)0xaa}, data));
-            return whitelistMock;
-        });
+        when(repositoryMock.getStorageBytes(any(UscAddress.class), eq(new DataWord("lockWhitelist".getBytes(StandardCharsets.UTF_8)))))
+                .then((InvocationOnMock invocation) -> {
+                    calls.add(0);
+                    UscAddress contractAddress = invocation.getArgumentAt(0, UscAddress.class);
+                    DataWord address = invocation.getArgumentAt(1, DataWord.class);
+                    // Make sure the bytes are got from the correct address in the repo
+                    Assert.assertTrue(Arrays.equals(new byte[]{(byte)0xaa, (byte)0xbb, (byte)0xcc, (byte)0xdd}, contractAddress.getBytes()));
+                    Assert.assertEquals(new DataWord("lockWhitelist".getBytes(StandardCharsets.UTF_8)), address);
+                    return new byte[]{(byte)0xaa};
+                });
+        when(repositoryMock.getStorageBytes(any(UscAddress.class), eq(new DataWord("unlimitedLockWhitelist".getBytes(StandardCharsets.UTF_8)))))
+                .then((InvocationOnMock invocation) -> {
+                    calls.add(0);
+                    UscAddress contractAddress = invocation.getArgumentAt(0, UscAddress.class);
+                    DataWord address = invocation.getArgumentAt(1, DataWord.class);
+                    // Make sure the bytes are got from the correct address in the repo
+                    Assert.assertTrue(Arrays.equals(new byte[]{(byte)0xaa, (byte)0xbb, (byte)0xcc, (byte)0xdd}, contractAddress.getBytes()));
+                    Assert.assertEquals(new DataWord("unlimitedLockWhitelist".getBytes(StandardCharsets.UTF_8)), address);
+                    return new byte[]{(byte)0xbb};
+                });
+        PowerMockito
+                .when(BridgeSerializationUtils.deserializeOneOffLockWhitelistAndDisableBlockHeight(any(byte[].class), any(NetworkParameters.class)))
+                .then((InvocationOnMock invocation) -> {
+                    calls.add(0);
+                    byte[] data = invocation.getArgumentAt(0, byte[].class);
+                    NetworkParameters parameters = invocation.getArgumentAt(1, NetworkParameters.class);
+                    Assert.assertEquals(NetworkParameters.fromID(NetworkParameters.ID_REGTEST), parameters);
+                    // Make sure we're deserializing what just came from the repo with the correct AddressBasedAuthorizer
+                    Assert.assertTrue(Arrays.equals(new byte[]{(byte)0xaa}, data));
+                    HashMap<Address, LockWhitelistEntry> map = new HashMap<>();
+                    map.put(oneOffEntry.address(), oneOffEntry);
+                    return Pair.of(map, 0);
+                });
+        PowerMockito
+                .when(BridgeSerializationUtils.deserializeUnlimitedLockWhitelistEntries(any(byte[].class), any(NetworkParameters.class)))
+                .then((InvocationOnMock invocation) -> {
+                    calls.add(0);
+                    byte[] unlimitedData = invocation.getArgumentAt(0, byte[].class);
+                    NetworkParameters parameters = invocation.getArgumentAt(1, NetworkParameters.class);
+                    Assert.assertEquals(NetworkParameters.fromID(NetworkParameters.ID_REGTEST), parameters);
+                    // Make sure we're deserializing what just came from the repo with the correct AddressBasedAuthorizer
+                    Assert.assertTrue(Arrays.equals(new byte[]{(byte)0xbb}, unlimitedData));
+                    HashMap<Address, LockWhitelistEntry> map = new HashMap<>();
+                    map.put(unlimitedEntry.address(), unlimitedEntry);
+                    return map;
+                });
 
-        Assert.assertSame(whitelistMock, storageProvider.getLockWhitelist());
-        Assert.assertEquals(2, calls.size()); // 1 for each call to deserializeFederation & getStorageBytes
+        Assert.assertEquals(whitelistMock.getAll(), storageProvider.getLockWhitelist().getAll());
+        Assert.assertEquals(4, calls.size()); // 1 for each call to deserializeFederation & getStorageBytes (we call getStorageBytes twice)
     }
 
     @Test
-    public void getLockWhitelist_nullBytes() throws IOException {
+    public void getLockWhitelist_nullBytes() {
         List<Integer> calls = new ArrayList<>();
         PowerMockito.mockStatic(BridgeSerializationUtils.class);
         Repository repositoryMock = mock(Repository.class);
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants(),
+                BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(500)));
         Context contextMock = mock(Context.class);
         when(contextMock.getParams()).thenReturn(NetworkParameters.fromID(NetworkParameters.ID_REGTEST));
-        Whitebox.setInternalState(storageProvider, "uldContext", contextMock);
+        Whitebox.setInternalState(storageProvider, "btcContext", contextMock);
 
-        when(repositoryMock.getStorageBytes(any(UscAddress.class), any(DataWord.class))).then((InvocationOnMock invocation) -> {
-            calls.add(0);
-            UscAddress contractAddress = invocation.getArgumentAt(0, UscAddress.class);
-            DataWord address = invocation.getArgumentAt(1, DataWord.class);
-            // Make sure the bytes are got from the correct address in the repo
-            Assert.assertTrue(Arrays.equals(new byte[]{(byte)0xaa, (byte)0xbb, (byte)0xcc, (byte)0xdd}, contractAddress.getBytes()));
-            Assert.assertEquals(new DataWord("lockWhitelist".getBytes(StandardCharsets.UTF_8)), address);
-            return null;
-        });
-        PowerMockito.when(BridgeSerializationUtils.deserializeLockWhitelist(any(byte[].class), any(NetworkParameters.class))).then((InvocationOnMock invocation) -> {
-            calls.add(0);
-            return null;
-        });
+        when(repositoryMock.getStorageBytes(any(UscAddress.class), any(DataWord.class)))
+                .then((InvocationOnMock invocation) -> {
+                    calls.add(0);
+                    UscAddress contractAddress = invocation.getArgumentAt(0, UscAddress.class);
+                    DataWord address = invocation.getArgumentAt(1, DataWord.class);
+                    // Make sure the bytes are got from the correct address in the repo
+                    Assert.assertTrue(Arrays.equals(new byte[]{(byte)0xaa, (byte)0xbb, (byte)0xcc, (byte)0xdd}, contractAddress.getBytes()));
+                    Assert.assertEquals(new DataWord("lockWhitelist".getBytes(StandardCharsets.UTF_8)), address);
+                    return null;
+                });
+        PowerMockito
+                .when(BridgeSerializationUtils.deserializeOneOffLockWhitelistAndDisableBlockHeight(any(byte[].class), any(NetworkParameters.class)))
+                .then((InvocationOnMock invocation) -> {
+                    calls.add(0);
+                    return null;
+                });
+        PowerMockito
+                .when(BridgeSerializationUtils.deserializeUnlimitedLockWhitelistEntries(any(byte[].class), any(NetworkParameters.class)))
+                .then((InvocationOnMock invocation) -> {
+                    calls.add(0); // THIS ONE WON'T BE CALLED BECAUSE ONEOFF IS EMPTY
+                    Assert.fail("As we don't have data for one-off, we shouldn't have called deserialize unlimited");
+                    return null;
+                });
 
         LockWhitelist result = storageProvider.getLockWhitelist();
         Assert.assertNotNull(result);
         Assert.assertEquals(0, result.getSize().intValue());
-        Assert.assertEquals(1, calls.size()); // 1 for each call to deserializeFederation & getStorageBytes
+        Assert.assertEquals(2, calls.size()); // 1 for each call to deserializeFederation & getStorageBytes
     }
 
     @Test
-    public void saveLockWhitelist() throws IOException {
+    public void saveLockWhitelist() {
         LockWhitelist whitelistMock = mock(LockWhitelist.class);
         List<Integer> storageBytesCalls = new ArrayList<>();
         List<Integer> serializeCalls = new ArrayList<>();
         PowerMockito.mockStatic(BridgeSerializationUtils.class);
         Repository repositoryMock = mock(Repository.class);
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        // Overriding BridgeStorageConfiguration to make sure it serializes the unlimited whitelist data
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants(),
+                BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(500)));
 
-        PowerMockito.when(BridgeSerializationUtils.serializeLockWhitelist(any(LockWhitelist.class))).then((InvocationOnMock invocation) -> {
-            LockWhitelist whitelist = invocation.getArgumentAt(0, LockWhitelist.class);
-            Assert.assertSame(whitelistMock, whitelist);
-            serializeCalls.add(0);
-            return Hex.decode("ccdd");
-        });
-        Mockito.doAnswer((InvocationOnMock invocation) -> {
-            storageBytesCalls.add(0);
-            UscAddress contractAddress = invocation.getArgumentAt(0, UscAddress.class);
-            DataWord address = invocation.getArgumentAt(1, DataWord.class);
-            byte[] data = invocation.getArgumentAt(2, byte[].class);
-            // Make sure the bytes are set to the correct address in the repo and that what's saved is what was serialized
-            Assert.assertTrue(Arrays.equals(Hex.decode("aabbccdd"), contractAddress.getBytes()));
-            Assert.assertEquals(new DataWord("lockWhitelist".getBytes(StandardCharsets.UTF_8)), address);
-            Assert.assertTrue(Arrays.equals(Hex.decode("ccdd"), data));
-            return null;
-        }).when(repositoryMock).addStorageBytes(any(UscAddress.class), any(DataWord.class), any(byte[].class));
+        // Mock the One-Off serialization
+        PowerMockito
+                .when(BridgeSerializationUtils.serializeOneOffLockWhitelist(any(Pair.class)))
+                .then((InvocationOnMock invocation) -> {
+                    Pair<List<OneOffWhiteListEntry>, Integer> data = invocation.getArgumentAt(0, Pair.class);
+                    Assert.assertEquals(whitelistMock.getAll(OneOffWhiteListEntry.class), data.getLeft());
+                    Assert.assertSame(whitelistMock.getDisableBlockHeight(), data.getRight());
+                    serializeCalls.add(0);
+                    return Hex.decode("ccdd");
+                });
+
+        Mockito
+                .doAnswer((InvocationOnMock invocation) -> {
+                    storageBytesCalls.add(0);
+                    UscAddress contractAddress = invocation.getArgumentAt(0, UscAddress.class);
+                    DataWord address = invocation.getArgumentAt(1, DataWord.class);
+                    byte[] data = invocation.getArgumentAt(2, byte[].class);
+                    // Make sure the bytes are set to the correct address in the repo and that what's saved is what was serialized
+                    Assert.assertTrue(Arrays.equals(Hex.decode("aabbccdd"), contractAddress.getBytes()));
+                    Assert.assertEquals(new DataWord("lockWhitelist".getBytes(StandardCharsets.UTF_8)), address);
+                    Assert.assertTrue(Arrays.equals(Hex.decode("ccdd"), data));
+                    return null;
+                })
+                .when(repositoryMock).addStorageBytes(any(UscAddress.class), eq(new DataWord("lockWhitelist".getBytes(StandardCharsets.UTF_8))), any(byte[].class));
+
+        // Mock the Unlimited serialization
+        PowerMockito
+                .when(BridgeSerializationUtils.serializeUnlimitedLockWhitelist(any(List.class)))
+                .then((InvocationOnMock invocation) -> {
+                    List<UnlimitedWhiteListEntry> unlimitedWhiteListEntries = invocation.getArgumentAt(0, List.class);
+                    Assert.assertEquals(whitelistMock.getAll(UnlimitedWhiteListEntry.class), unlimitedWhiteListEntries);
+                    serializeCalls.add(0);
+                    return Hex.decode("bbcc");
+                });
+
+        Mockito
+                .doAnswer((InvocationOnMock invocation) -> {
+                    storageBytesCalls.add(0);
+                    UscAddress contractAddress = invocation.getArgumentAt(0, UscAddress.class);
+                    DataWord address = invocation.getArgumentAt(1, DataWord.class);
+                    byte[] data = invocation.getArgumentAt(2, byte[].class);
+                    // Make sure the bytes are set to the correct address in the repo and that what's saved is what was serialized
+                    Assert.assertTrue(Arrays.equals(Hex.decode("aabbccdd"), contractAddress.getBytes()));
+                    Assert.assertEquals(new DataWord("unlimitedLockWhitelist".getBytes(StandardCharsets.UTF_8)), address);
+                    Assert.assertTrue(Arrays.equals(Hex.decode("bbcc"), data));
+                    return null;
+                })
+                .when(repositoryMock).addStorageBytes(any(UscAddress.class), eq(new DataWord("unlimitedLockWhitelist".getBytes(StandardCharsets.UTF_8))), any(byte[].class));
 
         storageProvider.saveLockWhitelist();
         // Shouldn't have tried to save nor serialize anything
@@ -542,8 +629,8 @@ public class BridgeStorageProviderTest {
         Assert.assertEquals(0, serializeCalls.size());
         Whitebox.setInternalState(storageProvider, "lockWhitelist", whitelistMock);
         storageProvider.saveLockWhitelist();
-        Assert.assertEquals(1, storageBytesCalls.size());
-        Assert.assertEquals(1, serializeCalls.size());
+        Assert.assertEquals(2, storageBytesCalls.size());
+        Assert.assertEquals(2, serializeCalls.size());
     }
 
     @Test
@@ -552,7 +639,7 @@ public class BridgeStorageProviderTest {
         ReleaseRequestQueue requestQueueMock = mock(ReleaseRequestQueue.class);
         PowerMockito.mockStatic(BridgeSerializationUtils.class);
         Repository repositoryMock = mock(Repository.class);
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         when(repositoryMock.getStorageBytes(any(UscAddress.class), any(DataWord.class))).then((InvocationOnMock invocation) -> {
             calls.add(0);
@@ -583,7 +670,7 @@ public class BridgeStorageProviderTest {
         ReleaseTransactionSet transactionSetMock = mock(ReleaseTransactionSet.class);
         PowerMockito.mockStatic(BridgeSerializationUtils.class);
         Repository repositoryMock = mock(Repository.class);
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         when(repositoryMock.getStorageBytes(any(UscAddress.class), any(DataWord.class))).then((InvocationOnMock invocation) -> {
             calls.add(0);
@@ -610,10 +697,10 @@ public class BridgeStorageProviderTest {
 
     @Test
     public void setFeePerKb_savedAndRecreated() {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Coin expectedCoin = Coin.valueOf(5325);
         provider0.setFeePerKb(expectedCoin);
@@ -622,7 +709,7 @@ public class BridgeStorageProviderTest {
 
         track = repository.startTracking();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         assertThat(provider.getFeePerKb(), is(expectedCoin));
     }
@@ -631,7 +718,7 @@ public class BridgeStorageProviderTest {
     public void getFeePerKbElection_emptyVotes() {
         AddressBasedAuthorizer authorizerMock = mock(AddressBasedAuthorizer.class);
         Repository repositoryMock = mock(Repository.class);
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         HashMap<ABICallSpec, List<UscAddress>> electionVotes = new HashMap<>();
         byte[] serializedElection = BridgeSerializationUtils.serializeElection(
@@ -654,7 +741,7 @@ public class BridgeStorageProviderTest {
                 .thenReturn(1);
         when(authorizerMock.isAuthorized(any(UscAddress.class)))
                 .thenReturn(true);
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(repositoryMock, mockAddress("aabbccdd"), config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         byte[] electionFee = new byte[] {0x43, 0x19};
         ABICallSpec expectedWinner = new ABICallSpec("setFeePerKb", new byte[][]{electionFee});
@@ -680,10 +767,17 @@ public class BridgeStorageProviderTest {
         return tx;
     }
 
+    private Address getUldAddress(String addr) {
+        return new Address(config.getBlockchainConfig().getCommonConstants().getBridgeConstants().getUldParams(), Hex.decode(addr));
+    }
+
     private UscAddress mockAddress(String addr) {
         UscAddress mock = PowerMockito.mock(UscAddress.class);
         when(mock.getBytes()).thenReturn(Hex.decode(addr));
         return mock;
     }
 
+    public static RepositoryImpl createRepositoryImpl(UscSystemProperties config) {
+        return new RepositoryImpl(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+    }
 }

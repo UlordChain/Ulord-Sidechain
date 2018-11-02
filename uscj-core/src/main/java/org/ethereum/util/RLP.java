@@ -439,6 +439,44 @@ public class RLP {
         }
     }
 
+    @Nullable
+    public static Coin parseCoinNonNullZero(byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
+
+        return new Coin(bytes);
+    }
+
+    @Nullable
+    public static Coin parseSignedCoinNonNullZero(byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
+
+        return new Coin(new BigInteger(bytes));
+    }
+
+    public static Coin parseCoinNullZero(@Nullable byte[] bytes) {
+        if (bytes == null) {
+            return Coin.ZERO;
+        }
+
+        return new Coin(bytes);
+    }
+
+    /**
+     * @param bytes the difficulty bytes, as expected by {@link BigInteger#BigInteger(byte[])}.
+     */
+    @Nullable
+    public static BlockDifficulty parseBlockDifficulty(@Nullable byte[] bytes) {
+        if (bytes == null) {
+            return null;
+        }
+
+        return new BlockDifficulty(new BigInteger(bytes));
+    }
+
     /**
      * Get exactly one message payload
      */
@@ -582,6 +620,18 @@ public class RLP {
         return encodeBigInteger(coin.asBigInteger());
     }
 
+    public static byte[] encodeCoinNonNullZero(@CheckForNull Coin coin) {
+        if (coin == null) {
+            return encodeElement(null);
+        }
+
+        if (coin.equals(Coin.ZERO)) {
+            return new byte[]{0};
+        }
+
+        return encodeElement(BigIntegers.asUnsignedByteArray(coin.asBigInteger()));
+    }
+
     public static byte[] encodeSignedCoinNonNullZero(@CheckForNull Coin coin) {
         if (coin == null) {
             return encodeElement(null);
@@ -592,6 +642,14 @@ public class RLP {
         }
 
         return encodeElement(coin.getBytes());
+    }
+
+    public static byte[] encodeCoinNullZero(Coin coin) {
+        if (coin.equals(Coin.ZERO)) {
+            return encodeByte((byte) 0);
+        }
+
+        return encodeCoinNonNullZero(coin);
     }
 
     public static byte[] encodeBlockDifficulty(BlockDifficulty difficulty) {

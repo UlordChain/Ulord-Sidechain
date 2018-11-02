@@ -21,6 +21,7 @@ package co.usc.db;
 
 import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
+import co.usc.trie.TrieStore;
 import org.ethereum.core.Repository;
 import org.ethereum.db.RepositoryTrack;
 import org.ethereum.vm.DataWord;
@@ -63,8 +64,8 @@ public class RepositoryTrackWithBenchmarking extends RepositoryTrack {
 
     private final Statistics statistics;
 
-    public RepositoryTrackWithBenchmarking(UscSystemProperties config, Repository repository) {
-        super(config, repository);
+    public RepositoryTrackWithBenchmarking(Repository repository, TrieStore.Pool trieStorePool, int memoryStorageLimit) {
+        super(repository, trieStorePool, memoryStorageLimit);
         statistics = new Statistics();
     }
 

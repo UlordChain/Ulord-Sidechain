@@ -22,8 +22,12 @@ package org.ethereum.jsontestsuite.builder;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
 import co.usc.db.ContractDetailsImpl;
+import co.usc.db.TrieStorePoolOnMemory;
+import co.usc.trie.TrieImpl;
+import co.usc.trie.TrieStoreImpl;
 import org.ethereum.core.AccountState;
 import org.ethereum.crypto.HashUtil;
+import org.ethereum.datasource.HashMapDB;
 import org.ethereum.jsontestsuite.model.AccountTck;
 import org.ethereum.vm.DataWord;
 
@@ -36,9 +40,14 @@ import static org.ethereum.util.Utils.unifiedNumericToBigInteger;
 
 public class AccountBuilder {
 
-    public static StateWrap build(AccountTck account) {
+    public static StateWrap build(AccountTck account, HashMapDB store) {
 
-        ContractDetailsImpl details = new ContractDetailsImpl(new TestSystemProperties());
+        TestSystemProperties config = new TestSystemProperties();
+        ContractDetailsImpl details = new ContractDetailsImpl(null,
+                new TrieImpl(new TrieStoreImpl(store), true),
+                null,
+                new TrieStorePoolOnMemory(),
+                config.detailsInMemoryStorageLimit());
         details.setCode(parseData(account.getCode()));
         details.setStorage(convertStorage(account.getStorage()));
 

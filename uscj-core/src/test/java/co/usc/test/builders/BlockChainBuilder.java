@@ -25,6 +25,7 @@ import co.usc.core.Coin;
 import co.usc.core.UscAddress;
 import co.usc.core.bc.*;
 import co.usc.db.RepositoryImpl;
+import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.peg.RepositoryBlockStore;
 import co.usc.trie.TrieStoreImpl;
 import co.usc.validators.BlockValidator;
@@ -111,7 +112,7 @@ public class BlockChainBuilder {
 
     public BlockChainImpl build(boolean withoutCleaner) {
         if (repository == null)
-            repository = new RepositoryImpl(config, new TrieStoreImpl(new HashMapDB().setClearOnClose(false)));
+            repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB().setClearOnClose(false)), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
 
         if (blockStore == null) {
             blockStore = new IndexedBlockStore(new HashMap<>(), new HashMapDB(), null);

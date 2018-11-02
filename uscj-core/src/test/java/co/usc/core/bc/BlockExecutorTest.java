@@ -22,6 +22,7 @@ import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
 import co.usc.db.RepositoryImpl;
+import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.trie.TrieStoreImpl;
 import co.usc.blockchain.utils.BlockGenerator;
@@ -67,7 +68,7 @@ public class BlockExecutorTest {
         BlockGenerator blockGenerator = new BlockGenerator();
         Block block = blockGenerator.createChildBlock(blockGenerator.getGenesisBlock());
 
-        Repository repository = new RepositoryImpl(config, new TrieStoreImpl(new HashMapDB()));
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
 
         Repository track = repository.startTracking();
 
@@ -190,7 +191,7 @@ public class BlockExecutorTest {
 
     @Test
     public void executeBlockWithTwoTransactions() {
-        Repository repository = new RepositoryImpl(config, new TrieStoreImpl(new HashMapDB()));
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
 
         Repository track = repository.startTracking();
 
@@ -323,7 +324,7 @@ public class BlockExecutorTest {
 
     @Test
     public void executeAndFillBlockWithTxToExcludeBecauseSenderHasNoBalance() {
-        Repository repository = new RepositoryImpl(config, new TrieStoreImpl(new HashMapDB()));
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
 
         Repository track = repository.startTracking();
 
@@ -383,7 +384,7 @@ public class BlockExecutorTest {
 
     @Test
     public void executeBlockWithTxThatMakesBlockInvalidSenderHasNoBalance() {
-        Repository repository = new RepositoryImpl(config, new TrieStoreImpl(new HashMapDB()));
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
 
         Repository track = repository.startTracking();
 

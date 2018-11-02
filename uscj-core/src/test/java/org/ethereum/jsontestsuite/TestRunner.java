@@ -20,13 +20,16 @@
 package org.ethereum.jsontestsuite;
 
 import co.usc.config.TestSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.config.VmConfig;
 import co.usc.core.Coin;
+import co.usc.core.Usc;
 import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.BlockExecutor;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.db.RepositoryImpl;
+import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.validators.DummyBlockValidator;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.core.Block;
@@ -217,7 +220,7 @@ public class TestRunner {
 
 
         logger.info("--------- PRE ---------");
-        Repository repository = loadRepository(new RepositoryImpl(config).startTracking(), testCase.getPre());
+        Repository repository = loadRepository(createRepositoryImpl(config).startTracking(), testCase.getPre());
 
         try {
 
@@ -630,5 +633,9 @@ public class TestRunner {
 
     public ProgramTrace getTrace() {
         return trace;
+    }
+
+    public static RepositoryImpl createRepositoryImpl(UscSystemProperties config) {
+        return new RepositoryImpl(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
     }
 }

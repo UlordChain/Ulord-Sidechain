@@ -92,6 +92,8 @@ public class RepositoryBlockStore implements UldBlockstoreWithCache {
             return storedBlock;
         }
 
+
+
         storedBlock = byteArrayToStoredBlock(ba);
 
         knownBlocks.put(hash, storedBlock);

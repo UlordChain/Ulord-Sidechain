@@ -18,6 +18,7 @@
 
 package co.usc.peg.performance;
 
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.script.Script;
 import co.usc.ulordj.store.BlockStoreException;
@@ -118,7 +119,7 @@ public class RegisterUldTransactionTest extends BridgePerformanceTestCase {
             Coin changeAmount = fromAmount.subtract(lockAmount).subtract(Coin.MILLICOIN); // 1 millicoin fee simulation
 
             // Whitelisting sender
-            provider.getLockWhitelist().put(fromAddress, lockAmount);
+            provider.getLockWhitelist().put(fromAddress, new OneOffWhiteListEntry(fromAddress, lockAmount));
 
             // Input tx
             UldTransaction inputTx = new UldTransaction(networkParameters);

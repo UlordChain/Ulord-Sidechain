@@ -4,6 +4,10 @@ import co.usc.core.BlockDifficulty;
 import org.ethereum.core.BlockHeader;
 
 public class DevNetShakespeareConfig extends DevNetGenesisConfig {
+
+    @Override
+    public boolean isUscIP87() { return true; }
+
     @Override
     public boolean isUscIP85() {
         return true;

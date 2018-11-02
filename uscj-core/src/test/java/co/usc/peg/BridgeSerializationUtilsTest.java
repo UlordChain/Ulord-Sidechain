@@ -18,9 +18,12 @@
 
 package co.usc.peg;
 
+import co.usc.peg.whitelist.LockWhitelist;
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
 import co.usc.ulordj.core.*;
 import co.usc.core.UscAddress;
 import com.google.common.primitives.UnsignedBytes;
+import org.apache.commons.lang3.tuple.Pair;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
 import org.junit.Assert;
@@ -513,10 +516,13 @@ public class BridgeSerializationUtilsTest {
         LockWhitelist lockWhitelist = new LockWhitelist(
             Arrays.stream(addressesBytes)
                 .map(bytes -> new Address(NetworkParameters.fromID(NetworkParameters.ID_REGTEST), bytes))
-                .collect(Collectors.toMap(Function.identity(), k -> maxToTransfer)),
+                .collect(Collectors.toMap(Function.identity(), k -> new OneOffWhiteListEntry(k, maxToTransfer))),
                 0);
 
-        byte[] result = BridgeSerializationUtils.serializeLockWhitelist(lockWhitelist);
+        byte[] result = BridgeSerializationUtils.serializeOneOffLockWhitelist(Pair.of(
+                lockWhitelist.getAll(OneOffWhiteListEntry.class),
+                lockWhitelist.getDisableBlockHeight()
+        ));
         StringBuilder expectedBuilder = new StringBuilder();
         Arrays.stream(addressesBytes).sorted(UnsignedBytes.lexicographicalComparator()).forEach(bytes -> {
             expectedBuilder.append("dd");
@@ -530,7 +536,7 @@ public class BridgeSerializationUtilsTest {
     }
 
     @Test
-    public void deserializeLockWhitelist() throws Exception {
+    public void deserializeOneOffLockWhitelistAndDisableBlockHeight() throws Exception {
         PowerMockito.mockStatic(RLP.class);
         mock_RLP_decode2(InnerListMode.NONE);
 
@@ -549,34 +555,37 @@ public class BridgeSerializationUtilsTest {
         sampleBuilder.append("002a");
         byte[] sample = Hex.decode(sampleBuilder.toString());
 
-        LockWhitelist deserializedLockWhitelist = BridgeSerializationUtils.deserializeLockWhitelist(
+        Pair<HashMap<Address, OneOffWhiteListEntry>, Integer> deserializedLockWhitelist = BridgeSerializationUtils.deserializeOneOffLockWhitelistAndDisableBlockHeight(
                 sample,
                 NetworkParameters.fromID(NetworkParameters.ID_REGTEST)
         );
 
-        Assert.assertThat(deserializedLockWhitelist.getSize(), is(addressesBytes.length));
-        Assert.assertThat(deserializedLockWhitelist.getAddresses().stream().map(Address::getHash160).collect(Collectors.toList()), containsInAnyOrder(addressesBytes));
-        Set<Coin> deserializedCoins = deserializedLockWhitelist.getAddresses().stream().map(deserializedLockWhitelist::getMaxTransferValue).collect(Collectors.toSet());
+        Assert.assertThat(deserializedLockWhitelist.getLeft().size(), is(addressesBytes.length));
+        Assert.assertThat(deserializedLockWhitelist.getLeft().keySet().stream().map(Address::getHash160).collect(Collectors.toList()), containsInAnyOrder(addressesBytes));
+        Set<Coin> deserializedCoins = deserializedLockWhitelist.getLeft().values().stream().map(entry -> ((OneOffWhiteListEntry)entry).maxTransferValue()).collect(Collectors.toSet());
         Assert.assertThat(deserializedCoins, hasSize(1));
         Assert.assertThat(deserializedCoins, hasItem(Coin.MILLICOIN));
-        Assert.assertThat(deserializedLockWhitelist.getDisableBlockHeight(), is(42));
+        Assert.assertThat(deserializedLockWhitelist.getRight(), is(42));
     }
 
     @Test
-    public void serializeDeserializeLockWhitelist() {
-        NetworkParameters uldParams = NetworkParameters.fromID(NetworkParameters.ID_REGTEST);
-        Map<Address, Coin> whitelist = new HashMap<>();
-        whitelist.put(UldECKey.fromPrivate(BigInteger.valueOf(100L)).toAddress(uldParams), Coin.COIN);
+    public void deserializeOneOffLockWhitelistAndDisableBlockHeight_null() throws Exception {
+        PowerMockito.mockStatic(RLP.class);
+        mock_RLP_decode2(InnerListMode.NONE);
 
-        LockWhitelist originalLockWhitelist = new LockWhitelist(whitelist, 0);
-        LockWhitelist deserializedLockWhitelist = BridgeSerializationUtils.deserializeLockWhitelist(BridgeSerializationUtils.serializeLockWhitelist(originalLockWhitelist), uldParams);
+        Pair<HashMap<Address, OneOffWhiteListEntry>, Integer> deserializedLockWhitelist = BridgeSerializationUtils.deserializeOneOffLockWhitelistAndDisableBlockHeight(
+                null,
+                NetworkParameters.fromID(NetworkParameters.ID_REGTEST)
+        );
 
-        List<Address> originalAddresses = originalLockWhitelist.getAddresses();
-        List<Address> deserializedAddresses = deserializedLockWhitelist.getAddresses();
-        Assert.assertThat(originalAddresses, hasSize(1));
-        Assert.assertThat(deserializedAddresses, hasSize(1));
-        Assert.assertThat(originalAddresses, is(deserializedAddresses));
-        Assert.assertThat(originalLockWhitelist.getMaxTransferValue(originalAddresses.get(0)), is(deserializedLockWhitelist.getMaxTransferValue(deserializedAddresses.get(0))));
+        Assert.assertNull(deserializedLockWhitelist);
+
+        Pair<HashMap<Address, OneOffWhiteListEntry>, Integer> deserializedLockWhitelist2 = BridgeSerializationUtils.deserializeOneOffLockWhitelistAndDisableBlockHeight(
+                new byte[]{},
+                NetworkParameters.fromID(NetworkParameters.ID_REGTEST)
+        );
+
+        Assert.assertNull(deserializedLockWhitelist2);
     }
 
     @Test

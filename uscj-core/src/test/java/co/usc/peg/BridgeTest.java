@@ -18,6 +18,7 @@
 
 package co.usc.peg;
 
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.script.ScriptBuilder;
@@ -69,6 +70,7 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.*;
 
+import static co.usc.peg.BridgeStorageProviderTest.createRepositoryImpl;
 import static co.usc.ulordj.core.Utils.uint32ToByteStreamLE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Matchers.any;
@@ -106,10 +108,11 @@ public class BridgeTest {
     public void callUpdateCollectionsWithSignatureNotFromFederation() throws IOException {
         UldTransaction tx1 = createTransaction();
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageConfiguration bridgeStorageConfigurationAtThisHeight = BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(0));
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtThisHeight);
 
         provider0.getReleaseTransactionSet().add(tx1, 1L);
         provider0.save();
@@ -137,10 +140,11 @@ public class BridgeTest {
         UldTransaction tx2 = createTransaction();
         UldTransaction tx3 = createTransaction();
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageConfiguration bridgeStorageConfigurationAtThisHeight = BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(0));
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtThisHeight);
 
         provider0.getReleaseTransactionSet().add(tx1, 1L);
         provider0.getReleaseTransactionSet().add(tx2, 2L);
@@ -162,7 +166,7 @@ public class BridgeTest {
 
         track.commit();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtThisHeight);
 
         Assert.assertEquals(3, provider.getReleaseTransactionSet().getEntries().size());
         Assert.assertEquals(0, provider.getUscTxsWaitingForSignatures().size());
@@ -174,10 +178,11 @@ public class BridgeTest {
         UldTransaction tx2 = createTransaction();
         UldTransaction tx3 = createTransaction();
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageConfiguration bridgeStorageConfigurationAtThisHeight = BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(0));
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtThisHeight);
 
         provider0.getReleaseTransactionSet().add(tx1, 1L);
         provider0.getReleaseTransactionSet().add(tx2, 2L);
@@ -205,7 +210,7 @@ public class BridgeTest {
 
         track.commit();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtThisHeight);
 
         Assert.assertEquals(2, provider.getReleaseTransactionSet().getEntries().size());
         Assert.assertEquals(1, provider.getUscTxsWaitingForSignatures().size());
@@ -213,7 +218,7 @@ public class BridgeTest {
 
     @Test
     public void sendNoUscTx() throws IOException {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
@@ -232,7 +237,7 @@ public class BridgeTest {
 
     @Test
     public void sendNoBlockHeader() throws IOException {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -248,7 +253,7 @@ public class BridgeTest {
 
     @Test
     public void sendOrphanBlockHeader() {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -286,7 +291,7 @@ public class BridgeTest {
 
     @Test
     public void receiveHeadersNotFromTheFederation() throws IOException {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -306,7 +311,7 @@ public class BridgeTest {
 
     @Test
     public void receiveHeadersWithNonParseableHeader() {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -326,7 +331,7 @@ public class BridgeTest {
 
     @Test
     public void receiveHeadersWithCorrectSizeHeaders() throws Exception {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -378,7 +383,7 @@ public class BridgeTest {
 
     @Test
     public void receiveHeadersWithIncorrectSizeHeaders() throws Exception {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -450,7 +455,7 @@ public class BridgeTest {
     }
 
     public void registerUldTransactionNotFromFederation() throws Exception{
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -472,7 +477,7 @@ public class BridgeTest {
 
     @Test
     public void receiveHeadersWithHugeDeclaredTransactionsSize() {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -518,7 +523,7 @@ public class BridgeTest {
 
     @Test
     public void registerUldTransactionWithNonParseableTx() {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -562,7 +567,7 @@ public class BridgeTest {
     }
 
     private void registerUldTransactionWithHugeDeclaredSize(UldTransaction tx) {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -637,7 +642,7 @@ public class BridgeTest {
 
     @Test
     public void registerUldTransactionWithNonParseableMerkleeProof1() throws Exception{
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -658,7 +663,7 @@ public class BridgeTest {
 
     @Test
     public void registerUldTransactionWithNonParseableMerkleeProof2() throws Exception{
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -679,7 +684,7 @@ public class BridgeTest {
 
     @Test
     public void registerUldTransactionWithHugeDeclaredSizeMerkleeProof() throws Exception{
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -725,7 +730,7 @@ public class BridgeTest {
     public void getFederationAddress() throws Exception {
         // Case with genesis federation
         Federation federation = bridgeConstants.getGenesisFederation();
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
@@ -738,7 +743,7 @@ public class BridgeTest {
 
     @Test
     public void getMinimumLockTxValue() throws Exception{
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
 
@@ -752,7 +757,7 @@ public class BridgeTest {
 
     @Test
     public void addSignatureNotFromFederation() throws Exception{
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -776,7 +781,7 @@ public class BridgeTest {
 
     @Test
     public void addSignatureWithNonParseablePublicKey() throws Exception{
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -795,7 +800,7 @@ public class BridgeTest {
 
     @Test
     public void addSignatureWithEmptySignatureArray() throws Exception{
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -814,7 +819,7 @@ public class BridgeTest {
 
     @Test
     public void addSignatureWithNonParseableSignature() throws Exception{
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -833,7 +838,7 @@ public class BridgeTest {
 
     @Test
     public void addSignatureWithNonParseableUscTx() throws Exception{
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
@@ -1356,12 +1361,14 @@ public class BridgeTest {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
         bridge.init(null, null, null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
+        OneOffWhiteListEntry mockedEntry10 = new OneOffWhiteListEntry(new UldECKey().toAddress(networkParameters), Coin.COIN);
+        OneOffWhiteListEntry mockedEntry20 = new OneOffWhiteListEntry(new UldECKey().toAddress(networkParameters), Coin.COIN);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
-        when(bridgeSupportMock.getLockWhitelistAddress(any(int.class))).then((InvocationOnMock invocation) ->
-                BigInteger.valueOf(invocation.getArgumentAt(0, int.class)).toString());
+        when(bridgeSupportMock.getLockWhitelistEntryByIndex(10)).then((InvocationOnMock invocation) -> mockedEntry10);
+        when(bridgeSupportMock.getLockWhitelistEntryByIndex(20)).then((InvocationOnMock invocation) -> mockedEntry20);
 
-        Assert.assertEquals("10", bridge.getLockWhitelistAddress(new Object[]{BigInteger.valueOf(10)}));
-        Assert.assertEquals("20", bridge.getLockWhitelistAddress(new Object[]{BigInteger.valueOf(20)}));
+        Assert.assertEquals(mockedEntry10.address().toBase58(), bridge.getLockWhitelistAddress(new Object[]{BigInteger.valueOf(10)}));
+        Assert.assertEquals(mockedEntry20.address().toBase58(), bridge.getLockWhitelistAddress(new Object[]{BigInteger.valueOf(20)}));
     }
 
     @Test
@@ -1371,9 +1378,9 @@ public class BridgeTest {
         bridge.init(mockedTransaction, null, null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
-        when(bridgeSupportMock.addLockWhitelistAddress(mockedTransaction, "i-am-an-address", BigInteger.valueOf(Coin.COIN.getValue()))).thenReturn(1234);
+        when(bridgeSupportMock.addOneOffLockWhitelistAddress(mockedTransaction, "i-am-an-address", BigInteger.valueOf(Coin.COIN.getValue()))).thenReturn(1234);
 
-        Assert.assertEquals(1234, bridge.addLockWhitelistAddress(new Object[]{ "i-am-an-address", BigInteger.valueOf(Coin.COIN.getValue())}).intValue());
+        Assert.assertEquals(1234, bridge.addOneOffLockWhitelistAddress(new Object[]{ "i-am-an-address", BigInteger.valueOf(Coin.COIN.getValue())}).intValue());
     }
 
     @Test
@@ -1439,7 +1446,7 @@ public class BridgeTest {
         // block 457 was the first federate call.
         byte[] data = Files.readAllBytes(Paths.get(this.getClass().getResource("/bridge/block457.bin").toURI()));
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         Transaction uscTx = Transaction.create(config, PrecompiledContracts.BRIDGE_ADDR_STR, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
