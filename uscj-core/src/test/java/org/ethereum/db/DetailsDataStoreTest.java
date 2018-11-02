@@ -22,12 +22,16 @@ package org.ethereum.db;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.UscAddress;
 import co.usc.db.ContractDetailsImpl;
+import co.usc.db.TrieStorePoolOnMemory;
+import co.usc.trie.TrieImpl;
+import co.usc.trie.TrieStore;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.vm.DataWord;
 import org.junit.Test;
 import org.spongycastle.util.encoders.Hex;
 
 import static org.ethereum.TestUtils.randomAddress;
+import static org.ethereum.util.ByteUtil.toHexString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -38,15 +42,23 @@ public class DetailsDataStoreTest {
     @Test
     public void test1(){
         DatabaseImpl db = new DatabaseImpl(new HashMapDB());
-        DetailsDataStore dds = new DetailsDataStore(config, db);
+        TrieStorePoolOnMemory trieStorePool = new TrieStorePoolOnMemory();
+        DetailsDataStore dds = new DetailsDataStore(db, trieStorePool, config.detailsInMemoryStorageLimit());
 
         UscAddress c_key = new UscAddress("0000000000000000000000000000000000001a2b");
         byte[] code = Hex.decode("60606060");
         byte[] key =  Hex.decode("11");
         byte[] value =  Hex.decode("aa");
 
-        ContractDetails contractDetails = new ContractDetailsImpl(config);
-        contractDetails.setAddress(randomAddress().getBytes());
+        byte[] contractAddress = randomAddress().getBytes();
+        String storeName = "details-storage/" + toHexString(contractAddress);
+        ContractDetails contractDetails = new ContractDetailsImpl(
+                contractAddress,
+                new TrieImpl(trieStorePool.getInstanceFor(storeName), true),
+                null,
+                trieStorePool,
+                config.detailsInMemoryStorageLimit()
+        );
         contractDetails.setCode(code);
         contractDetails.put(new DataWord(key), new DataWord(value));
 
@@ -70,16 +82,24 @@ public class DetailsDataStoreTest {
     public void test2(){
 
         DatabaseImpl db = new DatabaseImpl(new HashMapDB());
-        DetailsDataStore dds = new DetailsDataStore(config, db);
+        TrieStore.Pool trieStorePool = new TrieStorePoolOnMemory();
+        DetailsDataStore dds = new DetailsDataStore(db, trieStorePool, config.detailsInMemoryStorageLimit());
 
         UscAddress c_key = new UscAddress("0000000000000000000000000000000000001a2b");
         byte[] code = Hex.decode("60606060");
         byte[] key =  Hex.decode("11");
         byte[] value =  Hex.decode("aa");
 
-        ContractDetails contractDetails = new ContractDetailsImpl(config);
+        byte[] contractAddress = randomAddress().getBytes();
+        String storeName = "details-storage/" + toHexString(contractAddress);
+        ContractDetails contractDetails = new ContractDetailsImpl(
+                null,
+                new TrieImpl(trieStorePool.getInstanceFor(storeName), true),
+                null,
+                trieStorePool,
+                config.detailsInMemoryStorageLimit()
+        );
         contractDetails.setCode(code);
-        contractDetails.setAddress(randomAddress().getBytes());
         contractDetails.put(new DataWord(key), new DataWord(value));
 
         dds.update(c_key, contractDetails);
@@ -106,14 +126,23 @@ public class DetailsDataStoreTest {
     public void test3(){
 
         DatabaseImpl db = new DatabaseImpl(new HashMapDB());
-        DetailsDataStore dds = new DetailsDataStore(config, db);
+        TrieStore.Pool trieStorePool = new TrieStorePoolOnMemory();
+        DetailsDataStore dds = new DetailsDataStore(db, trieStorePool, config.detailsInMemoryStorageLimit());
 
         UscAddress c_key = new UscAddress("0000000000000000000000000000000000001a2b");
         byte[] code = Hex.decode("60606060");
         byte[] key =  Hex.decode("11");
         byte[] value =  Hex.decode("aa");
 
-        ContractDetails contractDetails = new ContractDetailsImpl(config);
+        byte[] contractAddress = randomAddress().getBytes();
+        String storeName = "details-storage/" + toHexString(contractAddress);
+        ContractDetails contractDetails = new ContractDetailsImpl(
+                contractAddress,
+                new TrieImpl(trieStorePool.getInstanceFor(storeName), true),
+                null,
+                trieStorePool,
+                config.detailsInMemoryStorageLimit()
+        );
         contractDetails.setCode(code);
         contractDetails.put(new DataWord(key), new DataWord(value));
 
@@ -144,7 +173,7 @@ public class DetailsDataStoreTest {
     public void test4() {
 
         DatabaseImpl db = new DatabaseImpl(new HashMapDB());
-        DetailsDataStore dds = new DetailsDataStore(config, db);
+        DetailsDataStore dds = new DetailsDataStore(db, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
 
         UscAddress c_key = new UscAddress("0000000000000000000000000000000000001a2b");
 

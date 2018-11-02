@@ -22,6 +22,7 @@ package org.ethereum.jsontestsuite.builder;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.UscAddress;
 import co.usc.db.RepositoryImpl;
+import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.trie.TrieStoreImpl;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Repository;
@@ -38,12 +39,14 @@ public class RepositoryBuilder {
     public static Repository build(Map<String, AccountTck> accounts){
         HashMap<UscAddress, AccountState> stateBatch = new HashMap<>();
         HashMap<UscAddress, ContractDetails> detailsBatch = new HashMap<>();
+        HashMapDB store = new HashMapDB();
+        TrieStorePoolOnMemory pool = new TrieStorePoolOnMemory(() -> store);
 
         for (String address : accounts.keySet()) {
             UscAddress addr = new UscAddress(address);
 
             AccountTck accountTCK = accounts.get(address);
-            AccountBuilder.StateWrap stateWrap = AccountBuilder.build(accountTCK);
+            AccountBuilder.StateWrap stateWrap = AccountBuilder.build(accountTCK, store);
 
             AccountState state = stateWrap.getAccountState();
             ContractDetails details = stateWrap.getContractDetails();
@@ -56,7 +59,8 @@ public class RepositoryBuilder {
             detailsBatch.put(addr, detailsCache);
         }
 
-        RepositoryImpl repositoryDummy = new RepositoryImpl(new TestSystemProperties(), new TrieStoreImpl(new HashMapDB()));
+        final TestSystemProperties testSystemProperties = new TestSystemProperties();
+        RepositoryImpl repositoryDummy = new RepositoryImpl(new TrieStoreImpl(store), pool, testSystemProperties.detailsInMemoryStorageLimit());
         Repository track = repositoryDummy.startTracking();
         track.updateBatch(stateBatch, detailsBatch);
         track.commit();

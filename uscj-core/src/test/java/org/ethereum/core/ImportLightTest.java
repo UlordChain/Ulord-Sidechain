@@ -26,6 +26,8 @@ import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.BlockExecutor;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.db.RepositoryImpl;
+import co.usc.db.TrieStorePoolOnMemory;
+import co.usc.trie.TrieStore;
 import co.usc.trie.TrieStoreImpl;
 import co.usc.validators.DummyBlockValidator;
 import org.ethereum.config.blockchain.GenesisConfig;
@@ -58,7 +60,8 @@ public class ImportLightTest {
         }));
         IndexedBlockStore blockStore = new IndexedBlockStore(new HashMap<>(), new HashMapDB(), null);
 
-        Repository repository = new RepositoryImpl(config, new TrieStoreImpl(new HashMapDB()));
+        TrieStore.Pool pool = new TrieStorePoolOnMemory();
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), pool, config.detailsInMemoryStorageLimit());
 
         CompositeEthereumListener listener = new TestCompositeEthereumListener();
 
