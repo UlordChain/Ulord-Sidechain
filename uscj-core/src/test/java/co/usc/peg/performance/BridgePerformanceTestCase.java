@@ -18,6 +18,7 @@
 
 package co.usc.peg.performance;
 
+import co.usc.peg.BridgeStorageConfiguration;
 import co.usc.ulordj.core.*;
 import co.usc.config.BridgeConstants;
 import co.usc.config.TestSystemProperties;
@@ -253,7 +254,8 @@ public abstract class BridgePerformanceTestCase {
 
         RepositoryImpl repository = new RepositoryImpl(config);
         Repository track = repository.startTracking();
-        BridgeStorageProvider storageProvider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, bridgeConstants);
+        BridgeStorageConfiguration bridgeStorageConfigurationAtThisHeight = BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(executionIndex));
+        BridgeStorageProvider storageProvider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, bridgeConstants,bridgeStorageConfigurationAtThisHeight);
 
         storageInitializer.initialize(storageProvider, track, executionIndex);
 

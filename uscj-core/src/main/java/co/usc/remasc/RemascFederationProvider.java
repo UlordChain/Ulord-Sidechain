@@ -20,8 +20,7 @@ package co.usc.remasc;
 import co.usc.config.BridgeConstants;
 import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
-import co.usc.peg.BridgeStorageProvider;
-import co.usc.peg.FederationSupport;
+import co.usc.peg.*;
 import co.usc.config.BridgeConstants;
 import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
@@ -46,7 +45,8 @@ public class RemascFederationProvider {
         BridgeStorageProvider bridgeStorageProvider = new BridgeStorageProvider(
                 repository,
                 PrecompiledContracts.BRIDGE_ADDR,
-                bridgeConstants
+                bridgeConstants,
+                BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(processingBlock.getNumber()))
         );
         this.federationSupport = new FederationSupport(
                 bridgeStorageProvider,

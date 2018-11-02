@@ -56,36 +56,48 @@ public class RepositoryImpl implements Repository {
 
     private static final Logger logger = LoggerFactory.getLogger("repository");
 
-    private final UscSystemProperties config;
     private TrieStore store;
     private Trie trie;
     private DetailsDataStore detailsDataStore;
     private boolean closed;
+    private TrieStore.Pool trieStorePool;
+    private int memoryStorageLimit;
 
-    public RepositoryImpl(UscSystemProperties config) {
-        this(config, null);
+    public RepositoryImpl(TrieStore store, TrieStore.Pool trieStorePool, int memoryStorageLimit) {
+        this(store, new HashMapDB(), trieStorePool, memoryStorageLimit);
     }
 
-    public RepositoryImpl(UscSystemProperties config, TrieStore store) {
-        this(config, store, new HashMapDB());
+    public RepositoryImpl(
+            TrieStore store,
+            KeyValueDataSource detailsDS,
+            TrieStore.Pool trieStorePool,
+            int memoryStorageLimit) {
+        this(store, new DetailsDataStore(new DatabaseImpl(detailsDS), trieStorePool, memoryStorageLimit),
+                trieStorePool, memoryStorageLimit);
     }
 
-    public RepositoryImpl(UscSystemProperties config, TrieStore store, KeyValueDataSource detailsDS) {
-        this(config, store, new DetailsDataStore(config, new DatabaseImpl(detailsDS)));
-    }
-
-    private RepositoryImpl(UscSystemProperties config, TrieStore store, DetailsDataStore detailsDataStore) {
-        this.config = config;
+    private RepositoryImpl(
+            TrieStore store,
+            DetailsDataStore detailsDataStore,
+            TrieStore.Pool trieStorePool,
+            int memoryStorageLimit) {
         this.store = store;
         this.trie = new TrieImpl(store, true);
         this.detailsDataStore = detailsDataStore;
+        this.trieStorePool = trieStorePool;
+        this.memoryStorageLimit = memoryStorageLimit;
     }
 
     @Override
     public synchronized AccountState createAccount(UscAddress addr) {
         AccountState accountState = new AccountState();
         updateAccountState(addr, accountState);
-        updateContractDetails(addr, new ContractDetailsImpl(config));
+        updateContractDetails(addr, new ContractDetailsImpl(
+                addr.getBytes(),
+                null,
+                null,
+                trieStorePool,
+                memoryStorageLimit));
         return accountState;
     }
 
@@ -270,7 +282,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public synchronized Repository startTracking() {
-        return new RepositoryTrack(config, this);
+        return new RepositoryTrack(this, trieStorePool, memoryStorageLimit);
     }
 
     @Override
@@ -341,7 +353,11 @@ public class RepositoryImpl implements Repository {
                 ContractDetailsCacheImpl contractDetailsCache = (ContractDetailsCacheImpl) contractDetails;
 
                 if (contractDetailsCache.getOriginalContractDetails() == null) {
-                    ContractDetails originalContractDetails = new ContractDetailsImpl(config);
+                    ContractDetails originalContractDetails = new ContractDetailsImpl(addr.getBytes(),
+                            null,
+                            null,
+                            trieStorePool,
+                            memoryStorageLimit);
                     originalContractDetails.setAddress(addr.getBytes());
                     contractDetailsCache.setOriginalContractDetails(originalContractDetails);
                     contractDetailsCache.commit();
@@ -394,7 +410,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public synchronized Repository getSnapshotTo(byte[] root) {
-        RepositoryImpl snapshotRepository = new RepositoryImpl(this.config, this.store, this.detailsDataStore);
+        RepositoryImpl snapshotRepository = new RepositoryImpl(this.store, this.detailsDataStore, this.trieStorePool, this.memoryStorageLimit);
         snapshotRepository.syncToRoot(root);
         return snapshotRepository;
     }

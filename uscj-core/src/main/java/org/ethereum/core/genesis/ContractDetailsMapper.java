@@ -21,6 +21,9 @@ package org.ethereum.core.genesis;
 
 import co.usc.config.UscSystemProperties;
 import co.usc.db.ContractDetailsImpl;
+import co.usc.trie.TrieImpl;
+import co.usc.trie.TrieStoreImpl;
+import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.DataWord;
 import org.spongycastle.util.encoders.Hex;
@@ -39,7 +42,13 @@ public class ContractDetailsMapper {
     public ContractDetails mapFromContract(Contract contract) {
         ContractDetails contractDetails;
 
-        contractDetails = new ContractDetailsImpl(config);
+        contractDetails = new ContractDetailsImpl(
+                null,
+                new TrieImpl(new TrieStoreImpl(new HashMapDB()), true),
+                null,
+                null,
+                config.detailsInMemoryStorageLimit()
+        );
 
         if (contract.getCode()!=null) {
             contractDetails.setCode(Hex.decode(contract.getCode()));

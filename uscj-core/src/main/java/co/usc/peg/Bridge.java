@@ -18,6 +18,8 @@
 
 package co.usc.peg;
 
+import co.usc.peg.whitelist.LockWhitelistEntry;
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.store.BlockStoreException;
 import co.usc.config.BridgeConstants;
@@ -27,8 +29,9 @@ import co.usc.panic.PanicProcessor;
 import co.usc.peg.utils.BridgeEventLogger;
 import co.usc.peg.utils.BridgeEventLoggerImpl;
 import co.usc.peg.utils.UldTransactionFormatUtils;
+import co.usc.peg.whitelist.LockWhitelistEntry;
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
 import com.google.common.annotations.VisibleForTesting;
-import org.apache.commons.lang3.tuple.Pair;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.core.Block;
@@ -150,8 +153,14 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     public static final CallTransaction.Function GET_LOCK_WHITELIST_SIZE = BridgeMethods.GET_LOCK_WHITELIST_SIZE.getFunction();
     // Returns the lock whitelist address stored at the specified index
     public static final CallTransaction.Function GET_LOCK_WHITELIST_ADDRESS = BridgeMethods.GET_LOCK_WHITELIST_ADDRESS.getFunction();
+    // Returns the lock whitelist entry stored at the specified address
+    public static final CallTransaction.Function GET_LOCK_WHITELIST_ENTRY_BY_ADDRESS = BridgeMethods.GET_LOCK_WHITELIST_ENTRY_BY_ADDRESS.getFunction();
     // Adds the given address to the lock whitelist
     public static final CallTransaction.Function ADD_LOCK_WHITELIST_ADDRESS = BridgeMethods.ADD_LOCK_WHITELIST_ADDRESS.getFunction();
+    // Adds the given address to the lock whitelist in "one-off" mode
+    public static final CallTransaction.Function ADD_ONE_OFF_LOCK_WHITELIST_ADDRESS = BridgeMethods.ADD_ONE_OFF_LOCK_WHITELIST_ADDRESS.getFunction();
+    // Adds the given address to the lock whitelist in "unlimited" mode
+    public static final CallTransaction.Function ADD_UNLIMITED_LOCK_WHITELIST_ADDRESS = BridgeMethods.ADD_UNLIMITED_LOCK_WHITELIST_ADDRESS.getFunction();
     // Adds the given address to the lock whitelist
     public static final CallTransaction.Function REMOVE_LOCK_WHITELIST_ADDRESS = BridgeMethods.REMOVE_LOCK_WHITELIST_ADDRESS.getFunction();
 
@@ -161,6 +170,10 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     public static final CallTransaction.Function GET_FEE_PER_KB = BridgeMethods.GET_FEE_PER_KB.getFunction();
     // Adds the given key to the current pending federation
     public static final CallTransaction.Function VOTE_FEE_PER_KB = BridgeMethods.VOTE_FEE_PER_KB.getFunction();
+
+    public static final int LOCK_WHITELIST_UNLIMITED_MODE_CODE = 0;
+    public static final int LOCK_WHITELIST_ENTRY_NOT_FOUND_CODE = -1;
+    public static final int LOCK_WHITELIST_INVALID_ADDRESS_FORMAT_ERROR_CODE = -2;
 
     // Log topics used by Bridge Contract
     public static final DataWord RELEASE_ULD_TOPIC = new DataWord("release_uld_topic".getBytes(StandardCharsets.UTF_8));
@@ -239,6 +252,12 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
                 return null;
             }
         }
+
+        if (!bridgeParsedData.bridgeMethod.isEnabled(this.blockchainConfig)) {
+            logger.warn("'{}' is not enabled to run",bridgeParsedData.bridgeMethod.name());
+            return null;
+        }
+
         return bridgeParsedData;
     }
 
@@ -261,8 +280,14 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     public byte[] execute(byte[] data) {
         try
         {
+            // Preliminary validation: the transaction on which we execute cannot be null
+            if (uscTx == null) {
+                throw new RuntimeException("Usc Transaction is null");
+            }
+
             BridgeParsedData bridgeParsedData = parseData(data);
 
+            // Function parsing from data returned null => invalid function selected, halt!
             if (bridgeParsedData == null) {
                 return null;
             }
@@ -743,19 +768,43 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         logger.trace("getLockWhitelistAddress");
 
         int index = ((BigInteger) args[0]).intValue();
-        String address = bridgeSupport.getLockWhitelistAddress(index);
+        LockWhitelistEntry entry = bridgeSupport.getLockWhitelistEntryByIndex(index);
 
-        if (address == null) {
+        if (entry == null) {
             // Empty string is returned when address is not found
             return "";
         }
 
-        return address;
+        return entry.address().toBase58();
     }
 
-    public Integer addLockWhitelistAddress(Object[] args)
+    public long getLockWhitelistEntryByAddress(Object[] args)
     {
-        logger.trace("addLockWhitelistAddress");
+        logger.trace("getLockWhitelistEntryByAddress");
+
+        String addressBase58;
+        try {
+            addressBase58 = (String) args[0];
+        } catch (Exception e) {
+            logger.warn("Exception in getLockWhitelistEntryByAddress", e);
+            return LOCK_WHITELIST_INVALID_ADDRESS_FORMAT_ERROR_CODE;
+        }
+
+        LockWhitelistEntry entry = bridgeSupport.getLockWhitelistEntryByAddress(addressBase58);
+
+        if (entry == null) {
+            // Empty string is returned when address is not found
+            return LOCK_WHITELIST_ENTRY_NOT_FOUND_CODE;
+        }
+
+        return entry.getClass() == OneOffWhiteListEntry.class ?
+                ((OneOffWhiteListEntry)entry).maxTransferValue().getValue() :
+                LOCK_WHITELIST_UNLIMITED_MODE_CODE;
+    }
+
+    public Integer addOneOffLockWhitelistAddress(Object[] args)
+    {
+        logger.trace("addOneOffLockWhitelistAddress");
 
         String addressBase58;
         BigInteger maxTransferValue;
@@ -763,11 +812,26 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
             addressBase58 = (String) args[0];
             maxTransferValue = (BigInteger) args[1];
         } catch (Exception e) {
-            logger.warn("Exception in addLockWhitelistAddress: {}", e.getMessage());
+            logger.warn("Exception in addOneOffLockWhitelistAddress", e);
             return 0;
         }
 
-        return bridgeSupport.addLockWhitelistAddress(uscTx, addressBase58, maxTransferValue);
+        return bridgeSupport.addOneOffLockWhitelistAddress(uscTx, addressBase58, maxTransferValue);
+    }
+
+    public Integer addUnlimitedLockWhitelistAddress(Object[] args)
+    {
+        logger.trace("addUnlimitedLockWhitelistAddress");
+
+        String addressBase58;
+        try {
+            addressBase58 = (String) args[0];
+        } catch (Exception e) {
+            logger.warn("Exception in addUnlimitedLockWhitelistAddress", e);
+            return 0;
+        }
+
+        return bridgeSupport.addUnlimitedLockWhitelistAddress(uscTx, addressBase58);
     }
 
     public Integer removeLockWhitelistAddress(Object[] args)
@@ -816,11 +880,6 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
 
     public static BridgeMethods.BridgeMethodExecutor activeAndRetiringFederationOnly(BridgeMethods.BridgeMethodExecutor decoratee, String funcName) {
         return (self, args) -> {
-            if(self.uscTx == null){
-                String errorMessage = String.format("Usc Transaction is null for function '%s'",funcName);
-                logger.warn(errorMessage);
-                throw new RuntimeException(errorMessage);
-            }
             Federation retiringFederation = self.bridgeSupport.getRetiringFederation();
 
             if (!BridgeUtils.isFromFederateMember(self.uscTx, self.bridgeSupport.getActiveFederation())
@@ -833,4 +892,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         };
     }
 
+    private boolean isLocalCall() {
+        return uscTx.isLocalCallTransaction();
+    }
 }

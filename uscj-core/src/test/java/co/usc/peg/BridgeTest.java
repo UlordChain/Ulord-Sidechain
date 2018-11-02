@@ -18,6 +18,7 @@
 
 package co.usc.peg;
 
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.script.ScriptBuilder;
@@ -109,7 +110,8 @@ public class BridgeTest {
         Repository repository = new RepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageConfiguration bridgeStorageConfigurationAtThisHeight = BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(0));
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtThisHeight);
 
         provider0.getReleaseTransactionSet().add(tx1, 1L);
         provider0.save();
@@ -140,7 +142,8 @@ public class BridgeTest {
         Repository repository = new RepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageConfiguration bridgeStorageConfigurationAtThisHeight = BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(0));
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtThisHeight);
 
         provider0.getReleaseTransactionSet().add(tx1, 1L);
         provider0.getReleaseTransactionSet().add(tx2, 2L);
@@ -162,7 +165,7 @@ public class BridgeTest {
 
         track.commit();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtThisHeight);
 
         Assert.assertEquals(3, provider.getReleaseTransactionSet().getEntries().size());
         Assert.assertEquals(0, provider.getUscTxsWaitingForSignatures().size());
@@ -177,7 +180,8 @@ public class BridgeTest {
         Repository repository = new RepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageConfiguration bridgeStorageConfigurationAtThisHeight = BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(0));
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtThisHeight);
 
         provider0.getReleaseTransactionSet().add(tx1, 1L);
         provider0.getReleaseTransactionSet().add(tx2, 2L);
@@ -205,7 +209,7 @@ public class BridgeTest {
 
         track.commit();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtThisHeight);
 
         Assert.assertEquals(2, provider.getReleaseTransactionSet().getEntries().size());
         Assert.assertEquals(1, provider.getUscTxsWaitingForSignatures().size());
@@ -1356,12 +1360,14 @@ public class BridgeTest {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
         bridge.init(null, null, null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
+        OneOffWhiteListEntry mockedEntry10 = new OneOffWhiteListEntry(new UldECKey().toAddress(networkParameters), Coin.COIN);
+        OneOffWhiteListEntry mockedEntry20 = new OneOffWhiteListEntry(new UldECKey().toAddress(networkParameters), Coin.COIN);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
-        when(bridgeSupportMock.getLockWhitelistAddress(any(int.class))).then((InvocationOnMock invocation) ->
-                BigInteger.valueOf(invocation.getArgumentAt(0, int.class)).toString());
+        when(bridgeSupportMock.getLockWhitelistEntryByIndex(10)).then((InvocationOnMock invocation) -> mockedEntry10);
+        when(bridgeSupportMock.getLockWhitelistEntryByIndex(20)).then((InvocationOnMock invocation) -> mockedEntry20);
 
-        Assert.assertEquals("10", bridge.getLockWhitelistAddress(new Object[]{BigInteger.valueOf(10)}));
-        Assert.assertEquals("20", bridge.getLockWhitelistAddress(new Object[]{BigInteger.valueOf(20)}));
+        Assert.assertEquals(mockedEntry10.address().toBase58(), bridge.getLockWhitelistAddress(new Object[]{BigInteger.valueOf(10)}));
+        Assert.assertEquals(mockedEntry20.address().toBase58(), bridge.getLockWhitelistAddress(new Object[]{BigInteger.valueOf(20)}));
     }
 
     @Test
@@ -1371,9 +1377,9 @@ public class BridgeTest {
         bridge.init(mockedTransaction, null, null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
-        when(bridgeSupportMock.addLockWhitelistAddress(mockedTransaction, "i-am-an-address", BigInteger.valueOf(Coin.COIN.getValue()))).thenReturn(1234);
+        when(bridgeSupportMock.addOneOffLockWhitelistAddress(mockedTransaction, "i-am-an-address", BigInteger.valueOf(Coin.COIN.getValue()))).thenReturn(1234);
 
-        Assert.assertEquals(1234, bridge.addLockWhitelistAddress(new Object[]{ "i-am-an-address", BigInteger.valueOf(Coin.COIN.getValue())}).intValue());
+        Assert.assertEquals(1234, bridge.addOneOffLockWhitelistAddress(new Object[]{ "i-am-an-address", BigInteger.valueOf(Coin.COIN.getValue())}).intValue());
     }
 
     @Test

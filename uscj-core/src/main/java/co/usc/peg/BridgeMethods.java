@@ -46,7 +46,28 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             25000L,
-            (BridgeMethodExecutorTyped) Bridge::addLockWhitelistAddress
+            (BridgeMethodExecutorTyped) Bridge::addOneOffLockWhitelistAddress,
+            blockchainConfig -> !blockchainConfig.isUscIP87()
+    ),
+    ADD_ONE_OFF_LOCK_WHITELIST_ADDRESS(
+            CallTransaction.Function.fromSignature(
+                    "addOneOffLockWhitelistAddress",
+                    new String[]{"string", "int256"},
+                    new String[]{"int256"}
+            ),
+            25000L, // using same gas estimation as ADD_LOCK_WHITELIST_ADDRESS
+            (BridgeMethodExecutorTyped) Bridge::addOneOffLockWhitelistAddress,
+            blockChainConfig -> blockChainConfig.isUscIP87()
+    ),
+    ADD_UNLIMITED_LOCK_WHITELIST_ADDRESS(
+            CallTransaction.Function.fromSignature(
+                    "addUnlimitedLockWhitelistAddress",
+                    new String[]{"string"},
+                    new String[]{"int256"}
+            ),
+            25000L, // using same gas estimation as ADD_LOCK_WHITELIST_ADDRESS
+            (BridgeMethodExecutorTyped) Bridge::addUnlimitedLockWhitelistAddress,
+            blockChainConfig -> blockChainConfig.isUscIP87()
     ),
     ADD_SIGNATURE(
             CallTransaction.Function.fromSignature(
@@ -195,6 +216,16 @@ public enum BridgeMethods {
             ),
             16000L,
             (BridgeMethodExecutorTyped) Bridge::getLockWhitelistAddress
+    ),
+    GET_LOCK_WHITELIST_ENTRY_BY_ADDRESS(
+            CallTransaction.Function.fromSignature(
+                    "getLockWhitelistEntryByAddress",
+                    new String[]{"string"},
+                    new String[]{"int256"}
+            ),
+            16000L,
+            (BridgeMethodExecutorTyped) Bridge::getLockWhitelistEntryByAddress,
+            blockchainConfig -> blockchainConfig.isUscIP87()
     ),
     GET_LOCK_WHITELIST_SIZE(
             CallTransaction.Function.fromSignature(

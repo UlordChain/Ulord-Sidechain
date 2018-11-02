@@ -41,6 +41,8 @@ public interface BlockchainConfig {
 
     boolean areBridgeTxsFree();
 
+    boolean isUscIP87();
+
     boolean isUscIP89();
 
     boolean isUscIP90();
