@@ -19,6 +19,7 @@
 package co.usc.db;
 
 import co.usc.config.TestSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.UscAddress;
@@ -30,8 +31,11 @@ import org.ethereum.vm.DataWord;
  * Created by ajlopez on 08/04/2017.
  */
 public class RepositoryImplForTesting extends RepositoryImpl {
+
+    private static UscSystemProperties config = new TestSystemProperties();
+
     public RepositoryImplForTesting() {
-        super(new TestSystemProperties());
+        super(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
     }
 
     @Override
