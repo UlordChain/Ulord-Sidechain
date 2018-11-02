@@ -23,6 +23,7 @@ import co.usc.config.TestSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.peg.simples.SimpleBlock;
 import co.usc.remasc.RemascTransaction;
+import co.usc.remasc.Sibling;
 import co.usc.test.builders.BlockBuilder;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.validators.BlockParentDependantValidationRule;
@@ -44,10 +45,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by ajlopez on 04/08/2016.
@@ -981,6 +979,11 @@ public class BlockValidatorTest {
 
         @Override
         public List<BlockInformation> getBlocksInformationByNumber(long blockNumber) { return null; }
+
+        @Override
+        public Map<Long, List<Sibling>> getSiblingsFromBlockByHash(Keccak256 hash) {
+            return null;
+        }
     }
 }
 

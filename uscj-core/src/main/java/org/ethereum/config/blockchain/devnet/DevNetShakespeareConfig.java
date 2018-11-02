@@ -5,6 +5,11 @@ import org.ethereum.core.BlockHeader;
 
 public class DevNetShakespeareConfig extends DevNetGenesisConfig {
     @Override
+    public boolean isUscIP85() {
+        return true;
+    }
+
+    @Override
     public boolean isUscIP89() {
         return true;
     }
