@@ -103,7 +103,7 @@ public class MnrModuleImpl implements MnrModule, Runnable {
     public SubmittedBlockInfo submitUlordBlockPartialMerkle(String blockHashHex, String blockHeaderHex, String coinbaseHex, String merkleHashesHex, String blockTxnCountHex) {
         submittedQueue.add(blockHashHex + ":" + blockHeaderHex + ":" + coinbaseHex + ":" + merkleHashesHex + ":" + blockTxnCountHex);
 
-        System.out.println("Queue Size: " + submittedQueue.size());
+        logger.debug("Queue Size: " + submittedQueue.size());
         if(processUlordBlockPartialMerkleThread == null) {
             processUlordBlockPartialMerkleThread = new Thread(this);
             processUlordBlockPartialMerkleThread.start();
@@ -181,10 +181,9 @@ public class MnrModuleImpl implements MnrModule, Runnable {
 
                 SubmitBlockResult result = minerServer.submitUlordBlockPartialMerkle(blockHashForMergedMining, ulordBlockWithHeaderOnly, coinbase, merkleHashes, txnCount);
 
-                System.out.println("result" + result.getMessage() + " " + result.getStatus() + " " + result.getBlockInfo().getBlockIncludedHeight());
+                logger.debug("Queue result:" + result.getMessage() + " " + result.getStatus() + " " + result.getBlockInfo().getBlockIncludedHeight());
             } catch (Exception e) {
                 logger.warn("Exception in processUlordBlockPartialMerkle:" + e);
-                System.out.println("Exception in processUlordBlockPartialMerkle:" + e);
             }
 
         }
