@@ -31,7 +31,7 @@ public class SubmitBlockResult {
 
     private final SubmittedBlockInfo blockInfo;
 
-    SubmitBlockResult(String status, String message) {
+    public SubmitBlockResult(String status, String message) {
         this.status = status;
         this.message = message;
         this.blockInfo = null;
