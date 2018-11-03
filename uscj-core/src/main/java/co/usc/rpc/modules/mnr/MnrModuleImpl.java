@@ -154,7 +154,6 @@ public class MnrModuleImpl implements MnrModule, Runnable {
                     }
                     continue;
                 }
-                Thread.sleep(500);
                 String data = submittedQueue.poll();
 
                 if (data == null) continue;
