@@ -37,7 +37,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             13000L,
-            (BridgeMethodExecutorTyped) Bridge::addFederatorPublicKey
+            (BridgeMethodExecutorTyped) Bridge::addFederatorPublicKey,
+            false
     ),
     ADD_LOCK_WHITELIST_ADDRESS(
             CallTransaction.Function.fromSignature(
@@ -47,7 +48,8 @@ public enum BridgeMethods {
             ),
             25000L,
             (BridgeMethodExecutorTyped) Bridge::addOneOffLockWhitelistAddress,
-            blockchainConfig -> !blockchainConfig.isUscIP87()
+            blockchainConfig -> !blockchainConfig.isUscIP87(),
+            false
     ),
     ADD_ONE_OFF_LOCK_WHITELIST_ADDRESS(
             CallTransaction.Function.fromSignature(
@@ -57,7 +59,8 @@ public enum BridgeMethods {
             ),
             25000L, // using same gas estimation as ADD_LOCK_WHITELIST_ADDRESS
             (BridgeMethodExecutorTyped) Bridge::addOneOffLockWhitelistAddress,
-            blockChainConfig -> blockChainConfig.isUscIP87()
+            blockChainConfig -> blockChainConfig.isUscIP87(),
+            false
     ),
     ADD_UNLIMITED_LOCK_WHITELIST_ADDRESS(
             CallTransaction.Function.fromSignature(
@@ -67,7 +70,8 @@ public enum BridgeMethods {
             ),
             25000L, // using same gas estimation as ADD_LOCK_WHITELIST_ADDRESS
             (BridgeMethodExecutorTyped) Bridge::addUnlimitedLockWhitelistAddress,
-            blockChainConfig -> blockChainConfig.isUscIP87()
+            blockChainConfig -> blockChainConfig.isUscIP87(),
+            false
     ),
     ADD_SIGNATURE(
             CallTransaction.Function.fromSignature(
@@ -76,7 +80,8 @@ public enum BridgeMethods {
                     new String[]{}
             ),
             70000L,
-            Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::addSignature, "addSignature")
+            Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::addSignature, "addSignature"),
+            false
     ),
     COMMIT_FEDERATION(
             CallTransaction.Function.fromSignature(
@@ -85,7 +90,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             38000L,
-            (BridgeMethodExecutorTyped) Bridge::commitFederation
+            (BridgeMethodExecutorTyped) Bridge::commitFederation,
+            false
     ),
     CREATE_FEDERATION(
             CallTransaction.Function.fromSignature(
@@ -94,7 +100,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             11000L,
-            (BridgeMethodExecutorTyped) Bridge::createFederation
+            (BridgeMethodExecutorTyped) Bridge::createFederation,
+            false
     ),
     GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT(
             CallTransaction.Function.fromSignature(
@@ -103,7 +110,8 @@ public enum BridgeMethods {
                     new String[]{"int"}
             ),
             19000L,
-            (BridgeMethodExecutorTyped) Bridge::getUldBlockchainBestChainHeight
+            (BridgeMethodExecutorTyped) Bridge::getUldBlockchainBestChainHeight,
+            true
     ),
     GET_ULD_BLOCKCHAIN_INITIAL_BLOCK_HEIGHT(
             CallTransaction.Function.fromSignature(
@@ -113,7 +121,8 @@ public enum BridgeMethods {
             ),
             19000L,
             (BridgeMethodExecutorTyped) Bridge::getUldBlockchainInitialBlockHeight,
-            (blockchainConfig -> blockchainConfig.isUscIP89())
+            (blockchainConfig -> blockchainConfig.isUscIP89()),
+            true
 
     ),
     GET_ULD_BLOCKCHAIN_BLOCK_LOCATOR(
@@ -124,7 +133,9 @@ public enum BridgeMethods {
             ),
             76000L,
             (BridgeMethodExecutorTyped) Bridge::getUldBlockchainBlockLocator,
-            blockchainConfig -> !blockchainConfig.isUscIP89()
+            blockchainConfig -> !blockchainConfig.isUscIP89(),
+            true
+
     ),
     GET_ULD_BLOCKCHAIN_BLOCK_HASH_AT_DEPTH(
             CallTransaction.Function.fromSignature(
@@ -134,7 +145,8 @@ public enum BridgeMethods {
             ),
             76000L,
             (BridgeMethodExecutorTyped) Bridge::getUldBlockchainBlockHashAtDepth,
-            (blockchainConfig -> blockchainConfig.isUscIP89())
+            (blockchainConfig -> blockchainConfig.isUscIP89()),
+            true
     ),
     GET_ULD_TX_HASH_PROCESSED_HEIGHT(
             CallTransaction.Function.fromSignature(
@@ -143,7 +155,8 @@ public enum BridgeMethods {
                     new String[]{"int64"}
             ),
             22000L,
-            (BridgeMethodExecutorTyped) Bridge::getUldTxHashProcessedHeight
+            (BridgeMethodExecutorTyped) Bridge::getUldTxHashProcessedHeight,
+            true
     ),
     GET_FEDERATION_ADDRESS(
             CallTransaction.Function.fromSignature(
@@ -152,7 +165,8 @@ public enum BridgeMethods {
                     new String[]{"string"}
             ),
             11000L,
-            (BridgeMethodExecutorTyped) Bridge::getFederationAddress
+            (BridgeMethodExecutorTyped) Bridge::getFederationAddress,
+            true
     ),
     GET_FEDERATION_CREATION_BLOCK_NUMBER(
             CallTransaction.Function.fromSignature(
@@ -161,7 +175,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             10000L,
-            (BridgeMethodExecutorTyped) Bridge::getFederationCreationBlockNumber
+            (BridgeMethodExecutorTyped) Bridge::getFederationCreationBlockNumber,
+            true
     ),
     GET_FEDERATION_CREATION_TIME(
             CallTransaction.Function.fromSignature(
@@ -170,7 +185,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             10000L,
-            (BridgeMethodExecutorTyped) Bridge::getFederationCreationTime
+            (BridgeMethodExecutorTyped) Bridge::getFederationCreationTime,
+            true
     ),
     GET_FEDERATION_SIZE(
             CallTransaction.Function.fromSignature(
@@ -179,7 +195,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             10000L,
-            (BridgeMethodExecutorTyped) Bridge::getFederationSize
+            (BridgeMethodExecutorTyped) Bridge::getFederationSize,
+            true
     ),
     GET_FEDERATION_THRESHOLD(
             CallTransaction.Function.fromSignature(
@@ -188,7 +205,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             11000L,
-            (BridgeMethodExecutorTyped) Bridge::getFederationThreshold
+            (BridgeMethodExecutorTyped) Bridge::getFederationThreshold,
+            true
     ),
     GET_FEDERATOR_PUBLIC_KEY(
             CallTransaction.Function.fromSignature(
@@ -197,7 +215,8 @@ public enum BridgeMethods {
                     new String[]{"bytes"}
             ),
             10000L,
-            (BridgeMethodExecutorTyped) Bridge::getFederatorPublicKey
+            (BridgeMethodExecutorTyped) Bridge::getFederatorPublicKey,
+            true
     ),
     GET_FEE_PER_KB(
             CallTransaction.Function.fromSignature(
@@ -206,7 +225,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             2000L,
-            (BridgeMethodExecutorTyped) Bridge::getFeePerKb
+            (BridgeMethodExecutorTyped) Bridge::getFeePerKb,
+            true
     ),
     GET_LOCK_WHITELIST_ADDRESS(
             CallTransaction.Function.fromSignature(
@@ -215,7 +235,8 @@ public enum BridgeMethods {
                     new String[]{"string"}
             ),
             16000L,
-            (BridgeMethodExecutorTyped) Bridge::getLockWhitelistAddress
+            (BridgeMethodExecutorTyped) Bridge::getLockWhitelistAddress,
+            true
     ),
     GET_LOCK_WHITELIST_ENTRY_BY_ADDRESS(
             CallTransaction.Function.fromSignature(
@@ -225,7 +246,8 @@ public enum BridgeMethods {
             ),
             16000L,
             (BridgeMethodExecutorTyped) Bridge::getLockWhitelistEntryByAddress,
-            blockchainConfig -> blockchainConfig.isUscIP87()
+            blockchainConfig -> blockchainConfig.isUscIP87(),
+            true
     ),
     GET_LOCK_WHITELIST_SIZE(
             CallTransaction.Function.fromSignature(
@@ -234,7 +256,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             16000L,
-            (BridgeMethodExecutorTyped) Bridge::getLockWhitelistSize
+            (BridgeMethodExecutorTyped) Bridge::getLockWhitelistSize,
+            true
     ),
     GET_MINIMUM_LOCK_TX_VALUE(
             CallTransaction.Function.fromSignature(
@@ -243,7 +266,8 @@ public enum BridgeMethods {
                     new String[]{"int"}
             ),
             2000L,
-            (BridgeMethodExecutorTyped) Bridge::getMinimumLockTxValue
+            (BridgeMethodExecutorTyped) Bridge::getMinimumLockTxValue,
+            true
     ),
     GET_PENDING_FEDERATION_HASH(
             CallTransaction.Function.fromSignature(
@@ -252,7 +276,8 @@ public enum BridgeMethods {
                     new String[]{"bytes"}
             ),
             3000L,
-            (BridgeMethodExecutorTyped) Bridge::getPendingFederationHash
+            (BridgeMethodExecutorTyped) Bridge::getPendingFederationHash,
+            true
     ),
     GET_PENDING_FEDERATION_SIZE(
             CallTransaction.Function.fromSignature(
@@ -261,7 +286,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             3000L,
-            (BridgeMethodExecutorTyped) Bridge::getPendingFederationSize
+            (BridgeMethodExecutorTyped) Bridge::getPendingFederationSize,
+            true
     ),
     GET_PENDING_FEDERATOR_PUBLIC_KEY(
             CallTransaction.Function.fromSignature(
@@ -270,7 +296,8 @@ public enum BridgeMethods {
                     new String[]{"bytes"}
             ),
             3000L,
-            (BridgeMethodExecutorTyped) Bridge::getPendingFederatorPublicKey
+            (BridgeMethodExecutorTyped) Bridge::getPendingFederatorPublicKey,
+            true
     ),
     GET_RETIRING_FEDERATION_ADDRESS(
             CallTransaction.Function.fromSignature(
@@ -279,7 +306,8 @@ public enum BridgeMethods {
                     new String[]{"string"}
             ),
             3000L,
-            (BridgeMethodExecutorTyped) Bridge::getRetiringFederationAddress
+            (BridgeMethodExecutorTyped) Bridge::getRetiringFederationAddress,
+            true
     ),
     GET_RETIRING_FEDERATION_CREATION_BLOCK_NUMBER(
             CallTransaction.Function.fromSignature(
@@ -288,7 +316,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             3000L,
-            (BridgeMethodExecutorTyped) Bridge::getRetiringFederationCreationBlockNumber
+            (BridgeMethodExecutorTyped) Bridge::getRetiringFederationCreationBlockNumber,
+            true
     ),
     GET_RETIRING_FEDERATION_CREATION_TIME(
             CallTransaction.Function.fromSignature(
@@ -297,7 +326,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             3000L,
-            (BridgeMethodExecutorTyped) Bridge::getRetiringFederationCreationTime
+            (BridgeMethodExecutorTyped) Bridge::getRetiringFederationCreationTime,
+            true
     ),
     GET_RETIRING_FEDERATION_SIZE(
             CallTransaction.Function.fromSignature(
@@ -306,7 +336,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             3000L,
-            (BridgeMethodExecutorTyped) Bridge::getRetiringFederationSize
+            (BridgeMethodExecutorTyped) Bridge::getRetiringFederationSize,
+            true
     ),
     GET_RETIRING_FEDERATION_THRESHOLD(
             CallTransaction.Function.fromSignature(
@@ -315,7 +346,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             3000L,
-            (BridgeMethodExecutorTyped) Bridge::getRetiringFederationThreshold
+            (BridgeMethodExecutorTyped) Bridge::getRetiringFederationThreshold,
+            true
     ),
     GET_RETIRING_FEDERATOR_PUBLIC_KEY(
             CallTransaction.Function.fromSignature(
@@ -324,7 +356,8 @@ public enum BridgeMethods {
                     new String[]{"bytes"}
             ),
             3000L,
-            (BridgeMethodExecutorTyped) Bridge::getRetiringFederatorPublicKey
+            (BridgeMethodExecutorTyped) Bridge::getRetiringFederatorPublicKey,
+            true
     ),
     GET_STATE_FOR_ULD_RELEASE_CLIENT(
             CallTransaction.Function.fromSignature(
@@ -333,7 +366,8 @@ public enum BridgeMethods {
                     new String[]{"bytes"}
             ),
             4000L,
-            (BridgeMethodExecutorTyped) Bridge::getStateForUldReleaseClient
+            (BridgeMethodExecutorTyped) Bridge::getStateForUldReleaseClient,
+            true
     ),
     GET_STATE_FOR_DEBUGGING(
             CallTransaction.Function.fromSignature(
@@ -342,7 +376,8 @@ public enum BridgeMethods {
                     new String[]{"bytes"}
             ),
             3_000_000L,
-            (BridgeMethodExecutorTyped) Bridge::getStateForDebugging
+            (BridgeMethodExecutorTyped) Bridge::getStateForDebugging,
+            true
     ),
     IS_ULD_TX_HASH_ALREADY_PROCESSED(
             CallTransaction.Function.fromSignature(
@@ -351,7 +386,8 @@ public enum BridgeMethods {
                     new String[]{"bool"}
             ),
             23000L,
-            (BridgeMethodExecutorTyped) Bridge::isUldTxHashAlreadyProcessed
+            (BridgeMethodExecutorTyped) Bridge::isUldTxHashAlreadyProcessed,
+            true
     ),
     RECEIVE_HEADERS(
             CallTransaction.Function.fromSignature(
@@ -360,7 +396,8 @@ public enum BridgeMethods {
                     new String[]{}
             ),
             22000L,
-            Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::receiveHeaders, "receiveHeaders")
+            Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::receiveHeaders, "receiveHeaders"),
+            false
     ),
     REGISTER_ULD_TRANSACTION(
             CallTransaction.Function.fromSignature(
@@ -369,7 +406,8 @@ public enum BridgeMethods {
                     new String[]{}
             ),
             22000L,
-            Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::registerUldTransaction, "registerUldTransaction")
+            Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::registerUldTransaction, "registerUldTransaction"),
+            false
     ),
     RELEASE_ULD(
             CallTransaction.Function.fromSignature(
@@ -378,7 +416,8 @@ public enum BridgeMethods {
                     new String[]{}
             ),
             23000L,
-            (BridgeMethodExecutorVoid) Bridge::releaseUld
+            (BridgeMethodExecutorVoid) Bridge::releaseUld,
+            false
     ),
     REMOVE_LOCK_WHITELIST_ADDRESS(
             CallTransaction.Function.fromSignature(
@@ -387,7 +426,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             24000L,
-            (BridgeMethodExecutorTyped) Bridge::removeLockWhitelistAddress
+            (BridgeMethodExecutorTyped) Bridge::removeLockWhitelistAddress,
+            false
     ),
     ROLLBACK_FEDERATION(
             CallTransaction.Function.fromSignature(
@@ -396,7 +436,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             12000L,
-            (BridgeMethodExecutorTyped) Bridge::rollbackFederation
+            (BridgeMethodExecutorTyped) Bridge::rollbackFederation,
+            false
     ),
     SET_LOCK_WHITELIST_DISABLE_BLOCK_DELAY(
             CallTransaction.Function.fromSignature(
@@ -405,7 +446,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             24000L,
-            (BridgeMethodExecutorTyped) Bridge::setLockWhitelistDisableBlockDelay
+            (BridgeMethodExecutorTyped) Bridge::setLockWhitelistDisableBlockDelay,
+            false
     ),
     UPDATE_COLLECTIONS(
             CallTransaction.Function.fromSignature(
@@ -414,7 +456,8 @@ public enum BridgeMethods {
                     new String[]{}
             ),
             48000L,
-            Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::updateCollections, "updateCollections")
+            Bridge.activeAndRetiringFederationOnly((BridgeMethodExecutorVoid) Bridge::updateCollections, "updateCollections"),
+            false
     ),
     VOTE_FEE_PER_KB(
             CallTransaction.Function.fromSignature(
@@ -423,7 +466,8 @@ public enum BridgeMethods {
                     new String[]{"int256"}
             ),
             10000L,
-            (BridgeMethodExecutorTyped) Bridge::voteFeePerKbChange
+            (BridgeMethodExecutorTyped) Bridge::voteFeePerKbChange,
+            false
     );
 
     private static final Map<ByteArrayWrapper, BridgeMethods> SIGNATURES = Stream.of(BridgeMethods.values())
@@ -433,18 +477,20 @@ public enum BridgeMethods {
                         ));
     private final CallTransaction.Function function;
     private final long cost;
-    private final Function<BlockchainConfig, Boolean> _isEnabled;
+    private final Function<BlockchainConfig, Boolean> isEnabledFunction;
     private final BridgeMethodExecutor executor;
+    private final boolean onlyAllowsLocalCalls;
 
-    BridgeMethods(CallTransaction.Function function, long cost, BridgeMethodExecutor executor) {
-        this(function, cost, executor, (blockchainConfig) -> true);
+    BridgeMethods(CallTransaction.Function function, long cost, BridgeMethodExecutor executor, boolean onlyAllowsLocalCalls) {
+        this(function, cost, executor, blockchainConfig -> Boolean.TRUE, onlyAllowsLocalCalls);
     }
 
-    BridgeMethods(CallTransaction.Function function, long cost, BridgeMethodExecutor executor, Function<BlockchainConfig, Boolean> isEnabled) {
+    BridgeMethods(CallTransaction.Function function, long cost, BridgeMethodExecutor executor, Function<BlockchainConfig, Boolean> isEnabled, boolean onlyAllowsLocalCalls) {
         this.function = function;
         this.cost = cost;
         this.executor = executor;
-        this._isEnabled = isEnabled;
+        this.isEnabledFunction = isEnabled;
+        this.onlyAllowsLocalCalls = onlyAllowsLocalCalls;
     }
 
     public static Optional<BridgeMethods> findBySignature(byte[] encoding) {
@@ -456,7 +502,7 @@ public enum BridgeMethods {
     }
 
     public Boolean isEnabled(BlockchainConfig blockchainConfig) {
-        return this._isEnabled.apply(blockchainConfig);
+        return this.isEnabledFunction.apply(blockchainConfig);
     }
 
     public long getCost() {
@@ -465,6 +511,10 @@ public enum BridgeMethods {
 
     public BridgeMethodExecutor getExecutor() {
         return executor;
+    }
+
+    public boolean onlyAllowsLocalCalls() {
+        return onlyAllowsLocalCalls;
     }
 
     public interface BridgeMethodExecutor {

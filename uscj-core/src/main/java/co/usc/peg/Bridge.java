@@ -204,6 +204,11 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
 
     @Override
     public long getGasForData(byte[] data) {
+        if(!blockchainConfig.isUscIP88() && BridgeUtils.isContractTx(uscTx)) {
+            logger.warn("Call from contract before Shakespeare");
+            throw new NullPointerException();
+        }
+
         if (BridgeUtils.isFreeBridgeTx(uscTx, uscExecutionBlock.getNumber(), config.getBlockchainConfig())) {
             return 0;
         }
@@ -289,7 +294,21 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
 
             // Function parsing from data returned null => invalid function selected, halt!
             if (bridgeParsedData == null) {
+                String errorMessage = String.format("Invalid data given: %s.", Hex.toHexString(data));
+                logger.info(errorMessage);
+                if (blockchainConfig.isUscIP88()) {
+                    throw new BridgeIllegalArgumentException(errorMessage);
+                }
+
                 return null;
+            }
+
+            // If this is not a local call, then first check whether the function
+            // allows for non-local calls
+            if (blockchainConfig.isUscIP88() && !isLocalCall() && bridgeParsedData.bridgeMethod.onlyAllowsLocalCalls()) {
+                String errorMessage = String.format("Non-local-call to %s. Returning without execution.", bridgeParsedData.bridgeMethod.getFunction().name);
+                logger.info(errorMessage);
+                throw new BridgeIllegalArgumentException(errorMessage);
             }
 
             this.bridgeSupport = setup();

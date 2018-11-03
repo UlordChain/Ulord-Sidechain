@@ -6,12 +6,15 @@ import org.ethereum.core.BlockHeader;
 public class RegTestShakespeareConfig extends RegTestGenesisConfig {
 
     @Override
-    public boolean isUscIP87() { return true; }
-
-    @Override
     public boolean isUscIP85() {
         return true;
     }
+
+    @Override
+    public boolean isUscIP87() { return true; }
+
+    @Override
+    public boolean isUscIP88() { return true; }
 
     @Override
     public boolean isUscIP89() {
