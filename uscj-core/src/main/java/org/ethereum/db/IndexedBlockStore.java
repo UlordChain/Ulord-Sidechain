@@ -68,7 +68,7 @@ public class IndexedBlockStore extends AbstractBlockstore {
     @Override
     public synchronized void removeBlock(Block block) {
         this.blockCache.removeBlock(block);
-
+        this.remascCache.remove(block.getHash());
         this.blocks.delete(block.getHash().getBytes());
 
         List<BlockInfo> binfos = this.index.get(block.getNumber());
@@ -167,6 +167,7 @@ public class IndexedBlockStore extends AbstractBlockstore {
         }
         index.put(block.getNumber(), blockInfos);
         blockCache.addBlock(block);
+        remascCache.put(block.getHash(), getSiblingsFromBlock(block));
     }
 
     @Override
@@ -211,19 +212,14 @@ public class IndexedBlockStore extends AbstractBlockstore {
 
     @Override
     public synchronized Block getBlockByHash(byte[] hash) {
-        Block block = this.blockCache.getBlockByHash(hash);
 
-        if (block != null) {
-            return block;
-        }
-
-        byte[] blockRlp = blocks.get(hash);
-        if (blockRlp == null) {
+        Block block = getBlock(hash);
+        if (block == null) {
             return null;
         }
 
-        block = new Block(blockRlp);
-        this.blockCache.put(new Keccak256(hash), block);
+        blockCache.addBlock(block);
+        remascCache.put(block.getHash(), getSiblingsFromBlock(block));
         return block;
     }
 
@@ -524,10 +520,6 @@ public class IndexedBlockStore extends AbstractBlockstore {
     }
 
     @Override
-    public void load() {
-    }
-
-    @Override
     public synchronized List<Block> getChainBlocksByNumber(long number){
         List<Block> result = new ArrayList<>();
 
@@ -556,15 +548,15 @@ public class IndexedBlockStore extends AbstractBlockstore {
      */
     private Map<Long, List<Sibling>> getSiblingsFromBlock(Block block) {
         return block.getUncleList().stream()
-            .collect(
-                Collectors.groupingBy(
-                    BlockHeader::getNumber,
-                    Collectors.mapping(
-                        header -> new Sibling(header, block.getCoinbase(), block.getNumber()),
-                        Collectors.toList()
+                .collect(
+                    Collectors.groupingBy(
+                        BlockHeader::getNumber,
+                        Collectors.mapping(
+                                header -> new Sibling(header, block.getCoinbase(), block.getNumber()),
+                                Collectors.toList()
+                        )
                     )
-                )
-            );
+                );
     }
 
 }

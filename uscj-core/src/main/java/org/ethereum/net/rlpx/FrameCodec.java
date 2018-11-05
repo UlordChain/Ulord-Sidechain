@@ -22,13 +22,13 @@ package org.ethereum.net.rlpx;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
-import org.ethereum.util.RLP;
 import org.bouncycastle.crypto.StreamCipher;
 import org.bouncycastle.crypto.digests.KeccakDigest;
 import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.modes.SICBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
+import org.ethereum.util.RLP;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -184,6 +184,10 @@ public class FrameCodec {
             totalBodySize = headBuffer[0];
             totalBodySize = (totalBodySize << 8) + (headBuffer[1] & 0xFF);
             totalBodySize = (totalBodySize << 8) + (headBuffer[2] & 0xFF);
+
+            if (totalBodySize < 0) {
+                return null;
+            }
 
             decode2OneItem(headBuffer, 3);
 

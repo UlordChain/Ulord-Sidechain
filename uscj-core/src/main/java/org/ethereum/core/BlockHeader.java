@@ -18,20 +18,21 @@
  */
 package org.ethereum.core;
 
+import co.rsk.core.BlockDifficulty;
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
-import co.usc.core.BlockDifficulty;
 import co.usc.crypto.Keccak256;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
+import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
+import org.bouncycastle.util.BigIntegers;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
 import org.ethereum.util.Utils;
-import org.spongycastle.pqc.math.linearalgebra.ByteUtils;
-import org.spongycastle.util.BigIntegers;
 
+import javax.annotation.Nullable;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -71,10 +72,7 @@ public class BlockHeader {
      * A scalar value corresponding to the difficulty level of this block.
      * This can be calculated from the previous block’s difficulty level
      * and the timestamp.
-     * Note that difficultyRaw is saved to perform {@link #getEncoded()},
-     * but for other uses you should only rely on difficulty.
      */
-    private byte[] difficultyRaw;
     private BlockDifficulty difficulty;
     /* A scalar value equalBytes to the reasonable output of Unix's time()
      * at this block's inception */
@@ -104,7 +102,6 @@ public class BlockHeader {
      * Note that minimumGasPriceRaw is saved to perform {@link #getEncoded()},
      * but for other uses you should only rely on minimumGasPrice.
      */
-    private byte[] minimumGasPriceRaw;
     private Coin minimumGasPrice;
     private int uncleCount;
 
@@ -112,10 +109,18 @@ public class BlockHeader {
     private volatile boolean sealed;
 
     public BlockHeader(byte[] encoded, boolean sealed) {
-        this((RLPList) RLP.decode2(encoded).get(0), sealed);
+        this(RLP.decodeList(encoded), sealed);
     }
 
     public BlockHeader(RLPList rlpHeader, boolean sealed) {
+        // TODO fix old tests that have other sizes
+        if (rlpHeader.size() != 19 && rlpHeader.size() != 16) {
+            throw new IllegalArgumentException(String.format(
+                    "A block header must have 16 elements or 19 including merged-mining fields but it had %d",
+                    rlpHeader.size()
+            ));
+        }
+
         this.parentHash = rlpHeader.get(0).getRLPData();
         this.unclesHash = rlpHeader.get(1).getRLPData();
         this.coinbase = RLP.parseUscAddress(rlpHeader.get(2).getRLPData());
@@ -135,8 +140,7 @@ public class BlockHeader {
         }
 
         this.logsBloom = rlpHeader.get(6).getRLPData();
-        this.difficultyRaw = rlpHeader.get(7).getRLPData();
-        this.difficulty = new BlockDifficulty(difficultyRaw);
+        this.difficulty = RLP.parseBlockDifficulty(rlpHeader.get(7).getRLPData());
 
         byte[] nrBytes = rlpHeader.get(8).getRLPData();
         byte[] glBytes = rlpHeader.get(9).getRLPData();
@@ -152,8 +156,7 @@ public class BlockHeader {
         this.extraData = rlpHeader.get(12).getRLPData();
 
         this.paidFees = RLP.parseCoin(rlpHeader.get(13).getRLPData());
-        this.minimumGasPriceRaw = rlpHeader.get(14).getRLPData();
-        this.minimumGasPrice = RLP.parseCoin(this.minimumGasPriceRaw);
+        this.minimumGasPrice = RLP.parseSignedCoinNonNullZero(rlpHeader.get(14).getRLPData());
 
         int r = 15;
 
@@ -194,16 +197,14 @@ public class BlockHeader {
         this.unclesHash = unclesHash;
         this.coinbase = new UscAddress(coinbase);
         this.logsBloom = logsBloom;
-        this.difficultyRaw = difficulty;
-        this.difficulty = new BlockDifficulty(difficultyRaw);
+        this.difficulty = RLP.parseBlockDifficulty(difficulty);
         this.number = number;
         this.gasLimit = gasLimit;
         this.gasUsed = gasUsed;
         this.timestamp = timestamp;
         this.extraData = extraData;
         this.stateRoot = ByteUtils.clone(EMPTY_TRIE_HASH);
-        this.minimumGasPriceRaw = minimumGasPrice;
-        this.minimumGasPrice = minimumGasPriceRaw == null ? null : new Coin(minimumGasPriceRaw);
+        this.minimumGasPrice = RLP.parseSignedCoinNonNullZero(minimumGasPrice);
         this.receiptTrieRoot = ByteUtils.clone(EMPTY_TRIE_HASH);
         this.uncleCount = uncleCount;
         this.paidFees = Coin.ZERO;
@@ -299,6 +300,12 @@ public class BlockHeader {
     }
 
     public BlockDifficulty getDifficulty() {
+        // some blocks have zero encoded as null, but if we altered the internal field then re-encoding the value would
+        // give a different value than the original.
+        if (difficulty == null) {
+            return BlockDifficulty.ZERO;
+        }
+
         return difficulty;
     }
 
@@ -308,7 +315,6 @@ public class BlockHeader {
             throw new SealedBlockHeaderException("trying to alter difficulty");
         }
 
-        this.difficultyRaw = difficulty.getBytes();
         this.difficulty = difficulty;
     }
 
@@ -416,6 +422,7 @@ public class BlockHeader {
         return this.getEncoded(false,false);
     }
 
+    @Nullable
     public Coin getMinimumGasPrice() {
         return this.minimumGasPrice;
     }
@@ -441,7 +448,6 @@ public class BlockHeader {
         byte[] receiptTrieRoot = RLP.encodeElement(this.receiptTrieRoot);
 
         byte[] logsBloom = RLP.encodeElement(this.logsBloom);
-        //byte[] difficulty = RLP.encodeElement(this.difficultyRaw);
         byte[] difficulty = encodeBlockDifficulty(this.difficulty);
         byte[] number = RLP.encodeBigInteger(BigInteger.valueOf(this.number));
         byte[] gasLimit = RLP.encodeElement(this.gasLimit);
@@ -460,7 +466,7 @@ public class BlockHeader {
         if (withMergedMiningFields && hasMiningFields()) {
             byte[] ulordMergedMiningHeader = RLP.encodeElement(this.ulordMergedMiningHeader);
             fieldToEncodeList.add(ulordMergedMiningHeader);
-            if(withMerkleProofAndCoinbase){
+            if (withMerkleProofAndCoinbase) {
                 byte[] ulordMergedMiningMerkleProof = RLP.encodeElement(this.ulordMergedMiningMerkleProof);
                 fieldToEncodeList.add(ulordMergedMiningMerkleProof);
                 byte[] ulordMergedMiningCoinbaseTransaction = RLP.encodeElement(this.ulordMergedMiningCoinbaseTransaction);

@@ -94,6 +94,7 @@ public class PrecompiledContracts {
         if (address.isHex(USC_NATIVECONTRACT_REQUIREDPREFIX + IDENTITY_ADDR_STR)) {
             return identity;
         }
+        // USCIP-93 removes this contract completely
         if (address.isHex(USC_NATIVECONTRACT_REQUIREDPREFIX + SAMPLE_ADDR_STR) && !blockchainConfig.isUscIP93()) {
             return sample;
         }

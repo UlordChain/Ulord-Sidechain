@@ -19,8 +19,7 @@
 
 package org.ethereum.net.eth.message;
 
-import co.usc.config.UscSystemProperties;
-import co.usc.net.eth.UscMessage;
+import co.usc.net.eth.RskMessage;
 import org.ethereum.net.message.Message;
 import org.ethereum.net.message.MessageFactory;
 
@@ -32,12 +31,6 @@ import static org.ethereum.net.eth.EthVersion.V62;
  */
 public class Eth62MessageFactory implements MessageFactory {
 
-    private final UscSystemProperties config;
-
-    public Eth62MessageFactory(UscSystemProperties config) {
-        this.config = config;
-    }
-
     @Override
     public Message create(byte code, byte[] encoded) {
 
@@ -48,7 +41,7 @@ public class Eth62MessageFactory implements MessageFactory {
             case NEW_BLOCK_HASHES:
                 return new NewBlockHashesMessage(encoded);
             case TRANSACTIONS:
-                return new TransactionsMessage(config, encoded);
+                return new TransactionsMessage(encoded);
             case GET_BLOCK_HEADERS:
                 return new GetBlockHeadersMessage(encoded);
             case BLOCK_HEADERS:
@@ -61,7 +54,7 @@ public class Eth62MessageFactory implements MessageFactory {
                 return new NewBlockMessage(encoded);
             // USC new message
             case USC_MESSAGE:
-                return new UscMessage(config, encoded);
+                return new UscMessage(encoded);
             default:
                 throw new IllegalArgumentException("No such message");
         }

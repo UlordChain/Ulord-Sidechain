@@ -19,7 +19,6 @@
 
 package org.ethereum.core;
 
-import co.usc.config.UscSystemProperties;
 import co.usc.config.VmConfig;
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
@@ -31,7 +30,6 @@ import org.ethereum.db.BlockStore;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.db.ReceiptStore;
 import org.ethereum.listener.EthereumListener;
-import org.ethereum.listener.EthereumListenerAdapter;
 import org.ethereum.vm.*;
 import org.ethereum.vm.program.Program;
 import org.ethereum.vm.program.ProgramResult;
@@ -71,7 +69,7 @@ public class TransactionExecutor {
     private final VmConfig vmConfig;
     private final PrecompiledContracts precompiledContracts;
     private final BlockchainNetConfig netConfig;
-    private final boolean playVM;
+    private final boolean playVm;
     private final boolean enableRemasc;
     private final boolean vmTrace;
     private final String databaseDir;
@@ -104,8 +102,8 @@ public class TransactionExecutor {
 
     public TransactionExecutor(Transaction tx, int txindex, UscAddress coinbase, Repository track, BlockStore blockStore, ReceiptStore receiptStore,
                                ProgramInvokeFactory programInvokeFactory, Block executionBlock, EthereumListener listener, long gasUsedInTheBlock,
-                               VmConfig vmConfig, BlockchainNetConfig blockchainConfig, boolean playVm, boolean remascEnabled, boolean vmTrace,
-                               PrecompiledContracts precompiledContracts, String databaseDir, String vmTraceDir, boolean vmTraceCompressed) {
+                               VmConfig vmConfig, BlockchainNetConfig blockchainConfig, boolean playVm, boolean remascEnabled,
+                               boolean vmTrace, PrecompiledContracts precompiledContracts, String databaseDir, String vmTraceDir, boolean vmTraceCompressed) {
         this.tx = tx;
         this.txindex = txindex;
         this.coinbase = coinbase;
@@ -120,7 +118,7 @@ public class TransactionExecutor {
         this.vmConfig = vmConfig;
         this.precompiledContracts = precompiledContracts;
         this.netConfig = blockchainConfig;
-        this.playVM = playVm;
+        this.playVm = playVm;
         this.enableRemasc = remascEnabled;
         this.vmTrace = vmTrace;
         this.databaseDir = databaseDir;
@@ -362,7 +360,7 @@ public class TransactionExecutor {
             // Charge basic cost of the transaction
             program.spendGas(tx.transactionCost(executionBlock, netConfig), "TRANSACTION COST");
 
-            if (playVM) {
+            if (playVm) {
                 vm.play(program);
             }
 
@@ -532,6 +530,7 @@ public class TransactionExecutor {
 
     public TransactionExecutor setLocalCall(boolean localCall) {
         this.localCall = localCall;
+        this.tx.setLocalCallTransaction(localCall);
         return this;
     }
 

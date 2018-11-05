@@ -48,7 +48,7 @@ import org.ethereum.vm.trace.ProgramTrace;
 import org.ethereum.vm.trace.ProgramTraceListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
@@ -877,12 +877,13 @@ public class Program {
 
         returnDataBuffer = null; // reset return buffer right before the call
         ProgramResult childResult = null;
+
         ProgramInvoke programInvoke = programInvokeFactory.createProgramInvoke(
                 this, new DataWord(contextAddress.getBytes()),
                 msg.getType() == MsgType.DELEGATECALL ? getCallerAddress() : getOwnerAddress(),
                 msg.getType() == MsgType.DELEGATECALL ? getCallValue() : msg.getEndowment(),
                 limitToMaxLong(msg.getGas()), contextBalance, data, track, this.invoke.getBlockStore(),
-                msg.getType() == MsgType.STATICCALL || isStaticCall(),byTestingSuite());
+                msg.getType() == MsgType.STATICCALL || isStaticCall(), byTestingSuite());
 
         VM vm = new VM(config, precompiledContracts);
         Program program = new Program(config, precompiledContracts, blockchainConfig, programCode, programInvoke, internalTx);
@@ -890,9 +891,10 @@ public class Program {
         childResult  = program.getResult();
 
         getTrace().merge(program.getTrace());
-        getResult().merge(childResult );
+        getResult().merge(childResult);
 
         boolean childCallSuccessful = true;
+
         if (childResult.getException() != null || childResult.isRevert()) {
             if (isGasLogEnabled) {
                 gasLogger.debug("contract run halted by Exception: contract: [{}], exception: [{}]",
@@ -1564,6 +1566,20 @@ public class Program {
             return;
         }
 
+        // Special initialization for Bridge and Remasc contracts
+        if (contract instanceof Bridge || contract instanceof RemascContract) {
+            // CREATE CALL INTERNAL TRANSACTION
+            InternalTransaction internalTx = addInternalTx(null, getGasLimit(), senderAddress, contextAddress, endowment, EMPTY_BYTE_ARRAY, "call");
+
+            // Propagate the "local call" nature of the originating transaction down to the callee
+            internalTx.setLocalCallTransaction(this.transaction.isLocalCallTransaction());
+
+            Block executionBlock = new Block(getPrevHash().getData(), EMPTY_BYTE_ARRAY, getCoinbase().getLast20Bytes(), EMPTY_BYTE_ARRAY,
+                getDifficulty().getData(), getNumber().longValue(), getGasLimit().getData(), 0, getTimestamp().longValue(),
+                EMPTY_BYTE_ARRAY, EMPTY_BYTE_ARRAY, EMPTY_BYTE_ARRAY, new ArrayList<>(), new ArrayList<>(), null);
+
+            contract.init(internalTx, executionBlock, track, this.invoke.getBlockStore(), null, null);
+        }
 
         long requiredGas = contract.getGasForData(data);
         if (requiredGas > msg.getGas().longValue()) {
@@ -1575,16 +1591,6 @@ public class Program {
 
             this.refundGas(msg.getGas().longValue() - requiredGas, "call pre-compiled");
 
-            if (contract instanceof Bridge || contract instanceof RemascContract) {
-                // CREATE CALL INTERNAL TRANSACTION
-                InternalTransaction internalTx = addInternalTx(null, getGasLimit(), senderAddress, contextAddress, endowment, EMPTY_BYTE_ARRAY, "call");
-
-                Block executionBlock = new Block(getPrevHash().getData(), EMPTY_BYTE_ARRAY, getCoinbase().getData(), EMPTY_BYTE_ARRAY,
-                        getDifficulty().getData(), getNumber().longValue(), getGasLimit().getData(), 0, getTimestamp().longValue(),
-                        EMPTY_BYTE_ARRAY, EMPTY_BYTE_ARRAY, EMPTY_BYTE_ARRAY, new ArrayList<>(), new ArrayList<>(), null);
-
-                contract.init(internalTx, executionBlock, track, this.invoke.getBlockStore(), null, null);
-            }
             byte[] out = contract.execute(data);
 
             if (getBlockchainConfig().isUscIP90()) {

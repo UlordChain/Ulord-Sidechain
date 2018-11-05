@@ -108,9 +108,11 @@ public class ProgramInvokeImpl implements ProgramInvoke {
                              byte[] gasPrice, byte[] gas, byte[] callValue, byte[] msgData,
                              byte[] lastHash, byte[] coinbase, long timestamp, long number, int transactionIndex, byte[] difficulty,
                              byte[] gaslimit,
-                             Repository repository, BlockStore blockStore, boolean byTestingSuite) {
+                             Repository repository, BlockStore blockStore,
+                             boolean byTestingSuite) {
         this(address, origin, caller, balance, gasPrice, gas, callValue, msgData, lastHash, coinbase,
                 timestamp, number, transactionIndex, difficulty, gaslimit, repository, blockStore);
+
         this.byTestingSuite = byTestingSuite;
     }
 

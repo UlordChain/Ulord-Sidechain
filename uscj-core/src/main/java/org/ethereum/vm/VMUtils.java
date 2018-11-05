@@ -19,7 +19,6 @@
 
 package org.ethereum.vm;
 
-import co.usc.config.UscSystemProperties;
 import org.ethereum.vm.trace.ProgramTrace;
 import org.ethereum.vm.trace.Serializers;
 

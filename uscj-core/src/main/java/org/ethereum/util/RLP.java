@@ -19,15 +19,15 @@
 
 package org.ethereum.util;
 
+import co.usc.core.BlockDifficulty;
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
-import co.usc.core.BlockDifficulty;
 import co.usc.util.ByteBufferUtil;
 import co.usc.util.RLPElementType;
 import co.usc.util.RLPElementView;
 import co.usc.util.RLPException;
+import org.bouncycastle.util.BigIntegers;
 import org.ethereum.db.ByteArrayWrapper;
-import org.spongycastle.util.BigIntegers;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -37,9 +37,9 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import static org.bouncycastle.util.Arrays.concatenate;
+import static org.bouncycastle.util.BigIntegers.asUnsignedByteArray;
 import static org.ethereum.util.ByteUtil.*;
-import static org.spongycastle.util.Arrays.concatenate;
-import static org.spongycastle.util.BigIntegers.asUnsignedByteArray;
 
 /**
  * Recursive Length Prefix (RLP) encoding.
@@ -405,6 +405,23 @@ public class RLP {
         return decode(ByteBuffer.wrap(msgData));
     }
 
+    /**
+     * Parse and verify that the passed data has just one list encoded as RLP
+     */
+    public static RLPList decodeList(byte[] msgData) {
+        List<RLPElement> decoded = RLP.decode2(msgData);
+        if (decoded.size() != 1) {
+            throw new IllegalArgumentException(String.format("Expected one RLP item but got %d", decoded.size()));
+        }
+
+        RLPElement element = decoded.get(0);
+        if (!(element instanceof RLPList)) {
+            throw new IllegalArgumentException("The decoded element wasn't a list");
+        }
+
+        return (RLPList) element;
+    }
+
     @Nullable
     public static RLPElement decode2OneItem(@CheckForNull byte[] msgData, int startPos) {
         if (msgData == null) {
@@ -653,6 +670,10 @@ public class RLP {
     }
 
     public static byte[] encodeBlockDifficulty(BlockDifficulty difficulty) {
+        if (difficulty == null) {
+            return encodeElement(null);
+        }
+
         return encodeElement(difficulty.getBytes());
     }
 

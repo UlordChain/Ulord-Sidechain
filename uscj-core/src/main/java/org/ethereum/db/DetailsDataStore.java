@@ -19,7 +19,6 @@
 
 package org.ethereum.db;
 
-import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
 import co.usc.db.ContractDetailsImpl;
 import co.usc.trie.TrieStore;

@@ -19,7 +19,6 @@
 
 package org.ethereum.datasource;
 
-import co.usc.config.UscSystemProperties;
 import org.slf4j.Logger;
 
 import java.util.concurrent.ConcurrentHashMap;
