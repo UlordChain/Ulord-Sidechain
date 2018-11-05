@@ -21,8 +21,6 @@ package co.usc.net.messages;
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.core.BlockDifficulty;
 import co.usc.net.Status;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.net.Status;
 import org.ethereum.core.Block;
 import org.junit.Assert;
 import org.junit.Test;

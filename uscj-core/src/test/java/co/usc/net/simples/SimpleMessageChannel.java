@@ -24,11 +24,6 @@ import co.usc.net.NodeID;
 import co.usc.net.messages.GetBlockMessage;
 import co.usc.net.messages.Message;
 import co.usc.net.messages.MessageType;
-import co.usc.net.MessageChannel;
-import co.usc.net.NodeID;
-import co.usc.net.messages.GetBlockMessage;
-import co.usc.net.messages.Message;
-import co.usc.net.messages.MessageType;
 import org.junit.Assert;
 
 import java.net.InetAddress;

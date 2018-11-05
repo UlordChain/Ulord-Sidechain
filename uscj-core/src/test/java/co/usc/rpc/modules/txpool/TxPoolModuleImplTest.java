@@ -19,8 +19,6 @@ package co.usc.rpc.modules.txpool;
 
 import co.usc.test.builders.AccountBuilder;
 import co.usc.test.builders.TransactionBuilder;
-import co.usc.test.builders.AccountBuilder;
-import co.usc.test.builders.TransactionBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -31,7 +29,7 @@ import org.ethereum.rpc.Web3Mocks;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.IOException;
 import java.math.BigInteger;

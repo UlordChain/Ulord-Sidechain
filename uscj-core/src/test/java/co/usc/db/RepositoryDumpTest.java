@@ -19,7 +19,6 @@
 package co.usc.db;
 
 import co.usc.test.World;
-import co.usc.test.World;
 import org.junit.Test;
 
 /**

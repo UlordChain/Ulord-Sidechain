@@ -8,7 +8,7 @@ import co.usc.peg.Federation;
 import co.usc.ulordj.params.MainNetParams;
 import com.google.common.collect.Lists;
 import org.ethereum.crypto.ECKey;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.time.Instant;
 import java.util.Arrays;

@@ -65,7 +65,6 @@ tasks.withType(AbstractArchiveTask) {
 ext {
     slf4jVersion = '1.7.25'
     leveldbVersion = '0.9'
-    scastleVersion = '1.52.0.0'
     springVersion = '4.2.9.RELEASE'
     junitVersion = '4.12'
     mockitoVersion = '1.10.19'
@@ -76,9 +75,10 @@ ext {
 }
 
 dependencies {
+    compile "com.madgag.spongycastle:core:1.52.0.0"
     compile "io.netty:netty-codec-http:$nettyVersion"
-    compile "com.madgag.spongycastle:core:${scastleVersion}" // for SHA3 and SECP256K1
-    compile "com.madgag.spongycastle:prov:${scastleVersion}" // for SHA3 and SECP256K1
+    compile "org.bouncycastle:bclcrypto-jdk15on:1.59"
+    //compile "org.bouncycastle:bcprov-jdk15on:1.59"
     compile "org.iq80.leveldb:leveldb:${leveldbVersion}"
     compile "org.fusesource.leveldbjni:leveldbjni:1.8"
     compile "org.ethereum:leveldbjni-all:1.18.3"

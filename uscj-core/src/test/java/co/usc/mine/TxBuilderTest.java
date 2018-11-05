@@ -20,7 +20,6 @@ package co.usc.mine;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.net.BlockProcessor;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
 import org.ethereum.rpc.Simples.SimpleEthereum;

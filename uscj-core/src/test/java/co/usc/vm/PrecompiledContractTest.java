@@ -20,8 +20,6 @@ package co.usc.vm;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.peg.Bridge;
-import co.usc.config.TestSystemProperties;
-import co.usc.peg.Bridge;
 import org.ethereum.vm.DataWord;
 import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.PrecompiledContracts.PrecompiledContract;

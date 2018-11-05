@@ -20,7 +20,6 @@ package co.usc.core.bc;
 
 import co.usc.crypto.Keccak256;
 import co.usc.net.BlockStore;
-import co.usc.net.BlockStore;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.core.Blockchain;

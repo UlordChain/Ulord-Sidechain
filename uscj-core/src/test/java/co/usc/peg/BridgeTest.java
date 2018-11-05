@@ -41,6 +41,7 @@ import co.usc.db.RepositoryImpl;
 import co.usc.peg.ulord.SimpleUldTransaction;
 import co.usc.test.World;
 import co.usc.ulordj.store.BlockStoreException;
+import org.bouncycastle.util.encoders.Hex;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.blockchain.GenesisConfig;
@@ -66,7 +67,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.util.encoders.Hex;
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

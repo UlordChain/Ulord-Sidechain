@@ -21,9 +21,6 @@ package co.usc.net.simples;
 import co.usc.net.MessageChannel;
 import co.usc.net.NodeID;
 import co.usc.net.messages.Message;
-import co.usc.net.MessageChannel;
-import co.usc.net.NodeID;
-import co.usc.net.messages.Message;
 
 import java.net.InetAddress;
 

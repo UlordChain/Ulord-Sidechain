@@ -19,7 +19,6 @@
 package co.usc.rpc;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.config.TestSystemProperties;
 import org.junit.Assert;
 import org.junit.Test;
 

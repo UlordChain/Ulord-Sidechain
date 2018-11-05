@@ -20,7 +20,7 @@
 package org.ethereum.util;
 
 import org.ethereum.db.ByteArrayWrapper;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import javax.annotation.Nonnull;
 import java.math.BigInteger;

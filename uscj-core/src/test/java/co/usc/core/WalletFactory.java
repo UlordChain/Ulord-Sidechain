@@ -19,7 +19,6 @@
 package co.usc.core;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.datasource.KeyValueDataSource;
 import org.ethereum.datasource.LevelDbDataSource;

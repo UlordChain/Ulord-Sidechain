@@ -26,8 +26,6 @@ import co.usc.core.SnapshotManager;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.validators.BlockValidationRule;
 import co.usc.validators.ProofOfWorkRule;
-import co.usc.config.ConfigUtils;
-import co.usc.config.TestSystemProperties;
 import org.awaitility.Awaitility;
 import org.awaitility.Duration;
 import org.ethereum.core.Block;

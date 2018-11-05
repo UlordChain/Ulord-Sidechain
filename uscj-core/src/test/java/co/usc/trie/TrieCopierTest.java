@@ -30,15 +30,13 @@ import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.remasc.RemascTransaction;
 import co.usc.test.World;
 import co.usc.test.builders.AccountBuilder;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.core.*;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.util.TransactionFactoryHelper;
 import org.ethereum.vm.PrecompiledContracts;
 import org.junit.Assert;
 import org.junit.Test;
-import org.spongycastle.pqc.math.linearalgebra.ByteUtils;
+import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

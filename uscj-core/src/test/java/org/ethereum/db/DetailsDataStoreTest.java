@@ -28,7 +28,7 @@ import co.usc.trie.TrieStore;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.vm.DataWord;
 import org.junit.Test;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import static org.ethereum.TestUtils.randomAddress;
 import static org.ethereum.util.ByteUtil.toHexString;

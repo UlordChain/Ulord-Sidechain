@@ -28,6 +28,8 @@ import co.usc.config.UscMiningConstants;
 import co.usc.config.UscSystemProperties;
 import co.usc.util.DifficultyUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.util.Pack;
 import org.ethereum.config.Constants;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
@@ -37,7 +39,6 @@ import org.ethereum.util.RLPElement;
 import org.ethereum.util.RLPList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.crypto.digests.SHA256Digest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -167,7 +168,7 @@ public class ProofOfWorkRule implements BlockHeaderValidationRule, BlockValidati
         System.arraycopy(ulordMergedMiningCoinbaseTransactionCompressed, UscMiningConstants.MIDSTATE_SIZE_TRIMMED,
                 ulordMergedMiningCoinbaseTransactionTail, 0, ulordMergedMiningCoinbaseTransactionTail.length);
 
-        byte[] expectedCoinbaseMessageBytes = org.spongycastle.util.Arrays.concatenate(UscMiningConstants.USC_TAG, header.getHashForMergedMining());
+        byte[] expectedCoinbaseMessageBytes = org.bouncycastle.util.Arrays.concatenate(UscMiningConstants.USC_TAG, header.getHashForMergedMining());
 
 
         List<Byte> ulordMergedMiningCoinbaseTransactionTailAsList = Arrays.asList(ArrayUtils.toObject(ulordMergedMiningCoinbaseTransactionTail));

@@ -23,17 +23,12 @@ import co.usc.trie.Trie;
 import co.usc.trie.TrieImpl;
 import co.usc.trie.TrieStore;
 import co.usc.trie.TrieStoreImpl;
-import co.usc.config.TestSystemProperties;
-import co.usc.trie.Trie;
-import co.usc.trie.TrieImpl;
-import co.usc.trie.TrieStore;
-import co.usc.trie.TrieStoreImpl;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.DataWord;
 import org.junit.Assert;
 import org.junit.Test;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.util.*;
 

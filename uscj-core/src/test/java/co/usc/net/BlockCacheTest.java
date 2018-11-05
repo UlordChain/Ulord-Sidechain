@@ -20,7 +20,6 @@
 package co.usc.net;
 
 import co.usc.crypto.Keccak256;
-import co.usc.crypto.Keccak256;
 import org.ethereum.core.Block;
 import org.ethereum.crypto.HashUtil;
 import org.junit.Test;

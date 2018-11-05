@@ -21,7 +21,6 @@ package co.usc.core.bc;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.DifficultyCalculator;
 import co.usc.validators.*;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.core.Repository;
 import org.ethereum.db.BlockStore;
 import org.mockito.Mockito;

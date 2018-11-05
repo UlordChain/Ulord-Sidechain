@@ -19,7 +19,6 @@
 package co.usc.mine;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.config.Constants;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.validator.ParentGasLimitRule;
