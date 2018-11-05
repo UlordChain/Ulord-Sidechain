@@ -19,7 +19,6 @@ package co.usc.cli.config;
 
 import co.usc.cli.CliArgs;
 
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
