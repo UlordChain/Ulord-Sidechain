@@ -19,13 +19,12 @@
 package co.usc.net.utils;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.core.Account;
 import org.ethereum.core.Transaction;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.util.Utils;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

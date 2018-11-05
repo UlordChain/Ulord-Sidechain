@@ -30,8 +30,6 @@ import co.usc.peg.RepositoryBlockStore;
 import co.usc.trie.TrieStoreImpl;
 import co.usc.validators.BlockValidator;
 import co.usc.validators.DummyBlockValidator;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.core.*;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.datasource.KeyValueDataSource;

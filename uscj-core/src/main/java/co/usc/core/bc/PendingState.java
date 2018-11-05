@@ -20,8 +20,6 @@ package co.usc.core.bc;
 
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
-import co.usc.core.Coin;
-import co.usc.core.UscAddress;
 import org.ethereum.core.*;
 import org.ethereum.util.ByteUtil;
 import org.ethereum.vm.DataWord;

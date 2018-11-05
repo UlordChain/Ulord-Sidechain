@@ -2,7 +2,6 @@ package co.usc.net.sync;
 
 import co.usc.net.NodeID;
 import co.usc.net.utils.StatusUtils;
-import co.usc.net.NodeID;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.net.server.Channel;
 import org.ethereum.net.server.ChannelManager;

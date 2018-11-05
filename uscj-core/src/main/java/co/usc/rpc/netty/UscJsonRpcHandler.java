@@ -25,8 +25,6 @@ import co.usc.rpc.modules.UscJsonRpcRequestVisitor;
 import co.usc.rpc.modules.eth.subscribe.EthSubscribeRequest;
 import co.usc.rpc.modules.eth.subscribe.EthSubscribeTypes;
 import co.usc.rpc.modules.eth.subscribe.EthUnsubscribeRequest;
-import co.usc.rpc.EthSubscriptionNotificationEmitter;
-import co.usc.rpc.JsonRpcSerializer;
 import io.netty.buffer.ByteBufHolder;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;

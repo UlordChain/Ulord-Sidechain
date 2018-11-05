@@ -23,7 +23,7 @@ import co.usc.config.BridgeConstants;
 import co.usc.config.BridgeTestNetConstants;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.UscAddress;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

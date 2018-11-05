@@ -19,7 +19,6 @@
 package co.usc.blocks;
 
 import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.blockchain.utils.BlockGenerator;
 import org.junit.Assert;
 import org.junit.Test;
 

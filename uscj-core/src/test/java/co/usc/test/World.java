@@ -28,8 +28,6 @@ import co.usc.net.BlockSyncService;
 import co.usc.net.NodeBlockProcessor;
 import co.usc.net.sync.SyncConfiguration;
 import co.usc.test.builders.BlockChainBuilder;
-import co.usc.config.TestSystemProperties;
-import co.usc.test.builders.BlockChainBuilder;
 import org.ethereum.core.*;
 import org.ethereum.db.ReceiptStore;
 import org.ethereum.vm.PrecompiledContracts;

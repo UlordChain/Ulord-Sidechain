@@ -21,8 +21,6 @@ package co.usc.db;
 import co.usc.config.TestSystemProperties;
 import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
-import co.usc.config.TestSystemProperties;
-import co.usc.core.UscAddress;
 import org.ethereum.core.AccountState;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.DataWord;

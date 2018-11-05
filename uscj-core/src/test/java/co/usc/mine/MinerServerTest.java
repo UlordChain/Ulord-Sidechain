@@ -31,8 +31,6 @@ import co.usc.remasc.RemascTransaction;
 import co.usc.validators.BlockUnclesValidationRule;
 import co.usc.validators.BlockValidationRule;
 import co.usc.validators.ProofOfWorkRule;
-import co.usc.config.ConfigUtils;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.core.*;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;

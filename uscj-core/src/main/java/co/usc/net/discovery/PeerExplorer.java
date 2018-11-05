@@ -24,7 +24,6 @@ import co.usc.net.discovery.table.NodeDistanceTable;
 import co.usc.net.discovery.table.OperationResult;
 import co.usc.net.discovery.table.PeerDiscoveryRequestBuilder;
 import co.usc.util.IpUtils;
-import co.usc.net.NodeID;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

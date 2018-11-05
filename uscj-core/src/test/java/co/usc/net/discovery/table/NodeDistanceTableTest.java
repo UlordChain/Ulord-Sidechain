@@ -19,11 +19,10 @@
 package co.usc.net.discovery.table;
 
 import co.usc.net.NodeID;
-import co.usc.net.NodeID;
 import org.ethereum.net.rlpx.Node;
 import org.junit.Assert;
 import org.junit.Test;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.util.List;
 

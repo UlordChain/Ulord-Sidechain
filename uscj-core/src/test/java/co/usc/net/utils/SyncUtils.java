@@ -2,8 +2,6 @@ package co.usc.net.utils;
 
 import co.usc.net.sync.ConnectionPointFinder;
 import co.usc.net.sync.SyncConfiguration;
-import co.usc.net.sync.ConnectionPointFinder;
-import co.usc.net.sync.SyncConfiguration;
 
 public final class SyncUtils {
     public static int syncSetupRequests(long bestBlock, long currentBestBlock, SyncConfiguration syncConfiguration) {

@@ -23,12 +23,6 @@ import co.usc.net.*;
 import co.usc.net.messages.Message;
 import co.usc.net.messages.StatusMessage;
 import co.usc.validators.DummyBlockValidationRule;
-import co.usc.net.MessageHandler;
-import co.usc.net.NodeID;
-import co.usc.net.NodeMessageHandler;
-import co.usc.net.Status;
-import co.usc.net.messages.Message;
-import co.usc.net.messages.StatusMessage;
 import org.ethereum.core.Block;
 import org.ethereum.crypto.HashUtil;
 

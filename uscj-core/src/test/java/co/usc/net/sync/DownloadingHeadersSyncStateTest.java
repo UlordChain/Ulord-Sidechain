@@ -1,7 +1,6 @@
 package co.usc.net.sync;
 
 import co.usc.net.NodeID;
-import co.usc.net.NodeID;
 import org.ethereum.core.BlockIdentifier;
 import org.junit.Assert;
 import org.junit.Test;

@@ -19,7 +19,6 @@ package co.usc.rpc;
 
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.rpc.modules.eth.subscribe.SubscriptionId;
-import co.usc.blockchain.utils.BlockGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;

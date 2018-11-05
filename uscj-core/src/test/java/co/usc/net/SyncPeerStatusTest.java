@@ -1,7 +1,6 @@
 package co.usc.net;
 
 import co.usc.net.sync.SyncPeerStatus;
-import co.usc.net.sync.SyncPeerStatus;
 import org.junit.Assert;
 import org.junit.Test;
 

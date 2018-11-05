@@ -20,7 +20,6 @@ package co.usc.rpc.modules.eth.subscribe;
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.rpc.JacksonBasedRpcSerializer;
 import co.usc.rpc.JsonRpcSerializer;
-import co.usc.blockchain.utils.BlockGenerator;
 import org.ethereum.core.Block;
 import org.junit.Test;
 

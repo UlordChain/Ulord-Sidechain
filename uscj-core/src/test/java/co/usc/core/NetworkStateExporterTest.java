@@ -24,7 +24,6 @@ import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.trie.TrieImpl;
 import co.usc.trie.TrieStore;
 import co.usc.trie.TrieStoreImpl;
-import co.usc.config.TestSystemProperties;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.ByteStreams;
@@ -39,7 +38,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.File;
 import java.io.FileInputStream;

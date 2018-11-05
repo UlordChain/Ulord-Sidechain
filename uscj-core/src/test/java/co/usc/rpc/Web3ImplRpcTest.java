@@ -21,7 +21,6 @@ package co.usc.rpc;
 import co.usc.config.TestSystemProperties;
 import co.usc.rpc.modules.personal.PersonalModule;
 import co.usc.rpc.modules.personal.PersonalModuleWalletDisabled;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.TransactionPool;
 import org.ethereum.core.Repository;

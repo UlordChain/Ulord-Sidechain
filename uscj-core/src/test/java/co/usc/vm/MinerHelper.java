@@ -23,17 +23,12 @@ import co.usc.core.Coin;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.mine.GasLimitCalculator;
 import co.usc.panic.PanicProcessor;
-import co.usc.config.TestSystemProperties;
-import co.usc.core.Coin;
-import co.usc.core.bc.BlockChainImpl;
-import co.usc.mine.GasLimitCalculator;
-import co.usc.panic.PanicProcessor;
 import org.ethereum.core.*;
 import org.ethereum.listener.EthereumListenerAdapter;
 import org.ethereum.vm.PrecompiledContracts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

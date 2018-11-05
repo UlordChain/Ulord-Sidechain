@@ -1,9 +1,8 @@
 package co.usc.scoring;
 
 import co.usc.net.NodeID;
-import co.usc.net.NodeID;
 import com.google.common.annotations.VisibleForTesting;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import javax.annotation.concurrent.GuardedBy;
 import java.net.InetAddress;

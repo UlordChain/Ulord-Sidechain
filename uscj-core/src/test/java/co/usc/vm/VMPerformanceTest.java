@@ -20,8 +20,6 @@ package co.usc.vm;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.config.VmConfig;
-import co.usc.config.TestSystemProperties;
-import co.usc.config.VmConfig;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.vm.DataWord;
@@ -34,7 +32,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

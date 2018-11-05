@@ -20,8 +20,7 @@ package co.usc.test.dsl;
 
 import co.usc.test.World;
 import co.usc.test.builders.TransactionBuilder;
-import co.usc.test.builders.TransactionBuilder;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 import org.ethereum.util.ByteUtil;
 
 import java.math.BigInteger;

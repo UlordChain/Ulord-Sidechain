@@ -20,9 +20,8 @@ package co.usc.net.handler.txvalidator;
 
 import co.usc.config.BridgeRegTestConstants;
 import co.usc.config.TestSystemProperties;
-import co.usc.config.TestSystemProperties;
+import org.bouncycastle.util.encoders.Hex;
 import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
-import org.spongycastle.util.encoders.Hex;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Transaction;
 import org.ethereum.crypto.ECKey;
@@ -30,7 +29,6 @@ import org.ethereum.vm.PrecompiledContracts;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.spongycastle.util.encoders.Hex;
 
 import java.math.BigInteger;
 

@@ -36,7 +36,7 @@
 
 package co.usc.crypto;
 
-import org.spongycastle.crypto.params.KeyParameter;
+import org.bouncycastle.crypto.params.KeyParameter;
 
 import java.io.Serializable;
 
