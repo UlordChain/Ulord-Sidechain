@@ -26,6 +26,9 @@ import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
 import co.usc.peg.BridgeUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
+import org.bouncycastle.util.BigIntegers;
+import org.bouncycastle.util.encoders.Hex;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.Constants;
 import org.ethereum.crypto.ECKey;
@@ -35,13 +38,9 @@ import org.ethereum.crypto.HashUtil;
 import org.ethereum.util.ByteUtil;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPElement;
-import org.ethereum.util.RLPList;
 import org.ethereum.vm.GasCost;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.pqc.math.linearalgebra.ByteUtils;
-import org.spongycastle.util.BigIntegers;
-import org.spongycastle.util.encoders.Hex;
 
 import javax.annotation.Nullable;
 import java.math.BigInteger;
@@ -229,7 +228,10 @@ public class Transaction {
     }
 
     public void rlpParse() {
-        List<RLPElement> transaction = (RLPList)RLP.decode2(rlpEncoded).get(0);
+        List<RLPElement> transaction = RLP.decodeList(rlpEncoded);
+        if (transaction.size() != 9) {
+            throw new IllegalArgumentException("A transaction must have exactly 9 elements");
+        }
 
         this.nonce = transaction.get(0).getRLPData();
         this.gasPrice = RLP.parseCoinNonNullZero(transaction.get(1).getRLPData());
@@ -304,6 +306,12 @@ public class Transaction {
     public Coin getGasPrice() {
         if (!parsed) {
             rlpParse();
+        }
+
+        // some blocks have zero encoded as null, but if we altered the internal field then re-encoding the value would
+        // give a different value than the original.
+        if (gasPrice == null) {
+            return Coin.ZERO;
         }
 
         return gasPrice;
@@ -518,7 +526,7 @@ public class Transaction {
         byte[] toEncodeGasPrice = RLP.encodeCoinNonNullZero(this.gasPrice);
         byte[] toEncodeGasLimit = RLP.encodeElement(this.gasLimit);
         byte[] toEncodeReceiveAddress = RLP.encodeUscAddress(this.receiveAddress);
-        byte[] toEncodeValue = RLP.encodeCoinNonNullZero(this.value);
+        byte[] toEncodeValue = RLP.encodeCoinNullZero(this.value);
         byte[] toEncodeData = RLP.encodeElement(this.data);
 
         byte[] v;
@@ -547,6 +555,7 @@ public class Transaction {
                 toEncodeReceiveAddress, toEncodeValue, toEncodeData, v, r, s);
 
         Keccak256 hash = this.getHash();
+
         this.hash = hash == null ? null : hash.getBytes();
 
         return rlpEncoded;
@@ -587,17 +596,8 @@ public class Transaction {
     }
 
     public static Transaction create(UscSystemProperties config, String to, BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, byte[] decodedData) {
-        // Condition added by usc team.
-        if(gasLimit.equals(BigInteger.ZERO))
-            return new Transaction(BigIntegers.asUnsignedByteArray(nonce),
-                    BigIntegers.asUnsignedByteArray(gasPrice),
-                    gasLimit.toByteArray(),         // We don't want to use "asUnsignedByteArray" when gas limit is set to 0 as "asUnsignedByteArray" function returns an empty byte array {}
-                    to != null ? Hex.decode(to) : null,
-                    BigIntegers.asUnsignedByteArray(amount),
-                    decodedData,
-                    config.getBlockchainConfig().getCommonConstants().getChainId());
         return new Transaction(BigIntegers.asUnsignedByteArray(nonce),
-                BigIntegers.asUnsignedByteArray(gasPrice),
+                gasPrice.toByteArray(),
                 BigIntegers.asUnsignedByteArray(gasLimit),
                 to != null ? Hex.decode(to) : null,
                 BigIntegers.asUnsignedByteArray(amount),

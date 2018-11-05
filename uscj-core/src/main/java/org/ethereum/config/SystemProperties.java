@@ -83,7 +83,9 @@ public abstract class SystemProperties {
     public static final String PROPERTY_BC_CONFIG_NAME = "blockchain.config.name";
     // TODO: define a proper name for this config setting
     public static final String PROPERTY_BC_CONFIG_HARDFORKACTIVATION_NAME = "blockchain.config.hardforkActivationHeights";
+    public static final String PROPERTY_DB_DIR = "database.dir";
     public static final String PROPERTY_PEER_PORT = "peer.port";
+    public static final String PROPERTY_PEER_ACTIVE = "peer.active";
     public static final String PROPERTY_DB_RESET = "database.reset";
     // TODO review rpc properties
     public static final String PROPERTY_RPC_CORS = "rpc.providers.web.cors";
@@ -101,6 +103,8 @@ public abstract class SystemProperties {
     /* Testing */
     private static final Boolean DEFAULT_VMTEST_LOAD_LOCAL = false;
     private static final String DEFAULT_BLOCKS_LOADER = "";
+
+
 
     /**
      * Marks config accessor methods which need to be called (for value validation)
@@ -125,7 +129,7 @@ public abstract class SystemProperties {
     private Boolean syncEnabled = null;
     private Boolean discoveryEnabled = null;
 
-    private BlockchainNetConfig blockchainConfig;
+    protected BlockchainNetConfig blockchainConfig;
     
     protected SystemProperties(ConfigLoader loader) {
         try {
@@ -179,25 +183,13 @@ public abstract class SystemProperties {
         }
     }
 
-    public <T> T getProperty(String propName, T defaultValue) {
-        if (!configFromFiles.hasPath(propName)) {
-            return defaultValue;
-        }
-
-        String string = configFromFiles.getString(propName);
-        if (string.trim().isEmpty()) {
-            return defaultValue;
-        }
-        
-        return (T) configFromFiles.getAnyRef(propName);
-    }
-
     @ValidateMe
-    public BlockchainNetConfig getBlockchainConfig() {
+    public synchronized BlockchainNetConfig getBlockchainConfig() {
         if (blockchainConfig == null) {
             blockchainConfig = buildBlockchainConfig();
             DONOTUSE_blockchainConfig = blockchainConfig;
         }
+
         return blockchainConfig;
     }
 
@@ -514,6 +506,16 @@ public abstract class SystemProperties {
     }
 
     @ValidateMe
+    public int maxConnectionsPerAddressBlock() {
+        return configFromFiles.getInt("peer.blockAddress.maxConnections");
+    }
+
+    @ValidateMe
+    public int blockAddressCIDR() {
+        return configFromFiles.getInt("peer.blockAddress.cidr");
+    }
+
+    @ValidateMe
     public boolean eip8() {
         return configFromFiles.getBoolean("peer.p2p.eip8");
     }
@@ -677,6 +679,18 @@ public abstract class SystemProperties {
         return configFromFiles.hasPath(path) ? configFromFiles.getLong(path) : val;
     }
 
+    protected double getDouble(String path, double val) {
+        return configFromFiles.hasPath(path) ? configFromFiles.getDouble(path) : val;
+    }
+
+    protected boolean getBoolean(String path, boolean val) {
+        return configFromFiles.hasPath(path) ? configFromFiles.getBoolean(path) : val;
+    }
+
+    protected String getString(String path, String val) {
+        return configFromFiles.hasPath(path) ? configFromFiles.getString(path) : val;
+    }
+
     /*
      *
      * Testing
@@ -740,13 +754,6 @@ public abstract class SystemProperties {
 
     public String corsDomains() {
         return configFromFiles.getString(PROPERTY_RPC_CORS);
-    }
-
-    protected long getLongProperty(String propertyName, long defaultValue) {
-        return configFromFiles.hasPath(propertyName) ? configFromFiles.getLong(propertyName) : defaultValue;
-    }
-    protected boolean getBooleanProperty(String propertyName, boolean defaultValue) {
-        return configFromFiles.hasPath(propertyName) ? configFromFiles.getBoolean(propertyName) : defaultValue;
     }
 
     private InetAddress tryParseIpOrThrow(String ipToParse) throws IOException {

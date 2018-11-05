@@ -21,8 +21,9 @@ package org.ethereum.vm;
 
 import co.usc.config.VmConfig;
 import co.usc.core.UscAddress;
-import org.ethereum.config.BlockchainConfig;
+import org.ethereum.core.Blockchain;
 import org.ethereum.crypto.HashUtil;
+import org.ethereum.config.BlockchainConfig;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.MessageCall.MsgType;
 import org.ethereum.vm.program.Program;
@@ -38,6 +39,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.ethereum.util.ByteUtil.EMPTY_BYTE_ARRAY;
+import static org.ethereum.vm.OpCode.CALL;
 
 
 /**
@@ -779,10 +781,9 @@ public class VM {
             BlockchainConfig blockchainConfig = program.getBlockchainConfig();
             if(blockchainConfig.isUscIP90()) {
                 PrecompiledContracts.PrecompiledContract precompiledContract = precompiledContracts.getContractForAddress(blockchainConfig, address);
-                if(precompiledContract != null) {
+                if (precompiledContract != null) {
                     codeLength = new DataWord(BigIntegers.asUnsignedByteArray(DataWord.MAX_VALUE));
                 }
-
             }
             program.disposeWord(address);
         }
@@ -1413,6 +1414,10 @@ public class VM {
         // value is always zero in a DELEGATECALL operation
         DataWord value = op.equals(OpCode.DELEGATECALL) ? DataWord.ZERO : program.stackPop();
 
+        if (program.isStaticCall() && op == CALL && !value.isZero()) {
+            throw Program.ExceptionHelper.modificationException();
+        }
+
         DataWord inDataOffs = program.stackPop();
         DataWord inDataSize = program.stackPop();
 
@@ -1854,7 +1859,8 @@ public class VM {
             break;
             case OpCodes.OP_CALL:
             case OpCodes.OP_CALLCODE:
-            case OpCodes.OP_DELEGATECALL: doCALL();
+            case OpCodes.OP_DELEGATECALL:
+                doCALL();
             break;
             case OpCodes.OP_STATICCALL:
                 if (!config.isUscIP91()) {

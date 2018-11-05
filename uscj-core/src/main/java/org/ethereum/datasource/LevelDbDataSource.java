@@ -19,7 +19,6 @@
 
 package org.ethereum.datasource;
 
-import co.usc.config.UscSystemProperties;
 import co.usc.panic.PanicProcessor;
 import org.iq80.leveldb.*;
 import org.slf4j.Logger;
@@ -50,7 +49,7 @@ public class LevelDbDataSource implements KeyValueDataSource {
     private static final PanicProcessor panicProcessor = new PanicProcessor();
 
     private final String databaseDir;
-    private String name;
+    private final String name;
     private DB db;
     private boolean alive;
 
@@ -142,11 +141,6 @@ public class LevelDbDataSource implements KeyValueDataSource {
         } finally {
             resetDbLock.writeLock().unlock();
         }
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
