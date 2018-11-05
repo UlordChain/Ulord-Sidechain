@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import java.math.BigInteger;
+import java.time.Duration;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -48,11 +49,10 @@ public class MinerClientImpl implements MinerClient {
     private static final Logger logger = LoggerFactory.getLogger("minerClient");
     private static final PanicProcessor panicProcessor = new PanicProcessor();
 
-    private static final long DELAY_BETWEEN_GETWORK_REFRESH_MS = 1000;
-
     private final Usc usc;
     private final MinerServer minerServer;
-    private final UscSystemProperties config;
+    private final Duration delayBetweenBlocks;
+    private final Duration delayBetweenRefreshes;
 
     private volatile boolean stop = false;
 
@@ -67,12 +67,13 @@ public class MinerClientImpl implements MinerClient {
     public MinerClientImpl(Usc usc, MinerServer minerServer, UscSystemProperties config) {
         this.usc = usc;
         this.minerServer = minerServer;
-        this.config = config;
+        this.delayBetweenBlocks = config.minerClientDelayBetweenBlocks();
+        this.delayBetweenRefreshes = config.minerClientDelayBetweenRefreshes();
     }
 
     public void mine() {
         aTimer = new Timer("Refresh work for mining");
-        aTimer.schedule(createRefreshWork(), 0, DELAY_BETWEEN_GETWORK_REFRESH_MS);
+        aTimer.schedule(createRefreshWork(), 0, this.delayBetweenRefreshes.toMillis());
 
         Thread doWorkThread = this.createDoWorkThread();
         doWorkThread.start();
@@ -104,11 +105,8 @@ public class MinerClientImpl implements MinerClient {
     public void doWork() {
         try {
             if (mineBlock()) {
-                if (config.getBlockchainConfig() instanceof RegTestConfig) {
-                    Thread.sleep(1000);
-                }
-                else if (config.getBlockchainConfig() instanceof DevNetConfig) {
-                    Thread.sleep(20000);
+                if (!this.delayBetweenBlocks.isZero()) {
+                    Thread.sleep(this.delayBetweenBlocks.toMillis());
                 }
             }
         } catch (Exception e) {
@@ -147,7 +145,6 @@ public class MinerClientImpl implements MinerClient {
         co.usc.ulordj.core.UldBlock ulordMergedMiningBlock = MinerUtils.getUlordMergedMiningBlock(ulordNetworkParameters, ulordMergedMiningCoinbaseTransaction);
 
         BigInteger target = new BigInteger(1, TypeConverter.stringHexToByteArray(work.getTarget()));
-        logger.info("Miner Client Target : " + target);
         boolean foundNonce = findNonce(ulordMergedMiningBlock, target);
 
         if (newBestBlockArrivedFromAnotherNode) {
@@ -159,9 +156,8 @@ public class MinerClientImpl implements MinerClient {
         }
 
         if (foundNonce) {
-            String blockHashForMergedMining = work.getBlockHashForMergedMining();
-            logger.info("Mined block: " + blockHashForMergedMining);
-            minerServer.submitUlordBlock(blockHashForMergedMining, ulordMergedMiningBlock);
+            logger.info("Mined block: " + work.getBlockHashForMergedMining());
+            minerServer.submitUlordBlock(work.getBlockHashForMergedMining(), ulordMergedMiningBlock);
         }
 
         return foundNonce;

@@ -18,14 +18,14 @@
 
 package co.usc.peg;
 
-import co.usc.peg.whitelist.LockWhitelist;
-import co.usc.peg.whitelist.LockWhitelistEntry;
-import co.usc.peg.whitelist.OneOffWhiteListEntry;
-import co.usc.peg.whitelist.UnlimitedWhiteListEntry;
 import co.usc.ulordj.core.*;
 import co.usc.config.BridgeConstants;
 import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
+import co.usc.peg.whitelist.LockWhitelist;
+import co.usc.peg.whitelist.LockWhitelistEntry;
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
+import co.usc.peg.whitelist.UnlimitedWhiteListEntry;
 import org.apache.commons.lang3.tuple.Pair;
 import org.ethereum.core.Repository;
 import org.ethereum.vm.DataWord;

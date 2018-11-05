@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public class LockWhitelist {
 
     private static final Comparator<Address> LEXICOGRAPHICAL_COMPARATOR
-            = Comparator.comparing(Address::getHash160, UnsignedBytes.lexicographicalComparator());
+        = Comparator.comparing(Address::getHash160, UnsignedBytes.lexicographicalComparator());
 
     private SortedMap<Address, LockWhitelistEntry> whitelistedAddresses;
     private int disableBlockHeight;

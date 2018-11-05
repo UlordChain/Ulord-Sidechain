@@ -49,9 +49,7 @@ public class BlockExecutor {
     private final Repository repository;
     private final TransactionExecutorFactory transactionExecutorFactory;
 
-    private final ProgramInvokeFactory programInvokeFactory = new ProgramInvokeFactoryImpl();
-
-    public BlockExecutor( Repository repository, TransactionExecutorFactory transactionExecutorFactory) {
+    public BlockExecutor(Repository repository, TransactionExecutorFactory transactionExecutorFactory) {
         this.repository = repository;
         this.transactionExecutorFactory = transactionExecutorFactory;
     }
@@ -206,7 +204,6 @@ public class BlockExecutor {
                     block,
                     totalGasUsed
             );
-
             boolean readyToExecute = txExecutor.init();
             if (!ignoreReadyToExecute && !readyToExecute) {
                 if (discardInvalidTxs) {

@@ -83,7 +83,7 @@ public class UscWireProtocol extends EthHandler {
         this.messageHandler = messageHandler;
         this.blockchain = blockchain;
         this.config = config;
-        this.messageSender = new EthMessageSender(config, this);
+        this.messageSender = new EthMessageSender(this);
         this.messageRecorder = config.getMessageRecorder();
     }
 
@@ -180,14 +180,6 @@ public class UscWireProtocol extends EthHandler {
             // basic checks passed, update statistics
             channel.getNodeStatistics().ethHandshake(msg);
             ethereumListener.onEthStatusUpdated(channel, msg);
-
-            if (peerDiscoveryMode) {
-                loggerNet.debug("Peer discovery mode: STATUS received, disconnecting...");
-                disconnect(ReasonCode.REQUESTED);
-                ctx.close().sync();
-                ctx.disconnect().sync();
-                return;
-            }
         } catch (NoSuchElementException e) {
             loggerNet.debug("EthHandler already removed");
         }
@@ -245,7 +237,7 @@ public class UscWireProtocol extends EthHandler {
 
         // USC new protocol send status
         Status status = new Status(bestBlock.getNumber(), bestBlock.getHash().getBytes(), bestBlock.getParentHash().getBytes(), totalDifficulty);
-        UscMessage uscmessage = new UscMessage(config, new StatusMessage(status));
+        UscMessage uscmessage = new UscMessage(new StatusMessage(status));
         loggerNet.trace("Sending status best block {} to {}", status.getBestBlockNumber(), this.messageSender.getPeerNodeID().toString());
         sendMessage(uscmessage);
 
@@ -254,7 +246,7 @@ public class UscWireProtocol extends EthHandler {
 
     @Override
     public void sendTransaction(List<Transaction> txs) {
-        TransactionsMessage msg = new TransactionsMessage(config, txs);
+        TransactionsMessage msg = new TransactionsMessage(txs);
         sendMessage(msg);
     }
 

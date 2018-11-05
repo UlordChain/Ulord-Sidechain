@@ -18,13 +18,10 @@
 
 package co.usc.db;
 
-import co.usc.config.UscSystemProperties;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
 import co.usc.trie.*;
 import org.ethereum.datasource.DataSourcePool;
-import org.ethereum.datasource.HashMapDB;
-import org.ethereum.datasource.KeyValueDataSource;
 import org.ethereum.db.ByteArrayWrapper;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.util.RLP;
@@ -40,7 +37,6 @@ import org.bouncycastle.util.encoders.Hex;
 import javax.annotation.Nullable;
 import java.util.*;
 
-import static org.ethereum.datasource.DataSourcePool.levelDbByName;
 import static org.ethereum.util.ByteUtil.EMPTY_BYTE_ARRAY;
 import static org.ethereum.util.ByteUtil.toHexString;
 import static org.ethereum.util.ByteUtil.wrap;
@@ -234,10 +230,10 @@ public class ContractDetailsImpl implements ContractDetails {
         logger.trace("getting contract details as bytes, hash {}, address {}, storage size {}, has external storage {}", this.getStorageHashAsString(), this.getAddressAsString(), this.getStorageSize(), this.hasExternalStorage());
 
         byte[] rlpAddress = RLP.encodeElement(address);
-        byte[] rlpIsExternalStorage = RLP.encodeByte((byte) (externalStorage ? 1 : 0));
+        byte[] rlpIsExternalStorage = RLP.encodeByte((byte) 1);
 
         // Serialize the full trie, or only the root hash if external storage is used
-        byte[] rlpStorage = RLP.encodeElement(externalStorage ? this.trie.getHash().getBytes() : this.trie.serialize());
+        byte[] rlpStorage = RLP.encodeElement(this.trie.getHash().getBytes());
 
         byte[] rlpCode = RLP.encodeElement(this.code);
         byte[] rlpKeys = RLP.encodeSet(this.keys);

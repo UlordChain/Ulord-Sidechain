@@ -39,7 +39,7 @@ public class UscAddress {
      */
     private static final int LENGTH_IN_BYTES = 20;
 
-    private static final UscAddress NULL_ADDRESS = new UscAddress(new byte[LENGTH_IN_BYTES]);
+    private static final UscAddress NULL_ADDRESS = new UscAddress();
 
     /**
      * This compares using the lexicographical order of the sender unsigned bytes.
@@ -73,6 +73,13 @@ public class UscAddress {
         }
 
         this.bytes = bytes;
+    }
+
+    /**
+     * This instantiates the contract creation address.
+     */
+    private UscAddress() {
+        this.bytes = new byte[0];
     }
 
     /**

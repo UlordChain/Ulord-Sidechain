@@ -19,7 +19,6 @@
 package co.usc.core.bc;
 
 import co.usc.blocks.BlockRecorder;
-import co.usc.config.UscSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.net.Metrics;
 import co.usc.panic.PanicProcessor;
@@ -34,7 +33,6 @@ import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;
 import org.ethereum.db.TransactionInfo;
 import org.ethereum.listener.EthereumListener;
-import org.ethereum.manager.AdminInfo;
 import org.ethereum.util.RLP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,8 +91,8 @@ public class BlockChainImpl implements Blockchain {
     private final Object accessLock = new Object();
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    private final int flushNumberOfBlocks;
     private final boolean flushEnabled;
+    private final int flushNumberOfBlocks;
     private final BlockExecutor blockExecutor;
     private BlockRecorder blockRecorder;
     private boolean noValidation;

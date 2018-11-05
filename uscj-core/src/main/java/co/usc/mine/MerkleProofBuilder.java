@@ -15,21 +15,25 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package co.usc.mine;
 
-package co.usc.peg.whitelist;
+import co.usc.ulordj.core.UldBlock;
 
-import co.usc.ulordj.core.Address;
-import co.usc.ulordj.core.Coin;
+import java.util.List;
 
 /**
- * Represents a lock whitelist
- * entry for a LockWhiteList.
- *
- * @author Jose Dahlquist
+ * Builds Merkle proofs for inclusion in the merged-mining block header
  */
-public interface LockWhitelistEntry {
-    Address address();
-    boolean canLock(Coin value);
-    boolean isConsumed();
-    void consume();
+public interface MerkleProofBuilder {
+
+    byte[] buildFromMerkleHashes(
+            UldBlock blockWithHeaderOnly,
+            List<String> merkleHashesString,
+            int blockTxnCount);
+
+    byte[] buildFromTxHashes(
+            UldBlock blockWithHeaderOnly,
+            List<String> txHashesString);
+
+    byte[] buildFromBlock(UldBlock bitcoinMergedMiningBlock);
 }

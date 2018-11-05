@@ -16,6 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package co.usc.peg;
+
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.db.ByteArrayWrapper;
@@ -48,7 +49,7 @@ public enum BridgeMethods {
             ),
             25000L,
             (BridgeMethodExecutorTyped) Bridge::addOneOffLockWhitelistAddress,
-            blockchainConfig -> !blockchainConfig.isUscIP87(),
+            blockChainConfig -> !blockChainConfig.isUscIP87(),
             false
     ),
     ADD_ONE_OFF_LOCK_WHITELIST_ADDRESS(
@@ -119,11 +120,10 @@ public enum BridgeMethods {
                     new String[]{},
                     new String[]{"int"}
             ),
-            19000L,
+            20000L,
             (BridgeMethodExecutorTyped) Bridge::getUldBlockchainInitialBlockHeight,
             (blockchainConfig -> blockchainConfig.isUscIP89()),
             true
-
     ),
     GET_ULD_BLOCKCHAIN_BLOCK_LOCATOR(
             CallTransaction.Function.fromSignature(
@@ -135,7 +135,6 @@ public enum BridgeMethods {
             (BridgeMethodExecutorTyped) Bridge::getUldBlockchainBlockLocator,
             blockchainConfig -> !blockchainConfig.isUscIP89(),
             true
-
     ),
     GET_ULD_BLOCKCHAIN_BLOCK_HASH_AT_DEPTH(
             CallTransaction.Function.fromSignature(
@@ -143,7 +142,7 @@ public enum BridgeMethods {
                     new String[]{"int256"},
                     new String[]{"bytes"}
             ),
-            76000L,
+            20000L,
             (BridgeMethodExecutorTyped) Bridge::getUldBlockchainBlockHashAtDepth,
             (blockchainConfig -> blockchainConfig.isUscIP89()),
             true
@@ -500,7 +499,6 @@ public enum BridgeMethods {
     public CallTransaction.Function getFunction() {
         return function;
     }
-
     public Boolean isEnabled(BlockchainConfig blockchainConfig) {
         return this.isEnabledFunction.apply(blockchainConfig);
     }

@@ -20,7 +20,6 @@ package co.usc.core.bc;
 
 import co.usc.config.UscSystemProperties;
 import co.usc.core.Coin;
-import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.net.handler.TxPendingValidator;
 import co.usc.trie.Trie;
@@ -160,25 +159,25 @@ public class TransactionPoolImpl implements TransactionPool {
             new TransactionSet(pendingTransactions),
             (repository, tx) ->
                 new TransactionExecutor(
-                        tx,
-                        0,
-                        bestBlock.getCoinbase(),
-                        repository,
-                        blockStore,
-                        receiptStore,
-                        programInvokeFactory,
-                        createFakePendingBlock(bestBlock),
-                        new EthereumListenerAdapter(),
-                        0,
-                        config.getVmConfig(),
-                        config.getBlockchainConfig(),
-                        config.playVM(),
-                        config.isRemascEnabled(),
-                        config.vmTrace(),
-                        new PrecompiledContracts(config),
-                        config.databaseDir(),
-                        config.vmTraceDir(),
-                        config.vmTraceCompressed()
+                    tx,
+                    0,
+                    bestBlock.getCoinbase(),
+                    repository,
+                    blockStore,
+                    receiptStore,
+                    programInvokeFactory,
+                    createFakePendingBlock(bestBlock),
+                    new EthereumListenerAdapter(),
+                    0,
+                    config.getVmConfig(),
+                    config.getBlockchainConfig(),
+                    config.playVM(),
+                    config.isRemascEnabled(),
+                    config.vmTrace(),
+                    new PrecompiledContracts(config),
+                    config.databaseDir(),
+                    config.vmTraceDir(),
+                    config.vmTraceCompressed()
                 )
         );
     }
@@ -252,12 +251,17 @@ public class TransactionPoolImpl implements TransactionPool {
             return false;
         }
 
+        if (!isBumpingGasPriceForSameNonceTx(tx)) {
+            return false;
+        }
+
         transactionBlocks.put(hash, bnumber);
         final long timestampSeconds = this.getCurrentTimeInSeconds();
         transactionTimes.put(hash, timestampSeconds);
 
-        BigInteger txnonce = tx.getNonceAsInteger();
-        if (!txnonce.equals(getPendingState().getNonce(tx.getSender()))) {
+        BigInteger currentNonce = getPendingState().getNonce(tx.getSender());
+        BigInteger txNonce = tx.getNonceAsInteger();
+        if (txNonce.compareTo(currentNonce) > 0) {
             this.addQueuedTransaction(tx);
 
             return false;
@@ -277,6 +281,25 @@ public class TransactionPoolImpl implements TransactionPool {
             });
         }
 
+        return true;
+    }
+
+    private boolean isBumpingGasPriceForSameNonceTx(Transaction tx) {
+        Optional<Transaction> oldTxWithNonce = pendingTransactions.getTransactionsWithSender(tx.getSender()).stream()
+                .filter(t -> t.getNonceAsInteger().equals(tx.getNonceAsInteger()))
+                .findFirst();
+
+        if (oldTxWithNonce.isPresent()){
+            //oldGasPrice * (100 + priceBump) / 100
+            Coin oldGasPrice = oldTxWithNonce.get().getGasPrice();
+            Coin gasPriceBumped = oldGasPrice
+                    .multiply(BigInteger.valueOf(config.getGasPriceBump() + 100L))
+                    .divide(BigInteger.valueOf(100));
+
+            if (oldGasPrice.compareTo(tx.getGasPrice()) >= 0 || gasPriceBumped.compareTo(tx.getGasPrice()) > 0) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -419,7 +442,7 @@ public class TransactionPoolImpl implements TransactionPool {
         // creating fake lightweight calculated block with no hashes calculations
         return new Block(best.getHash().getBytes(),
                             emptyUncleHashList, // uncleHash
-                            UscAddress.nullAddress().getBytes(), //coinbase
+                            new byte[20], //coinbase
                             new byte[32], // log bloom - from tx receipts
                             best.getDifficulty().getBytes(), // difficulty
                             best.getNumber() + 1, //number

@@ -26,6 +26,7 @@ import co.usc.core.UscAddress;
 import co.usc.core.bc.PendingState;
 import co.usc.crypto.Keccak256;
 import co.usc.remasc.RemascTransaction;
+import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.core.TransactionPool;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
@@ -39,7 +40,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 public class MinerUtils {
 
@@ -132,11 +133,26 @@ public class MinerUtils {
         return new co.usc.ulordj.core.UldBlock(params, params.getProtocolVersionNum(NetworkParameters.ProtocolVersion.CURRENT), prevBlockHash, null, time, difficultyTarget, BigInteger.ZERO, transactions);
     }
 
+    /**
+     * Takes in a proofBuilderFunction (e.g. buildFromTxHashes)
+     * and executes it on the builder corresponding to this block number.
+     */
+    public static byte[] buildMerkleProof(
+            BlockchainNetConfig blockchainConfig,
+            Function<MerkleProofBuilder, byte[]> proofBuilderFunction,
+            long blockNumber) {
+        if (blockchainConfig.getConfigForBlock(blockNumber).isRskip92()) {
+            return proofBuilderFunction.apply(new Rskip92MerkleProofBuilder());
+        } else {
+            return proofBuilderFunction.apply(new GenesisMerkleProofBuilder());
+        }
+    }
+
     public List<org.ethereum.core.Transaction> getAllTransactions(TransactionPool transactionPool) {
-        //TODO: optimize this by considering GasPrice (order by GasPrice/Nonce)
-        return transactionPool.getPendingTransactions().stream()
-                .sorted(PendingState.TRANSACTION_COMPARATOR)
-                .collect(Collectors.toCollection(LinkedList::new));
+
+        List<Transaction> txs = transactionPool.getPendingTransactions();
+
+        return PendingState.sortByPriceTakingIntoAccountSenderAndNonce(txs);
     }
 
     public List<org.ethereum.core.Transaction> filterTransactions(List<Transaction> txsToRemove, List<Transaction> txs, Map<UscAddress, BigInteger> accountNonces, Repository originalRepo, Coin minGasPrice) {

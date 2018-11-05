@@ -18,8 +18,6 @@
 
 package co.usc.peg;
 
-import co.usc.peg.whitelist.LockWhitelistEntry;
-import co.usc.peg.whitelist.OneOffWhiteListEntry;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.store.BlockStoreException;
 import co.usc.config.BridgeConstants;
@@ -98,7 +96,6 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
     // (replacing the need for getUldBlockchainBlockLocator).
     // The goal of this function is to help synchronize bridge and federators blockchains.
     public static final CallTransaction.Function GET_ULD_BLOCKCHAIN_BLOCK_HASH_AT_DEPTH = BridgeMethods.GET_ULD_BLOCKCHAIN_BLOCK_HASH_AT_DEPTH.getFunction();
-
     // Returns the minimum amount of satoshis a user should send to the federation.
     public static final CallTransaction.Function GET_MINIMUM_LOCK_TX_VALUE = BridgeMethods.GET_MINIMUM_LOCK_TX_VALUE.getFunction();
 
@@ -183,9 +180,9 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
 
     private final UscSystemProperties config;
     private final BridgeConstants bridgeConstants;
+
     private BlockchainNetConfig blockchainNetConfig;
     private BlockchainConfig blockchainConfig;
-
 
     private org.ethereum.core.Transaction uscTx;
     private org.ethereum.core.Block uscExecutionBlock;
@@ -319,7 +316,12 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
                 // If the user tries to call an non-existent function, parseData() will return null.
                 result = bridgeParsedData.bridgeMethod.getExecutor().execute(this, bridgeParsedData.args);
             } catch (BridgeIllegalArgumentException ex) {
-                logger.warn("Error executing: {}", bridgeParsedData.bridgeMethod, ex);
+                String errorMessage = String.format("Error executing: %s", bridgeParsedData.bridgeMethod);
+                logger.warn(errorMessage, ex);
+                if (blockchainConfig.isUscIP88()) {
+                    throw new BridgeIllegalArgumentException(errorMessage);
+                }
+
                 return null;
             }
 
@@ -701,7 +703,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         try {
             publicKeyBytes = (byte[]) args[0];
         } catch (Exception e) {
-            logger.warn("Exception in addFederatorPublicKey: {}", e.getMessage());
+            logger.warn("Exception in addFederatorPublicKey", e);
             return -10;
         }
 
@@ -719,7 +721,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         try {
             hash = (byte[]) args[0];
         } catch (Exception e) {
-            logger.warn("Exception in commitFederation: {}", e.getMessage());
+            logger.warn("Exception in commitFederation", e);
             return -10;
         }
 
@@ -882,7 +884,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         try {
             feePerKb = Coin.valueOf(((BigInteger) args[0]).longValueExact());
         } catch (Exception e) {
-            logger.warn("Exception in voteFeePerKbChange: {}", e);
+            logger.warn("Exception in voteFeePerKbChange", e);
             return -10;
         }
 

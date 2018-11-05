@@ -91,10 +91,10 @@ public class BridgeSupport {
 
     private final FederationSupport federationSupport;
 
-    private Context uldContext;
+    private final Context uldContext;
     private UldBlockstoreWithCache uldBlockStore;
     private UldBlockChain uldBlockChain;
-    private org.ethereum.core.Block uscExecutionBlock;
+    private final org.ethereum.core.Block uscExecutionBlock;
 
     // Used by unit tests
     public BridgeSupport(
@@ -112,11 +112,11 @@ public class BridgeSupport {
                 executionBlock,
                 config,
                 bridgeConstants,
-                eventLogger
+                eventLogger,
+                new Context(bridgeConstants.getUldParams()),
+                uldBlockStore,
+                uldBlockChain
         );
-        this.uldContext = new Context(this.bridgeConstants.getUldParams());
-        this.uldBlockStore = uldBlockStore;
-        this.uldBlockChain = uldBlockChain;
     }
 
     // Used by bridge
@@ -127,16 +127,20 @@ public class BridgeSupport {
             UscAddress contractAddress,
             Block uscExecutionBlock) {
         this(
-                config,
                 repository,
-                eventLogger,
                 new BridgeStorageProvider(
                         repository,
                         contractAddress,
                         config.getBlockchainConfig().getCommonConstants().getBridgeConstants(),
                         BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(uscExecutionBlock.getNumber()))
                 ),
-                uscExecutionBlock
+                uscExecutionBlock,
+                config,
+                config.getBlockchainConfig().getCommonConstants().getBridgeConstants(),
+                eventLogger,
+                new Context(config.getBlockchainConfig().getCommonConstants().getBridgeConstants().getBtcParams()),
+                null,
+                null
         );
     }
 
@@ -152,25 +156,58 @@ public class BridgeSupport {
                 uscExecutionBlock,
                 config,
                 config.getBlockchainConfig().getCommonConstants().getBridgeConstants(),
-                eventLogger
+                eventLogger,
+                new Context(config.getBlockchainConfig().getCommonConstants().getBridgeConstants().getUldParams()),
+                null,
+                null
         );
     }
 
-    // this constructor has all common parameters, mostly dependencies that aren't instantiated here
     private BridgeSupport(
             Repository repository,
             BridgeStorageProvider provider,
             Block executionBlock,
             UscSystemProperties config,
             BridgeConstants bridgeConstants,
-            BridgeEventLogger eventLogger) {
+            BridgeEventLogger eventLogger,
+            Context uldContext,
+            UldBlockstoreWithCache uldBlockStore,
+            UldBlockChain uldBlockChain) {
+        this(
+                repository,
+                provider,
+                executionBlock,
+                config,
+                bridgeConstants,
+                eventLogger,
+                uldContext,
+                new FederationSupport(provider, bridgeConstants, executionBlock),
+                uldBlockStore,
+                uldBlockChain
+        );
+    }
+
+    public BridgeSupport(
+            Repository repository,
+            BridgeStorageProvider provider,
+            Block executionBlock,
+            RskSystemProperties config,
+            BridgeConstants bridgeConstants,
+            BridgeEventLogger eventLogger,
+            Context uldContext,
+            FederationSupport federationSupport,
+            BtcBlockstoreWithCache uldBlockStore,
+            BtcBlockChain uldBlockChain) {
         this.uscRepository = repository;
         this.provider = provider;
         this.uscExecutionBlock = executionBlock;
         this.config = config;
         this.bridgeConstants = bridgeConstants;
         this.eventLogger = eventLogger;
-        this.federationSupport = new FederationSupport(provider, bridgeConstants, executionBlock);
+        this.uldContext = uldContext;
+        this.federationSupport = federationSupport;
+        this.uldBlockStore = uldBlockStore;
+        this.uldBlockChain = uldBlockChain;
     }
 
     private RepositoryBlockStore buildRepositoryBlockStore() throws BlockStoreException, IOException {

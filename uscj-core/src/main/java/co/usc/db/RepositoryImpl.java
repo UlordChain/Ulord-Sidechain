@@ -18,7 +18,6 @@
 
 package co.usc.db;
 
-import co.usc.config.UscSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
@@ -73,7 +72,7 @@ public class RepositoryImpl implements Repository {
             TrieStore.Pool trieStorePool,
             int memoryStorageLimit) {
         this(store, new DetailsDataStore(new DatabaseImpl(detailsDS), trieStorePool, memoryStorageLimit),
-                trieStorePool, memoryStorageLimit);
+             trieStorePool, memoryStorageLimit);
     }
 
     private RepositoryImpl(
@@ -97,7 +96,8 @@ public class RepositoryImpl implements Repository {
                 null,
                 null,
                 trieStorePool,
-                memoryStorageLimit));
+                memoryStorageLimit
+        ));
         return accountState;
     }
 
@@ -353,11 +353,13 @@ public class RepositoryImpl implements Repository {
                 ContractDetailsCacheImpl contractDetailsCache = (ContractDetailsCacheImpl) contractDetails;
 
                 if (contractDetailsCache.getOriginalContractDetails() == null) {
-                    ContractDetails originalContractDetails = new ContractDetailsImpl(addr.getBytes(),
+                    ContractDetails originalContractDetails = new ContractDetailsImpl(
+                            addr.getBytes(),
                             null,
                             null,
                             trieStorePool,
-                            memoryStorageLimit);
+                            memoryStorageLimit
+                    );
                     originalContractDetails.setAddress(addr.getBytes());
                     contractDetailsCache.setOriginalContractDetails(originalContractDetails);
                     contractDetailsCache.commit();
