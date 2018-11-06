@@ -18,13 +18,14 @@
 
 package co.usc.peg.performance;
 
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.store.BlockStoreException;
 import co.usc.ulordj.store.UldBlockStore;
 import co.usc.config.TestSystemProperties;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageProvider;
-import co.usc.peg.LockWhitelist;
+import co.usc.peg.whitelist.LockWhitelist;
 import co.usc.peg.RepositoryBlockStore;
 import co.usc.config.TestSystemProperties;
 import org.ethereum.core.Repository;
@@ -141,7 +142,7 @@ public class LockWhitelistTest extends BridgePerformanceTestCase {
             for (int i = 0; i < size; i++) {
                 Address address = new UldECKey().toAddress(networkParameters);
                 Coin value = Helper.randomCoin(Coin.COIN, 1, 30);
-                lockWhitelist.put(address, value);
+                lockWhitelist.put(address, new OneOffWhiteListEntry(address, value));
             }
         };
     }
