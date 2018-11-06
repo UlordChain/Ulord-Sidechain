@@ -19,7 +19,7 @@
 
 package org.ethereum.net.eth.message;
 
-import co.usc.net.eth.RskMessage;
+import co.usc.net.eth.UscMessage;
 import org.ethereum.net.message.Message;
 import org.ethereum.net.message.MessageFactory;
 

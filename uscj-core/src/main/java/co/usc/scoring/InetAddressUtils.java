@@ -37,7 +37,7 @@ public final class InetAddressUtils {
      * Convert a text representation to an InetAddress
      * It supports IPV4 and IPV6 formats
      *
-     * @param   hostname    the address
+     * @param   name    the address
      *
      * @return  the text converted to an InetAddress
      */

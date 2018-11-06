@@ -18,7 +18,6 @@
 
 package co.usc.remasc;
 
-import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.core.Block;
@@ -39,7 +38,7 @@ public class RemascTransaction extends Transaction {
      * Instead of the empty array, it is encoded as the array with just one zero.
      * This instance should not be used for any other reason.
      */
-    public static final UscAddress REMASC_ADDRESS = new UscAddress(UscAddress.nullAddress().getBytes()) {
+    public static final UscAddress REMASC_ADDRESS = new UscAddress(new byte[20]) {
         @Override
         public byte[] getBytes() {
             return ZERO_BYTE_ARRAY;

@@ -138,7 +138,7 @@ public class BridgeSupport {
                 config,
                 config.getBlockchainConfig().getCommonConstants().getBridgeConstants(),
                 eventLogger,
-                new Context(config.getBlockchainConfig().getCommonConstants().getBridgeConstants().getBtcParams()),
+                new Context(config.getBlockchainConfig().getCommonConstants().getBridgeConstants().getUldParams()),
                 null,
                 null
         );
@@ -191,13 +191,13 @@ public class BridgeSupport {
             Repository repository,
             BridgeStorageProvider provider,
             Block executionBlock,
-            RskSystemProperties config,
+            UscSystemProperties config,
             BridgeConstants bridgeConstants,
             BridgeEventLogger eventLogger,
             Context uldContext,
             FederationSupport federationSupport,
-            BtcBlockstoreWithCache uldBlockStore,
-            BtcBlockChain uldBlockChain) {
+            UldBlockstoreWithCache uldBlockStore,
+            UldBlockChain uldBlockChain) {
         this.uscRepository = repository;
         this.provider = provider;
         this.uscExecutionBlock = executionBlock;

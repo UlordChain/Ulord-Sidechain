@@ -20,7 +20,6 @@ package co.usc.peg;
 
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.store.BlockStoreException;
-import co.usc.ulordj.store.UldBlockStore;
 import co.usc.core.UscAddress;
 import co.usc.util.MaxSizeHashMap;
 import org.ethereum.config.SystemProperties;

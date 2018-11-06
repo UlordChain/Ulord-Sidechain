@@ -322,7 +322,7 @@ public class ChannelManagerImpl implements ChannelManager {
         if (channel == null){
             return false;
         }
-        EthMessage msg = new RskMessage(message);
+        EthMessage msg = new UscMessage(message);
         channel.sendMessage(msg);
         return true;
     }

@@ -15,32 +15,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package co.usc.validators;
 
-package org.ethereum.rpc.Simples;
+import co.usc.ulordj.core.Sha256Hash;
 
-import org.ethereum.net.client.Capability;
-import org.ethereum.net.client.ConfigCapabilities;
-import org.ethereum.net.p2p.HelloMessage;
+public interface MerkleProofValidator {
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Created by Ruben Altman on 09/06/2016.
- */
-public class SimpleConfigCapabilities implements ConfigCapabilities {
-
-    @Override
-    public List<Capability> getConfigCapabilities() {
-        List<Capability> capabilities = new ArrayList<>();
-
-        capabilities.add(new Capability("usc", (byte)1));
-
-        return capabilities;
-    }
-
-    @Override
-    public List<Capability> getSupportedCapabilities(HelloMessage hello) {
-        return getConfigCapabilities();
-    }
+    /**
+     * Validates that the coinbase hash is included in the serialized PartialMerkleTree
+     * and it has the expected root.
+     */
+    boolean isValid(Sha256Hash expectedRoot, Sha256Hash coinbaseHash);
 }

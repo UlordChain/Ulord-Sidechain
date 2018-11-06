@@ -47,7 +47,7 @@ public class BlockCacheTest {
     public void putAndGetValue() {
         BlockCache store = getSubject();
         Block block = Mockito.mock(Block.class);
-        store.put(new Keccak256(HASH_1), block);
+        store.addBlock(block);
 
         assertThat(store.getBlockByHash(HASH_1), is(block));
     }
@@ -55,11 +55,11 @@ public class BlockCacheTest {
     @Test
     public void putMoreThanSizeAndCheckCleanup() {
         BlockCache store = getSubject();
-        store.put(new Keccak256(HASH_1), Mockito.mock(Block.class));
-        store.put(new Keccak256(HASH_2), Mockito.mock(Block.class));
-        store.put(new Keccak256(HASH_3), Mockito.mock(Block.class));
-        store.put(new Keccak256(HASH_4), Mockito.mock(Block.class));
-        store.put(new Keccak256(HASH_5), Mockito.mock(Block.class));
+        store.addBlock(blockWithHash(new Keccak256(HASH_1)));
+        store.addBlock(blockWithHash(new Keccak256(HASH_2)));
+        store.addBlock(blockWithHash(new Keccak256(HASH_3)));
+        store.addBlock(blockWithHash(new Keccak256(HASH_4)));
+        store.addBlock(blockWithHash(new Keccak256(HASH_5)));
 
         assertThat(store.getBlockByHash(HASH_1), nullValue());
         assertThat(store.getBlockByHash(HASH_2), notNullValue());
@@ -71,12 +71,12 @@ public class BlockCacheTest {
     @Test
     public void repeatingValueAtEndPreventsCleanup() {
         BlockCache store = getSubject();
-        store.put(new Keccak256(HASH_1), Mockito.mock(Block.class));
-        store.put(new Keccak256(HASH_2), Mockito.mock(Block.class));
-        store.put(new Keccak256(HASH_3), Mockito.mock(Block.class));
-        store.put(new Keccak256(HASH_4), Mockito.mock(Block.class));
-        store.put(new Keccak256(HASH_1), Mockito.mock(Block.class));
-        store.put(new Keccak256(HASH_5), Mockito.mock(Block.class));
+        store.addBlock(blockWithHash(new Keccak256(HASH_1)));
+        store.addBlock(blockWithHash(new Keccak256(HASH_2)));
+        store.addBlock(blockWithHash(new Keccak256(HASH_3)));
+        store.addBlock(blockWithHash(new Keccak256(HASH_4)));
+        store.addBlock(blockWithHash(new Keccak256(HASH_1)));
+        store.addBlock(blockWithHash(new Keccak256(HASH_5)));
 
         assertThat(store.getBlockByHash(HASH_1), notNullValue());
         assertThat(store.getBlockByHash(HASH_2), nullValue());
@@ -108,6 +108,12 @@ public class BlockCacheTest {
 
     private BlockCache getSubject() {
         return new BlockCache(4);
+    }
+
+    private static Block blockWithHash(Keccak256 hash) {
+        Block mock = Mockito.mock(Block.class);
+        when(mock.getHash()).thenReturn(hash);
+        return mock;
     }
 
 }

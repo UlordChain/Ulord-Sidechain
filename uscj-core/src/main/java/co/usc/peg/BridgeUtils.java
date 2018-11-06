@@ -27,7 +27,6 @@ import co.usc.core.UscAddress;
 import co.usc.peg.ulord.UscAllowUnconfirmedCoinSelector;
 import co.usc.util.MaxSizeHashMap;
 import org.ethereum.config.BlockchainNetConfig;
-import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Transaction;
 import org.ethereum.vm.PrecompiledContracts;
 import org.slf4j.Logger;
@@ -154,6 +153,15 @@ public class BridgeUtils {
         return Optional.of(tx.getInput(0).getScriptSig());
     }
 
+    /**
+     * It checks if the tx doesn't spend any of the federations' funds and if it sends more than
+     * the minimum ({@see BridgeConstants::getMinimumLockTxValue}) to any of the federations
+     * @param tx the BTC transaction to check
+     * @param federations the active federations
+     * @param btcContext the BTC Context
+     * @param bridgeConstants the Bridge constants
+     * @return true if this is a valid lock transaction
+     */
     public static boolean isLockTx(UldTransaction tx, List<Federation> federations, Context uldContext, BridgeConstants bridgeConstants) {
         // First, check tx is not a typical release tx (tx spending from the any of the federation addresses and
         // optionally sending some change to any of the federation addresses)

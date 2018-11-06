@@ -141,8 +141,8 @@ public class MinerUtils {
             BlockchainNetConfig blockchainConfig,
             Function<MerkleProofBuilder, byte[]> proofBuilderFunction,
             long blockNumber) {
-        if (blockchainConfig.getConfigForBlock(blockNumber).isRskip92()) {
-            return proofBuilderFunction.apply(new Rskip92MerkleProofBuilder());
+        if (blockchainConfig.getConfigForBlock(blockNumber).isUscIP92()) {
+            return proofBuilderFunction.apply(new UscIP92MerkleProofBuilder());
         } else {
             return proofBuilderFunction.apply(new GenesisMerkleProofBuilder());
         }

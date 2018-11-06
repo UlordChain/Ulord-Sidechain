@@ -20,7 +20,6 @@ package co.usc.remasc;
 
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
-import co.usc.peg.BridgeStorageProvider;
 import org.ethereum.core.Repository;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPList;
@@ -33,7 +32,7 @@ import java.util.*;
 
 /**
  * Responsible for persisting the remasc state into the contract state
- * @see BridgeStorageProvider
+ * @see co.usc.peg.BridgeStorageProvider
  * @author Oscar Guindzberg
  */
 class RemascStorageProvider {
@@ -75,6 +74,7 @@ class RemascStorageProvider {
         return new Coin(value.getData());
     }
 
+
     public Coin getRewardBalance() {
         if (rewardBalance != null) {
             return rewardBalance;
@@ -91,8 +91,19 @@ class RemascStorageProvider {
         return new Coin(value.getData());
     }
 
+
     public void setFederationBalance(Coin federationBalance) {
         this.federationBalance = federationBalance;
+    }
+
+    private void saveFederationBalance() {
+        if (federationBalance == null) {
+            return;
+        }
+
+        DataWord address = new DataWord(FEDERATION_BALANCE_KEY.getBytes(StandardCharsets.UTF_8));
+
+        this.repository.addStorageRow(this.contractAddress, address, new DataWord(this.federationBalance.getBytes()));
     }
 
     public void setRewardBalance(Coin rewardBalance) {
@@ -280,5 +291,6 @@ class RemascStorageProvider {
         saveBurnedBalance();
         saveSiblings();
         saveBrokenSelectionRule();
+        saveFederationBalance();
     }
 }

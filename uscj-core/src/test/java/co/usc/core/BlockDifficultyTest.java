@@ -18,6 +18,7 @@
 
 package co.usc.core;
 
+import org.ethereum.util.RLP;
 import org.junit.Test;
 
 import java.math.BigInteger;
@@ -28,7 +29,7 @@ import static org.junit.Assert.assertThat;
 public class BlockDifficultyTest {
     @Test
     public void bytesZeroDifficulty() {
-        BlockDifficulty difficulty = new BlockDifficulty(BigInteger.ZERO.toByteArray());
+        BlockDifficulty difficulty = RLP.parseBlockDifficulty(BigInteger.ZERO.toByteArray());
         assertThat(difficulty.asBigInteger(), is(BigInteger.ZERO));
         assertThat(difficulty, is(new BlockDifficulty(BigInteger.ZERO)));
         assertThat(difficulty.toString(), is(BigInteger.ZERO.toString()));
@@ -36,7 +37,7 @@ public class BlockDifficultyTest {
 
     @Test
     public void bytesOneDifficulty() {
-        BlockDifficulty difficulty = new BlockDifficulty(BigInteger.ONE.toByteArray());
+        BlockDifficulty difficulty = RLP.parseBlockDifficulty(BigInteger.ONE.toByteArray());
         assertThat(difficulty.asBigInteger(), is(BigInteger.ONE));
         assertThat(difficulty, is(new BlockDifficulty(BigInteger.ONE)));
         assertThat(difficulty.toString(), is(BigInteger.ONE.toString()));
@@ -45,7 +46,7 @@ public class BlockDifficultyTest {
     @Test
     public void bytesLargeDifficulty() {
         BigInteger largeValue = BigInteger.valueOf(1532098739382974L);
-        BlockDifficulty difficulty = new BlockDifficulty(largeValue.toByteArray());
+        BlockDifficulty difficulty = RLP.parseBlockDifficulty(largeValue.toByteArray());
         assertThat(difficulty.asBigInteger(), is(largeValue));
         assertThat(difficulty, is(new BlockDifficulty(largeValue)));
         assertThat(difficulty.toString(), is(largeValue.toString()));
@@ -53,7 +54,7 @@ public class BlockDifficultyTest {
 
     @Test
     public void bytesEmptyIsZero() {
-        BlockDifficulty difficulty = new BlockDifficulty(new byte[0]);
+        BlockDifficulty difficulty = RLP.parseBlockDifficulty(new byte[0]);
         assertThat(difficulty.asBigInteger(), is(BigInteger.ZERO));
         assertThat(difficulty, is(new BlockDifficulty(BigInteger.ZERO)));
         assertThat(difficulty.toString(), is(BigInteger.ZERO.toString()));
@@ -62,7 +63,7 @@ public class BlockDifficultyTest {
     @Test(expected = RuntimeException.class)
     public void bytesNegativeDifficultyFails() {
         BigInteger negativeValue = BigInteger.valueOf(-1532098739382974L);
-        new BlockDifficulty(negativeValue.toByteArray());
+        RLP.parseBlockDifficulty(negativeValue.toByteArray());
     }
 
     @Test

@@ -18,7 +18,7 @@
  */
 package org.ethereum.core;
 
-import co.rsk.core.BlockDifficulty;
+import co.usc.core.BlockDifficulty;
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;

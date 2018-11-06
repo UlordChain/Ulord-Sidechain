@@ -25,6 +25,7 @@ import co.usc.core.UscAddress;
 import com.google.common.primitives.UnsignedBytes;
 import org.apache.commons.lang3.tuple.Pair;
 import org.ethereum.util.RLP;
+import org.ethereum.util.RLPItem;
 import org.ethereum.util.RLPList;
 import org.junit.Assert;
 import org.junit.Test;
@@ -882,7 +883,7 @@ public class BridgeSerializationUtilsTest {
                 } else {
                     element = new byte[]{arg[i]};
                 }
-                result.add(() -> element);
+                result.add(new RLPItem(element));
             }
             return new ArrayList<>(Arrays.asList(result));
         });
@@ -925,7 +926,7 @@ public class BridgeSerializationUtilsTest {
         for (int i = 1; i <= size; i++) {
             int elementSize = Byte.toUnsignedInt(bytes[i]);
             byte[] element = Arrays.copyOfRange(bytes, offset, offset+elementSize);
-            decoded.add(() -> element);
+            decoded.add(new RLPItem(element));
             offset += elementSize;
         }
         return decoded;

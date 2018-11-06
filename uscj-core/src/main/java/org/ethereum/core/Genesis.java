@@ -20,7 +20,7 @@
 package org.ethereum.core;
 
 import co.usc.config.UscSystemProperties;
-import co.rsk.core.BlockDifficulty;
+import co.usc.core.BlockDifficulty;
 import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import org.ethereum.core.genesis.GenesisLoader;
@@ -66,8 +66,8 @@ public class Genesis extends Block {
         super(
                 new BlockHeader(parentHash, unclesHash, coinbase, logsBloom, difficulty,
                         number, ByteUtil.longToBytesNoLeadZeroes(gasLimit), gasUsed, timestamp, extraData,
-                        bitcoinMergedMiningHeader, bitcoinMergedMiningMerkleProof,
-                        bitcoinMergedMiningCoinbaseTransaction, minimumGasPrice, 0) {
+                        ulordMergedMiningHeader, ulordMergedMiningMerkleProof,
+                        ulordMergedMiningCoinbaseTransaction, minimumGasPrice, 0) {
 
                     @Override
                     protected byte[] encodeBlockDifficulty(BlockDifficulty ignored) {

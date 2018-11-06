@@ -142,13 +142,13 @@ public class WriterMessageRecorderTest {
     public static Message createUscMessage() {
         Block block = new BlockGenerator().getBlock(1);
         GetBlockMessage message = new GetBlockMessage(block.getHash().getBytes());
-        return new UscMessage(config, message);
+        return new UscMessage(message);
     }
 
     public static Message createEthMessage() {
         Account acc1 = new AccountBuilder().name("acc1").build();
         Account acc2 = new AccountBuilder().name("acc2").build();
         Transaction tx = new TransactionBuilder().sender(acc1).receiver(acc2).value(BigInteger.valueOf(1000000)).build();
-        return new TransactionsMessage(config, tx);
+        return new TransactionsMessage(tx);
     }
 }

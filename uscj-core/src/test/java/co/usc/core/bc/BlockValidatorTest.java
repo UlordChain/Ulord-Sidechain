@@ -112,7 +112,7 @@ public class BlockValidatorTest {
     public void invalidChildBlockBadDifficulty() {
         Block genesis = new BlockGenerator().getGenesisBlock();
         Block block = new BlockGenerator().createChildBlock(genesis);
-        block.getHeader().setDifficulty(new BlockDifficulty(new byte[]{0x00}));
+        block.getHeader().setDifficulty(BlockDifficulty.ZERO);
 
         BlockValidatorImpl validator = new BlockValidatorBuilder()
                 .addDifficultyRule()
@@ -960,11 +960,6 @@ public class BlockValidatorTest {
 
         @Override
         public void reBranch(Block forkBlock) {
-
-        }
-
-        @Override
-        public void load() {
 
         }
 

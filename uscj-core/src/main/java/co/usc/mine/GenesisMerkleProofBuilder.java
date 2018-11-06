@@ -46,7 +46,7 @@ public class GenesisMerkleProofBuilder implements MerkleProofBuilder {
         }
 
         // bits indicates which nodes are going to be used for building the partial merkle tree
-        // for more information please refer to {@link co.rsk.bitcoinj.core.PartialMerkleTree#buildFromLeaves } method
+        // for more information please refer to {@link co.usc.ulordj.core.PartialMerkleTree#buildFromLeaves } method
         byte[] bits = new byte[(bitList.size() + 7) / 8];
         for (int i = 0; i < bitList.size(); i++) {
             if (bitList.get(i)) {

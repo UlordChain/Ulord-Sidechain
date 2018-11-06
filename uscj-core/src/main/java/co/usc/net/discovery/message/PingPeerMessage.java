@@ -18,7 +18,7 @@
 
 package co.usc.net.discovery.message;
 
-import co.rsk.net.discovery.PeerDiscoveryException;
+import co.usc.net.discovery.PeerDiscoveryException;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.util.ByteUtil;
