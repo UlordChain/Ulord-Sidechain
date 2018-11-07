@@ -31,6 +31,6 @@ public class BridgeStorageConfiguration {
     }
 
     public static BridgeStorageConfiguration fromBlockchainConfig(BlockchainConfig config) {
-        return new BridgeStorageConfiguration(true);
+        return new BridgeStorageConfiguration(config.isUscIP87());
     }
 }

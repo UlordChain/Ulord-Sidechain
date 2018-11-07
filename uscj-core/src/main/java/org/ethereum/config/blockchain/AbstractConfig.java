@@ -150,4 +150,7 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
     public boolean areBridgeTxsFree() {
         return false;
     }
+
+    @Override
+    public boolean isUscIP87() { return false; }
 }
