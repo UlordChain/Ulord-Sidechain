@@ -58,7 +58,8 @@ public enum BridgeMethods {
             ),
             25000L, // using same gas estimation as ADD_LOCK_WHITELIST_ADDRESS
             (BridgeMethodExecutorTyped) Bridge::addOneOffLockWhitelistAddress,
-            blockChainConfig -> !blockChainConfig.isUscIP87()
+            blockChainConfig -> blockChainConfig.isUscIP87()
+
     ),
     ADD_UNLIMITED_LOCK_WHITELIST_ADDRESS(
             CallTransaction.Function.fromSignature(
@@ -68,7 +69,7 @@ public enum BridgeMethods {
             ),
             25000L, // using same gas estimation as ADD_LOCK_WHITELIST_ADDRESS
             (BridgeMethodExecutorTyped) Bridge::addUnlimitedLockWhitelistAddress,
-            blockChainConfig -> !blockChainConfig.isUscIP87()
+            blockChainConfig -> blockChainConfig.isUscIP87()
     ),
     ADD_SIGNATURE(
             CallTransaction.Function.fromSignature(
@@ -204,7 +205,7 @@ public enum BridgeMethods {
             ),
             16000L,
             (BridgeMethodExecutorTyped) Bridge::getLockWhitelistEntryByAddress,
-            blockChainConfig -> !blockChainConfig.isUscIP87()
+            blockChainConfig -> blockChainConfig.isUscIP87()
     ),
     GET_LOCK_WHITELIST_SIZE(
             CallTransaction.Function.fromSignature(
