@@ -156,7 +156,11 @@ public class MnrModuleImpl implements MnrModule, Runnable {
                     }
                     continue;
                 }
-                String data = submittedQueue.poll();
+
+                String data = "";
+                synchronized (this) {
+                    data = submittedQueue.poll();
+                }
 
                 if (data == null) continue;
                 String[] dataObjects = data.split(":");
