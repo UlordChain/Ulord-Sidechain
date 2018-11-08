@@ -24,6 +24,7 @@ import co.usc.crypto.Keccak256;
 import co.usc.trie.Trie;
 import co.usc.trie.TrieImpl;
 import co.usc.trie.TrieStore;
+import co.usc.trie.TrieStoreImpl;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
@@ -59,31 +60,30 @@ public class RepositoryImpl implements Repository {
     private Trie trie;
     private DetailsDataStore detailsDataStore;
     private boolean closed;
-    private TrieStore.Pool trieStorePool;
+    private TrieStore.Factory trieStoreFactory;
     private int memoryStorageLimit;
 
-    public RepositoryImpl(TrieStore store, TrieStore.Pool trieStorePool, int memoryStorageLimit) {
-        this(store, new HashMapDB(), trieStorePool, memoryStorageLimit);
+    public RepositoryImpl(TrieStore store, TrieStore.Factory trieStoreFactory, int memoryStorageLimit) {
+        this(store, new HashMapDB(), trieStoreFactory, memoryStorageLimit);
     }
 
     public RepositoryImpl(
             TrieStore store,
             KeyValueDataSource detailsDS,
-            TrieStore.Pool trieStorePool,
+            TrieStore.Factory trieStoreFactory,
             int memoryStorageLimit) {
-        this(store, new DetailsDataStore(new DatabaseImpl(detailsDS), trieStorePool, memoryStorageLimit),
-             trieStorePool, memoryStorageLimit);
+        this(store, new DetailsDataStore(new DatabaseImpl(detailsDS), trieStoreFactory, memoryStorageLimit), trieStoreFactory, memoryStorageLimit);
     }
 
     private RepositoryImpl(
             TrieStore store,
             DetailsDataStore detailsDataStore,
-            TrieStore.Pool trieStorePool,
+            TrieStore.Factory trieStoreFactory,
             int memoryStorageLimit) {
         this.store = store;
         this.trie = new TrieImpl(store, true);
         this.detailsDataStore = detailsDataStore;
-        this.trieStorePool = trieStorePool;
+        this.trieStoreFactory = trieStoreFactory;
         this.memoryStorageLimit = memoryStorageLimit;
     }
 
@@ -92,10 +92,10 @@ public class RepositoryImpl implements Repository {
         AccountState accountState = new AccountState();
         updateAccountState(addr, accountState);
         updateContractDetails(addr, new ContractDetailsImpl(
-                addr.getBytes(),
                 null,
+                new TrieImpl(new TrieStoreImpl(new HashMapDB()), true),
                 null,
-                trieStorePool,
+                trieStoreFactory,
                 memoryStorageLimit
         ));
         return accountState;
@@ -282,7 +282,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public synchronized Repository startTracking() {
-        return new RepositoryTrack(this, trieStorePool, memoryStorageLimit);
+        return new RepositoryTrack(this, trieStoreFactory, memoryStorageLimit);
     }
 
     @Override
@@ -354,10 +354,10 @@ public class RepositoryImpl implements Repository {
 
                 if (contractDetailsCache.getOriginalContractDetails() == null) {
                     ContractDetails originalContractDetails = new ContractDetailsImpl(
-                            addr.getBytes(),
                             null,
+                            new TrieImpl(new TrieStoreImpl(new HashMapDB()), true),
                             null,
-                            trieStorePool,
+                            trieStoreFactory,
                             memoryStorageLimit
                     );
                     originalContractDetails.setAddress(addr.getBytes());
@@ -412,7 +412,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public synchronized Repository getSnapshotTo(byte[] root) {
-        RepositoryImpl snapshotRepository = new RepositoryImpl(this.store, this.detailsDataStore, this.trieStorePool, this.memoryStorageLimit);
+        RepositoryImpl snapshotRepository = new RepositoryImpl(this.store, this.detailsDataStore, this.trieStoreFactory, this.memoryStorageLimit);
         snapshotRepository.syncToRoot(root);
         return snapshotRepository;
     }

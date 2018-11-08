@@ -170,7 +170,7 @@ public class TrieImpl implements Trie {
     }
 
     /**
-     * Pool method, to create a NewTrie from a serialized message
+     * Factory method, to create a NewTrie from a serialized message
      * the store argument is used to retrieve any subnode
      * of the subnode
      *

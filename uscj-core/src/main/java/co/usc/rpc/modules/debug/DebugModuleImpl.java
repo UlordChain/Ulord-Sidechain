@@ -19,7 +19,6 @@
 package co.usc.rpc.modules.debug;
 
 import co.usc.net.MessageHandler;
-import co.usc.net.MessageHandler;
 import org.ethereum.rpc.TypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

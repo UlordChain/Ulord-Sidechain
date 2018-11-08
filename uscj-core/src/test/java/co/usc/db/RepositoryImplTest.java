@@ -83,7 +83,7 @@ public class RepositoryImplTest {
     @Test
     public void syncToRootAfterCreatingAnAccount() {
         TrieStore store = new TrieStoreImpl(new HashMapDB());
-        RepositoryImpl repository = new RepositoryImpl(store, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        RepositoryImpl repository = new RepositoryImpl(store, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         repository.flush();
 
@@ -447,7 +447,7 @@ public class RepositoryImplTest {
         UscAddress accAddress2 = randomAccountAddress();
 
         TrieStore store = new TrieStoreImpl(new HashMapDB());
-        RepositoryImpl repository = new RepositoryImpl(store, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        RepositoryImpl repository = new RepositoryImpl(store, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         repository.createAccount(accAddress1);
         repository.flush();
@@ -475,7 +475,7 @@ public class RepositoryImplTest {
     @Test
     public void flushNoReconnect() {
         TrieStore store = new TrieStoreImpl(new HashMapDB());
-        RepositoryImpl repository = new RepositoryImpl(store, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        RepositoryImpl repository = new RepositoryImpl(store, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         UscAddress accAddress = randomAccountAddress();
         byte[] initialRoot = repository.getRoot();
@@ -495,6 +495,6 @@ public class RepositoryImplTest {
     }
 
     public static RepositoryImpl createRepositoryImpl(UscSystemProperties config) {
-        return new RepositoryImpl(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        return new RepositoryImpl(null, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
     }
 }

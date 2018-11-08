@@ -638,7 +638,7 @@ public class MinerServerImpl implements MinerServer {
 
         // note: integer divisions might truncate values
         BigInteger percentage = BigInteger.valueOf(100L + UscMiningConstants.NOTIFY_FEES_PERCENTAGE_INCREASE);
-        co.usc.core.Coin minFeesNotify = latestPaidFeesWithNotify.multiply(percentage).divide(BigInteger.valueOf(100L));
+        Coin minFeesNotify = latestPaidFeesWithNotify.multiply(percentage).divide(BigInteger.valueOf(100L));
         Coin feesPaidToMiner = block.getFeesPaidToMiner();
         BigDecimal feesPaidToMinerInDollars = new BigDecimal(feesPaidToMiner.asBigInteger()).multiply(gasUnitInDollars);
         return feesPaidToMiner.compareTo(minFeesNotify) > 0

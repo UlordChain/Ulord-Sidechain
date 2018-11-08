@@ -46,6 +46,15 @@ public interface ChannelManager {
 
     boolean isRecentlyDisconnected(InetAddress peerAddr);
 
+    /**
+     * Propagates the transactions message across active peers with exclusion of
+     * 'receivedFrom' peer.
+     *
+     * @param tx           transactions to be sent
+     * @param receivedFrom the peer which sent original message or null if
+     *                     the transactions were originated by this peer
+     */
+    void broadcastTransactionMessage(List<Transaction> tx, Channel receivedFrom);
 
 
     /**
@@ -53,10 +62,11 @@ public interface ChannelManager {
      * the peers with an id belonging to the skip set.
      *
      * @param block new Block to be sent
+     * @param skip  the set of peers to avoid sending the message.
      * @return a set containing the ids of the peers that received the block.
      */
     @Nonnull
-    Set<NodeID> broadcastBlock(@Nonnull final Block block);
+    Set<NodeID> broadcastBlock(@Nonnull final Block block, @Nullable final Set<NodeID> skip);
 
     @Nonnull
     Set<NodeID> broadcastBlockHash(@Nonnull final List<BlockIdentifier> identifiers, @Nullable final Set<NodeID> targets);
@@ -74,6 +84,17 @@ public interface ChannelManager {
 
     int broadcastStatus(@Nonnull final Status status);
 
+    /**
+     * Propagates the new block message across active peers with exclusion of
+     * 'receivedFrom' peer.
+     * @param block  new Block to be sent
+     * @param receivedFrom the peer which sent original message or null if
+     *                     the block has been mined by us
+     */
+
+    @Deprecated // Use broadcastBlock
+    void sendNewBlock(Block block, Channel receivedFrom);
+
     void add(Channel peer);
 
     void notifyDisconnect(Channel channel);
@@ -83,6 +104,4 @@ public interface ChannelManager {
     Collection<Channel> getActivePeers();
 
     boolean sendMessageTo(NodeID nodeID, MessageWithId message);
-
-    boolean isAddressBlockAvailable(InetAddress address);
 }

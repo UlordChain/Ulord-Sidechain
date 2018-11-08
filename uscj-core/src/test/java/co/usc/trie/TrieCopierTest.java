@@ -19,14 +19,12 @@
 package co.usc.trie;
 
 import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.ConfigLoader;
 import co.usc.config.UscSystemProperties;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.bc.BlockExecutor;
 import co.usc.crypto.Keccak256;
 import co.usc.db.RepositoryImpl;
-import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.remasc.RemascTransaction;
 import co.usc.test.World;
 import co.usc.test.builders.AccountBuilder;
@@ -36,7 +34,6 @@ import org.ethereum.util.TransactionFactoryHelper;
 import org.ethereum.vm.PrecompiledContracts;
 import org.junit.Assert;
 import org.junit.Test;
-import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -136,7 +133,7 @@ public class TrieCopierTest {
     public void copyBlockchainHeightTwoStates() {
         TrieStore store = new TrieStoreImpl(new HashMapDB().setClearOnClose(false));
         TrieStore store2 = new TrieStoreImpl(new HashMapDB().setClearOnClose(false));
-        Repository repository = new RepositoryImpl(store, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        Repository repository = new RepositoryImpl(store, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
         World world = new World(repository);
 
         Blockchain blockchain = createBlockchain(world);
@@ -149,7 +146,7 @@ public class TrieCopierTest {
         TrieCopier.trieStateCopy(store, store2, blockchain, 9);
 
         Repository repository91 = repository.getSnapshotTo(state9);
-        Repository repository92 = new RepositoryImpl(store2, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit()).getSnapshotTo(state9);
+        Repository repository92 = new RepositoryImpl(store2, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit()).getSnapshotTo(state9);
 
         Assert.assertNotNull(repository91);
         Assert.assertNotNull(repository92);
@@ -167,7 +164,7 @@ public class TrieCopierTest {
     public void copyBlockchainHeightTwoContractStates() {
         TrieStore store = new TrieStoreImpl(new HashMapDB().setClearOnClose(false));
         TrieStore store2 = new TrieStoreImpl(new HashMapDB().setClearOnClose(false));
-        Repository repository = new RepositoryImpl(store, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        Repository repository = new RepositoryImpl(store, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
         World world = new World(repository);
 
         Blockchain blockchain = createBlockchain(world);

@@ -29,7 +29,7 @@ import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.BlockExecutor;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.db.RepositoryImpl;
-import co.usc.db.TrieStorePoolOnMemory;
+import co.usc.trie.TrieStoreImpl;
 import co.usc.validators.DummyBlockValidator;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.core.Block;
@@ -636,6 +636,6 @@ public class TestRunner {
     }
 
     public static RepositoryImpl createRepositoryImpl(UscSystemProperties config) {
-        return new RepositoryImpl(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        return new RepositoryImpl(null, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
     }
 }

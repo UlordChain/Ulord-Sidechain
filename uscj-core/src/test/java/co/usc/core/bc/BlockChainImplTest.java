@@ -24,7 +24,6 @@ import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
 import co.usc.db.RepositoryImpl;
-import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.test.builders.BlockBuilder;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.trie.TrieStoreImpl;
@@ -39,7 +38,6 @@ import org.ethereum.db.IndexedBlockStore;
 import org.ethereum.db.ReceiptStore;
 import org.ethereum.db.ReceiptStoreImpl;
 import org.ethereum.listener.CompositeEthereumListener;
-import org.ethereum.manager.AdminInfo;
 import org.ethereum.util.FastByteComparisons;
 import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl;
@@ -849,7 +847,7 @@ public class BlockChainImplTest {
 
     @Test
     public void addInvalidMGPBlock() {
-        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         IndexedBlockStore blockStore = new IndexedBlockStore(new HashMap<>(), new HashMapDB(), null);
 
@@ -880,7 +878,7 @@ public class BlockChainImplTest {
 
     @Test
     public void addValidMGPBlock() {
-        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         IndexedBlockStore blockStore = new IndexedBlockStore(new HashMap<>(), new HashMapDB(), (DB) null);
 
@@ -937,7 +935,7 @@ public class BlockChainImplTest {
     }
 
     public static BlockChainImpl createBlockChain() {
-        return new BlockChainBuilder().setAdminInfo(new SimpleAdminInfo()).build();
+        return new BlockChainBuilder().build();
     }
 
     public static BlockChainImpl createBlockChain(Repository repository) {
@@ -956,8 +954,6 @@ public class BlockChainImplTest {
         KeyValueDataSource ds = new HashMapDB();
         ds.init();
         ReceiptStore receiptStore = new ReceiptStoreImpl(ds);
-
-        AdminInfo adminInfo = new SimpleAdminInfo();
 
         CompositeEthereumListener listener = new BlockExecutorTest.SimpleEthereumListener();
 
@@ -1039,25 +1035,6 @@ public class BlockChainImplTest {
 
         alterBytes(cloned);
         return cloned;
-    }
-
-    public static class SimpleAdminInfo extends AdminInfo {
-        private long time;
-        private int count;
-
-        @Override
-        public void addBlockExecTime(long time){
-            this.time += time;
-            count++;
-        }
-
-        public long getTime() {
-            return time;
-        }
-
-        public int getCount() {
-            return count;
-        }
     }
 
     public static class RejectValidator implements BlockValidator {

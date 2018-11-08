@@ -73,41 +73,4 @@ public class ConfigCapabilitiesImpl implements ConfigCapabilities{
         return ret;
     }
 
-    /**
-     * Returns the node's supported capabilities for this hello message
-     */
-    @Override
-    public List<Capability> getSupportedCapabilities(HelloMessage hello) {
-        List<Capability> configCaps = getConfigCapabilities();
-        List<Capability> supported = new ArrayList<>();
-
-        List<Capability> eths = new ArrayList<>();
-
-        for (Capability cap : hello.getCapabilities()) {
-            if (configCaps.contains(cap)) {
-                if (cap.isUSC()) {
-                    eths.add(cap);
-                } else {
-                    supported.add(cap);
-                }
-            }
-        }
-
-        if (eths.isEmpty()) {
-            return supported;
-        }
-
-        // we need to pick up
-        // the most recent Eth version
-        Capability highest = null;
-        for (Capability eth : eths) {
-            if (highest == null || highest.getVersion() < eth.getVersion()) {
-                highest = eth;
-            }
-        }
-
-        supported.add(highest);
-        return supported;
-    }
-
 }

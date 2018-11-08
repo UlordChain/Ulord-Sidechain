@@ -20,7 +20,6 @@ package org.ethereum.rpc.Simples;
 
 import org.ethereum.net.client.Capability;
 import org.ethereum.net.client.ConfigCapabilities;
-import org.ethereum.net.p2p.HelloMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +36,5 @@ public class SimpleConfigCapabilities implements ConfigCapabilities {
         capabilities.add(new Capability("usc", (byte)1));
 
         return capabilities;
-    }
-
-    @Override
-    public List<Capability> getSupportedCapabilities(HelloMessage hello) {
-        return getConfigCapabilities();
     }
 }

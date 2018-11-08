@@ -57,25 +57,21 @@ public class ContractDetailsImpl implements ContractDetails {
     private boolean externalStorage;
     private boolean closed;
     private Set<ByteArrayWrapper> keys = new HashSet<>();
-    private final TrieStore.Pool trieStorePool;
+    private final TrieStore.Factory trieStoreFactory;
     private final int memoryStorageLimit;
 
-    public ContractDetailsImpl(byte[] encoded, TrieStore.Pool trieStorePool, int memoryStorageLimit) {
-        this.trieStorePool = trieStorePool;
+    public ContractDetailsImpl(byte[] encoded, TrieStore.Factory trieStoreFactory, int memoryStorageLimit) {
+        this.trieStoreFactory = trieStoreFactory;
         this.memoryStorageLimit = memoryStorageLimit;
         decode(encoded);
     }
 
-    public ContractDetailsImpl(byte[] address, Trie trie, byte[] code, TrieStore.Pool trieStorePool, int memoryStorageLimit) {
+    public ContractDetailsImpl(byte[] address, Trie trie, byte[] code, TrieStore.Factory trieStoreFactory, int memoryStorageLimit) {
         this.address = ByteUtils.clone(address);
         this.trie = trie;
         this.code = ByteUtils.clone(code);
-        this.trieStorePool = trieStorePool;
+        this.trieStoreFactory = trieStoreFactory;
         this.memoryStorageLimit = memoryStorageLimit;
-
-        if (this.trie == null) {
-            this.trie = new TrieImpl(trieStorePool.getInstanceFor(getDataSourceName()), true);
-        }
     }
 
     @Override
@@ -191,7 +187,7 @@ public class ContractDetailsImpl implements ContractDetails {
 
         if (this.externalStorage) {
             Keccak256 snapshotHash = new Keccak256(rlpStorage.getRLPData());
-            this.trie = new TrieImpl(trieStorePool.getInstanceFor(getDataSourceName()), true).getSnapshotTo(snapshotHash);
+            this.trie = new TrieImpl(trieStoreFactory.newInstance(getDataSourceName()), true).getSnapshotTo(snapshotHash);
         } else {
             this.trie = TrieImpl.deserialize(rlpStorage.getRLPData());
         }
@@ -331,7 +327,7 @@ public class ContractDetailsImpl implements ContractDetails {
                 // switching to data source
 
                 logger.trace("switching to data source, hash {}, address {}", hashString, addressString);
-                TrieStoreImpl newStore = (TrieStoreImpl) trieStorePool.getInstanceFor(getDataSourceName());
+                TrieStoreImpl newStore = (TrieStoreImpl) trieStoreFactory.newInstance(this.getDataSourceName());
                 TrieStoreImpl originalStore = (TrieStoreImpl)((TrieImpl) this.trie).getStore();
                 newStore.copyFrom(originalStore);
                 Trie newTrie = newStore.retrieve(this.trie.getHash().getBytes());
@@ -365,10 +361,10 @@ public class ContractDetailsImpl implements ContractDetails {
         this.trie.save();
 
         ContractDetailsImpl details = new ContractDetailsImpl(this.address,
-                this.trie.getSnapshotTo(new Keccak256(hash)),
-                this.code,
-                this.trieStorePool,
-                this.memoryStorageLimit);
+                                                              this.trie.getSnapshotTo(new Keccak256(hash)),
+                                                              this.code,
+                                                              this.trieStoreFactory,
+                                                              this.memoryStorageLimit);
         details.keys = new HashSet<>();
         details.keys.addAll(this.keys);
         details.externalStorage = this.externalStorage;
@@ -432,7 +428,7 @@ public class ContractDetailsImpl implements ContractDetails {
         }
 
         logger.trace("reopening contract details data source");
-        TrieStoreImpl newStore = (TrieStoreImpl) trieStorePool.getInstanceFor(getDataSourceName());
+        TrieStoreImpl newStore = (TrieStoreImpl) trieStoreFactory.newInstance(getDataSourceName());
         Trie newTrie = newStore.retrieve(this.trie.getHash().getBytes());
         this.trie = newTrie;
         this.closed = false;

@@ -251,17 +251,12 @@ public class TransactionPoolImpl implements TransactionPool {
             return false;
         }
 
-        if (!isBumpingGasPriceForSameNonceTx(tx)) {
-            return false;
-        }
-
         transactionBlocks.put(hash, bnumber);
         final long timestampSeconds = this.getCurrentTimeInSeconds();
         transactionTimes.put(hash, timestampSeconds);
 
-        BigInteger currentNonce = getPendingState().getNonce(tx.getSender());
-        BigInteger txNonce = tx.getNonceAsInteger();
-        if (txNonce.compareTo(currentNonce) > 0) {
+        BigInteger txnonce = tx.getNonceAsInteger();
+        if (!txnonce.equals(getPendingState().getNonce(tx.getSender()))) {
             this.addQueuedTransaction(tx);
 
             return false;
@@ -281,25 +276,6 @@ public class TransactionPoolImpl implements TransactionPool {
             });
         }
 
-        return true;
-    }
-
-    private boolean isBumpingGasPriceForSameNonceTx(Transaction tx) {
-        Optional<Transaction> oldTxWithNonce = pendingTransactions.getTransactionsWithSender(tx.getSender()).stream()
-                .filter(t -> t.getNonceAsInteger().equals(tx.getNonceAsInteger()))
-                .findFirst();
-
-        if (oldTxWithNonce.isPresent()){
-            //oldGasPrice * (100 + priceBump) / 100
-            Coin oldGasPrice = oldTxWithNonce.get().getGasPrice();
-            Coin gasPriceBumped = oldGasPrice
-                    .multiply(BigInteger.valueOf(config.getGasPriceBump() + 100L))
-                    .divide(BigInteger.valueOf(100));
-
-            if (oldGasPrice.compareTo(tx.getGasPrice()) >= 0 || gasPriceBumped.compareTo(tx.getGasPrice()) > 0) {
-                return false;
-            }
-        }
         return true;
     }
 

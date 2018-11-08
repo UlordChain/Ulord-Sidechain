@@ -80,6 +80,7 @@ public class Remasc {
         return new RemascState(this.provider.getRewardBalance(), this.provider.getBurnedBalance(), this.provider.getSiblings(), this.provider.getBrokenSelectionRule());
     }
 
+
     /**
      * Implements the actual Remasc distribution logic
      */
@@ -153,7 +154,7 @@ public class Remasc {
             Coin minPayableFees = executionBlock.getMinimumGasPrice().multiply(minimumPayableGas);
             if (syntheticReward.compareTo(minPayableFees) < 0) {
                 logger.debug("Synthetic Reward: {} is lower than minPayableFees: {} at block: {}",
-                        syntheticReward, minPayableFees, executionBlock.getShortHash());
+                             syntheticReward, minPayableFees, executionBlock.getShortHash());
                 return;
             }
         }
@@ -165,7 +166,7 @@ public class Remasc {
         Coin payToUscLabs = syntheticReward.divide(BigInteger.valueOf(remascConstants.getUscLabsDivisor()));
         feesPayer.payMiningFees(processingBlockHeader.getHash().getBytes(), payToUscLabs, remascConstants.getUscLabsAddress(), logs);
         syntheticReward = syntheticReward.subtract(payToUscLabs);
-	Coin payToFederation = payToFederation(configForBlock, isUscIP85Enabled, processingBlock, processingBlockHeader, syntheticReward);
+        Coin payToFederation = payToFederation(configForBlock, isUscIP85Enabled, processingBlock, processingBlockHeader, syntheticReward);
         syntheticReward = syntheticReward.subtract(payToFederation);
 
         if (!siblings.isEmpty()) {

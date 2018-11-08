@@ -20,7 +20,6 @@ package co.usc.core;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.db.RepositoryImpl;
-import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.trie.TrieImpl;
 import co.usc.trie.TrieStore;
 import co.usc.trie.TrieStoreImpl;
@@ -67,7 +66,7 @@ public class NetworkStateExporterTest {
 
     @Test
     public void testEmptyRepo() throws Exception {
-        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         Map result = writeAndReadJson(repository);
 
@@ -76,7 +75,7 @@ public class NetworkStateExporterTest {
 
     @Test
     public void testNoContracts() throws Exception {
-        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
         String address1String = "1000000000000000000000000000000000000000";
         UscAddress addr1 = new UscAddress(address1String);
         repository.createAccount(addr1);
@@ -119,19 +118,19 @@ public class NetworkStateExporterTest {
 
     @Test
     public void testContracts() throws Exception {
-        TrieStore.Pool trieStorePool = new TrieStorePoolOnMemory();
-        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), trieStorePool, config.detailsInMemoryStorageLimit());
+        TrieStore.Factory trieStoreFactory = name -> new TrieStoreImpl(new HashMapDB());
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), trieStoreFactory, config.detailsInMemoryStorageLimit());
         String address1String = "1000000000000000000000000000000000000000";
         UscAddress addr1 = new UscAddress(address1String);
         repository.createAccount(addr1);
         repository.addBalance(addr1, Coin.valueOf(1L));
         repository.increaseNonce(addr1);
         ContractDetails contractDetails = new co.usc.db.ContractDetailsImpl(
-                null,
-                new TrieImpl(new TrieStoreImpl(new HashMapDB()), true),
-                null,
-                trieStorePool,
-                config.detailsInMemoryStorageLimit()
+            null,
+            new TrieImpl(new TrieStoreImpl(new HashMapDB()), true),
+            null,
+            trieStoreFactory,
+            config.detailsInMemoryStorageLimit()
         );
         contractDetails.setCode(new byte[] {1, 2, 3, 4});
         contractDetails.put(DataWord.ZERO, DataWord.ONE);

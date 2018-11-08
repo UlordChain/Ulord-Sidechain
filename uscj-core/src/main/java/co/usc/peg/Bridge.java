@@ -863,7 +863,7 @@ public class Bridge extends PrecompiledContracts.PrecompiledContract {
         try {
             addressBase58 = (String) args[0];
         } catch (Exception e) {
-            logger.warn("Exception in removeLockWhitelistAddress: {}", e.getMessage());
+            logger.warn("Exception in removeLockWhitelistAddress", e);
             return 0;
         }
 

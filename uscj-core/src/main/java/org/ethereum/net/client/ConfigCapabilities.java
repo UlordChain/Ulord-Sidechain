@@ -34,6 +34,4 @@ public interface ConfigCapabilities {
      * sorted by their names.
      */
     List<Capability> getConfigCapabilities() ;
-
-    List<Capability> getSupportedCapabilities(HelloMessage hello);
 }

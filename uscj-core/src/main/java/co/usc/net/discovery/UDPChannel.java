@@ -64,6 +64,7 @@ public class UDPChannel extends SimpleChannelInboundHandler<DiscoveryEvent> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         logger.debug("Discover channel error", cause);
+        ctx.close();
         // We don't close the channel because we can keep serving requests.
     }
 

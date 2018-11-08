@@ -25,7 +25,6 @@ import co.usc.core.Coin;
 import co.usc.core.UscAddress;
 import co.usc.core.bc.*;
 import co.usc.db.RepositoryImpl;
-import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.peg.RepositoryBlockStore;
 import co.usc.trie.TrieStoreImpl;
 import co.usc.validators.BlockValidator;
@@ -36,7 +35,6 @@ import org.ethereum.datasource.KeyValueDataSource;
 import org.ethereum.db.*;
 import org.ethereum.listener.EthereumListener;
 import org.ethereum.listener.TestCompositeEthereumListener;
-import org.ethereum.manager.AdminInfo;
 import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl;
 import org.junit.Assert;
@@ -48,22 +46,15 @@ import java.util.List;
  * Created by ajlopez on 8/6/2016.
  */
 public class BlockChainBuilder {
-    private final TestSystemProperties config = new TestSystemProperties();
     private boolean testing;
-
     private List<Block> blocks;
     private List<TransactionInfo> txinfos;
 
-    private AdminInfo adminInfo;
     private Repository repository;
     private BlockStore blockStore;
     private Genesis genesis;
     private ReceiptStore receiptStore;
-
-    public BlockChainBuilder setAdminInfo(AdminInfo adminInfo) {
-        this.adminInfo = adminInfo;
-        return this;
-    }
+    private UscSystemProperties config;
 
     public BlockChainBuilder setTesting(boolean value) {
         this.testing = value;
@@ -95,6 +86,11 @@ public class BlockChainBuilder {
         return this;
     }
 
+    public BlockChainBuilder setConfig(UscSystemProperties config) {
+        this.config = config;
+        return this;
+    }
+
     public BlockChainBuilder setReceiptStore(ReceiptStore receiptStore) {
         this.receiptStore = receiptStore;
         return this;
@@ -109,8 +105,12 @@ public class BlockChainBuilder {
     }
 
     public BlockChainImpl build(boolean withoutCleaner) {
+        if (config == null){
+            config = new TestSystemProperties();
+        }
+
         if (repository == null)
-            repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB().setClearOnClose(false)), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+            repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB().setClearOnClose(false)), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         if (blockStore == null) {
             blockStore = new IndexedBlockStore(new HashMap<>(), new HashMapDB(), null);
@@ -134,10 +134,6 @@ public class BlockChainBuilder {
                 .addBlockTxsValidationRule(repository).blockStore(blockStore);
 
         BlockValidator blockValidator = validatorBuilder.build();
-
-        if (this.adminInfo == null)
-            this.adminInfo = new AdminInfo();
-
 
         TransactionPoolImpl transactionPool;
         if (withoutCleaner) {

@@ -22,9 +22,9 @@ package org.ethereum.db;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.UscAddress;
 import co.usc.db.ContractDetailsImpl;
-import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.trie.TrieImpl;
 import co.usc.trie.TrieStore;
+import co.usc.trie.TrieStoreImpl;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.vm.DataWord;
 import org.junit.Test;
@@ -41,9 +41,10 @@ public class DetailsDataStoreTest {
 
     @Test
     public void test1(){
+        HashMapDB keyValueDataSource = new HashMapDB();
         DatabaseImpl db = new DatabaseImpl(new HashMapDB());
-        TrieStorePoolOnMemory trieStorePool = new TrieStorePoolOnMemory();
-        DetailsDataStore dds = new DetailsDataStore(db, trieStorePool, config.detailsInMemoryStorageLimit());
+        TrieStore.Factory trieStoreFactory = name -> new TrieStoreImpl(keyValueDataSource);
+        DetailsDataStore dds = new DetailsDataStore(db, trieStoreFactory, config.detailsInMemoryStorageLimit());
 
         UscAddress c_key = new UscAddress("0000000000000000000000000000000000001a2b");
         byte[] code = Hex.decode("60606060");
@@ -54,9 +55,9 @@ public class DetailsDataStoreTest {
         String storeName = "details-storage/" + toHexString(contractAddress);
         ContractDetails contractDetails = new ContractDetailsImpl(
                 contractAddress,
-                new TrieImpl(trieStorePool.getInstanceFor(storeName), true),
+                new TrieImpl(new TrieStoreImpl(keyValueDataSource), true),
                 null,
-                trieStorePool,
+                trieStoreFactory,
                 config.detailsInMemoryStorageLimit()
         );
         contractDetails.setCode(code);
@@ -82,8 +83,8 @@ public class DetailsDataStoreTest {
     public void test2(){
 
         DatabaseImpl db = new DatabaseImpl(new HashMapDB());
-        TrieStore.Pool trieStorePool = new TrieStorePoolOnMemory();
-        DetailsDataStore dds = new DetailsDataStore(db, trieStorePool, config.detailsInMemoryStorageLimit());
+        TrieStore.Factory trieStoreFactory = name -> new TrieStoreImpl(new HashMapDB());
+        DetailsDataStore dds = new DetailsDataStore(db, trieStoreFactory, config.detailsInMemoryStorageLimit());
 
         UscAddress c_key = new UscAddress("0000000000000000000000000000000000001a2b");
         byte[] code = Hex.decode("60606060");
@@ -94,9 +95,9 @@ public class DetailsDataStoreTest {
         String storeName = "details-storage/" + toHexString(contractAddress);
         ContractDetails contractDetails = new ContractDetailsImpl(
                 null,
-                new TrieImpl(trieStorePool.getInstanceFor(storeName), true),
+                new TrieImpl(new TrieStoreImpl(new HashMapDB()), true),
                 null,
-                trieStorePool,
+                trieStoreFactory,
                 config.detailsInMemoryStorageLimit()
         );
         contractDetails.setCode(code);
@@ -125,9 +126,10 @@ public class DetailsDataStoreTest {
     @Test
     public void test3(){
 
+        HashMapDB store = new HashMapDB();
         DatabaseImpl db = new DatabaseImpl(new HashMapDB());
-        TrieStore.Pool trieStorePool = new TrieStorePoolOnMemory();
-        DetailsDataStore dds = new DetailsDataStore(db, trieStorePool, config.detailsInMemoryStorageLimit());
+        TrieStore.Factory trieStoreFactory = name -> new TrieStoreImpl(store);
+        DetailsDataStore dds = new DetailsDataStore(db, trieStoreFactory, config.detailsInMemoryStorageLimit());
 
         UscAddress c_key = new UscAddress("0000000000000000000000000000000000001a2b");
         byte[] code = Hex.decode("60606060");
@@ -138,9 +140,9 @@ public class DetailsDataStoreTest {
         String storeName = "details-storage/" + toHexString(contractAddress);
         ContractDetails contractDetails = new ContractDetailsImpl(
                 contractAddress,
-                new TrieImpl(trieStorePool.getInstanceFor(storeName), true),
+                new TrieImpl(new TrieStoreImpl(store), true),
                 null,
-                trieStorePool,
+                trieStoreFactory,
                 config.detailsInMemoryStorageLimit()
         );
         contractDetails.setCode(code);
@@ -173,7 +175,8 @@ public class DetailsDataStoreTest {
     public void test4() {
 
         DatabaseImpl db = new DatabaseImpl(new HashMapDB());
-        DetailsDataStore dds = new DetailsDataStore(db, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        TrieStore.Factory trieStoreFactory = name -> new TrieStoreImpl(new HashMapDB());
+        DetailsDataStore dds = new DetailsDataStore(db, trieStoreFactory, config.detailsInMemoryStorageLimit());
 
         UscAddress c_key = new UscAddress("0000000000000000000000000000000000001a2b");
 

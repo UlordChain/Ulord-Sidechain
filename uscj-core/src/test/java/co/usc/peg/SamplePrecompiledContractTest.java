@@ -18,16 +18,15 @@
 
 package co.usc.peg;
 
-import co.usc.config.TestSystemProperties;
 import co.usc.config.UscSystemProperties;
-import co.usc.db.RepositoryImpl;
 import co.usc.config.TestSystemProperties;
 import co.usc.db.RepositoryImpl;
-import co.usc.db.TrieStorePoolOnMemory;
+import co.usc.trie.TrieStoreImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.core.Repository;
+import org.ethereum.datasource.HashMapDB;
 import org.ethereum.vm.DataWord;
 import org.ethereum.vm.LogInfo;
 import org.ethereum.vm.PrecompiledContracts;
@@ -307,6 +306,6 @@ public class SamplePrecompiledContractTest {
     }
 
     public static RepositoryImpl createRepositoryImpl(UscSystemProperties config) {
-        return new RepositoryImpl(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        return new RepositoryImpl(null, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
     }
 }

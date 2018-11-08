@@ -21,7 +21,9 @@ package co.usc.db;
 import co.usc.config.TestSystemProperties;
 import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
+import co.usc.trie.TrieStoreImpl;
 import org.ethereum.core.AccountState;
+import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.DataWord;
 
@@ -33,7 +35,7 @@ public class RepositoryImplForTesting extends RepositoryImpl {
     private static UscSystemProperties config = new TestSystemProperties();
 
     public RepositoryImplForTesting() {
-        super(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        super(null, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
     }
 
     @Override

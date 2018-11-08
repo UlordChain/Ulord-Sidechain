@@ -10,7 +10,6 @@ import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.BlockExecutor;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.db.RepositoryImpl;
-import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.net.BlockNodeInformation;
 import co.usc.net.BlockSyncService;
 import co.usc.net.NodeBlockProcessor;
@@ -224,7 +223,7 @@ public class UscTestFactory {
     public Repository getRepository() {
         if (repository == null) {
             HashMapDB stateStore = new HashMapDB();
-            repository = new RepositoryImpl(new TrieStoreImpl(stateStore), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+            repository = new RepositoryImpl(new TrieStoreImpl(stateStore), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
         }
 
         return repository;

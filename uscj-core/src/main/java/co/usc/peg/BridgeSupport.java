@@ -400,7 +400,7 @@ public class BridgeSupport {
 
         boolean locked = true;
 
-        Federation federation = getActiveFederation();
+        Federation activeFederation = getActiveFederation();
         // Specific code for lock/release/none txs
         if (BridgeUtils.isLockTx(uldTx, getLiveFederations(), uldContext, bridgeConstants)) {
             logger.debug("This is a lock tx {}", uldTx);
@@ -493,7 +493,7 @@ public class BridgeSupport {
             // When is not guaranteed to be called in the chronological order, so a Federator can inform
             // b) In prod: Federator created a tx manually or the federation was compromised and some utxos were spent. Better not try to spend them.
             // Open problem: For performance removeUsedUTXOs() just removes 1 utxo
-        } else if (BridgeUtils.isMigrationTx(uldTx, getActiveFederation(), getRetiringFederation(), uldContext, bridgeConstants)) {
+        } else if (BridgeUtils.isMigrationTx(uldTx, activeFederation, getRetiringFederation(), uldContext, bridgeConstants)) {
             logger.debug("This is a migration tx {}", uldTx);
         } else {
             logger.warn("This is not a lock, a release nor a migration tx {}", uldTx);

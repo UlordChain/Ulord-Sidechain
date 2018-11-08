@@ -22,7 +22,6 @@ import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
 import co.usc.db.RepositoryImpl;
-import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.trie.TrieStoreImpl;
 import com.google.common.collect.Lists;
@@ -65,7 +64,7 @@ public class BlockExecutorTest {
         BlockGenerator blockGenerator = new BlockGenerator();
         Block block = blockGenerator.createChildBlock(blockGenerator.getGenesisBlock());
 
-        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         Repository track = repository.startTracking();
 
@@ -188,7 +187,7 @@ public class BlockExecutorTest {
 
     @Test
     public void executeBlockWithTwoTransactions() {
-        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         Repository track = repository.startTracking();
 
@@ -306,7 +305,6 @@ public class BlockExecutorTest {
                 config.vmTraceCompressed()
         ));
 
-
         BlockResult result = executor.execute(block, parent.getStateRoot(), false);
         executor.executeAndFill(block, parent);
 
@@ -321,7 +319,7 @@ public class BlockExecutorTest {
 
     @Test
     public void executeAndFillBlockWithTxToExcludeBecauseSenderHasNoBalance() {
-        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         Repository track = repository.startTracking();
 
@@ -381,7 +379,7 @@ public class BlockExecutorTest {
 
     @Test
     public void executeBlockWithTxThatMakesBlockInvalidSenderHasNoBalance() {
-        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         Repository track = repository.startTracking();
 
@@ -492,7 +490,7 @@ public class BlockExecutorTest {
                 config.vmTraceDir(),
                 config.vmTraceCompressed()
         ));
-        
+
         byte[] stateRoot = block.getStateRoot();
         stateRoot[0] = (byte)((stateRoot[0] + 1) % 256);
 
@@ -723,7 +721,8 @@ public class BlockExecutorTest {
 
     @Test
     public void executeBlocksWithOneStrangeTransactions3() {
-        executeBlockWithOneStrangeTransaction(true, false, generateBlockWithOneStrangeTransaction(2));
+        // the wrongly-encoded value parameter will be re-encoded with the correct serialization and won't fail
+        executeBlockWithOneStrangeTransaction(false, false, generateBlockWithOneStrangeTransaction(2));
     }
 
     public void executeBlockWithOneStrangeTransaction(boolean mustFailValidation, boolean mustFailExecution, TestObjects objects) {
@@ -784,10 +783,9 @@ public class BlockExecutorTest {
         Assert.assertEquals(tx, receipt.getTransaction());
         Assert.assertEquals(21000, new BigInteger(1, receipt.getGasUsed()).longValue());
         Assert.assertEquals(21000, new BigInteger(1, receipt.getCumulativeGas()).longValue());
-        Assert.assertArrayEquals(result.getStateRoot(), receipt.getPostTxState());
 
         Assert.assertEquals(21000, result.getGasUsed());
-        Assert.assertEquals(21000, result.getPaidFees());
+        Assert.assertEquals(Coin.valueOf(21000), result.getPaidFees());
 
         Assert.assertNotNull(result.getReceiptsRoot());
         Assert.assertArrayEquals(BlockChainImpl.calcReceiptsTrie(result.getTransactionReceipts()), result.getReceiptsRoot());

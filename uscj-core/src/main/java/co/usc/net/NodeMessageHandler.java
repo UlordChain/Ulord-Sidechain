@@ -198,11 +198,10 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
     @Override
     public void run() {
         while (!stopped) {
-            MessageTask task = null;
             try {
                 logger.trace("Get task");
 
-                task = this.queue.poll(1, TimeUnit.SECONDS);
+                final MessageTask task = this.queue.poll(1, TimeUnit.SECONDS);
 
                 loggerMessageProcess.debug("Queued Messages: {}", this.queue.size());
 
@@ -217,7 +216,7 @@ public class NodeMessageHandler implements MessageHandler, Runnable {
                 updateTimedEvents();
             }
             catch (Exception ex) {
-                logger.error("Unexpected error processing: {}", task, ex);
+                logger.error("Error {}", ex);
             }
         }
     }

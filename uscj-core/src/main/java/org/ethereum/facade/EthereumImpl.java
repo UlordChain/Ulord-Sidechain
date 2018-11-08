@@ -63,7 +63,7 @@ public class EthereumImpl implements Ethereum {
         final ImportResult importResult = blockchain.tryToConnect(block);
 
         if (blockchain.getBlockByHash(block.getHash().getBytes()) != null) {
-            channelManager.broadcastBlock(block);
+            channelManager.broadcastBlock(block, null);
         }
         return importResult;
     }

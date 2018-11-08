@@ -18,14 +18,9 @@
 
 package co.usc.peg;
 
-import co.usc.config.*;
-import co.usc.db.TrieStorePoolOnMemory;
-import co.usc.peg.whitelist.LockWhitelist;
-import co.usc.peg.whitelist.LockWhitelistEntry;
-import co.usc.peg.whitelist.OneOffWhiteListEntry;
-import co.usc.peg.whitelist.UnlimitedWhiteListEntry;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.crypto.TransactionSignature;
+import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.script.Script;
 import co.usc.ulordj.script.ScriptBuilder;
 import co.usc.ulordj.script.ScriptChunk;
@@ -33,6 +28,10 @@ import co.usc.ulordj.store.BlockStoreException;
 import co.usc.ulordj.store.UldBlockStore;
 import co.usc.ulordj.wallet.Wallet;
 import co.usc.blockchain.utils.BlockGenerator;
+import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeRegTestConstants;
+import co.usc.config.UscSystemProperties;
+import co.usc.config.TestSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
@@ -42,14 +41,12 @@ import co.usc.peg.simples.SimpleUscTransaction;
 import co.usc.peg.simples.SimpleWallet;
 import co.usc.peg.utils.BridgeEventLogger;
 import co.usc.peg.utils.BridgeEventLoggerImpl;
+import co.usc.peg.whitelist.LockWhitelist;
+import co.usc.peg.whitelist.LockWhitelistEntry;
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
+import co.usc.peg.whitelist.UnlimitedWhiteListEntry;
 import co.usc.test.builders.BlockChainBuilder;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
-import co.usc.db.RepositoryImpl;
-import co.usc.peg.simples.SimpleBlockChain;
-import co.usc.peg.simples.SimpleUscTransaction;
-import co.usc.peg.simples.SimpleWallet;
-import co.usc.test.builders.BlockChainBuilder;
+import co.usc.trie.TrieStoreImpl;
 import com.google.common.collect.Lists;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.crypto.ec.CustomNamedCurves;
@@ -58,21 +55,26 @@ import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.signers.ECDSASigner;
 import org.bouncycastle.util.BigIntegers;
 import org.bouncycastle.util.encoders.Hex;
+import org.ethereum.config.BlockchainNetConfig;
+import org.ethereum.config.blockchain.regtest.RegTestShakespeareConfig;
 import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.config.net.TestNetConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.crypto.Keccak256Helper;
+import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.ReceiptStore;
 import org.ethereum.util.ByteUtil;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPElement;
 import org.ethereum.util.RLPList;
+import org.ethereum.vm.DataWord;
 import org.ethereum.vm.LogInfo;
 import org.ethereum.vm.PrecompiledContracts;
+import org.ethereum.vm.program.InternalTransaction;
 import org.ethereum.vm.program.Program;
-import org.hamcrest.Matchers;
+import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -222,7 +224,6 @@ public class BridgeSupportTest {
         Assert.assertEquals(blocks.get(1).getHash(), locator.get(4));
         Assert.assertEquals(_networkParameters.getGenesisBlock().getHash(), locator.get(5));
     }
-
 
     @Test
     public void testGetUldBlockchainBlockLocatorWithUldCheckpoints() throws Exception {
@@ -384,6 +385,7 @@ public class BridgeSupportTest {
 
         track.commit();
 
+        // reusing same bridge storage configuration as the height doesn't affect it for releases
         BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(2, provider.getReleaseRequestQueue().getEntries().size());
@@ -444,6 +446,7 @@ public class BridgeSupportTest {
 
         track.commit();
 
+        // reusing same bridge storage configuration as it doesn't affect the release transactions
         BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(1, provider.getReleaseRequestQueue().getEntries().size());
@@ -504,6 +507,7 @@ public class BridgeSupportTest {
 
         track.commit();
 
+        // keeping same bridge storage configuration
         BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(1, provider.getReleaseRequestQueue().getEntries().size());
@@ -632,6 +636,7 @@ public class BridgeSupportTest {
 
         track.commit();
 
+        // reusing same bridge storage configuration
         BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(0, provider.getReleaseRequestQueue().getEntries().size());
@@ -999,7 +1004,7 @@ public class BridgeSupportTest {
         Assert.assertThat(logs, hasSize(5));
         LogInfo releaseTxEvent = logs.get(4);
         Assert.assertThat(releaseTxEvent.getTopics(), hasSize(1));
-        Assert.assertThat(releaseTxEvent.getTopics(), Matchers.hasItem(Bridge.RELEASE_ULD_TOPIC));
+        Assert.assertThat(releaseTxEvent.getTopics(), hasItem(Bridge.RELEASE_ULD_TOPIC));
         UldTransaction releaseTx = new UldTransaction(bridgeConstants.getUldParams(), ((RLPList)RLP.decode2(releaseTxEvent.getData()).get(0)).get(1).getRLPData());
         // Verify all inputs fully signed
         for (int i = 0; i < releaseTx.getInputs().size(); i++) {
@@ -1093,7 +1098,7 @@ public class BridgeSupportTest {
             Assert.assertThat(logs, hasSize(3));
             LogInfo releaseTxEvent = logs.get(2);
             Assert.assertThat(releaseTxEvent.getTopics(), hasSize(1));
-            Assert.assertThat(releaseTxEvent.getTopics(), Matchers.hasItem(Bridge.RELEASE_ULD_TOPIC));
+            Assert.assertThat(releaseTxEvent.getTopics(), hasItem(Bridge.RELEASE_ULD_TOPIC));
             UldTransaction releaseTx = new UldTransaction(bridgeConstants.getUldParams(), ((RLPList)RLP.decode2(releaseTxEvent.getData()).get(0)).get(1).getRLPData());
             Script retrievedScriptSig = releaseTx.getInput(0).getScriptSig();
             Assert.assertEquals(4, retrievedScriptSig.getChunks().size());
@@ -3178,6 +3183,6 @@ public class BridgeSupportTest {
     }
 
     public static RepositoryImpl createRepositoryImpl(UscSystemProperties config) {
-        return new RepositoryImpl(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        return new RepositoryImpl(null, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
     }
 }

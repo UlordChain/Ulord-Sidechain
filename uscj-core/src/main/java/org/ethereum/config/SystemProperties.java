@@ -22,12 +22,12 @@ package org.ethereum.config;
 import co.usc.config.ConfigLoader;
 import com.google.common.annotations.VisibleForTesting;
 import com.typesafe.config.*;
-import org.ethereum.config.blockchain.HardForkActivationConfig;
-import org.ethereum.config.net.DevNetConfig;
 import org.ethereum.config.blockchain.FallbackMainNetConfig;
-import org.ethereum.config.net.RegTestConfig;
+import org.ethereum.config.blockchain.HardForkActivationConfig;
 import org.ethereum.config.net.MainNetConfig;
 import org.ethereum.config.net.TestNetConfig;
+import org.ethereum.config.net.RegTestConfig;
+import org.ethereum.config.net.DevNetConfig;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.Keccak256Helper;
 import org.ethereum.net.p2p.P2pHandler;
@@ -103,8 +103,6 @@ public abstract class SystemProperties {
     /* Testing */
     private static final Boolean DEFAULT_VMTEST_LOAD_LOCAL = false;
     private static final String DEFAULT_BLOCKS_LOADER = "";
-
-
 
     /**
      * Marks config accessor methods which need to be called (for value validation)
@@ -503,16 +501,6 @@ public abstract class SystemProperties {
     @ValidateMe
     public int maxActivePeers() {
         return configFromFiles.getInt("peer.maxActivePeers");
-    }
-
-    @ValidateMe
-    public int maxConnectionsPerAddressBlock() {
-        return configFromFiles.getInt("peer.blockAddress.maxConnections");
-    }
-
-    @ValidateMe
-    public int blockAddressCIDR() {
-        return configFromFiles.getInt("peer.blockAddress.cidr");
     }
 
     @ValidateMe

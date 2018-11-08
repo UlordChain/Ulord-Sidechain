@@ -18,26 +18,25 @@
 
 package co.usc.peg.performance;
 
-import co.usc.config.UscSystemProperties;
-import co.usc.db.*;
-import co.usc.peg.BridgeStorageConfiguration;
 import co.usc.ulordj.core.*;
 import co.usc.config.BridgeConstants;
-import co.usc.config.TestSystemProperties;
-import co.usc.peg.Bridge;
-import co.usc.peg.BridgeStorageProvider;
-import co.usc.test.builders.BlockChainBuilder;
-import co.usc.vm.VMPerformanceTest;
+import co.usc.config.UscSystemProperties;
 import co.usc.config.TestSystemProperties;
 import co.usc.db.RepositoryImpl;
 import co.usc.db.RepositoryTrackWithBenchmarking;
+import co.usc.peg.Bridge;
+import co.usc.peg.BridgeStorageConfiguration;
+import co.usc.peg.BridgeStorageProvider;
 import co.usc.test.builders.BlockChainBuilder;
-import org.ethereum.config.net.RegTestConfig;
+import co.usc.trie.TrieStoreImpl;
+import co.usc.vm.VMPerformanceTest;
+import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;
+import org.ethereum.datasource.HashMapDB;
 import org.ethereum.vm.LogInfo;
 import org.ethereum.vm.PrecompiledContracts;
 import org.junit.After;
@@ -104,7 +103,7 @@ public abstract class BridgePerformanceTestCase {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         config = new TestSystemProperties();
-        config.setBlockchainConfig(new RegTestConfig());
+        config.setBlockchainConfig(new RegTestGenesisConfig());
         bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         networkParameters = bridgeConstants.getUldParams();
     }
@@ -213,7 +212,7 @@ public abstract class BridgePerformanceTestCase {
                     block.verifyHeader();
                     verified = true;
                 } catch (VerificationException e) {
-                    nonce.add(BigInteger.ONE);
+                    nonce = nonce.add(BigInteger.ONE);
                 }
             }
 
@@ -270,7 +269,7 @@ public abstract class BridgePerformanceTestCase {
 
         List<LogInfo> logs = new ArrayList<>();
 
-        RepositoryTrackWithBenchmarking benchmarkerTrack = new RepositoryTrackWithBenchmarking(repository, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        RepositoryTrackWithBenchmarking benchmarkerTrack = new RepositoryTrackWithBenchmarking(repository, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
         Blockchain blockchain = BlockChainBuilder.ofSizeWithNoTransactionPoolCleaner(heightProvider.getHeight(executionIndex));
@@ -326,6 +325,6 @@ public abstract class BridgePerformanceTestCase {
     }
 
     public static RepositoryImpl createRepositoryImpl(UscSystemProperties config) {
-        return new RepositoryImpl(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        return new RepositoryImpl(null, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
     }
 }

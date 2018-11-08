@@ -19,28 +19,24 @@
 package co.usc.peg;
 
 import co.usc.asm.EVMAssembler;
-import co.usc.config.*;
-import co.usc.core.UscAddress;
-import co.usc.crypto.Keccak256;
-import co.usc.db.TrieStorePoolOnMemory;
-import co.usc.peg.whitelist.OneOffWhiteListEntry;
-import co.usc.peg.whitelist.UnlimitedWhiteListEntry;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.script.ScriptBuilder;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.core.BlockDifficulty;
-import co.usc.db.RepositoryImpl;
-import co.usc.net.messages.Message;
-import co.usc.peg.ulord.SimpleUldTransaction;
-import co.usc.peg.utils.UldTransactionFormatUtils;
-import co.usc.test.World;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
-import co.usc.db.RepositoryImpl;
-import co.usc.peg.ulord.SimpleUldTransaction;
-import co.usc.test.World;
 import co.usc.ulordj.store.BlockStoreException;
+import co.usc.blockchain.utils.BlockGenerator;
+import co.usc.config.BridgeConstants;
+import co.usc.config.BridgeRegTestConstants;
+import co.usc.config.UscSystemProperties;
+import co.usc.config.TestSystemProperties;
+import co.usc.core.BlockDifficulty;
+import co.usc.core.UscAddress;
+import co.usc.crypto.Keccak256;
+import co.usc.db.RepositoryImpl;
+import co.usc.peg.ulord.SimpleUldTransaction;
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
+import co.usc.peg.whitelist.UnlimitedWhiteListEntry;
+import co.usc.test.World;
+import co.usc.trie.TrieStoreImpl;
 import org.bouncycastle.util.encoders.Hex;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.BlockchainNetConfig;
@@ -49,6 +45,7 @@ import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;
+import org.ethereum.datasource.HashMapDB;
 import org.ethereum.rpc.TypeConverter;
 import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.VM;
@@ -56,6 +53,7 @@ import org.ethereum.vm.program.Program;
 import org.ethereum.vm.program.invoke.ProgramInvoke;
 import org.ethereum.vm.program.invoke.ProgramInvokeMockImpl;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,8 +64,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -75,13 +71,11 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.math.BigInteger;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.*;
 
-import static co.usc.peg.BridgeStorageProviderTest.createRepositoryImpl;
 import static co.usc.ulordj.core.Utils.uint32ToByteStreamLE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Matchers.any;
@@ -93,7 +87,6 @@ import static org.mockito.Mockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Bridge.class, BridgeUtils.class})
 public class BridgeTest {
-
     private static NetworkParameters networkParameters;
     private static BridgeConstants bridgeConstants;
 
@@ -113,6 +106,11 @@ public class BridgeTest {
         networkParameters = bridgeConstants.getUldParams();
         UldECKey fedULDPrivateKey = ((BridgeRegTestConstants)bridgeConstants).getFederatorPrivateKeys().get(0);
         fedECPrivateKey = ECKey.fromPrivate(fedULDPrivateKey.getPrivKey());
+    }
+
+    @Before
+    public void resetConfigToRegTest() {
+        config.setBlockchainConfig(new RegTestGenesisConfig());
     }
 
     @Test
@@ -177,6 +175,7 @@ public class BridgeTest {
 
         track.commit();
 
+        // reusing same storage configuration as the height doesn't affect storage configurations for releases.
         BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtThisHeight);
 
         Assert.assertEquals(3, provider.getReleaseTransactionSet().getEntries().size());
@@ -221,6 +220,7 @@ public class BridgeTest {
 
         track.commit();
 
+        // reusing same storage configuration as the height doesn't affect storage configurations for releases.
         BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtThisHeight);
 
         Assert.assertEquals(2, provider.getReleaseTransactionSet().getEntries().size());
@@ -233,7 +233,7 @@ public class BridgeTest {
         Repository track = repository.startTracking();
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, track, null, null, null);
+        bridge.init(null, getGenesisBlock(), track, null, null, null);
         try {
             bridge.execute(Bridge.RECEIVE_HEADERS.encode());
             Assert.fail();
@@ -244,8 +244,6 @@ public class BridgeTest {
         track.commit();
     }
 
-
-
     @Test
     public void sendNoBlockHeader() throws IOException {
         Repository repository = createRepositoryImpl(config);
@@ -255,7 +253,7 @@ public class BridgeTest {
         uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
         bridge.execute(Bridge.RECEIVE_HEADERS.encode());
 
@@ -271,7 +269,7 @@ public class BridgeTest {
         uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
         co.usc.ulordj.core.UldBlock block = new co.usc.ulordj.core.UldBlock(networkParameters, 1, PegTestUtils.createHash(), PegTestUtils.createHash(), 1, Utils.encodeCompactBits(networkParameters.getMaxTarget()), BigInteger.ONE, new ArrayList<>());
         co.usc.ulordj.core.UldBlock[] headers = new co.usc.ulordj.core.UldBlock[1];
@@ -289,6 +287,7 @@ public class BridgeTest {
 
     @Test
     public void executeWithFunctionSignatureLengthTooShortBeforeUscIP88() {
+
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
         Transaction mockedTx = mock(Transaction.class);
         bridge.init(mockedTx, getGenesisBlock(), null, null, null, null);
@@ -376,7 +375,7 @@ public class BridgeTest {
         uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
         Object[] objectArray = new Object[1];
         objectArray[0] = new byte[60];
@@ -396,7 +395,7 @@ public class BridgeTest {
         uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
         final int numBlocks = 10;
         co.usc.ulordj.core.UldBlock[] headers = new co.usc.ulordj.core.UldBlock[numBlocks];
@@ -448,7 +447,7 @@ public class BridgeTest {
         uscTx.sign(new ECKey().getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
         final int numBlocks = 10;
         co.usc.ulordj.core.UldBlock[] headers = new co.usc.ulordj.core.UldBlock[numBlocks];
@@ -520,7 +519,7 @@ public class BridgeTest {
         uscTx.sign(new ECKey().getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
 
         byte[] data = Bridge.REGISTER_ULD_TRANSACTION.encode(new byte[3], 1, new byte[30]);
@@ -542,7 +541,7 @@ public class BridgeTest {
         uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
         NetworkParameters uldParams = RegTestParams.get();
         UldBlock block = new UldBlock(uldParams, 1, PegTestUtils.createHash(), PegTestUtils.createHash(), 1, 1, BigInteger.ONE, new ArrayList<UldTransaction>()) {
@@ -588,7 +587,7 @@ public class BridgeTest {
         uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
 
         byte[] data = Bridge.REGISTER_ULD_TRANSACTION.encode(new byte[3], 1, new byte[30]);
@@ -632,7 +631,7 @@ public class BridgeTest {
         uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
         byte[] serializedTx = tx.ulordSerialize();
 
@@ -707,7 +706,7 @@ public class BridgeTest {
         uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
         NetworkParameters uldParams = RegTestParams.get();
         UldTransaction tx = new UldTransaction(uldParams);
@@ -728,7 +727,7 @@ public class BridgeTest {
         uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
         NetworkParameters uldParams = RegTestParams.get();
         UldTransaction tx = new UldTransaction(uldParams);
@@ -749,7 +748,7 @@ public class BridgeTest {
         uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
         NetworkParameters uldParams = RegTestParams.get();
         UldTransaction tx = new UldTransaction(uldParams);
@@ -792,7 +791,9 @@ public class BridgeTest {
         Repository track = repository.startTracking();
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, track, null, null, null);
+        Transaction mockedTx = mock(Transaction.class);
+        when(mockedTx.isLocalCallTransaction()).thenReturn(true);
+        bridge.init(mockedTx, getGenesisBlock(), track, null, null, null);
 
         byte[] data = Bridge.GET_FEDERATION_ADDRESS.encode();
 
@@ -806,7 +807,9 @@ public class BridgeTest {
 
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, track, null, null, null);
+        Transaction mockedTx = mock(Transaction.class);
+        when(mockedTx.isLocalCallTransaction()).thenReturn(true);
+        bridge.init(mockedTx, getGenesisBlock(), track, null, null, null);
 
         byte[] data = Bridge.GET_MINIMUM_LOCK_TX_VALUE.encode();
 
@@ -822,7 +825,7 @@ public class BridgeTest {
         uscTx.sign(new ECKey().getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
         byte[] federatorPublicKeySerialized = new byte[3];
         Object[] signaturesObjectArray = new Object[0];
@@ -846,7 +849,7 @@ public class BridgeTest {
         uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
         byte[] federatorPublicKeySerialized = new byte[3];
         Object[] signaturesObjectArray = new Object[0];
@@ -865,7 +868,7 @@ public class BridgeTest {
         uscTx.sign(fedECPrivateKey.getPrivKeyBytes());
 
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(uscTx, null, track, null, null, null);
+        bridge.init(uscTx, getGenesisBlock(), track, null, null, null);
 
         byte[] federatorPublicKeySerialized = new UldECKey().getPubKey();
         Object[] signaturesObjectArray = new Object[0];
@@ -1063,7 +1066,11 @@ public class BridgeTest {
         uscTx.sign(((BridgeRegTestConstants)bridgeConstants).getFederatorPrivateKeys().get(0).getPrivKeyBytes());
 
         Block uscExecutionBlock = new BlockGenerator().createChildBlock(Genesis.getInstance(config));
-        bridge.init(uscTx, uscExecutionBlock, null, null, null, null);
+
+        Repository mockRepository = mock(Repository.class);
+        when(mockRepository.getCode(any(UscAddress.class))).thenReturn(null);
+
+        bridge.init(uscTx, uscExecutionBlock, mockRepository, null, null, null);
         Assert.assertEquals(0, bridge.getGasForData(uscTx.getData()));
 
         config.setBlockchainConfig(blockchainNetConfigOriginal);
@@ -1169,7 +1176,7 @@ public class BridgeTest {
     @Test
     public void isUldTxHashAlreadyProcessed_normalFlow() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         Set<Sha256Hash> hashes = new HashSet<>();
@@ -1191,7 +1198,7 @@ public class BridgeTest {
     @Test
     public void isUldTxHashAlreadyProcessed_exception() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
 
@@ -1208,7 +1215,7 @@ public class BridgeTest {
     @Test
     public void getUldTxHashProcessedHeight_normalFlow() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         Map<Sha256Hash, Long> hashes = new HashMap<>();
@@ -1229,7 +1236,7 @@ public class BridgeTest {
     @Test
     public void getUldTxHashProcessedHeight_exception() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
 
@@ -1246,7 +1253,7 @@ public class BridgeTest {
     @Test
     public void getFederationSize() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.getFederationSize()).thenReturn(1234);
@@ -1257,7 +1264,7 @@ public class BridgeTest {
     @Test
     public void getFederationThreshold() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.getFederationThreshold()).thenReturn(5678);
@@ -1268,7 +1275,7 @@ public class BridgeTest {
     @Test
     public void getFederationCreationTime() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.getFederationCreationTime()).thenReturn(Instant.ofEpochMilli(5000));
@@ -1289,7 +1296,7 @@ public class BridgeTest {
     @Test
     public void getFederatorPublicKey() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.getFederatorPublicKey(any(int.class))).then((InvocationOnMock invocation) ->
@@ -1303,7 +1310,7 @@ public class BridgeTest {
     @Test
     public void getRetiringFederationSize() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.getRetiringFederationSize()).thenReturn(1234);
@@ -1314,7 +1321,7 @@ public class BridgeTest {
     @Test
     public void getRetiringFederationThreshold() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.getRetiringFederationThreshold()).thenReturn(5678);
@@ -1325,7 +1332,7 @@ public class BridgeTest {
     @Test
     public void getRetiringFederationCreationTime() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.getRetiringFederationCreationTime()).thenReturn(Instant.ofEpochMilli(5000));
@@ -1346,7 +1353,7 @@ public class BridgeTest {
     @Test
     public void getRetiringFederatorPublicKey() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.getRetiringFederatorPublicKey(any(int.class))).then((InvocationOnMock invocation) ->
@@ -1360,7 +1367,7 @@ public class BridgeTest {
     @Test
     public void getPendingFederationSize() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.getPendingFederationSize()).thenReturn(1234);
@@ -1371,7 +1378,7 @@ public class BridgeTest {
     @Test
     public void getPendingFederatorPublicKey() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.getPendingFederatorPublicKey(any(int.class))).then((InvocationOnMock invocation) ->
@@ -1386,7 +1393,7 @@ public class BridgeTest {
     public void createFederation() throws IOException {
         Transaction txMock = mock(Transaction.class);
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(txMock, null, null, null, null, null);
+        bridge.init(txMock, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.voteFederationChange(txMock, new ABICallSpec("create", new byte[][]{}))).thenReturn(123);
@@ -1398,7 +1405,7 @@ public class BridgeTest {
     public void addFederatorPublicKey_ok() throws IOException {
         Transaction txMock = mock(Transaction.class);
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(txMock, null, null, null, null, null);
+        bridge.init(txMock, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.voteFederationChange(txMock, new ABICallSpec("add", new byte[][] { Hex.decode("aabbccdd") })))
@@ -1410,7 +1417,7 @@ public class BridgeTest {
     @Test
     public void addFederatorPublicKey_wrongParameterType() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
 
@@ -1422,7 +1429,7 @@ public class BridgeTest {
     public void commitFederation_ok() throws IOException {
         Transaction txMock = mock(Transaction.class);
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(txMock, null, null, null, null, null);
+        bridge.init(txMock, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
 
@@ -1434,7 +1441,7 @@ public class BridgeTest {
     @Test
     public void commitFederation_wrongParameterType() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
 
@@ -1446,7 +1453,7 @@ public class BridgeTest {
     public void rollbackFederation() throws IOException {
         Transaction txMock = mock(Transaction.class);
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(txMock, null, null, null, null, null);
+        bridge.init(txMock, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.voteFederationChange(txMock, new ABICallSpec("rollback", new byte[][]{}))).thenReturn(456);
@@ -1457,7 +1464,7 @@ public class BridgeTest {
     @Test
     public void getLockWhitelistSize() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.getLockWhitelistSize()).thenReturn(1234);
@@ -1468,7 +1475,7 @@ public class BridgeTest {
     @Test
     public void getLockWhitelistAddress() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         OneOffWhiteListEntry mockedEntry10 = new OneOffWhiteListEntry(new UldECKey().toAddress(networkParameters), Coin.COIN);
         OneOffWhiteListEntry mockedEntry20 = new OneOffWhiteListEntry(new UldECKey().toAddress(networkParameters), Coin.COIN);
@@ -1692,7 +1699,7 @@ public class BridgeTest {
     public void removeLockWhitelistAddress() throws IOException {
         Transaction mockedTransaction = mock(Transaction.class);
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(mockedTransaction, null, null, null, null, null);
+        bridge.init(mockedTransaction, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.removeLockWhitelistAddress(mockedTransaction, "i-am-an-address")).thenReturn(1234);
@@ -1715,7 +1722,7 @@ public class BridgeTest {
     public void voteFeePerKb_ok() throws IOException {
         Transaction txMock = mock(Transaction.class);
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(txMock, null, null, null, null, null);
+        bridge.init(txMock, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
         when(bridgeSupportMock.voteFeePerKbChange(txMock, Coin.valueOf(2)))
@@ -1727,7 +1734,7 @@ public class BridgeTest {
     @Test
     public void voteFeePerKb_wrongParameterType() throws IOException {
         Bridge bridge = new Bridge(config, PrecompiledContracts.BRIDGE_ADDR);
-        bridge.init(null, null, null, null, null, null);
+        bridge.init(null, getGenesisBlock(), null, null, null, null);
         BridgeSupport bridgeSupportMock = mock(BridgeSupport.class);
         Whitebox.setInternalState(bridge, "bridgeSupport", bridgeSupportMock);
 
@@ -1981,34 +1988,34 @@ public class BridgeTest {
 
         // Actual tests
         Arrays.asList(
-                BridgeMethods.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT,
-                BridgeMethods.GET_ULD_BLOCKCHAIN_INITIAL_BLOCK_HEIGHT,
-                BridgeMethods.GET_ULD_BLOCKCHAIN_BLOCK_LOCATOR,
-                BridgeMethods.GET_ULD_BLOCKCHAIN_BLOCK_HASH_AT_DEPTH,
-                BridgeMethods.GET_ULD_TX_HASH_PROCESSED_HEIGHT,
-                BridgeMethods.GET_FEDERATION_ADDRESS,
-                BridgeMethods.GET_FEDERATION_CREATION_BLOCK_NUMBER,
-                BridgeMethods.GET_FEDERATION_CREATION_TIME,
-                BridgeMethods.GET_FEDERATION_SIZE,
-                BridgeMethods.GET_FEDERATION_THRESHOLD,
-                BridgeMethods.GET_FEDERATOR_PUBLIC_KEY,
-                BridgeMethods.GET_FEE_PER_KB,
-                BridgeMethods.GET_LOCK_WHITELIST_ADDRESS,
-                BridgeMethods.GET_LOCK_WHITELIST_ENTRY_BY_ADDRESS,
-                BridgeMethods.GET_LOCK_WHITELIST_SIZE,
-                BridgeMethods.GET_MINIMUM_LOCK_TX_VALUE,
-                BridgeMethods.GET_PENDING_FEDERATION_HASH,
-                BridgeMethods.GET_PENDING_FEDERATION_SIZE,
-                BridgeMethods.GET_PENDING_FEDERATOR_PUBLIC_KEY,
-                BridgeMethods.GET_RETIRING_FEDERATION_ADDRESS,
-                BridgeMethods.GET_RETIRING_FEDERATION_CREATION_BLOCK_NUMBER,
-                BridgeMethods.GET_RETIRING_FEDERATION_CREATION_TIME,
-                BridgeMethods.GET_RETIRING_FEDERATION_SIZE,
-                BridgeMethods.GET_RETIRING_FEDERATION_THRESHOLD,
-                BridgeMethods.GET_RETIRING_FEDERATOR_PUBLIC_KEY,
-                BridgeMethods.GET_STATE_FOR_ULD_RELEASE_CLIENT,
-                BridgeMethods.GET_STATE_FOR_DEBUGGING,
-                BridgeMethods.IS_ULD_TX_HASH_ALREADY_PROCESSED
+            BridgeMethods.GET_ULD_BLOCKCHAIN_BEST_CHAIN_HEIGHT,
+            BridgeMethods.GET_ULD_BLOCKCHAIN_INITIAL_BLOCK_HEIGHT,
+            BridgeMethods.GET_ULD_BLOCKCHAIN_BLOCK_LOCATOR,
+            BridgeMethods.GET_ULD_BLOCKCHAIN_BLOCK_HASH_AT_DEPTH,
+            BridgeMethods.GET_ULD_TX_HASH_PROCESSED_HEIGHT,
+            BridgeMethods.GET_FEDERATION_ADDRESS,
+            BridgeMethods.GET_FEDERATION_CREATION_BLOCK_NUMBER,
+            BridgeMethods.GET_FEDERATION_CREATION_TIME,
+            BridgeMethods.GET_FEDERATION_SIZE,
+            BridgeMethods.GET_FEDERATION_THRESHOLD,
+            BridgeMethods.GET_FEDERATOR_PUBLIC_KEY,
+            BridgeMethods.GET_FEE_PER_KB,
+            BridgeMethods.GET_LOCK_WHITELIST_ADDRESS,
+            BridgeMethods.GET_LOCK_WHITELIST_ENTRY_BY_ADDRESS,
+            BridgeMethods.GET_LOCK_WHITELIST_SIZE,
+            BridgeMethods.GET_MINIMUM_LOCK_TX_VALUE,
+            BridgeMethods.GET_PENDING_FEDERATION_HASH,
+            BridgeMethods.GET_PENDING_FEDERATION_SIZE,
+            BridgeMethods.GET_PENDING_FEDERATOR_PUBLIC_KEY,
+            BridgeMethods.GET_RETIRING_FEDERATION_ADDRESS,
+            BridgeMethods.GET_RETIRING_FEDERATION_CREATION_BLOCK_NUMBER,
+            BridgeMethods.GET_RETIRING_FEDERATION_CREATION_TIME,
+            BridgeMethods.GET_RETIRING_FEDERATION_SIZE,
+            BridgeMethods.GET_RETIRING_FEDERATION_THRESHOLD,
+            BridgeMethods.GET_RETIRING_FEDERATOR_PUBLIC_KEY,
+            BridgeMethods.GET_STATE_FOR_ULD_RELEASE_CLIENT,
+            BridgeMethods.GET_STATE_FOR_DEBUGGING,
+            BridgeMethods.IS_ULD_TX_HASH_ALREADY_PROCESSED
         ).stream().forEach(m -> {
             Assert.assertTrue(m.onlyAllowsLocalCalls());
         });
@@ -2042,6 +2049,6 @@ public class BridgeTest {
     }
 
     public static RepositoryImpl createRepositoryImpl(UscSystemProperties config) {
-        return new RepositoryImpl(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
+        return new RepositoryImpl(null, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
     }
 }
