@@ -101,7 +101,9 @@ public class MnrModuleImpl implements MnrModule, Runnable {
 
     @Override
     public SubmittedBlockInfo submitUlordBlockPartialMerkle(String blockHashHex, String blockHeaderHex, String coinbaseHex, String merkleHashesHex, String blockTxnCountHex) {
-        submittedQueue.add(blockHashHex + ":" + blockHeaderHex + ":" + coinbaseHex + ":" + merkleHashesHex + ":" + blockTxnCountHex);
+        synchronized (this) {
+            submittedQueue.add(blockHashHex + ":" + blockHeaderHex + ":" + coinbaseHex + ":" + merkleHashesHex + ":" + blockTxnCountHex);
+        }
 
         logger.debug("Queue Size: " + submittedQueue.size());
         if(processUlordBlockPartialMerkleThread == null) {
@@ -154,7 +156,11 @@ public class MnrModuleImpl implements MnrModule, Runnable {
                     }
                     continue;
                 }
-                String data = submittedQueue.poll();
+
+                String data = "";
+                synchronized (this) {
+                    data = submittedQueue.poll();
+                }
 
                 if (data == null) continue;
                 String[] dataObjects = data.split(":");
