@@ -72,4 +72,7 @@ public class MainNetAfterBridgeSyncConfig extends GenesisConfig {
 
         return super.calcDifficulty(curBlock, parent);
     }
+
+    @Override
+    public boolean isUscIP87() {return true;}
 }

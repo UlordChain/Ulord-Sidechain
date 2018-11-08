@@ -17,4 +17,7 @@ public class MainNetBeforeBridgeSyncConfig extends MainNetAfterBridgeSyncConfig 
     public boolean areBridgeTxsFree() {
         return true;
     }
+
+    @Override
+    public  boolean isUscIP87() { return false; }
 }
