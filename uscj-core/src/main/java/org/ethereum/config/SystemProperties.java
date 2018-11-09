@@ -553,14 +553,14 @@ public abstract class SystemProperties {
 
     private String getMyPublicIpFromRemoteService(){
         try {
-            logger.info("Public IP wasn't set or resolved, using ident.me to identify it...");
+            logger.info("Public IP wasn't set or resolved, using checkip.amazonaws.com to identify it...");
 
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(new URL("http://ident.me").openStream()))) {
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(new URL("http://checkip.amazonaws.com").openStream()))) {
                 publicIp = in.readLine();
             }
 
             if (publicIp == null || publicIp.trim().isEmpty()) {
-                logger.warn("Unable to retrieve public IP from ident.me {}.", publicIp);
+                logger.warn("Unable to retrieve public IP from checkip.amazonaws.com {}.", publicIp);
                 throw new IOException("Invalid address: '" + publicIp + "'");
             }
 
