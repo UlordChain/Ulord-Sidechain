@@ -31,12 +31,11 @@ import org.ethereum.config.blockchain.mainnet.MainNetUnlimitedWhitelistConfig;
 public class MainNetConfig extends AbstractNetConfig {
     public MainNetConfig() {
         add(0, new MainNetBeforeBridgeSyncConfig());
-        add(144000, new MainNetUnlimitedWhitelistConfig());
+        add(144_000, new MainNetUnlimitedWhitelistConfig());
+        add(200_000, new MainNetShakespeareConfig());
         // 60 days of 1 block every 14 seconds.
         // On blockchain launch blocks will be faster until difficulty is adjusted to available hashing power.
         add(370_000, new MainNetAfterBridgeSyncConfig());
-        // TODO: establish when to apply this fork. 500_000 is just a made up figure.
-        add(500_000, new MainNetShakespeareConfig());
 
     }
 }

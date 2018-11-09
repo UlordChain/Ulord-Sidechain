@@ -63,16 +63,54 @@ public class MainNetAfterBridgeSyncConfig extends GenesisConfig {
     }
 
 
-    @Override
+    @Override   // UscIP97
     public BlockDifficulty calcDifficulty(BlockHeader curBlock, BlockHeader parent) {
-        // If more than 2.5 minutes, reset to original difficulty 0x0000001B58
-        if (curBlock.getTimestamp() >= parent.getTimestamp() + 150) {
-            return getConstants().getMinimumDifficulty();
-        }
-
-        return super.calcDifficulty(curBlock, parent);
+        return getBlockDifficulty(getConstants(), curBlock, parent);
     }
 
     @Override
     public boolean isUscIP87() {return true;}
+
+    @Override
+    public boolean isUscIP85() {
+        return true;
+    }
+
+    @Override
+    public boolean isUscIP88() { return true; }
+
+    @Override
+    public boolean isUscIP89() {
+        return true;
+    }
+
+    @Override
+    public boolean isUscIP90() {
+        return true;
+    }
+
+    @Override
+    public boolean isUscIP91() {
+        return true;
+    }
+
+    @Override
+    public boolean isUscIP92() {
+        return true;
+    }
+
+    @Override
+    public boolean isUscIP93() {
+        return true;
+    }
+
+    @Override
+    public boolean isUscIP94() {
+        return true;
+    }
+
+    @Override
+    public boolean isUscIP98() {
+        return true;
+    }
 }
