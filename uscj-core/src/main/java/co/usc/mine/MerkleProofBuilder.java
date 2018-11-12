@@ -35,5 +35,5 @@ public interface MerkleProofBuilder {
             UldBlock blockWithHeaderOnly,
             List<String> txHashesString);
 
-    byte[] buildFromBlock(UldBlock bitcoinMergedMiningBlock);
+    byte[] buildFromBlock(UldBlock ulordMergedMiningBlock);
 }

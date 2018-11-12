@@ -167,7 +167,7 @@ public class BlockHeader {
 
         if (rlpHeader.size() > r) {
             this.ulordMergedMiningHeader = rlpHeader.get(r++).getRLPData();
-            this.ulordMergedMiningMerkleProof = rlpHeader.get(r++).getRLPData();
+            this.ulordMergedMiningMerkleProof = rlpHeader.get(r++).getRLPRawData();
             this.ulordMergedMiningCoinbaseTransaction = rlpHeader.get(r++).getRLPData();
 
         }

@@ -50,9 +50,9 @@ public class UscIP92MerkleProofBuilder implements MerkleProofBuilder {
     }
 
     @Override
-    public byte[] buildFromBlock(UldBlock bitcoinMergedMiningBlock) {
+    public byte[] buildFromBlock(UldBlock ulordMergedMiningBlock) {
         return buildFromFullPmt(
-                new GenesisMerkleProofBuilder().buildFromBlock(bitcoinMergedMiningBlock)
+                new GenesisMerkleProofBuilder().buildFromBlock(ulordMergedMiningBlock)
         );
     }
 
