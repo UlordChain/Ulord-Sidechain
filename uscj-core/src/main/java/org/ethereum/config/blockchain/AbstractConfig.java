@@ -92,7 +92,7 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
         // Friday, August 17, 2018 10:00:00 AM GMT+08:00
         BigInteger difDivisor;
         if(constants instanceof TestNetAfterBridgeSyncConfig.TestNetConstants) {
-            if(curBlockTS < 1534471200l)
+            if(curBlockTS < 1534471200L)
                 difDivisor = constants.getDifficultyBoundDivisor();
             else
                 difDivisor = BigInteger.valueOf(50);
@@ -119,7 +119,7 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
         // Created Fork to reduce time 25% as Bitcoin and Ulord time difference is 25%
         // Monday, August 20, 2018 11:00:00 AM GMT+08:00
         if(constants instanceof TestNetAfterBridgeSyncConfig.TestNetConstants) {
-            if(curBlockTS > 1534734000l) {
+            if(curBlockTS > 1534734000L) {
                 calcDur = (int)((1 + uncleCount * 0.175) * duration);
             } else {
                 calcDur = (1 + uncleCount) * duration;
