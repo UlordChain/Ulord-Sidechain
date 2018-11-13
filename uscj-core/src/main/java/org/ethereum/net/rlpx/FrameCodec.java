@@ -185,10 +185,6 @@ public class FrameCodec {
             totalBodySize = (totalBodySize << 8) + (headBuffer[1] & 0xFF);
             totalBodySize = (totalBodySize << 8) + (headBuffer[2] & 0xFF);
 
-            if (totalBodySize < 0) {
-                return null;
-            }
-
             decode2OneItem(headBuffer, 3);
 
             contextId = -1;

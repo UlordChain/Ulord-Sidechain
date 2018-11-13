@@ -99,8 +99,6 @@ public class BlockHeader {
     private byte[] ulordMergedMiningCoinbaseTransaction;
     /**
      * The mgp for a tx to be included in the block.
-     * Note that minimumGasPriceRaw is saved to perform {@link #getEncoded()},
-     * but for other uses you should only rely on minimumGasPrice.
      */
     private Coin minimumGasPrice;
     private int uncleCount;
@@ -472,7 +470,6 @@ public class BlockHeader {
                 byte[] ulordMergedMiningCoinbaseTransaction = RLP.encodeElement(this.ulordMergedMiningCoinbaseTransaction);
                 fieldToEncodeList.add(ulordMergedMiningCoinbaseTransaction);
             }
-
         }
 
 

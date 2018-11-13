@@ -21,7 +21,6 @@ package org.ethereum.net.client;
 
 import org.ethereum.config.SystemProperties;
 import org.ethereum.net.eth.EthVersion;
-import org.ethereum.net.p2p.HelloMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

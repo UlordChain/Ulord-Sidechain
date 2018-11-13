@@ -440,7 +440,7 @@ public class RLP {
 
     @Nonnull
     public static UscAddress parseUscAddress(@Nullable byte[] bytes) {
-        if (bytes == null || isAllZeroes(bytes)) {
+        if (bytes == null || bytes.length == 0) {
             return UscAddress.nullAddress();
         } else {
             return new UscAddress(bytes);
