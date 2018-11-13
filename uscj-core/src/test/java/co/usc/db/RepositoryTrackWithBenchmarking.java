@@ -19,7 +19,6 @@
 
 package co.usc.db;
 
-import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
 import co.usc.trie.TrieStore;
 import org.ethereum.core.Repository;

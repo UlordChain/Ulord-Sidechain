@@ -18,12 +18,12 @@
 
 package co.usc.peg.performance;
 
+import co.usc.db.RepositoryTrackWithBenchmarking;
 import co.usc.ulordj.core.*;
 import co.usc.config.BridgeConstants;
 import co.usc.config.UscSystemProperties;
 import co.usc.config.TestSystemProperties;
 import co.usc.db.RepositoryImpl;
-import co.usc.db.RepositoryTrackWithBenchmarking;
 import co.usc.peg.Bridge;
 import co.usc.peg.BridgeStorageConfiguration;
 import co.usc.peg.BridgeStorageProvider;
