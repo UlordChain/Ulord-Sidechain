@@ -19,8 +19,6 @@
 
 package org.ethereum.net.client;
 
-import org.ethereum.net.p2p.HelloMessage;
-
 import java.util.List;
 
 /**
