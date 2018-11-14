@@ -1820,16 +1820,15 @@ public class BridgeSupport {
             return LOCK_WHITELIST_GENERIC_ERROR_CODE;
         }
 
-        LockWhitelist lockWhitelist = provider.getLockWhitelist();
-        if (lockWhitelist.isDisableBlockSet()) {
-            return -1;
-        }
         int disableBlockDelay = disableBlockDelayBI.intValueExact();
         int bestChainHeight = getUldBlockchainBestChainHeight();
-        if (bestChainHeight < 0 || Integer.MAX_VALUE - disableBlockDelay < bestChainHeight) {
+        if (disableBlockDelay < 0 || Integer.MAX_VALUE - disableBlockDelay < bestChainHeight) {
             return -2;
         }
+
+        LockWhitelist lockWhitelist = provider.getLockWhitelist();
         lockWhitelist.setDisableBlockHeight(bestChainHeight + disableBlockDelay);
+
         return 1;
     }
 
