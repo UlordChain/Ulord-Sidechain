@@ -600,7 +600,7 @@ public class Transaction {
                 gasPrice.toByteArray(),
                 gasLimit.toByteArray(),
                 to != null ? Hex.decode(to) : null,
-                amount.toByteArray(),
+                BigIntegers.asUnsignedByteArray(amount),
                 decodedData,
                 config.getBlockchainConfig().getCommonConstants().getChainId());
     }
