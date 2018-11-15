@@ -598,9 +598,9 @@ public class Transaction {
     public static Transaction create(UscSystemProperties config, String to, BigInteger amount, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, byte[] decodedData) {
         return new Transaction(BigIntegers.asUnsignedByteArray(nonce),
                 gasPrice.toByteArray(),
-                BigIntegers.asUnsignedByteArray(gasLimit),
+                gasLimit.toByteArray(),
                 to != null ? Hex.decode(to) : null,
-                BigIntegers.asUnsignedByteArray(amount),
+                amount.toByteArray(),
                 decodedData,
                 config.getBlockchainConfig().getCommonConstants().getChainId());
     }
