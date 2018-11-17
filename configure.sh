@@ -9,10 +9,6 @@ function downloadJar(){
 		mkdir ./uscj-core/libs
 	fi
 
-	curl -o ./uscj-core/libs/ulordj-thin-0.0.1-usc-1-bundled.jar -L https://github.com/UlordChain/ulordj-thin/releases/download/ulordj-thin-0.0.1/ulordj-thin-0.0.1-usc-1-bundled.jar;
-    curl -o ./uscj-core/libs/lll-compiler-0.0.2.jar -L https://github.com/UlordChain/lll-compiler/releases/download/0.0.2/lll-compiler-0.0.2.jar
-    curl -o ./uscj-core/libs/bclcrypto-jdk15on-1.59.jar -L https://github.com/UlordChain/lll-compiler/releases/download/0.0.2/bclcrypto-jdk15on-1.59.jar
-
     if [[ $PLATFORM == 'linux'  ]]; then
         sudo curl -o /usr/lib/libCryptoHello.so -L https://github.com/UlordChain/ulordj-thin/releases/download/ulordj-thin-0.0.1/libCryptoHello.so
     elif [[ $PLATFORM == 'windows' ]]; then
@@ -20,6 +16,10 @@ function downloadJar(){
     elif [[ $PLATFORM == 'mac' ]]; then
         echo "Platform currently not supported"
     fi
+
+    curl -o ./uscj-core/libs/ulordj-thin-0.0.1-usc-1-bundled.jar -L https://github.com/UlordChain/ulordj-thin/releases/download/ulordj-thin-0.0.1/ulordj-thin-0.0.1-usc-1-bundled.jar;
+    curl -o ./uscj-core/libs/lll-compiler-0.0.2.jar -L https://github.com/UlordChain/lll-compiler/releases/download/0.0.2/lll-compiler-0.0.2.jar
+    curl -o ./uscj-core/libs/bclcrypto-jdk15on-1.59.jar -L https://github.com/UlordChain/lll-compiler/releases/download/0.0.2/bclcrypto-jdk15on-1.59.jar
 }
 
 function platform() {
