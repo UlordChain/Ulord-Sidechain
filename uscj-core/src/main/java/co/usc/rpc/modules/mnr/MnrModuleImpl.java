@@ -108,6 +108,7 @@ public class MnrModuleImpl implements MnrModule, Runnable {
         logger.debug("Queue Size: " + submittedQueue.size());
         if(processUlordBlockPartialMerkleThread == null) {
             processUlordBlockPartialMerkleThread = new Thread(this);
+            processUlordBlockPartialMerkleThread.setName("processUlordBlockPartialMerkle");
             processUlordBlockPartialMerkleThread.start();
         }
 

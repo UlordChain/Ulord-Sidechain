@@ -34,6 +34,6 @@ public class TestNetConfig extends AbstractNetConfig {
         // On blockchain launch blocks will be faster until difficulty is adjusted to available hashing power.
         add(129_600, new TestNetAfterBridgeSyncConfig());
         add(399_093, new TestNetUnlimitedWhitelistConfig());
-        add(500_000, new TestNetShakespeareConfig());
+        add(462_000, new TestNetShakespeareConfig());
     }
 }
