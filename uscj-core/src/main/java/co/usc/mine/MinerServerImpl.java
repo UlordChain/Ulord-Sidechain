@@ -18,7 +18,8 @@
 
 package co.usc.mine;
 
-import co.usc.ulordj.core.*;
+import co.usc.ulordj.core.UldBlock;
+import co.usc.ulordj.core.UldTransaction;
 import co.usc.config.MiningConfig;
 import co.usc.config.UscMiningConstants;
 import co.usc.config.UscSystemProperties;
@@ -33,6 +34,9 @@ import co.usc.util.DifficultyUtils;
 import co.usc.validators.ProofOfWorkRule;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.ArrayUtils;
+import org.bouncycastle.crypto.digests.SHA256Digest;
+import org.bouncycastle.util.Arrays;
+import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.facade.Ethereum;
@@ -41,9 +45,6 @@ import org.ethereum.rpc.TypeConverter;
 import org.ethereum.util.RLP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.crypto.digests.SHA256Digest;
-import org.spongycastle.util.Arrays;
-import org.spongycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -57,7 +58,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 /**
  * The MinerServer provides support to components that perform the actual mining.
@@ -79,6 +80,7 @@ public class MinerServerImpl implements MinerServer {
     private final Blockchain blockchain;
     private final ProofOfWorkRule powRule;
     private final BlockToMineBuilder builder;
+    private final BlockchainNetConfig blockchainConfig;
 
     private boolean isFallbackMining;
     private int fallbackBlocksGenerated;
@@ -98,7 +100,7 @@ public class MinerServerImpl implements MinerServer {
     @GuardedBy("lock")
     private Block latestBlock;
     @GuardedBy("lock")
-    private co.usc.core.Coin latestPaidFeesWithNotify;
+    private Coin latestPaidFeesWithNotify;
     @GuardedBy("lock")
     private volatile MinerWork currentWork; // This variable can be read at anytime without the lock.
     private final Object lock = new Object();
@@ -131,10 +133,11 @@ public class MinerServerImpl implements MinerServer {
         this.difficultyCalculator = difficultyCalculator;
         this.powRule = powRule;
         this.builder = builder;
+        this.blockchainConfig = config.getBlockchainConfig();
 
         blocksWaitingforPoW = createNewBlocksWaitingList();
 
-        latestPaidFeesWithNotify = co.usc.core.Coin.ZERO;
+        latestPaidFeesWithNotify = Coin.ZERO;
         latestParentHash = null;
         coinbaseAddress = miningConfig.getCoinbaseAddress();
         minFeesNotifyInDollars = BigDecimal.valueOf(miningConfig.getMinFeesNotifyInDollars());
@@ -148,9 +151,9 @@ public class MinerServerImpl implements MinerServer {
                 config.getAverageFallbackMiningTime();
         // default
         if (secsBetweenFallbackMinedBlocks == 0) {
-            secsBetweenFallbackMinedBlocks = (config.getBlockchainConfig().getCommonConstants().getDurationLimit());
+            secsBetweenFallbackMinedBlocks = (blockchainConfig.getCommonConstants().getDurationLimit());
         }
-        autoSwitchBetweenNormalAndFallbackMining = !config.getBlockchainConfig().getCommonConstants().getFallbackMiningDifficulty().equals(BlockDifficulty.ZERO);
+        autoSwitchBetweenNormalAndFallbackMining = !blockchainConfig.getCommonConstants().getFallbackMiningDifficulty().equals(BlockDifficulty.ZERO);
     }
 
     // This method is used for tests
@@ -386,9 +389,13 @@ public class MinerServerImpl implements MinerServer {
             int blockTxnCount) {
         logger.debug("Received merkle solution with hash {} for merged mining", blockHashForMergedMining);
 
-        PartialMerkleTree ulordMergedMiningMerkleBranch = getUlordMergedMerkleBranchForCoinbase(blockWithHeaderOnly.getParams(), merkleHashes, blockTxnCount);
-
-        return processSolution(blockHashForMergedMining, blockWithHeaderOnly, coinbase, ulordMergedMiningMerkleBranch, true);
+        return processSolution(
+                blockHashForMergedMining,
+                blockWithHeaderOnly,
+                coinbase,
+                (pb) -> pb.buildFromMerkleHashes(blockWithHeaderOnly, merkleHashes, blockTxnCount),
+                true
+        );
     }
 
     @Override
@@ -399,9 +406,13 @@ public class MinerServerImpl implements MinerServer {
             List<String> txHashes) {
         logger.debug("Received tx solution with hash {} for merged mining", blockHashForMergedMining);
 
-        PartialMerkleTree ulordMergedMiningMerkleBranch = getUlordMergedMerkleBranch(blockWithHeaderOnly.getParams(), txHashes);
-
-        return processSolution(blockHashForMergedMining, blockWithHeaderOnly, coinbase, ulordMergedMiningMerkleBranch, true);
+        return processSolution(
+                blockHashForMergedMining,
+                blockWithHeaderOnly,
+                coinbase,
+                (pb) -> pb.buildFromTxHashes(blockWithHeaderOnly, txHashes),
+                true
+        );
     }
 
     @Override
@@ -412,18 +423,20 @@ public class MinerServerImpl implements MinerServer {
     SubmitBlockResult submitUlordBlock(String blockHashForMergedMining, UldBlock ulordMergedMiningBlock, boolean lastTag) {
         logger.debug("Received block with hash {} for merged mining", blockHashForMergedMining);
 
-        //noinspection ConstantConditions
-        UldTransaction coinbase = ulordMergedMiningBlock.getTransactions().get(0);
-        PartialMerkleTree ulordMergedMiningMerkleBranch = getUlordMergedMerkleBranch(ulordMergedMiningBlock);
-
-        return processSolution(blockHashForMergedMining, ulordMergedMiningBlock, coinbase, ulordMergedMiningMerkleBranch, lastTag);
+        return processSolution(
+                blockHashForMergedMining,
+                ulordMergedMiningBlock,
+                ulordMergedMiningBlock.getTransactions().get(0),
+                (pb) -> pb.buildFromBlock(ulordMergedMiningBlock),
+                lastTag
+        );
     }
 
     private SubmitBlockResult processSolution(
             String blockHashForMergedMining,
             UldBlock blockWithHeaderOnly,
             UldTransaction coinbase,
-            PartialMerkleTree ulordMergedMiningMerkleBranch,
+            Function<MerkleProofBuilder, byte[]> proofBuilderFunction,
             boolean lastTag) {
         Block newBlock;
         Keccak256 key = new Keccak256(TypeConverter.removeZeroX(blockHashForMergedMining));
@@ -448,7 +461,7 @@ public class MinerServerImpl implements MinerServer {
 
         newBlock.setUlordMergedMiningHeader(blockWithHeaderOnly.cloneAsHeader().ulordSerialize());
         newBlock.setUlordMergedMiningCoinbaseTransaction(compressCoinbase(coinbase.ulordSerialize(), lastTag));
-        newBlock.setUlordMergedMiningMerkleProof(ulordMergedMiningMerkleBranch.ulordSerialize());
+        newBlock.setUlordMergedMiningMerkleProof(MinerUtils.buildMerkleProof(blockchainConfig, proofBuilderFunction, newBlock.getNumber()));
         newBlock.seal();
 
         if (!isValid(newBlock)) {
@@ -504,84 +517,6 @@ public class MinerServerImpl implements MinerServer {
         byte[] unHashedContent = new byte[ulordMergedMiningCoinbaseTransactionSerialized.length - bytesToHash];
         System.arraycopy(ulordMergedMiningCoinbaseTransactionSerialized, bytesToHash, unHashedContent, 0, unHashedContent.length);
         return Arrays.concatenate(trimmedHashedContent, unHashedContent);
-    }
-
-    /**
-     * getUlordMergedMerkleBranch returns the Partial Merkle Branch needed to validate that the coinbase tx
-     * is part of the Merkle Tree.
-     *
-     * @param networkParams      ulord network params.
-     * @param merkleStringHashes hashes for the partial merkle tree of the ulord block used for merged mining.
-     * @param blockTxnCount      number of transactions in the block.
-     * @return A Partial Merkle Branch in which you can validate the coinbase tx.
-     */
-    private PartialMerkleTree getUlordMergedMerkleBranchForCoinbase(
-            NetworkParameters networkParams,
-            List<String> merkleStringHashes,
-            int blockTxnCount) {
-        List<Sha256Hash> merkleHashes = merkleStringHashes.stream().map(mk -> Sha256Hash.wrapReversed(Hex.decode(mk))).collect(Collectors.toList());
-        int merkleTreeHeight = (int) Math.ceil(Math.log(blockTxnCount) / Math.log(2));
-
-        // bitlist will always have ones at the beginning because merkle branch is built for coinbase tx
-        List<Boolean> bitList = new ArrayList<>();
-        for (int i = 0; i < merkleHashes.size() + merkleTreeHeight; i++) {
-            bitList.add(i < merkleHashes.size());
-        }
-
-        // bits indicates which nodes are going to be used for building the partial merkle tree
-        // for more information please refer to {@link co.usc.ulordj.core.PartialMerkleTree#buildFromLeaves } method
-        byte[] bits = new byte[(bitList.size() + 7) / 8];
-        for (int i = 0; i < bitList.size(); i++) {
-            if (bitList.get(i)) {
-                Utils.setBitLE(bits, i);
-            }
-        }
-
-        return new PartialMerkleTree(networkParams, bits, merkleHashes, blockTxnCount);
-    }
-
-    /**
-     * getUlordMergedMerkleBranch returns the Partial Merkle Branch needed to validate that the coinbase tx
-     * is part of the Merkle Tree.
-     *
-     * @param networkParams  ulord network params.
-     * @param txStringHashes hashes for the txs of the ulord block used for merged mining.
-     * @return A Partial Merkle Branch in which you can validate the coinbase tx.
-     */
-    private PartialMerkleTree getUlordMergedMerkleBranch(NetworkParameters networkParams, List<String> txStringHashes) {
-        List<Sha256Hash> txHashes = txStringHashes.stream().map(Sha256Hash::wrap).collect(Collectors.toList());
-
-        return buildMerkleBranch(txHashes, networkParams);
-    }
-
-    /**
-     * getUlordMergedMerkleBranch returns the Partial Merkle Branch needed to validate that the coinbase tx
-     * is part of the Merkle Tree.
-     *
-     * @param ulordMergedMiningBlock the ulord block that includes all the txs.
-     * @return A Partial Merkle Branch in which you can validate the coinbase tx.
-     */
-    public static PartialMerkleTree getUlordMergedMerkleBranch(UldBlock ulordMergedMiningBlock) {
-        List<UldTransaction> txs = ulordMergedMiningBlock.getTransactions();
-        List<Sha256Hash> txHashes = new ArrayList<>(txs.size());
-        for (UldTransaction tx : txs) {
-            txHashes.add(tx.getHash());
-        }
-
-        return buildMerkleBranch(txHashes, ulordMergedMiningBlock.getParams());
-    }
-
-    private static PartialMerkleTree buildMerkleBranch(List<Sha256Hash> txHashes, NetworkParameters params) {
-        /*
-           We need to convert the txs to a bitvector to choose which ones
-           will be included in the Partial Merkle Tree.
-
-           We need txs.size() / 8 bytes to represent this vector.
-           The coinbase tx is the first one of the txs so we set the first bit to 1.
-         */
-        byte[] bitvector = new byte[(txHashes.size() + 7) / 8];
-        Utils.setBitLE(bitvector, 0);
-        return PartialMerkleTree.buildFromLeaves(params, bitvector, txHashes);
     }
 
     @Override
@@ -661,14 +596,7 @@ public class MinerServerImpl implements MinerServer {
         final Block newBlock = builder.build(newBlockParent, extraData);
 
         if (autoSwitchBetweenNormalAndFallbackMining) {
-            if (ProofOfWorkRule.isFallbackMiningPossible(
-                    config.getBlockchainConfig().getCommonConstants(),
-                    newBlock.getHeader())) {
-
-                setFallbackMining(true);
-            } else {
-                setFallbackMining(false);
-            }
+            setFallbackMining(ProofOfWorkRule.isFallbackMiningPossible(config, newBlock.getHeader()));
         }
 
         synchronized (lock) {
@@ -710,7 +638,7 @@ public class MinerServerImpl implements MinerServer {
 
         // note: integer divisions might truncate values
         BigInteger percentage = BigInteger.valueOf(100L + UscMiningConstants.NOTIFY_FEES_PERCENTAGE_INCREASE);
-        co.usc.core.Coin minFeesNotify = latestPaidFeesWithNotify.multiply(percentage).divide(BigInteger.valueOf(100L));
+        Coin minFeesNotify = latestPaidFeesWithNotify.multiply(percentage).divide(BigInteger.valueOf(100L));
         Coin feesPaidToMiner = block.getFeesPaidToMiner();
         BigDecimal feesPaidToMinerInDollars = new BigDecimal(feesPaidToMiner.asBigInteger()).multiply(gasUnitInDollars);
         return feesPaidToMiner.compareTo(minFeesNotify) > 0

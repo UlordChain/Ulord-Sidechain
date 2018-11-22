@@ -7,6 +7,7 @@ import co.usc.core.ReversibleTransactionExecutor;
 import co.usc.core.UscAddress;
 import co.usc.core.UscImpl;
 import co.usc.core.bc.BlockChainImpl;
+import co.usc.core.bc.BlockExecutor;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.db.RepositoryImpl;
 import co.usc.net.BlockNodeInformation;
@@ -21,8 +22,10 @@ import org.ethereum.core.*;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.*;
 import org.ethereum.listener.CompositeEthereumListener;
+import org.ethereum.listener.EthereumListenerAdapter;
 import org.ethereum.listener.TestCompositeEthereumListener;
 import org.ethereum.rpc.TypeConverter;
+import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.program.ProgramResult;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl;
 
@@ -97,9 +100,27 @@ public class UscTestFactory {
 
     private TransactionExecutor executeTransaction(Transaction transaction) {
         Repository track = getRepository().startTracking();
-        TransactionExecutor executor = new TransactionExecutor(config, transaction, 0, UscAddress.nullAddress(),
-                getRepository(), getBlockStore(), getReceiptStore(),
-                getProgramInvokeFactory(), getBlockchain().getBestBlock());
+        TransactionExecutor executor = new TransactionExecutor(
+                transaction,
+                0,
+                UscAddress.nullAddress(),
+                getRepository(),
+                getBlockStore(),
+                getReceiptStore(),
+                getProgramInvokeFactory(),
+                getBlockchain().getBestBlock(),
+                new EthereumListenerAdapter(),
+                0,
+                config.getVmConfig(),
+                config.getBlockchainConfig(),
+                config.playVM(),
+                config.isRemascEnabled(),
+                config.vmTrace(),
+                new PrecompiledContracts(config),
+                config.databaseDir(),
+                config.vmTraceDir(),
+                config.vmTraceCompressed()
+        );
         executor.init();
         executor.execute();
         executor.go();
@@ -118,14 +139,37 @@ public class UscTestFactory {
 
     public BlockChainImpl getBlockchain() {
         if (blockchain == null) {
+            final ProgramInvokeFactoryImpl programInvokeFactory1 = new ProgramInvokeFactoryImpl();
             blockchain = new BlockChainImpl(
-                    config, getRepository(),
+                    getRepository(),
                     getBlockStore(),
                     getReceiptStore(),
                     getTransactionPool(),
                     getCompositeEthereumListener(),
-                    null,
-                    new DummyBlockValidator()
+                    new DummyBlockValidator(),
+                    false,
+                    1,
+                    new BlockExecutor(getRepository(), (tx, txindex, coinbase, repository, block, totalGasUsed) -> new TransactionExecutor(
+                            tx,
+                            txindex,
+                            block.getCoinbase(),
+                            repository,
+                            getBlockStore(),
+                            getReceiptStore(),
+                            programInvokeFactory1,
+                            block,
+                            getCompositeEthereumListener(),
+                            totalGasUsed,
+                            config.getVmConfig(),
+                            config.getBlockchainConfig(),
+                            config.playVM(),
+                            config.isRemascEnabled(),
+                            config.vmTrace(),
+                            new PrecompiledContracts(config),
+                            config.databaseDir(),
+                            config.vmTraceDir(),
+                            config.vmTraceCompressed()
+                    ))
             );
         }
 
@@ -179,7 +223,7 @@ public class UscTestFactory {
     public Repository getRepository() {
         if (repository == null) {
             HashMapDB stateStore = new HashMapDB();
-            repository = new RepositoryImpl(config, new TrieStoreImpl(stateStore));
+            repository = new RepositoryImpl(new TrieStoreImpl(stateStore), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
         }
 
         return repository;

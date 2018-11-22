@@ -25,6 +25,7 @@ import co.usc.config.UscMiningConstants;
 import co.usc.config.TestSystemProperties;
 import co.usc.crypto.Keccak256;
 import co.usc.mine.MinerUtils;
+import co.usc.mine.ParameterizedNetworkUpgradeTest;
 import co.usc.util.DifficultyUtils;
 import co.usc.validators.ProofOfWorkRule;
 import org.ethereum.core.Block;
@@ -38,7 +39,6 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
-import static co.usc.mine.MinerServerImpl.getUlordMergedMerkleBranch;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -46,14 +46,19 @@ import static org.junit.Assert.assertTrue;
  * @author Mikhail Kalinin
  * @since 02.09.2015
  */
-public class ProofOfWorkRuleTest {
+public class ProofOfWorkRuleTest extends ParameterizedNetworkUpgradeTest {
 
-    private ProofOfWorkRule rule = new ProofOfWorkRule(new TestSystemProperties()).setFallbackMiningEnabled(false);
+    private ProofOfWorkRule rule;
+
+    public ProofOfWorkRuleTest(TestSystemProperties config) {
+        super(config);
+        this.rule = new ProofOfWorkRule(config).setFallbackMiningEnabled(false);
+    }
 
     @Test
     public void test_1() {
         // mined block
-        Block b = BlockMiner.mineBlock(new BlockGenerator().getBlock(1));
+        Block b = new BlockMiner(config).mineBlock(new BlockGenerator(config).getBlock(1));
         assertTrue(rule.isValid(b));
     }
 
@@ -61,7 +66,7 @@ public class ProofOfWorkRuleTest {
     @Test // invalid block
     public void test_2() {
         // mined block
-        Block b = BlockMiner.mineBlock(new BlockGenerator().getBlock(1));
+        Block b = new BlockMiner(config).mineBlock(new BlockGenerator(config).getBlock(1));
         byte[] mergeMiningHeader = b.getUlordMergedMiningHeader();
         // TODO improve, the mutated block header could be still valid
         mergeMiningHeader[0]++;
@@ -73,7 +78,7 @@ public class ProofOfWorkRuleTest {
     @Test
     public void test_RLPEncoding() {
         // mined block
-        Block b = BlockMiner.mineBlock(new BlockGenerator().getBlock(1));
+        Block b = new BlockMiner(config).mineBlock(new BlockGenerator(config).getBlock(1));
         byte[] lastField = b.getUlordMergedMiningCoinbaseTransaction(); // last field
         b.flushRLP();// force re-encode
         byte[] encoded = b.getEncoded();
@@ -91,7 +96,7 @@ public class ProofOfWorkRuleTest {
         int iterCnt = 1_000_000;
 
         // mined block
-        Block b = BlockMiner.mineBlock(new BlockGenerator().getBlock(1));
+        Block b = new BlockMiner(config).mineBlock(new BlockGenerator(config).getBlock(1));
 
         long start = System.currentTimeMillis();
         for (int i = 0; i < iterCnt; i++)
@@ -104,7 +109,7 @@ public class ProofOfWorkRuleTest {
 
     @Test
     public void test_noUSCTagInCoinbaseTransaction() {
-        BlockGenerator blockGenerator = new BlockGenerator();
+        BlockGenerator blockGenerator = new BlockGenerator(config);
 
         // mined block
         Block b = mineBlockWithCoinbaseTransactionWithCompressedCoinbaseTransactionPrefix(blockGenerator.getBlock(1), new byte[100]);
@@ -115,9 +120,9 @@ public class ProofOfWorkRuleTest {
     @Test
     public void test_USCTagInCoinbaseTransactionTooFar() {
         /* This test is about a usc block, with a compressed coinbase that leaves more than 64 bytes before the start of the USC tag. */
-        BlockGenerator blockGenerator = new BlockGenerator();
+        BlockGenerator blockGenerator = new BlockGenerator(config);
         byte[] prefix = new byte[1000];
-        byte[] bytes = org.spongycastle.util.Arrays.concatenate(prefix, UscMiningConstants.USC_TAG);
+        byte[] bytes = org.bouncycastle.util.Arrays.concatenate(prefix, UscMiningConstants.USC_TAG);
 
         // mined block
         Block b = mineBlockWithCoinbaseTransactionWithCompressedCoinbaseTransactionPrefix(blockGenerator.getBlock(1), bytes);
@@ -125,7 +130,7 @@ public class ProofOfWorkRuleTest {
         Assert.assertFalse(rule.isValid(b));
     }
 
-    private static Block mineBlockWithCoinbaseTransactionWithCompressedCoinbaseTransactionPrefix(Block block, byte[] compressed) {
+    private Block mineBlockWithCoinbaseTransactionWithCompressedCoinbaseTransactionPrefix(Block block, byte[] compressed) {
         Keccak256 blockMergedMiningHash = new Keccak256(block.getHashForMergedMining());
 
         co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
@@ -134,17 +139,21 @@ public class ProofOfWorkRuleTest {
 
         BigInteger targetBI = DifficultyUtils.difficultyToTarget(block.getDifficulty());
 
-        BlockMiner.findNonce(ulordMergedMiningBlock, targetBI);
+        new BlockMiner(config).findNonce(ulordMergedMiningBlock, targetBI);
 
         // We need to clone to allow modifications
         Block newBlock = new Block(block.getEncoded()).cloneBlock();
 
         newBlock.setUlordMergedMiningHeader(ulordMergedMiningBlock.cloneAsHeader().ulordSerialize());
 
-        co.usc.ulordj.core.PartialMerkleTree ulordMergedMiningMerkleBranch = getUlordMergedMerkleBranch(ulordMergedMiningBlock);
+        byte[] merkleProof = MinerUtils.buildMerkleProof(
+                config.getBlockchainConfig(),
+                pb -> pb.buildFromBlock(ulordMergedMiningBlock),
+                newBlock.getNumber()
+        );
 
-        newBlock.setUlordMergedMiningCoinbaseTransaction(org.spongycastle.util.Arrays.concatenate(compressed, blockMergedMiningHash.getBytes()));
-        newBlock.setUlordMergedMiningMerkleProof(ulordMergedMiningMerkleBranch.ulordSerialize());
+        newBlock.setUlordMergedMiningCoinbaseTransaction(org.bouncycastle.util.Arrays.concatenate(compressed, blockMergedMiningHash.getBytes()));
+        newBlock.setUlordMergedMiningMerkleProof(merkleProof);
 
         return newBlock;
     }

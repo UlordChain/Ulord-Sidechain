@@ -20,7 +20,6 @@ package co.usc.test.dsltest;
 
 import co.usc.test.dsl.DslCommand;
 import co.usc.test.dsl.DslParser;
-import co.usc.test.dsl.DslParser;
 import org.junit.Assert;
 import org.junit.Test;
 

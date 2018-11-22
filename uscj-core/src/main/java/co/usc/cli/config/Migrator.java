@@ -19,8 +19,6 @@ package co.usc.cli.config;
 
 import co.usc.cli.CliArg;
 import co.usc.cli.OptionalizableCliArg;
-import co.usc.cli.CliArg;
-import co.usc.cli.OptionalizableCliArg;
 import com.typesafe.config.*;
 
 import java.io.IOException;

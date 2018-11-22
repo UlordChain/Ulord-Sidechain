@@ -20,7 +20,6 @@ package co.usc.test.dsl;
 
 import co.usc.test.World;
 import co.usc.test.builders.BlockBuilder;
-import co.usc.test.builders.BlockBuilder;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.core.Transaction;
 

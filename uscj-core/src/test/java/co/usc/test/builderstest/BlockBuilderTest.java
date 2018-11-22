@@ -20,7 +20,6 @@ package co.usc.test.builderstest;
 
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.test.builders.BlockBuilder;
-import co.usc.blockchain.utils.BlockGenerator;
 import org.ethereum.core.Block;
 import org.junit.Assert;
 import org.junit.Test;

@@ -40,5 +40,25 @@ public interface BlockchainConfig {
     BlockDifficulty calcDifficulty(BlockHeader curBlock, BlockHeader parent);
 
     boolean areBridgeTxsFree();
-    boolean isRfs55();
+
+    boolean isUscIP85();
+
+    boolean isUscIP87();
+
+    boolean isUscIP88();
+
+    boolean isUscIP89();
+
+    boolean isUscIP90();
+
+    boolean isUscIP91();
+
+    boolean isUscIP92();
+
+    boolean isUscIP93();
+
+    boolean isUscIP94();
+
+    boolean isUscIP98();
+
 }

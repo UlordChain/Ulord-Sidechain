@@ -58,7 +58,7 @@ public class ReversibleTransactionExecutorTest {
                 contract.getAddress(),
                 value,
                 helloFn.encode(),
-                from.getBytes()
+                from
         );
 
         Assert.assertNull(result.getException());
@@ -88,7 +88,7 @@ public class ReversibleTransactionExecutorTest {
                 contract.getAddress(),
                 value,
                 greeterFn.encode("greet me"),
-                from.getBytes()
+                from
         );
 
         Assert.assertNull(result.getException());
@@ -118,7 +118,7 @@ public class ReversibleTransactionExecutorTest {
                 contract.getAddress(),
                 value,
                 greeterFn.encode("greet me"),
-                from.getBytes()
+                from
         );
 
         Assert.assertTrue(result.isRevert());
@@ -145,7 +145,7 @@ public class ReversibleTransactionExecutorTest {
                 contract.getAddress(),
                 value,
                 callsFn.encodeSignature(),
-                from.getBytes()
+                from
         );
 
         Assert.assertNull(result.getException());
@@ -161,7 +161,7 @@ public class ReversibleTransactionExecutorTest {
                 contract.getAddress(),
                 value,
                 callsFn.encodeSignature(),
-                from.getBytes()
+                from
         );
 
         Assert.assertNull(result2.getException());

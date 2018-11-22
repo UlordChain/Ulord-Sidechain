@@ -18,7 +18,6 @@
 package co.usc.config;
 
 import co.usc.cli.CliArg;
-import co.usc.cli.CliArg;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValueFactory;
 import org.ethereum.config.SystemProperties;

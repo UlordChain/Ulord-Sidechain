@@ -21,10 +21,9 @@ package co.usc.core;
 import co.usc.config.TestSystemProperties;
 import co.usc.test.World;
 import co.usc.test.builders.AccountBuilder;
-import co.usc.config.TestSystemProperties;
-import co.usc.test.World;
-import co.usc.test.builders.AccountBuilder;
 import org.ethereum.core.*;
+import org.ethereum.listener.EthereumListenerAdapter;
+import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.program.ProgramResult;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl;
 import org.junit.Assert;
@@ -66,9 +65,26 @@ public class CallContractTest {
         Repository repository = world.getRepository().startTracking();
 
         try {
-            org.ethereum.core.TransactionExecutor executor = new org.ethereum.core.TransactionExecutor
-                    (config, tx, 0, bestBlock.getCoinbase(), repository, null, null,
-                            new ProgramInvokeFactoryImpl(), bestBlock)
+            org.ethereum.core.TransactionExecutor executor = new TransactionExecutor(
+                    tx,
+                    0,
+                    bestBlock.getCoinbase(),
+                    repository,
+                    null,
+                    null,
+                    new ProgramInvokeFactoryImpl(),
+                    bestBlock,
+                    new EthereumListenerAdapter(),
+                    0,
+                    config.getVmConfig(),
+                    config.getBlockchainConfig(),
+                    config.playVM(),
+                    config.isRemascEnabled(),
+                    config.vmTrace(),
+                    new PrecompiledContracts(config),
+                    config.databaseDir(),
+                    config.vmTraceDir(),
+                    config.vmTraceCompressed())
                     .setLocalCall(true);
 
             executor.init();

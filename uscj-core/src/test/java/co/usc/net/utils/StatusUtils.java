@@ -1,7 +1,6 @@
 package co.usc.net.utils;
 
 import co.usc.net.Status;
-import co.usc.net.Status;
 import org.ethereum.core.Blockchain;
 
 public class StatusUtils {

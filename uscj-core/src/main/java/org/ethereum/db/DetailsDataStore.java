@@ -19,9 +19,9 @@
 
 package org.ethereum.db;
 
-import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
 import co.usc.db.ContractDetailsImpl;
+import co.usc.trie.TrieStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,12 +43,14 @@ public class DetailsDataStore {
     private final Map<UscAddress, ContractDetails> cache = new ConcurrentHashMap<>();
     private final Set<UscAddress> removes = new HashSet<>();
 
-    private final UscSystemProperties config;
     private final DatabaseImpl db;
+    private final int memoryStorageLimit;
+    private TrieStore.Factory trieStoreFactory;
 
-    public DetailsDataStore(UscSystemProperties config, DatabaseImpl db) {
-        this.config = config;
+    public DetailsDataStore(DatabaseImpl db, TrieStore.Factory trieStoreFactory, int memoryStorageLimit) {
         this.db = db;
+        this.trieStoreFactory = trieStoreFactory;
+        this.memoryStorageLimit = memoryStorageLimit;
     }
 
     public synchronized ContractDetails get(UscAddress addr) {
@@ -64,7 +66,7 @@ public class DetailsDataStore {
                 return null;
             }
 
-            details = createContractDetails(data);
+            details = createContractDetails(data, trieStoreFactory, memoryStorageLimit);
             cache.put(addr, details);
 
             float out = ((float) data.length) / 1048576;
@@ -77,8 +79,11 @@ public class DetailsDataStore {
         return details;
     }
 
-    protected ContractDetails createContractDetails(byte[] data) {
-        return new ContractDetailsImpl(config, data);
+    protected ContractDetails createContractDetails(
+            byte[] data,
+            TrieStore.Factory trieStoreFactory,
+            int memoryStorageLimit) {
+        return new ContractDetailsImpl(data, trieStoreFactory, memoryStorageLimit);
     }
 
     public synchronized void update(UscAddress addr, ContractDetails contractDetails) {

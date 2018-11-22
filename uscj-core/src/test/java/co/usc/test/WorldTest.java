@@ -19,7 +19,6 @@
 package co.usc.test;
 
 import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.blockchain.utils.BlockGenerator;
 import org.ethereum.core.Account;
 import org.ethereum.core.Block;
 import org.ethereum.crypto.ECKey;

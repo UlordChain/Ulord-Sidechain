@@ -39,10 +39,6 @@ repositories {
     maven {
         url 'https://jitpack.io'
     }
-    maven {
-        url "https://deps.rsklabs.io"
-    }
-
 }
 
 sourceCompatibility = 1.8
@@ -65,20 +61,17 @@ tasks.withType(AbstractArchiveTask) {
 ext {
     slf4jVersion = '1.7.25'
     leveldbVersion = '0.9'
-    scastleVersion = '1.52.0.0'
     springVersion = '4.2.9.RELEASE'
     junitVersion = '4.12'
     mockitoVersion = '1.10.19'
     powermockitoVersion = '1.6.4'
-    rskLllVersion = '0.0.2'
     logbackVersion = '1.2.2'
     nettyVersion = '4.0.56.Final'
 }
 
 dependencies {
+    compile "com.madgag.spongycastle:core:1.52.0.0"
     compile "io.netty:netty-codec-http:$nettyVersion"
-    compile "com.madgag.spongycastle:core:${scastleVersion}" // for SHA3 and SECP256K1
-    compile "com.madgag.spongycastle:prov:${scastleVersion}" // for SHA3 and SECP256K1
     compile "org.iq80.leveldb:leveldb:${leveldbVersion}"
     compile "org.fusesource.leveldbjni:leveldbjni:1.8"
     compile "org.ethereum:leveldbjni-all:1.18.3"
@@ -108,7 +101,6 @@ dependencies {
     testCompile "org.powermock:powermock-core:${powermockitoVersion}"
     testCompile "org.powermock:powermock-module-junit4:${powermockitoVersion}"
     testCompile "org.powermock:powermock-api-mockito:${powermockitoVersion}"
-    testCompile "co.rsk:lll-compiler:${rskLllVersion}"
     testCompile "org.springframework:spring-tx:${springVersion}"
     testCompile "org.springframework:spring-orm:${springVersion}"
     testCompile "com.h2database:h2:1.4.193"

@@ -23,6 +23,7 @@ import co.usc.core.BlockDifficulty;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.BlockchainNetConfig;
 import org.ethereum.config.Constants;
+import org.ethereum.config.blockchain.testnet.TestNetAfterBridgeSyncConfig;
 import org.ethereum.core.BlockHeader;
 import java.math.BigInteger;
 
@@ -71,6 +72,15 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
         return calcDifficultyFortConstants(getConstants(),curBlockTS, parentBlockTS,pd,uncleCount);
     }
 
+    public BlockDifficulty getBlockDifficulty(Constants constants, BlockHeader curBlockHeader, BlockHeader parent) {
+        BlockDifficulty pd = parent.getDifficulty();
+        int uncleCount = curBlockHeader.getUncleCount();
+        long curBlockTS = curBlockHeader.getTimestamp();
+        long parentBlockTS = parent.getTimestamp();
+
+        return calcDifficultyFortConstants(constants, curBlockTS, parentBlockTS, pd, uncleCount);
+    }
+
     public static BlockDifficulty calcDifficultyFortConstants(Constants constants,
                                                          long curBlockTS,
                                                          long parentBlockTS,
@@ -82,7 +92,7 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
         // Friday, August 17, 2018 10:00:00 AM GMT+08:00
         BigInteger difDivisor;
         if(constants instanceof TestNetAfterBridgeSyncConfig.TestNetConstants) {
-            if(curBlockTS < 1534471200l)
+            if(curBlockTS < 1534471200L)
                 difDivisor = constants.getDifficultyBoundDivisor();
             else
                 difDivisor = BigInteger.valueOf(50);
@@ -109,7 +119,7 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
         // Created Fork to reduce time 25% as Bitcoin and Ulord time difference is 25%
         // Monday, August 20, 2018 11:00:00 AM GMT+08:00
         if(constants instanceof TestNetAfterBridgeSyncConfig.TestNetConstants) {
-            if(curBlockTS > 1534734000l) {
+            if(curBlockTS > 1534734000L) {
                 calcDur = (int)((1 + uncleCount * 0.175) * duration);
             } else {
                 calcDur = (1 + uncleCount) * duration;
@@ -152,8 +162,44 @@ public abstract class AbstractConfig implements BlockchainConfig, BlockchainNetC
     }
 
     @Override
-    public boolean isRfs55() {
+    public boolean isUscIP85() { return false; }
+
+    @Override
+    public boolean isUscIP87() { return false; }
+
+    @Override
+    public boolean isUscIP88() {
         return false;
     }
 
+    @Override
+    public boolean isUscIP89() {
+        return false;
+    }
+
+    @Override
+    public boolean isUscIP90() {
+        return false;
+    }
+
+    @Override
+    public boolean isUscIP91() {
+        return false;
+    }
+
+    @Override
+    public boolean isUscIP92() {return false; }
+
+    @Override
+    public boolean isUscIP93() {return false; }
+
+    @Override
+    public boolean isUscIP94() {
+        return false;
+    }
+
+    @Override
+    public boolean isUscIP98() {
+        return false;
+    }
 }

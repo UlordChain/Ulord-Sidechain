@@ -21,7 +21,6 @@ package co.usc.net.discovery.table;
 import co.usc.net.discovery.PeerDiscoveryRequest;
 import co.usc.net.discovery.message.DiscoveryMessageType;
 import co.usc.net.discovery.message.PeerDiscoveryMessage;
-import co.usc.net.discovery.PeerDiscoveryRequest;
 import org.ethereum.net.rlpx.Node;
 
 import java.net.InetSocketAddress;

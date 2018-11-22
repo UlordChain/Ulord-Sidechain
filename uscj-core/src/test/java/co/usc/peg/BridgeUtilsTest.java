@@ -32,7 +32,7 @@ import co.usc.core.UscAddress;
 import co.usc.peg.ulord.UscAllowUnconfirmedCoinSelector;
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.core.Block;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.core.Genesis;
@@ -42,7 +42,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -344,7 +344,7 @@ public class BridgeUtilsTest {
 
     @Test
     public void isFreeBridgeTxFreeTxDisabled() {
-        config.setBlockchainConfig(new RegTestConfig() {
+        config.setBlockchainConfig(new RegTestGenesisConfig() {
             @Override
             public boolean areBridgeTxsFree() {
                 return false;
@@ -422,6 +422,6 @@ public class BridgeUtilsTest {
 
         Block uscExecutionBlock = new BlockGenerator().createChildBlock(Genesis.getInstance(config));
         bridge.init(uscTx, uscExecutionBlock, null, null, null, null);
-        assertEquals(expected, BridgeUtils.isFreeBridgeTx(config, uscTx, uscExecutionBlock.getNumber()));
+        Assert.assertEquals(expected, BridgeUtils.isFreeBridgeTx(uscTx, uscExecutionBlock.getNumber(), config.getBlockchainConfig()));
     }
 }

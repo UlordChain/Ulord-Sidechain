@@ -22,10 +22,6 @@ import co.usc.config.UscSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
-import co.usc.config.UscSystemProperties;
-import co.usc.core.Coin;
-import co.usc.core.UscAddress;
-import co.usc.crypto.Keccak256;
 import org.ethereum.TestUtils;
 import org.ethereum.core.Block;
 import org.ethereum.core.Transaction;
@@ -89,7 +85,7 @@ public class Tx {
             b[i] = bytes.get(i);
         }
         Mockito.when(transaction.getData()).thenReturn(b);
-        Mockito.when(transaction.transactionCost(eq(config), any(Block.class))).thenReturn(amount);
+        Mockito.when(transaction.transactionCost(any(Block.class), eq(config.getBlockchainConfig()))).thenReturn(amount);
 
         return transaction;
     }

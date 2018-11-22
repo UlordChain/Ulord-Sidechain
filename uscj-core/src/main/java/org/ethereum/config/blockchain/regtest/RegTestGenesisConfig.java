@@ -17,16 +17,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ethereum.config.blockchain;
+package org.ethereum.config.blockchain.regtest;
 
 import co.usc.config.BridgeConstants;
 import co.usc.config.BridgeRegTestConstants;
 import co.usc.core.BlockDifficulty;
+import org.ethereum.config.blockchain.GenesisConfig;
 
 import java.math.BigInteger;
 
-
-public class RegTestConfig extends GenesisConfig {
+public class RegTestGenesisConfig extends GenesisConfig {
 
     public static class RegTestConstants extends GenesisConstants {
 
@@ -60,9 +60,9 @@ public class RegTestConfig extends GenesisConfig {
         public byte getChainId() {
             return RegTestConstants.CHAIN_ID;
         }
-    };
+    }
 
-    public RegTestConfig() {
+    public RegTestGenesisConfig() {
         super(new RegTestConstants());
     }
 
@@ -70,10 +70,4 @@ public class RegTestConfig extends GenesisConfig {
     public boolean areBridgeTxsFree() {
         return true;
     }
-
-    @Override
-    public boolean isRfs55() {
-        return true;
-    }
-
 }

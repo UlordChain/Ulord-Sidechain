@@ -19,7 +19,6 @@
 package co.usc.jsontestsuite;
 
 import co.usc.config.TestSystemProperties;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.jsontestsuite.GitHubJSONTestSuite;
 import org.ethereum.jsontestsuite.JSONReader;
 import org.json.simple.parser.ParseException;

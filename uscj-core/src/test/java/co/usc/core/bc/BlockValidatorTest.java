@@ -23,15 +23,12 @@ import co.usc.config.TestSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.peg.simples.SimpleBlock;
 import co.usc.remasc.RemascTransaction;
+import co.usc.remasc.Sibling;
 import co.usc.test.builders.BlockBuilder;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.validators.BlockParentDependantValidationRule;
 import co.usc.validators.BlockValidator;
 import co.usc.validators.ProofOfWorkRule;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
-import co.usc.test.builders.BlockBuilder;
-import co.usc.test.builders.BlockChainBuilder;
 import org.ethereum.TestUtils;
 import org.ethereum.core.*;
 import org.ethereum.datasource.HashMapDB;
@@ -44,10 +41,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by ajlopez on 04/08/2016.
@@ -118,7 +112,7 @@ public class BlockValidatorTest {
     public void invalidChildBlockBadDifficulty() {
         Block genesis = new BlockGenerator().getGenesisBlock();
         Block block = new BlockGenerator().createChildBlock(genesis);
-        block.getHeader().setDifficulty(new BlockDifficulty(new byte[]{0x00}));
+        block.getHeader().setDifficulty(BlockDifficulty.ZERO);
 
         BlockValidatorImpl validator = new BlockValidatorBuilder()
                 .addDifficultyRule()
@@ -970,17 +964,17 @@ public class BlockValidatorTest {
         }
 
         @Override
-        public void load() {
-
-        }
-
-        @Override
         public void removeBlock(Block block) {
             throw new UnsupportedOperationException();
         }
 
         @Override
         public List<BlockInformation> getBlocksInformationByNumber(long blockNumber) { return null; }
+
+        @Override
+        public Map<Long, List<Sibling>> getSiblingsFromBlockByHash(Keccak256 hash) {
+            return null;
+        }
     }
 }
 

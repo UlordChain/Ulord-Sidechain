@@ -2,8 +2,6 @@ package co.usc.core;
 
 import co.usc.test.builders.AccountBuilder;
 import co.usc.test.builders.TransactionBuilder;
-import co.usc.test.builders.AccountBuilder;
-import co.usc.test.builders.TransactionBuilder;
 import org.ethereum.core.Account;
 import org.ethereum.core.ImmutableTransaction;
 import org.ethereum.core.Transaction;

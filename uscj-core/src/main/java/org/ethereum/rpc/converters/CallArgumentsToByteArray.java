@@ -82,11 +82,11 @@ public class CallArgumentsToByteArray {
         return data;
     }
 
-    public byte[] getFromAddress() {
+    public UscAddress getFromAddress() {
         if (args.from == null || args.from.isEmpty()) {
-            return UscAddress.nullAddress().getBytes();
+            return UscAddress.nullAddress();
         }
 
-        return stringHexToByteArray(args.from);
+        return new UscAddress(stringHexToByteArray(args.from));
     }
 }

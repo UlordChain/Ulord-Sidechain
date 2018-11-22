@@ -20,7 +20,6 @@ package co.usc.core.bc;
 
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.core.BlockDifficulty;
-import co.usc.blockchain.utils.BlockGenerator;
 import org.ethereum.core.Block;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.BlockStore;

@@ -27,16 +27,12 @@ import co.usc.core.UscAddress;
 import co.usc.peg.ulord.UscAllowUnconfirmedCoinSelector;
 import co.usc.util.MaxSizeHashMap;
 import org.ethereum.config.BlockchainNetConfig;
-import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Transaction;
 import org.ethereum.vm.PrecompiledContracts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Oscar Guindzberg
@@ -47,7 +43,7 @@ public class BridgeUtils {
 
     // power of 2 size that contains enough hashes to handle one year of hashes
     private static final int MAX_MAP_PARENTS_SIZE = 65535;
-    private static Map<Sha256Hash, Sha256Hash> parentMap = new MaxSizeHashMap<>(MAX_MAP_PARENTS_SIZE);
+    private static Map<Sha256Hash, Sha256Hash> parentMap = new MaxSizeHashMap<>(MAX_MAP_PARENTS_SIZE, false);
 
     public static StoredBlock getStoredBlockAtHeight(UldBlockstoreWithCache blockStore, int height) throws BlockStoreException {
         StoredBlock storedBlock = blockStore.getChainHead();
@@ -157,6 +153,15 @@ public class BridgeUtils {
         return Optional.of(tx.getInput(0).getScriptSig());
     }
 
+    /**
+     * It checks if the tx doesn't spend any of the federations' funds and if it sends more than
+     * the minimum ({@see BridgeConstants::getMinimumLockTxValue}) to any of the federations
+     * @param tx the BTC transaction to check
+     * @param federations the active federations
+     * @param btcContext the BTC Context
+     * @param bridgeConstants the Bridge constants
+     * @return true if this is a valid lock transaction
+     */
     public static boolean isLockTx(UldTransaction tx, List<Federation> federations, Context uldContext, BridgeConstants bridgeConstants) {
         // First, check tx is not a typical release tx (tx spending from the any of the federation addresses and
         // optionally sending some change to any of the federation addresses)
@@ -181,17 +186,17 @@ public class BridgeUtils {
         return isLockTx(tx, Arrays.asList(federation), uldContext, bridgeConstants);
     }
 
-    public static boolean isReleaseTx(UldTransaction tx, Federation federation, BridgeConstants bridgeConstants) {
-        int i = 0;
-        for (TransactionInput transactionInput : tx.getInputs()) {
-            try {
-                transactionInput.getScriptSig().correctlySpends(tx, i, federation.getP2SHScript(), Script.ALL_VERIFY_FLAGS);
-                // There is an input spending from the federation address, this is a release tx
+    private static boolean isReleaseTx(UldTransaction tx, Federation federation) {
+        return isReleaseTx(tx, Collections.singletonList(federation));
+    }
+
+    public static boolean isReleaseTx(UldTransaction tx, List<Federation> federations) {
+        int inputsSize = tx.getInputs().size();
+        for (int i = 0; i < inputsSize; i++) {
+            final int inputIndex = i;
+            if (federations.stream().map(Federation::getP2SHScript).anyMatch(federationPayScript -> scriptCorrectlySpendsTx(tx, inputIndex, federationPayScript))) {
                 return true;
-            } catch (ScriptException se) {
-                // do-nothing, input does not spends from the federation address
             }
-            i++;
         }
         return false;
     }
@@ -200,7 +205,7 @@ public class BridgeUtils {
         if (retiringFederation == null) {
             return false;
         }
-        boolean moveFromRetiring = isReleaseTx(uldTx, retiringFederation, bridgeConstants);
+        boolean moveFromRetiring = isReleaseTx(uldTx, retiringFederation);
         boolean moveToActive = isLockTx(uldTx, activeFederation, uldContext, bridgeConstants);
 
         return moveFromRetiring && moveToActive;
@@ -212,27 +217,36 @@ public class BridgeUtils {
         return UldECKey.fromPublicOnly(pubKey).toAddress(networkParameters);
     }
 
-    public static boolean isFreeBridgeTx(SystemProperties config, Transaction uscTx, long blockNumber) {
-        BlockchainNetConfig blockchainConfig = config.getBlockchainConfig();
+    public static boolean isFreeBridgeTx(Transaction uscTx, long blockNumber, BlockchainNetConfig netConfig) {
         UscAddress receiveAddress = uscTx.getReceiveAddress();
         if (receiveAddress.equals(UscAddress.nullAddress())) {
             return false;
         }
 
-        BridgeConstants bridgeConstants = blockchainConfig.getCommonConstants().getBridgeConstants();
+        BridgeConstants bridgeConstants = netConfig.getCommonConstants().getBridgeConstants();
 
         // Temporary assumption: if areBridgeTxsFree() is true then the current federation
         // must be the genesis federation.
         // Once the original federation changes, txs are always paid.
         return PrecompiledContracts.BRIDGE_ADDR.equals(receiveAddress) &&
-               blockchainConfig.getConfigForBlock(blockNumber).areBridgeTxsFree() &&
-               uscTx.acceptTransactionSignature(config.getBlockchainConfig().getCommonConstants().getChainId()) &&
+               netConfig.getConfigForBlock(blockNumber).areBridgeTxsFree() &&
+               uscTx.acceptTransactionSignature(netConfig.getCommonConstants().getChainId()) &&
                (
                        isFromFederateMember(uscTx, bridgeConstants.getGenesisFederation()) ||
                        isFromFederationChangeAuthorizedSender(uscTx, bridgeConstants) ||
                        isFromLockWhitelistChangeAuthorizedSender(uscTx, bridgeConstants) ||
                        isFromFeePerKbChangeAuthorizedSender(uscTx, bridgeConstants)
                );
+    }
+
+    /**
+     * Indicates if the provided tx was generated from a contract
+     * @param uscTx
+     * @return
+     */
+    public static boolean isContractTx(Transaction uscTx) {
+        // TODO: this should be refactored to provide a more robust way of checking the transaction origin
+        return uscTx.getClass() == org.ethereum.vm.program.InternalTransaction.class;
     }
 
     public static boolean isFromFederateMember(org.ethereum.core.Transaction uscTx, Federation federation) {

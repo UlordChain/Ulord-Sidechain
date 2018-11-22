@@ -35,22 +35,6 @@ import co.usc.test.World;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.validators.DummyBlockValidationRule;
 import co.usc.validators.ProofOfWorkRule;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
-import co.usc.core.BlockDifficulty;
-import co.usc.crypto.Keccak256;
-import co.usc.net.messages.*;
-import co.usc.net.simples.SimpleBlockProcessor;
-import co.usc.net.simples.SimpleMessageChannel;
-import co.usc.net.sync.SyncConfiguration;
-import co.usc.scoring.EventType;
-import co.usc.scoring.PeerScoring;
-import co.usc.scoring.PeerScoringManager;
-import co.usc.scoring.PunishmentParameters;
-import co.usc.test.World;
-import co.usc.test.builders.BlockChainBuilder;
-import co.usc.validators.ProofOfWorkRule;
-import org.ethereum.config.blockchain.RegTestConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.net.server.Channel;
@@ -58,7 +42,6 @@ import org.ethereum.net.server.ChannelManager;
 import org.ethereum.rpc.Simples.SimpleChannelManager;
 import org.ethereum.util.UscMockFactory;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -77,13 +60,8 @@ import static org.mockito.Mockito.*;
  * Created by ajlopez on 5/10/2016.
  */
 public class NodeMessageHandlerTest {
-    private static TestSystemProperties config;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        config = new TestSystemProperties();
-        config.setBlockchainConfig(new RegTestConfig());
-    }
+    private TestSystemProperties config = new TestSystemProperties();
 
     @Test
     public void processBlockMessageUsingProcessor() throws UnknownHostException {

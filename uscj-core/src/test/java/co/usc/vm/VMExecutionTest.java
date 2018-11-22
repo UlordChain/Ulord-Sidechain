@@ -20,8 +20,6 @@ package co.usc.vm;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.config.VmConfig;
-import co.usc.config.TestSystemProperties;
-import co.usc.config.VmConfig;
 import org.ethereum.config.BlockchainConfig;
 import org.ethereum.vm.DataWord;
 import org.ethereum.vm.PrecompiledContracts;
@@ -33,7 +31,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
@@ -73,7 +71,7 @@ public class VMExecutionTest {
 
     @Test
     public void testAdd() {
-        Program program = executeCode("PUSH1 1 PUSH1 2 ADD", 3);
+        Program program = executeCode("PUSH1 0x01 PUSH1 0x02 ADD", 3);
         Stack stack = program.getStack();
 
         Assert.assertEquals(1, stack.size());
@@ -82,7 +80,7 @@ public class VMExecutionTest {
 
     @Test
     public void testMul() {
-        Program program = executeCode("PUSH1 3 PUSH1 2 MUL", 3);
+        Program program = executeCode("PUSH1 0x03 PUSH1 0x02 MUL", 3);
         Stack stack = program.getStack();
 
         Assert.assertEquals(1, stack.size());
@@ -91,7 +89,7 @@ public class VMExecutionTest {
 
     @Test
     public void testSub() {
-        Program program = executeCode("PUSH1 1 PUSH1 2 SUB", 3);
+        Program program = executeCode("PUSH1 0x01 PUSH1 0x02 SUB", 3);
         Stack stack = program.getStack();
 
         Assert.assertEquals(1, stack.size());

@@ -21,13 +21,13 @@ package co.usc.core;
 import co.usc.config.UscSystemProperties;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.core.bc.TransactionPoolImpl;
-import co.usc.rpc.*;
 import co.usc.metrics.HashRateCalculator;
 import co.usc.mine.MinerClient;
 import co.usc.mine.MinerServer;
 import co.usc.net.*;
 import co.usc.net.eth.UscWireProtocol;
 import co.usc.net.sync.SyncConfiguration;
+import co.usc.rpc.*;
 import co.usc.rpc.modules.debug.DebugModule;
 import co.usc.rpc.modules.eth.*;
 import co.usc.rpc.modules.mnr.MnrModule;
@@ -40,18 +40,6 @@ import co.usc.scoring.PeerScoring;
 import co.usc.scoring.PeerScoringManager;
 import co.usc.scoring.PunishmentParameters;
 import co.usc.validators.ProofOfWorkRule;
-import co.usc.net.*;
-import co.usc.net.eth.UscWireProtocol;
-import co.usc.net.sync.SyncConfiguration;
-import co.usc.rpc.*;
-import co.usc.rpc.modules.debug.DebugModule;
-import co.usc.rpc.modules.eth.*;
-import co.usc.rpc.modules.mnr.MnrModule;
-import co.usc.rpc.modules.personal.PersonalModule;
-import co.usc.rpc.modules.personal.PersonalModuleWalletDisabled;
-import co.usc.rpc.modules.personal.PersonalModuleWalletEnabled;
-import co.usc.rpc.modules.txpool.TxPoolModule;
-import co.usc.rpc.netty.*;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.core.Blockchain;
 import org.ethereum.core.Repository;
@@ -320,7 +308,7 @@ public class UscFactory {
         }
 
         logger.info("Local wallet enabled");
-        KeyValueDataSource ds = new LevelDbDataSource(config, "wallet");
+        KeyValueDataSource ds = new LevelDbDataSource("wallet", config.databaseDir());
         ds.init();
         return new Wallet(ds);
     }

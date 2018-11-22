@@ -22,10 +22,6 @@ import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.TestSystemProperties;
 import co.usc.net.Status;
 import co.usc.net.messages.*;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
-import co.usc.net.Status;
-import co.usc.net.messages.*;
 import org.ethereum.core.Block;
 import org.ethereum.net.eth.message.Eth62MessageFactory;
 import org.ethereum.net.eth.message.EthMessage;
@@ -38,17 +34,15 @@ import org.junit.Test;
  */
 public class UscMessageTest {
 
-    private final TestSystemProperties config = new TestSystemProperties();
-
     @Test
     public void encodeDecodeGetBlockMessage() {
         Block block = new BlockGenerator().getBlock(1);
         GetBlockMessage message = new GetBlockMessage(block.getHash().getBytes());
-        UscMessage uscmessage = new UscMessage(config, message);
+        UscMessage uscmessage = new UscMessage(message);
 
         byte[] encoded = uscmessage.getEncoded();
 
-        Eth62MessageFactory factory = new Eth62MessageFactory(config);
+        Eth62MessageFactory factory = new Eth62MessageFactory();
 
         EthMessage ethmessage = (EthMessage)factory.create((byte)0x08, encoded);
 
@@ -70,11 +64,11 @@ public class UscMessageTest {
         Block block = new BlockGenerator().getBlock(1);
         Status status = new Status(block.getNumber(), block.getHash().getBytes());
         StatusMessage message = new StatusMessage(status);
-        UscMessage uscmessage = new UscMessage(config, message);
+        UscMessage uscmessage = new UscMessage(message);
 
         byte[] encoded = uscmessage.getEncoded();
 
-        Eth62MessageFactory factory = new Eth62MessageFactory(config);
+        Eth62MessageFactory factory = new Eth62MessageFactory();
 
         EthMessage ethmessage = (EthMessage)factory.create((byte)0x08, encoded);
 
@@ -96,11 +90,11 @@ public class UscMessageTest {
     public void encodeDecodeBlockMessage() {
         Block block = new BlockGenerator().getBlock(1);
         BlockMessage message = new BlockMessage(block);
-        UscMessage uscmessage = new UscMessage(config, message);
+        UscMessage uscmessage = new UscMessage(message);
 
         byte[] encoded = uscmessage.getEncoded();
 
-        Eth62MessageFactory factory = new Eth62MessageFactory(config);
+        Eth62MessageFactory factory = new Eth62MessageFactory();
 
         EthMessage ethmessage = (EthMessage)factory.create((byte)0x08, encoded);
 

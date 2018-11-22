@@ -21,9 +21,8 @@ package co.usc.mine;
 import co.usc.config.UscSystemProperties;
 import co.usc.core.Usc;
 import co.usc.panic.PanicProcessor;
-import co.usc.ulordj.core.NetworkParameters;
-import org.ethereum.config.blockchain.DevNetConfig;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.ethereum.config.net.DevNetConfig;
+import org.ethereum.config.net.RegTestConfig;
 import org.ethereum.rpc.TypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,7 +147,6 @@ public class MinerClientImpl implements MinerClient {
         co.usc.ulordj.core.UldBlock ulordMergedMiningBlock = MinerUtils.getUlordMergedMiningBlock(ulordNetworkParameters, ulordMergedMiningCoinbaseTransaction);
 
         BigInteger target = new BigInteger(1, TypeConverter.stringHexToByteArray(work.getTarget()));
-        logger.info("Miner Client Target : " + target);
         boolean foundNonce = findNonce(ulordMergedMiningBlock, target);
 
         if (newBestBlockArrivedFromAnotherNode) {
@@ -160,9 +158,8 @@ public class MinerClientImpl implements MinerClient {
         }
 
         if (foundNonce) {
-            String blockHashForMergedMining = work.getBlockHashForMergedMining();
-            logger.info("Mined block: " + blockHashForMergedMining);
-            minerServer.submitUlordBlock(blockHashForMergedMining, ulordMergedMiningBlock);
+            logger.info("Mined block: " + work.getBlockHashForMergedMining());
+            minerServer.submitUlordBlock(work.getBlockHashForMergedMining(), ulordMergedMiningBlock);
         }
 
         return foundNonce;

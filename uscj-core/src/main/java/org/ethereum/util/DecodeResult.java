@@ -19,7 +19,7 @@
 
 package org.ethereum.util;
 
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.Serializable;
 
@@ -52,11 +52,11 @@ public class DecodeResult implements Serializable {
         } else if (decoded instanceof byte[]) {
             return Hex.toHexString((byte[]) decoded);
         } else if (decoded instanceof Object[]) {
-            String result = "";
+            StringBuilder result = new StringBuilder();
             for (Object item : (Object[]) decoded) {
-                result += asString(item);
+                result.append(asString(item));
             }
-            return result;
+            return result.toString();
         }
         throw new RuntimeException("Not a valid type. Should not occur");
     }

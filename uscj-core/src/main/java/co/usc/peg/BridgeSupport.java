@@ -31,6 +31,10 @@ import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.panic.PanicProcessor;
+import co.usc.peg.whitelist.LockWhitelist;
+import co.usc.peg.whitelist.LockWhitelistEntry;
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
+import co.usc.peg.whitelist.UnlimitedWhiteListEntry;
 import co.usc.peg.utils.BridgeEventLogger;
 import co.usc.peg.utils.UldTransactionFormatUtils;
 import co.usc.peg.utils.PartialMerkleTreeFormatUtils;
@@ -43,7 +47,7 @@ import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.program.Program;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -62,10 +66,16 @@ public class BridgeSupport {
 
     public static final Integer FEDERATION_CHANGE_GENERIC_ERROR_CODE = -10;
     public static final Integer LOCK_WHITELIST_GENERIC_ERROR_CODE = -10;
+    public static final Integer LOCK_WHITELIST_INVALID_ADDRESS_FORMAT_ERROR_CODE = -2;
+    public static final Integer LOCK_WHITELIST_ALREADY_EXISTS_ERROR_CODE = -1;
+    public static final Integer LOCK_WHITELIST_UNKNOWN_ERROR_CODE = 0;
+    public static final Integer LOCK_WHITELIST_SUCCESS_CODE = 1;
     public static final Integer FEE_PER_KB_GENERIC_ERROR_CODE = -10;
 
     private static final Logger logger = LoggerFactory.getLogger("BridgeSupport");
     private static final PanicProcessor panicProcessor = new PanicProcessor();
+
+    private static final String INVALID_ADDRESS_FORMAT_MESSAGE = "invalid address format";
 
     private final List<String> FEDERATION_CHANGE_FUNCTIONS = Collections.unmodifiableList(Arrays.asList(
             "create",
@@ -81,10 +91,10 @@ public class BridgeSupport {
 
     private final FederationSupport federationSupport;
 
-    private Context uldContext;
+    private final Context uldContext;
     private UldBlockstoreWithCache uldBlockStore;
     private UldBlockChain uldBlockChain;
-    private org.ethereum.core.Block uscExecutionBlock;
+    private final org.ethereum.core.Block uscExecutionBlock;
 
     // Used by unit tests
     public BridgeSupport(
@@ -102,11 +112,11 @@ public class BridgeSupport {
                 executionBlock,
                 config,
                 bridgeConstants,
-                eventLogger
+                eventLogger,
+                new Context(bridgeConstants.getUldParams()),
+                uldBlockStore,
+                uldBlockChain
         );
-        this.uldContext = new Context(this.bridgeConstants.getUldParams());
-        this.uldBlockStore = uldBlockStore;
-        this.uldBlockChain = uldBlockChain;
     }
 
     // Used by bridge
@@ -117,15 +127,20 @@ public class BridgeSupport {
             UscAddress contractAddress,
             Block uscExecutionBlock) {
         this(
-                config,
                 repository,
-                eventLogger,
                 new BridgeStorageProvider(
                         repository,
                         contractAddress,
-                        config.getBlockchainConfig().getCommonConstants().getBridgeConstants()
+                        config.getBlockchainConfig().getCommonConstants().getBridgeConstants(),
+                        BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(uscExecutionBlock.getNumber()))
                 ),
-                uscExecutionBlock
+                uscExecutionBlock,
+                config,
+                config.getBlockchainConfig().getCommonConstants().getBridgeConstants(),
+                eventLogger,
+                new Context(config.getBlockchainConfig().getCommonConstants().getBridgeConstants().getUldParams()),
+                null,
+                null
         );
     }
 
@@ -141,27 +156,58 @@ public class BridgeSupport {
                 uscExecutionBlock,
                 config,
                 config.getBlockchainConfig().getCommonConstants().getBridgeConstants(),
-                eventLogger
+                eventLogger,
+                new Context(config.getBlockchainConfig().getCommonConstants().getBridgeConstants().getUldParams()),
+                null,
+                null
         );
-
-        this.uldContext = this.buildUldContext();
     }
 
-    // this constructor has all common parameters, mostly dependencies that aren't instantiated here
     private BridgeSupport(
             Repository repository,
             BridgeStorageProvider provider,
             Block executionBlock,
             UscSystemProperties config,
             BridgeConstants bridgeConstants,
-            BridgeEventLogger eventLogger) {
+            BridgeEventLogger eventLogger,
+            Context uldContext,
+            UldBlockstoreWithCache uldBlockStore,
+            UldBlockChain uldBlockChain) {
+        this(
+                repository,
+                provider,
+                executionBlock,
+                config,
+                bridgeConstants,
+                eventLogger,
+                uldContext,
+                new FederationSupport(provider, bridgeConstants, executionBlock),
+                uldBlockStore,
+                uldBlockChain
+        );
+    }
+
+    public BridgeSupport(
+            Repository repository,
+            BridgeStorageProvider provider,
+            Block executionBlock,
+            UscSystemProperties config,
+            BridgeConstants bridgeConstants,
+            BridgeEventLogger eventLogger,
+            Context uldContext,
+            FederationSupport federationSupport,
+            UldBlockstoreWithCache uldBlockStore,
+            UldBlockChain uldBlockChain) {
         this.uscRepository = repository;
         this.provider = provider;
         this.uscExecutionBlock = executionBlock;
         this.config = config;
         this.bridgeConstants = bridgeConstants;
         this.eventLogger = eventLogger;
-        this.federationSupport = new FederationSupport(provider, bridgeConstants, executionBlock);
+        this.uldContext = uldContext;
+        this.federationSupport = federationSupport;
+        this.uldBlockStore = uldBlockStore;
+        this.uldBlockChain = uldBlockChain;
     }
 
     private RepositoryBlockStore buildRepositoryBlockStore() throws BlockStoreException, IOException {
@@ -354,7 +400,7 @@ public class BridgeSupport {
 
         boolean locked = true;
 
-        Federation federation = getActiveFederation();
+        Federation activeFederation = getActiveFederation();
         // Specific code for lock/release/none txs
         if (BridgeUtils.isLockTx(uldTx, getLiveFederations(), uldContext, bridgeConstants)) {
             logger.debug("This is a lock tx {}", uldTx);
@@ -432,9 +478,10 @@ public class BridgeSupport {
                         sender,
                         co.usc.core.Coin.fromUlord(totalAmount)
                 );
-                lockWhitelist.remove(senderUldAddress);
+                // Consume this whitelisted address
+                lockWhitelist.consume(senderUldAddress);
             }
-        } else if (BridgeUtils.isReleaseTx(uldTx, federation, bridgeConstants)) {
+        } else if (BridgeUtils.isReleaseTx(uldTx, getLiveFederations())) {
             logger.debug("This is a release tx {}", uldTx);
             // do-nothing
             // We could call removeUsedUTXOs(uldTx) here, but we decided to not do that.
@@ -446,7 +493,7 @@ public class BridgeSupport {
             // When is not guaranteed to be called in the chronological order, so a Federator can inform
             // b) In prod: Federator created a tx manually or the federation was compromised and some utxos were spent. Better not try to spend them.
             // Open problem: For performance removeUsedUTXOs() just removes 1 utxo
-        } else if (BridgeUtils.isMigrationTx(uldTx, getActiveFederation(), getRetiringFederation(), uldContext, bridgeConstants)) {
+        } else if (BridgeUtils.isMigrationTx(uldTx, activeFederation, getRetiringFederation(), uldContext, bridgeConstants)) {
             logger.debug("This is a migration tx {}", uldTx);
         } else {
             logger.warn("This is not a lock, a release nor a migration tx {}", uldTx);
@@ -496,10 +543,9 @@ public class BridgeSupport {
      * @throws IOException
      */
     public void releaseUld(Transaction uscTx) throws IOException {
-        byte[] senderCode = uscRepository.getCode(uscTx.getSender());
 
         //as we can't send uld from contracts we want to send them back to the sender
-        if (senderCode != null && senderCode.length > 0) {
+        if (BridgeUtils.isContractTx(uscTx)) {
             logger.trace("Contract {} tried to release funds. Release is just allowed from standard accounts.", uscTx);
             throw new Program.OutOfGasException("Contract calling releaseULD");
         }
@@ -1004,9 +1050,12 @@ public class BridgeSupport {
     }
 
     /**
-     * Returns an array of block hashes known by the bridge contract. Federators can use this to find what is the latest block in the mainchain the bridge has.
+     * @deprecated
+     * Returns an array of block hashes known by the bridge contract.
+     * Federators can use this to find what is the latest block in the mainchain the bridge has.
      * @return a List of ulord block hashes
      */
+    @Deprecated
     public List<Sha256Hash> getUldBlockchainBlockLocator() throws IOException {
         StoredBlock  initialUldStoredBlock = this.getLowestBlock();
         final int maxHashesToInform = 100;
@@ -1589,14 +1638,29 @@ public class BridgeSupport {
      * @param index the index at which to get the address
      * @return the base58-encoded address stored at the given index, or null if index is out of bounds
      */
-    public String getLockWhitelistAddress(int index) {
-        List<Address> addresses = provider.getLockWhitelist().getAddresses();
+    public LockWhitelistEntry getLockWhitelistEntryByIndex(int index) {
+        List<LockWhitelistEntry> entries = provider.getLockWhitelist().getAll();
 
-        if (index < 0 || index >= addresses.size()) {
+        if (index < 0 || index >= entries.size()) {
             return null;
         }
 
-        return addresses.get(index).toBase58();
+        return entries.get(index);
+    }
+
+    /**
+     *
+     * @param addressBase58
+     * @return
+     */
+    public LockWhitelistEntry getLockWhitelistEntryByAddress(String addressBase58) {
+        try {
+            Address address = getParsedAddress(addressBase58);
+            return provider.getLockWhitelist().get(address);
+        } catch (AddressFormatException e) {
+            logger.warn(INVALID_ADDRESS_FORMAT_MESSAGE, e);
+            return null;
+        }
     }
 
     /**
@@ -1609,7 +1673,28 @@ public class BridgeSupport {
      * in the whitelist, -2 if address is invalid
      * LOCK_WHITELIST_GENERIC_ERROR_CODE otherwise.
      */
-    public Integer addLockWhitelistAddress(Transaction tx, String addressBase58, BigInteger maxTransferValue) {
+    public Integer addOneOffLockWhitelistAddress(Transaction tx, String addressBase58, BigInteger maxTransferValue) {
+        try {
+            Address address = getParsedAddress(addressBase58);
+            Coin maxTransferValueCoin = Coin.valueOf(maxTransferValue.longValueExact());
+            return this.addLockWhitelistAddress(tx, new OneOffWhiteListEntry(address, maxTransferValueCoin));
+        } catch (AddressFormatException e) {
+            logger.warn(INVALID_ADDRESS_FORMAT_MESSAGE, e);
+            return LOCK_WHITELIST_INVALID_ADDRESS_FORMAT_ERROR_CODE;
+        }
+    }
+
+    public Integer addUnlimitedLockWhitelistAddress(Transaction tx, String addressBase58) {
+        try {
+            Address address = getParsedAddress(addressBase58);
+            return this.addLockWhitelistAddress(tx, new UnlimitedWhiteListEntry(address));
+        } catch (AddressFormatException e) {
+            logger.warn(INVALID_ADDRESS_FORMAT_MESSAGE, e);
+            return LOCK_WHITELIST_INVALID_ADDRESS_FORMAT_ERROR_CODE;
+        }
+    }
+
+    private Integer addLockWhitelistAddress(Transaction tx, LockWhitelistEntry entry) {
         if (!isLockWhitelistChangeAuthorized(tx)) {
             return LOCK_WHITELIST_GENERIC_ERROR_CODE;
         }
@@ -1617,19 +1702,15 @@ public class BridgeSupport {
         LockWhitelist whitelist = provider.getLockWhitelist();
 
         try {
-            Address address = Address.fromBase58(uldContext.getParams(), addressBase58);
-
-            if (whitelist.isWhitelisted(address)) {
-                return -1;
+            if (whitelist.isWhitelisted(entry.address())) {
+                return LOCK_WHITELIST_ALREADY_EXISTS_ERROR_CODE;
             }
-            whitelist.put(address, Coin.valueOf(maxTransferValue.longValueExact()));
-            return 1;
-        } catch (AddressFormatException e) {
-            return -2;
+            whitelist.put(entry.address(), entry);
+            return LOCK_WHITELIST_SUCCESS_CODE;
         } catch (Exception e) {
-            logger.error("Unexpected error in addLockWhitelistAddress: {}", e.getMessage());
+            logger.error("Unexpected error in addLockWhitelistAddress: {}", e);
             panicProcessor.panic("lock-whitelist", e.getMessage());
-            return 0;
+            return LOCK_WHITELIST_UNKNOWN_ERROR_CODE;
         }
     }
 
@@ -1656,7 +1737,7 @@ public class BridgeSupport {
         LockWhitelist whitelist = provider.getLockWhitelist();
 
         try {
-            Address address = Address.fromBase58(uldContext.getParams(), addressBase58);
+            Address address = getParsedAddress(addressBase58);
 
             if (!whitelist.remove(address)) {
                 return -1;
@@ -1739,16 +1820,15 @@ public class BridgeSupport {
             return LOCK_WHITELIST_GENERIC_ERROR_CODE;
         }
 
-        LockWhitelist lockWhitelist = provider.getLockWhitelist();
-        if (lockWhitelist.isDisableBlockSet()) {
-            return -1;
-        }
         int disableBlockDelay = disableBlockDelayBI.intValueExact();
         int bestChainHeight = getUldBlockchainBestChainHeight();
-        if (bestChainHeight < 0 || Integer.MAX_VALUE - disableBlockDelay < bestChainHeight) {
+        if (disableBlockDelay < 0 || Integer.MAX_VALUE - disableBlockDelay < bestChainHeight) {
             return -2;
         }
+
+        LockWhitelist lockWhitelist = provider.getLockWhitelist();
         lockWhitelist.setDisableBlockHeight(bestChainHeight + disableBlockDelay);
+
         return 1;
     }
 
@@ -1818,10 +1898,6 @@ public class BridgeSupport {
         }
     }
 
-    private Context buildUldContext() {
-        return new Context(this.bridgeConstants.getUldParams());
-    }
-
     // Make sure the local ulord blockchain is instantiated
     private void ensureUldBlockChain() throws IOException {
         this.ensureUldBlockStore();
@@ -1844,6 +1920,10 @@ public class BridgeSupport {
                 throw new IOException(e);
             }
         }
+    }
+
+    private Address getParsedAddress(String base58Address) throws AddressFormatException {
+        return Address.fromBase58(uldContext.getParams(), base58Address);
     }
 }
 

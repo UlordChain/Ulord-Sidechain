@@ -1,7 +1,6 @@
 package co.usc.net.messages;
 
 import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.blockchain.utils.BlockGenerator;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
 import org.junit.Assert;

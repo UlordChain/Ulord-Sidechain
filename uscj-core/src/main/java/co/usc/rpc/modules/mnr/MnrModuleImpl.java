@@ -26,21 +26,28 @@ import co.usc.ulordj.params.RegTestParams;
 import co.usc.config.UscMiningConstants;
 import co.usc.mine.*;
 import co.usc.rpc.exception.JsonRpcSubmitBlockException;
+import com.google.common.collect.EvictingQueue;
 import org.apache.commons.lang3.ArrayUtils;
 import org.ethereum.crypto.Keccak256Helper;
 import org.ethereum.rpc.TypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Queue;
 
 @Component
-public class MnrModuleImpl implements MnrModule {
+public class MnrModuleImpl implements MnrModule, Runnable {
+
+    private static Queue<String> submittedQueue = EvictingQueue.create(10);
+
+    private Thread processUlordBlockPartialMerkleThread;
+
     private static final Logger logger = LoggerFactory.getLogger("web3");
 
     private final MinerServer minerServer;
@@ -94,23 +101,18 @@ public class MnrModuleImpl implements MnrModule {
 
     @Override
     public SubmittedBlockInfo submitUlordBlockPartialMerkle(String blockHashHex, String blockHeaderHex, String coinbaseHex, String merkleHashesHex, String blockTxnCountHex) {
-        logger.debug("submitUlordBlockPartialMerkle(): {}, {}, {}, {}, {}", blockHashHex, blockHeaderHex, coinbaseHex, merkleHashesHex, blockTxnCountHex);
+        synchronized (this) {
+            submittedQueue.add(blockHashHex + ":" + blockHeaderHex + ":" + coinbaseHex + ":" + merkleHashesHex + ":" + blockTxnCountHex);
+        }
 
-        NetworkParameters params = RegTestParams.get();
-        new Context(params);
+        logger.debug("Queue Size: " + submittedQueue.size());
+        if(processUlordBlockPartialMerkleThread == null) {
+            processUlordBlockPartialMerkleThread = new Thread(this);
+            processUlordBlockPartialMerkleThread.setName("processUlordBlockPartialMerkle");
+            processUlordBlockPartialMerkleThread.start();
+        }
 
-        UldBlock ulordBlockWithHeaderOnly = getUldBlock(blockHeaderHex, params);
-        UldTransaction coinbase = new UldTransaction(params, Hex.decode(coinbaseHex));
-
-        String blockHashForMergedMining = extractBlockHashForMergedMining(coinbase);
-
-        List<String> merkleHashes = parseHashes(merkleHashesHex);
-
-        int txnCount = Integer.parseInt(blockTxnCountHex, 16);
-
-        SubmitBlockResult result = minerServer.submitUlordBlockPartialMerkle(blockHashForMergedMining, ulordBlockWithHeaderOnly, coinbase, merkleHashes, txnCount);
-
-        return parseResultAndReturn(result);
+        return parseResultAndReturn(new SubmitBlockResult("OK", "OK"));
     }
 
     private UldBlock getUldBlock(String blockHeaderHex, NetworkParameters params) {
@@ -141,5 +143,61 @@ public class MnrModuleImpl implements MnrModule {
         } else {
             throw new JsonRpcSubmitBlockException(result.getMessage());
         }
+    }
+
+    private void processUlordBlockPartialMerkle() {
+
+        while(true) {
+            try {
+                if (submittedQueue.isEmpty()) {
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException ex) {
+                        logger.warn("processUlordBlockPartialMerkle thread interrupted: " + ex);
+                    }
+                    continue;
+                }
+
+                String data = "";
+                synchronized (this) {
+                    data = submittedQueue.poll();
+                }
+
+                if (data == null) continue;
+                String[] dataObjects = data.split(":");
+
+                String blockHashHex = dataObjects[0];
+                String blockHeaderHex = dataObjects[1];
+                String coinbaseHex = dataObjects[2];
+                String merkleHashesHex = dataObjects[3];
+                String blockTxnCountHex = dataObjects[4];
+
+                logger.debug("submitUlordBlockPartialMerkle(): {}, {}, {}, {}, {}", blockHashHex, blockHeaderHex, coinbaseHex, merkleHashesHex, blockTxnCountHex);
+
+                NetworkParameters params = RegTestParams.get();
+                new Context(params);
+
+                UldBlock ulordBlockWithHeaderOnly = getUldBlock(blockHeaderHex, params);
+                UldTransaction coinbase = new UldTransaction(params, Hex.decode(coinbaseHex));
+
+                String blockHashForMergedMining = extractBlockHashForMergedMining(coinbase);
+
+                List<String> merkleHashes = parseHashes(merkleHashesHex);
+
+                int txnCount = Integer.parseInt(blockTxnCountHex, 16);
+
+                SubmitBlockResult result = minerServer.submitUlordBlockPartialMerkle(blockHashForMergedMining, ulordBlockWithHeaderOnly, coinbase, merkleHashes, txnCount);
+
+                logger.debug("result" + result.getMessage() + " " + result.getStatus() + " " + result.getBlockInfo().getBlockIncludedHeight());
+            } catch (Exception e) {
+                logger.warn("Exception in processUlordBlockPartialMerkle:" + e);
+            }
+
+        }
+    }
+
+    @Override
+    public void run() {
+        processUlordBlockPartialMerkle();
     }
 }

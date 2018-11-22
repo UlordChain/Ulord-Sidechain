@@ -1,7 +1,6 @@
 package co.usc.rpc.netty;
 
 import co.usc.rpc.CorsConfiguration;
-import co.usc.rpc.CorsConfiguration;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;

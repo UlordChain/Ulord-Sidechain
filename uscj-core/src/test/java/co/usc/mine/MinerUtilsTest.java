@@ -23,7 +23,6 @@ import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
 import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.core.TransactionPool;
 import org.ethereum.core.Repository;
 import org.ethereum.core.Transaction;

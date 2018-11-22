@@ -21,11 +21,10 @@ package co.usc.net.handler;
 import co.usc.config.UscSystemProperties;
 import co.usc.core.Coin;
 import co.usc.net.handler.txvalidator.*;
-import co.usc.net.handler.txvalidator.TxValidatorNonceRangeValidator;
 import org.ethereum.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.util.BigIntegers;
+import org.bouncycastle.util.BigIntegers;
 
 import javax.annotation.Nullable;
 import java.math.BigInteger;
@@ -61,7 +60,7 @@ public class TxPendingValidator {
         BigInteger blockGasLimit = BigIntegers.fromUnsignedByteArray(executionBlock.getGasLimit());
         Coin minimumGasPrice = executionBlock.getMinimumGasPrice();
         long bestBlockNumber = executionBlock.getNumber();
-        long basicTxCost = tx.transactionCost(config, executionBlock);
+        long basicTxCost = tx.transactionCost(executionBlock, config.getBlockchainConfig());
 
         if (state == null && basicTxCost != 0) {
             logger.trace("[tx={}, sender={}] account doesn't exist", tx.getHash(), tx.getSender());

@@ -23,10 +23,9 @@ import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.core.bc.BlockChainImpl;
 import co.usc.crypto.Keccak256;
 import co.usc.peg.PegTestUtils;
-import co.usc.blockchain.utils.BlockGenerator;
 import org.ethereum.TestUtils;
 import org.ethereum.core.*;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 import co.usc.remasc.RemascTransaction;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;
@@ -266,7 +265,7 @@ public class BlockTest {
         block.seal();
 
         try {
-            block.getHeader().setDifficulty(new BlockDifficulty(new byte[32]));
+            block.getHeader().setDifficulty(RLP.parseBlockDifficulty(new byte[32]));
             Assert.fail();
         }
         catch (SealedBlockHeaderException ex) {

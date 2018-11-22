@@ -19,10 +19,11 @@
 package co.usc.db;
 
 import co.usc.config.TestSystemProperties;
+import co.usc.config.UscSystemProperties;
 import co.usc.core.UscAddress;
-import co.usc.config.TestSystemProperties;
-import co.usc.core.UscAddress;
+import co.usc.trie.TrieStoreImpl;
 import org.ethereum.core.AccountState;
+import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.DataWord;
 
@@ -30,8 +31,11 @@ import org.ethereum.vm.DataWord;
  * Created by ajlopez on 08/04/2017.
  */
 public class RepositoryImplForTesting extends RepositoryImpl {
+
+    private static UscSystemProperties config = new TestSystemProperties();
+
     public RepositoryImplForTesting() {
-        super(new TestSystemProperties());
+        super(null, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
     }
 
     @Override

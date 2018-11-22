@@ -22,7 +22,7 @@ import co.usc.config.TestSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.DifficultyCalculator;
 import co.usc.core.UscAddress;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.core.Block;
 import org.ethereum.core.BlockHeader;
 import org.junit.Assert;
@@ -42,7 +42,7 @@ public class BlockDifficultyValidationRuleTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         config = new TestSystemProperties();
-        config.setBlockchainConfig(new RegTestConfig());
+        config.setBlockchainConfig(new RegTestGenesisConfig());
     }
 
     private BlockHeader getEmptyHeader(BlockDifficulty difficulty, long blockTimestamp, int uCount) {

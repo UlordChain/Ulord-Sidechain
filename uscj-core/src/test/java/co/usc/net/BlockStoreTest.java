@@ -20,8 +20,6 @@ package co.usc.net;
 
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.core.UscAddress;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.core.UscAddress;
 import com.google.common.collect.Lists;
 import org.ethereum.TestUtils;
 import org.ethereum.core.Block;

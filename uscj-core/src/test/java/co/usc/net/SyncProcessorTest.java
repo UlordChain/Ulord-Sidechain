@@ -16,20 +16,6 @@ import co.usc.scoring.PeerScoringManager;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.validators.DummyBlockValidationRule;
 import co.usc.validators.ProofOfWorkRule;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
-import co.usc.core.BlockDifficulty;
-import co.usc.core.Coin;
-import co.usc.core.DifficultyCalculator;
-import co.usc.core.bc.BlockExecutor;
-import co.usc.net.messages.*;
-import co.usc.net.simples.SimpleMessageChannel;
-import co.usc.net.sync.DownloadingBodiesSyncState;
-import co.usc.net.sync.DownloadingHeadersSyncState;
-import co.usc.net.sync.SyncConfiguration;
-import co.usc.scoring.PeerScoringManager;
-import co.usc.test.builders.BlockChainBuilder;
-import co.usc.validators.ProofOfWorkRule;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;
@@ -37,10 +23,12 @@ import org.ethereum.net.server.Channel;
 import org.ethereum.net.server.ChannelManager;
 import org.ethereum.rpc.Simples.SimpleChannelManager;
 import org.ethereum.util.UscMockFactory;
+import org.ethereum.vm.PrecompiledContracts;
+import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.math.BigInteger;
 import java.time.Duration;
@@ -675,7 +663,28 @@ public class SyncProcessorTest {
 
         Block block = new BlockGenerator().createChildBlock(genesis, txs, blockchain.getRepository().getRoot());
 
-        BlockExecutor blockExecutor = new BlockExecutor(config, blockchain.getRepository(), null, blockchain.getBlockStore(), null);
+        final ProgramInvokeFactoryImpl programInvokeFactory = new ProgramInvokeFactoryImpl();
+        BlockExecutor blockExecutor = new BlockExecutor(blockchain.getRepository(), (tx1, txindex, coinbase, repository, block1, totalGasUsed) -> new TransactionExecutor(
+                tx1,
+                txindex,
+                block1.getCoinbase(),
+                repository,
+                blockchain.getBlockStore(),
+                null,
+                programInvokeFactory,
+                block1,
+                null,
+                totalGasUsed,
+                config.getVmConfig(),
+                config.getBlockchainConfig(),
+                config.playVM(),
+                config.isRemascEnabled(),
+                config.vmTrace(),
+                new PrecompiledContracts(config),
+                config.databaseDir(),
+                config.vmTraceDir(),
+                config.vmTraceCompressed()
+        ));
         Assert.assertEquals(1, block.getTransactionsList().size());
         blockExecutor.executeAndFillAll(block, genesis);
         Assert.assertEquals(21000, block.getFeesPaidToMiner().asBigInteger().intValueExact());

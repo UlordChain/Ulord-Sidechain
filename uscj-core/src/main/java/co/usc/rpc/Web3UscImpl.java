@@ -29,7 +29,6 @@ import co.usc.rpc.modules.mnr.MnrModule;
 import co.usc.rpc.modules.personal.PersonalModule;
 import co.usc.rpc.modules.txpool.TxPoolModule;
 import co.usc.scoring.PeerScoringManager;
-import co.usc.net.BlockProcessor;
 import org.ethereum.core.*;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;
@@ -40,7 +39,7 @@ import org.ethereum.net.server.PeerServer;
 import org.ethereum.rpc.Web3Impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.File;
 import java.io.FileWriter;

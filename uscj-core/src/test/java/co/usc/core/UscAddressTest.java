@@ -20,7 +20,7 @@ package co.usc.core;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.spongycastle.util.encoders.DecoderException;
+import org.bouncycastle.util.encoders.DecoderException;
 
 public class UscAddressTest {
     @Test

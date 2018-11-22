@@ -20,14 +20,13 @@ package co.usc.net.handler.txvalidator;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
-import co.usc.config.TestSystemProperties;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Transaction;
 import org.ethereum.crypto.ECKey;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.math.BigInteger;
 

@@ -19,7 +19,6 @@
 package co.usc.net;
 
 import co.usc.crypto.Keccak256;
-import co.usc.crypto.Keccak256;
 import org.junit.Assert;
 import org.junit.Test;
 

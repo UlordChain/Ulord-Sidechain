@@ -20,8 +20,6 @@ package co.usc.vm;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.peg.Bridge;
-import co.usc.config.TestSystemProperties;
-import co.usc.peg.Bridge;
 import org.ethereum.vm.DataWord;
 import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.PrecompiledContracts.PrecompiledContract;
@@ -36,7 +34,7 @@ public class PrecompiledContractTest {
     @Test
     public void getBridgeContract() {
         DataWord bridgeAddress = new DataWord(PrecompiledContracts.BRIDGE_ADDR.getBytes());
-        PrecompiledContract bridge = precompiledContracts.getContractForAddress(bridgeAddress);
+        PrecompiledContract bridge = precompiledContracts.getContractForAddress(null, bridgeAddress);
 
         Assert.assertNotNull(bridge);
         Assert.assertEquals(Bridge.class, bridge.getClass());
@@ -45,8 +43,8 @@ public class PrecompiledContractTest {
     @Test
     public void getBridgeContractTwice() {
         DataWord bridgeAddress = new DataWord(PrecompiledContracts.BRIDGE_ADDR.getBytes());
-        PrecompiledContract bridge1 = precompiledContracts.getContractForAddress(bridgeAddress);
-        PrecompiledContract bridge2 = precompiledContracts.getContractForAddress(bridgeAddress);
+        PrecompiledContract bridge1 = precompiledContracts.getContractForAddress(null, bridgeAddress);
+        PrecompiledContract bridge2 = precompiledContracts.getContractForAddress(null, bridgeAddress);
 
         Assert.assertNotNull(bridge1);
         Assert.assertNotNull(bridge2);

@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.mapdb.DB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.File;
 import java.io.IOException;
@@ -424,7 +424,7 @@ public class IndexedBlockStoreTest {
         DB indexDB = createMapDB(testDir);
         Map<Long, List<IndexedBlockStore.BlockInfo>> indexMap = createIndexMap(indexDB);
 
-        KeyValueDataSource blocksDB = new LevelDbDataSource(config, "blocks");
+        KeyValueDataSource blocksDB = new LevelDbDataSource("blocks", config.databaseDir());
         blocksDB.init();
 
         IndexedBlockStore indexedBlockStore = new IndexedBlockStore(indexMap, blocksDB, indexDB);
@@ -539,7 +539,7 @@ public class IndexedBlockStoreTest {
         indexDB = createMapDB(testDir);
         indexMap = createIndexMap(indexDB);
 
-        blocksDB = new LevelDbDataSource(config, "blocks");
+        blocksDB = new LevelDbDataSource("blocks", config.databaseDir());
         blocksDB.init();
 
         indexedBlockStore = new IndexedBlockStore(indexMap, blocksDB, indexDB);
@@ -570,7 +570,7 @@ public class IndexedBlockStoreTest {
         DB indexDB = createMapDB(testDir);
         Map<Long, List<IndexedBlockStore.BlockInfo>> indexMap = createIndexMap(indexDB);
 
-        KeyValueDataSource blocksDB = new LevelDbDataSource(config, "blocks");
+        KeyValueDataSource blocksDB = new LevelDbDataSource("blocks", config.databaseDir());
         blocksDB.init();
 
         try {
@@ -698,7 +698,7 @@ public class IndexedBlockStoreTest {
             indexDB = createMapDB(testDir);
             indexMap = createIndexMap(indexDB);
 
-            blocksDB = new LevelDbDataSource(config, "blocks");
+            blocksDB = new LevelDbDataSource("blocks", config.databaseDir());
             blocksDB.init();
 
             indexedBlockStore = new IndexedBlockStore(indexMap, blocksDB, indexDB);
@@ -730,7 +730,7 @@ public class IndexedBlockStoreTest {
         DB indexDB = createMapDB(testDir);
         Map<Long, List<IndexedBlockStore.BlockInfo>> indexMap = createIndexMap(indexDB);
 
-        KeyValueDataSource blocksDB = new LevelDbDataSource(config, "blocks");
+        KeyValueDataSource blocksDB = new LevelDbDataSource("blocks", config.databaseDir());
         blocksDB.init();
 
         try {
@@ -833,7 +833,7 @@ public class IndexedBlockStoreTest {
         DB indexDB = createMapDB(testDir);
         Map<Long, List<IndexedBlockStore.BlockInfo>> indexMap = createIndexMap(indexDB);
 
-        KeyValueDataSource blocksDB = new LevelDbDataSource(config, "blocks");
+        KeyValueDataSource blocksDB = new LevelDbDataSource("blocks", config.databaseDir());
         blocksDB.init();
 
         try {
@@ -886,7 +886,7 @@ public class IndexedBlockStoreTest {
         DB indexDB = createMapDB(testDir);
         Map<Long, List<IndexedBlockStore.BlockInfo>> indexMap = createIndexMap(indexDB);
 
-        KeyValueDataSource blocksDB = new LevelDbDataSource(config, "blocks");
+        KeyValueDataSource blocksDB = new LevelDbDataSource("blocks", config.databaseDir());
         blocksDB.init();
 
         try {

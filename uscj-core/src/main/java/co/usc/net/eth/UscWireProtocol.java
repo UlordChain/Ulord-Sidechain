@@ -28,7 +28,6 @@ import co.usc.net.messages.Message;
 import co.usc.net.messages.StatusMessage;
 import co.usc.scoring.EventType;
 import co.usc.scoring.PeerScoringManager;
-import co.usc.net.*;
 import io.netty.channel.ChannelHandlerContext;
 import org.ethereum.core.*;
 import org.ethereum.core.genesis.GenesisLoader;
@@ -44,7 +43,7 @@ import org.ethereum.sync.SyncStatistics;
 import org.ethereum.util.ByteUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -84,7 +83,7 @@ public class UscWireProtocol extends EthHandler {
         this.messageHandler = messageHandler;
         this.blockchain = blockchain;
         this.config = config;
-        this.messageSender = new EthMessageSender(config, this);
+        this.messageSender = new EthMessageSender(this);
         this.messageRecorder = config.getMessageRecorder();
     }
 
@@ -181,14 +180,6 @@ public class UscWireProtocol extends EthHandler {
             // basic checks passed, update statistics
             channel.getNodeStatistics().ethHandshake(msg);
             ethereumListener.onEthStatusUpdated(channel, msg);
-
-            if (peerDiscoveryMode) {
-                loggerNet.debug("Peer discovery mode: STATUS received, disconnecting...");
-                disconnect(ReasonCode.REQUESTED);
-                ctx.close().sync();
-                ctx.disconnect().sync();
-                return;
-            }
         } catch (NoSuchElementException e) {
             loggerNet.debug("EthHandler already removed");
         }
@@ -246,7 +237,7 @@ public class UscWireProtocol extends EthHandler {
 
         // USC new protocol send status
         Status status = new Status(bestBlock.getNumber(), bestBlock.getHash().getBytes(), bestBlock.getParentHash().getBytes(), totalDifficulty);
-        UscMessage uscmessage = new UscMessage(config, new StatusMessage(status));
+        UscMessage uscmessage = new UscMessage(new StatusMessage(status));
         loggerNet.trace("Sending status best block {} to {}", status.getBestBlockNumber(), this.messageSender.getPeerNodeID().toString());
         sendMessage(uscmessage);
 
@@ -255,7 +246,7 @@ public class UscWireProtocol extends EthHandler {
 
     @Override
     public void sendTransaction(List<Transaction> txs) {
-        TransactionsMessage msg = new TransactionsMessage(config, txs);
+        TransactionsMessage msg = new TransactionsMessage(txs);
         sendMessage(msg);
     }
 

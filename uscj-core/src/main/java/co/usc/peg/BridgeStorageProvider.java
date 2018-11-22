@@ -22,8 +22,12 @@ import co.usc.ulordj.core.*;
 import co.usc.config.BridgeConstants;
 import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
+import co.usc.peg.whitelist.LockWhitelist;
+import co.usc.peg.whitelist.LockWhitelistEntry;
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
+import co.usc.peg.whitelist.UnlimitedWhiteListEntry;
+import org.apache.commons.lang3.tuple.Pair;
 import org.ethereum.core.Repository;
-import org.ethereum.rpc.TypeConverter;
 import org.ethereum.vm.DataWord;
 
 import java.io.IOException;
@@ -39,24 +43,26 @@ import java.util.SortedMap;
  * @author Oscar Guindzberg
  */
 public class BridgeStorageProvider {
-    private static final DataWord NEW_FEDERATION_ULD_UTXOS_KEY = new DataWord(TypeConverter.stringToByteArray("newFederationUldUTXOs"));
-    private static final DataWord OLD_FEDERATION_ULD_UTXOS_KEY = new DataWord(TypeConverter.stringToByteArray("oldFederationUldUTXOs"));
-    private static final DataWord ULD_TX_HASHES_ALREADY_PROCESSED_KEY = new DataWord(TypeConverter.stringToByteArray("uldTxHashesAP"));
-    private static final DataWord RELEASE_REQUEST_QUEUE = new DataWord(TypeConverter.stringToByteArray("releaseRequestQueue"));
-    private static final DataWord RELEASE_TX_SET = new DataWord(TypeConverter.stringToByteArray("releaseTransactionSet"));
-    private static final DataWord USC_TXS_WAITING_FOR_SIGNATURES_KEY = new DataWord(TypeConverter.stringToByteArray("uscTxsWaitingFS"));
-    private static final DataWord NEW_FEDERATION_KEY = new DataWord(TypeConverter.stringToByteArray("newFederation"));
-    private static final DataWord OLD_FEDERATION_KEY = new DataWord(TypeConverter.stringToByteArray("oldFederation"));
-    private static final DataWord PENDING_FEDERATION_KEY = new DataWord(TypeConverter.stringToByteArray("pendingFederation"));
-    private static final DataWord FEDERATION_ELECTION_KEY = new DataWord(TypeConverter.stringToByteArray("federationElection"));
-    private static final DataWord LOCK_WHITELIST_KEY = new DataWord(TypeConverter.stringToByteArray("lockWhitelist"));
-    private static final DataWord FEE_PER_KB_KEY = new DataWord(TypeConverter.stringToByteArray("feePerKb"));
-    private static final DataWord FEE_PER_KB_ELECTION_KEY = new DataWord(TypeConverter.stringToByteArray("feePerKbElection"));
+    private static final DataWord NEW_FEDERATION_ULD_UTXOS_KEY = DataWord.fromString("newFederationUldUTXOs");
+    private static final DataWord OLD_FEDERATION_ULD_UTXOS_KEY = DataWord.fromString("oldFederationUldUTXOs");
+    private static final DataWord ULD_TX_HASHES_ALREADY_PROCESSED_KEY = DataWord.fromString("uldTxHashesAP");
+    private static final DataWord RELEASE_REQUEST_QUEUE = DataWord.fromString("releaseRequestQueue");
+    private static final DataWord RELEASE_TX_SET = DataWord.fromString("releaseTransactionSet");
+    private static final DataWord USC_TXS_WAITING_FOR_SIGNATURES_KEY = DataWord.fromString("uscTxsWaitingFS");
+    private static final DataWord NEW_FEDERATION_KEY = DataWord.fromString("newFederation");
+    private static final DataWord OLD_FEDERATION_KEY = DataWord.fromString("oldFederation");
+    private static final DataWord PENDING_FEDERATION_KEY = DataWord.fromString("pendingFederation");
+    private static final DataWord FEDERATION_ELECTION_KEY = DataWord.fromString("federationElection");
+    private static final DataWord LOCK_ONE_OFF_WHITELIST_KEY = DataWord.fromString("lockWhitelist");
+    private static final DataWord LOCK_UNLIMITED_WHITELIST_KEY = DataWord.fromString("unlimitedLockWhitelist");
+    private static final DataWord FEE_PER_KB_KEY = DataWord.fromString("feePerKb");
+    private static final DataWord FEE_PER_KB_ELECTION_KEY = DataWord.fromString("feePerKbElection");
 
     private final Repository repository;
     private final UscAddress contractAddress;
     private final NetworkParameters networkParameters;
     private final Context uldContext;
+    private final BridgeStorageConfiguration bridgeStorageConfiguration;
 
     private Map<Sha256Hash, Long> uldTxHashesAlreadyProcessed;
 
@@ -86,11 +92,12 @@ public class BridgeStorageProvider {
     private Coin feePerKb;
     private ABICallElection feePerKbElection;
 
-    public BridgeStorageProvider(Repository repository, UscAddress contractAddress, BridgeConstants bridgeConstants) {
+    public BridgeStorageProvider(Repository repository, UscAddress contractAddress, BridgeConstants bridgeConstants, BridgeStorageConfiguration bridgeStorageConfiguration) {
         this.repository = repository;
         this.contractAddress = contractAddress;
         this.networkParameters = bridgeConstants.getUldParams();
         this.uldContext = new Context(networkParameters);
+        this.bridgeStorageConfiguration = bridgeStorageConfiguration;
     }
 
     public List<UTXO> getNewFederationUldUTXOs() throws IOException {
@@ -318,7 +325,13 @@ public class BridgeStorageProvider {
             return;
         }
 
-        safeSaveToRepository(LOCK_WHITELIST_KEY, lockWhitelist, BridgeSerializationUtils::serializeLockWhitelist);
+        List<OneOffWhiteListEntry> oneOffEntries = lockWhitelist.getAll(OneOffWhiteListEntry.class);
+        safeSaveToRepository(LOCK_ONE_OFF_WHITELIST_KEY, Pair.of(oneOffEntries, lockWhitelist.getDisableBlockHeight()), BridgeSerializationUtils::serializeOneOffLockWhitelist);
+
+        if (this.bridgeStorageConfiguration.getUnlimitedWhitelistEnabled()) {
+            List<UnlimitedWhiteListEntry> unlimitedEntries = lockWhitelist.getAll(UnlimitedWhiteListEntry.class);
+            safeSaveToRepository(LOCK_UNLIMITED_WHITELIST_KEY, unlimitedEntries, BridgeSerializationUtils::serializeUnlimitedLockWhitelist);
+        }
     }
 
     public LockWhitelist getLockWhitelist() {
@@ -326,11 +339,24 @@ public class BridgeStorageProvider {
             return lockWhitelist;
         }
 
-        lockWhitelist = safeGetFromRepository(LOCK_WHITELIST_KEY,
-            data -> (data == null)?
-                new LockWhitelist(new HashMap<>()) :
-                BridgeSerializationUtils.deserializeLockWhitelist(data, uldContext.getParams())
-        );
+        Pair<HashMap<Address, OneOffWhiteListEntry>, Integer> oneOffWhitelistAndDisableBlockHeightData =
+                safeGetFromRepository(LOCK_ONE_OFF_WHITELIST_KEY,
+                        data -> BridgeSerializationUtils.deserializeOneOffLockWhitelistAndDisableBlockHeight(data, uldContext.getParams()));
+        if (oneOffWhitelistAndDisableBlockHeightData == null) {
+            lockWhitelist = new LockWhitelist(new HashMap<>());
+            return lockWhitelist;
+        }
+
+        Map<Address, LockWhitelistEntry> whitelistedAddresses = new HashMap<>();
+
+        whitelistedAddresses.putAll(oneOffWhitelistAndDisableBlockHeightData.getLeft());
+
+        if (this.bridgeStorageConfiguration.getUnlimitedWhitelistEnabled()) {
+            whitelistedAddresses.putAll(safeGetFromRepository(LOCK_UNLIMITED_WHITELIST_KEY,
+                    data -> BridgeSerializationUtils.deserializeUnlimitedLockWhitelistEntries(data, uldContext.getParams())));
+        }
+
+        lockWhitelist = new LockWhitelist(whitelistedAddresses, oneOffWhitelistAndDisableBlockHeightData.getRight());
 
         return lockWhitelist;
     }

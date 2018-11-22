@@ -18,7 +18,6 @@
 
 package co.usc.net.eth;
 
-import co.usc.config.UscSystemProperties;
 import co.usc.net.messages.Message;
 import org.ethereum.net.eth.message.EthMessage;
 import org.ethereum.net.eth.message.EthMessageCodes;
@@ -29,16 +28,13 @@ import org.ethereum.util.RLPList;
  * Created by ajlopez on 5/14/2016.
  */
 public class UscMessage extends EthMessage {
-    private final UscSystemProperties config;
     private Message message;
 
-    public UscMessage(UscSystemProperties config, byte[] encoded) {
+    public UscMessage(byte[] encoded) {
         super(encoded);
-        this.config = config;
     }
 
-    public UscMessage(UscSystemProperties config, Message message) {
-        this.config = config;
+    public UscMessage(Message message) {
         this.message = message;
         this.parsed = true;
     }

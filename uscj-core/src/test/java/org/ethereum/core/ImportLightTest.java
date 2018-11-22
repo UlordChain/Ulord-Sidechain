@@ -23,8 +23,10 @@ import co.usc.config.TestSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockChainImpl;
+import co.usc.core.bc.BlockExecutor;
 import co.usc.core.bc.TransactionPoolImpl;
 import co.usc.db.RepositoryImpl;
+import co.usc.trie.TrieStore;
 import co.usc.trie.TrieStoreImpl;
 import co.usc.validators.DummyBlockValidator;
 import org.ethereum.config.blockchain.GenesisConfig;
@@ -36,6 +38,8 @@ import org.ethereum.db.ReceiptStoreImpl;
 import org.ethereum.listener.CompositeEthereumListener;
 import org.ethereum.listener.TestCompositeEthereumListener;
 import org.ethereum.manager.AdminInfo;
+import org.ethereum.vm.PrecompiledContracts;
+import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl;
 
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -55,7 +59,7 @@ public class ImportLightTest {
         }));
         IndexedBlockStore blockStore = new IndexedBlockStore(new HashMap<>(), new HashMapDB(), null);
 
-        Repository repository = new RepositoryImpl(config, new TrieStoreImpl(new HashMapDB()));
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         CompositeEthereumListener listener = new TestCompositeEthereumListener();
 
@@ -65,14 +69,37 @@ public class ImportLightTest {
 
         TransactionPoolImpl transactionPool = new TransactionPoolImpl(config, repository, null, receiptStore, null, listener, 10, 100);
 
+        final ProgramInvokeFactoryImpl programInvokeFactory = new ProgramInvokeFactoryImpl();
         BlockChainImpl blockchain = new BlockChainImpl(
-                config, repository,
+                repository,
                 blockStore,
                 receiptStore,
                 transactionPool,
                 listener,
-                new AdminInfo(),
-                new DummyBlockValidator()
+                new DummyBlockValidator(),
+                false,
+                1,
+                new BlockExecutor(repository, (tx1, txindex1, coinbase, track1, block1, totalGasUsed1) -> new TransactionExecutor(
+                        tx1,
+                        txindex1,
+                        block1.getCoinbase(),
+                        track1,
+                        blockStore,
+                        receiptStore,
+                        programInvokeFactory,
+                        block1,
+                        listener,
+                        totalGasUsed1,
+                        config.getVmConfig(),
+                        config.getBlockchainConfig(),
+                        config.playVM(),
+                        config.isRemascEnabled(),
+                        config.vmTrace(),
+                        new PrecompiledContracts(config),
+                        config.databaseDir(),
+                        config.vmTraceDir(),
+                        config.vmTraceCompressed()
+                ))
         );
 
         blockchain.setNoValidation(true);

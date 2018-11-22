@@ -17,43 +17,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.ethereum.config.blockchain;
+package org.ethereum.config.blockchain.testnet;
 
-import co.usc.config.BridgeConstants;
-import co.usc.config.BridgeDevNetConstants;
-//import org.ethereum.config.blockchain.testnet.TestNetAfterBridgeSyncConfig;
 
-/**
- * Created by Oscar Guindzberg on 25.10.2016.
- */
-public class DevNetConfig extends TestNetAfterBridgeSyncConfig {
+import org.ethereum.config.Constants;
 
-    public static class DevNetConstants extends TestNetConstants {
-        private static final byte CHAIN_ID = 52;
-        @Override
-        public BridgeConstants getBridgeConstants() {
-            return BridgeDevNetConstants.getInstance();
-        }
+public class TestNetBeforeBridgeSyncConfig extends TestNetAfterBridgeSyncConfig {
 
-        @Override
-        public byte getChainId() {
-            return DevNetConstants.CHAIN_ID;
-        }
+    public TestNetBeforeBridgeSyncConfig() {
+        super(new TestNetConstants());
     }
 
-    public DevNetConfig() {
-        super(new DevNetConstants());
+    protected TestNetBeforeBridgeSyncConfig(Constants constants) {
+        super(constants);
     }
 
     @Override
     public boolean areBridgeTxsFree() {
         return true;
     }
-
-    @Override
-    public boolean isRfs55() {
-        return true;
-    }
-
 
 }

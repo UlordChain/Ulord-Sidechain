@@ -46,7 +46,7 @@ public class TransactionResultDTO {
     public String value;
     public String input;
 
-    public TransactionResultDTO (Block b, Integer index, Transaction tx) {
+    public TransactionResultDTO(Block b, Integer index, Transaction tx) {
         hash = tx.getHash().toJsonString();
 
         if (Arrays.equals(tx.getNonce(), ByteUtil.EMPTY_BYTE_ARRAY)) {
@@ -74,10 +74,13 @@ public class TransactionResultDTO {
     }
 
     private String addressToJsonHex(UscAddress address) {
+        if (UscAddress.nullAddress().equals(address)) {
+            return null;
+        }
         // Web3.js requires the address to be valid (20 bytes),
         // so we have to serialize the Remasc sender as a valid address.
         if (address.equals(RemascTransaction.REMASC_ADDRESS)) {
-            return TypeConverter.toJsonHex(UscAddress.nullAddress().getBytes());
+            return TypeConverter.toJsonHex(new byte[20]);
         }
 
         return TypeConverter.toJsonHex(address.getBytes());

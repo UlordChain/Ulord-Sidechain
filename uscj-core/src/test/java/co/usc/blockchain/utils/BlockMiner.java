@@ -1,15 +1,14 @@
 package co.usc.blockchain.utils;
 
+import co.usc.config.TestSystemProperties;
 import co.usc.crypto.Keccak256;
 import co.usc.mine.MinerUtils;
 import co.usc.util.DifficultyUtils;
 import org.ethereum.core.Block;
 
-import javax.annotation.Nonnull;
 import java.math.BigInteger;
 
 import static co.usc.mine.MinerServerImpl.compressCoinbase;
-import static co.usc.mine.MinerServerImpl.getUlordMergedMerkleBranch;
 
 /**
  * Created by ajlopez on 13/09/2017.
@@ -17,7 +16,13 @@ import static co.usc.mine.MinerServerImpl.getUlordMergedMerkleBranch;
 public class BlockMiner {
     private static BigInteger nextNonceToUse = BigInteger.ZERO;
 
-    public static Block mineBlock(Block block) {
+    private final TestSystemProperties config;
+
+    public BlockMiner(TestSystemProperties config) {
+        this.config = config;
+    }
+
+    public Block mineBlock(Block block) {
         Keccak256 blockMergedMiningHash = new Keccak256(block.getHashForMergedMining());
 
         co.usc.ulordj.core.NetworkParameters ulordNetworkParameters = co.usc.ulordj.params.RegTestParams.get();
@@ -34,10 +39,14 @@ public class BlockMiner {
         newBlock.setUlordMergedMiningHeader(ulordMergedMiningBlock.cloneAsHeader().ulordSerialize());
 
         ulordMergedMiningCoinbaseTransaction = ulordMergedMiningBlock.getTransactions().get(0);
-        co.usc.ulordj.core.PartialMerkleTree ulordMergedMiningMerkleBranch = getUlordMergedMerkleBranch(ulordMergedMiningBlock);
+        byte[] merkleProof = MinerUtils.buildMerkleProof(
+                config.getBlockchainConfig(),
+                pb -> pb.buildFromBlock(ulordMergedMiningBlock),
+                newBlock.getNumber()
+        );
 
         newBlock.setUlordMergedMiningCoinbaseTransaction(compressCoinbase(ulordMergedMiningCoinbaseTransaction.ulordSerialize()));
-        newBlock.setUlordMergedMiningMerkleProof(ulordMergedMiningMerkleBranch.ulordSerialize());
+        newBlock.setUlordMergedMiningMerkleProof(merkleProof);
 
         return newBlock;
     }
@@ -48,10 +57,9 @@ public class BlockMiner {
      * @param ulordMergedMiningBlock ulordBlock to find nonce for. This block's nonce will be modified.
      * @param target                   target difficulty. Block's hash should be lower than this number.
      */
-    public static void findNonce(@Nonnull final co.usc.ulordj.core.UldBlock ulordMergedMiningBlock,
-                              @Nonnull final BigInteger target) {
-        ulordMergedMiningBlock.setNonce(nextNonceToUse.add(BigInteger.ONE));
-
+    public void findNonce(co.usc.ulordj.core.UldBlock ulordMergedMiningBlock, BigInteger target) {
+        ulordMergedMiningBlock.setNonce(nextNonceToUse);
+        nextNonceToUse = nextNonceToUse.add(BigInteger.ONE);
         while (true) {
             // Is our proof of work valid yet?
             BigInteger blockHashBI = ulordMergedMiningBlock.getHash().toBigInteger();
@@ -60,7 +68,8 @@ public class BlockMiner {
                 return;
 
             // No, so increment the nonce and try again.
-            ulordMergedMiningBlock.setNonce(nextNonceToUse.add(BigInteger.ONE));
+            ulordMergedMiningBlock.setNonce(nextNonceToUse);
+            nextNonceToUse = nextNonceToUse.add(BigInteger.ONE);
         }
    }
 }

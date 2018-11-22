@@ -33,9 +33,10 @@ import co.usc.test.builders.BlockBuilder;
 import co.usc.config.TestSystemProperties;
 import co.usc.test.World;
 import co.usc.test.builders.BlockBuilder;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
+import org.ethereum.listener.EthereumListenerAdapter;
 import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.program.ProgramResult;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl;
@@ -43,7 +44,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -61,7 +62,7 @@ public class UscForksBridgeTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         config = new TestSystemProperties();
-        config.setBlockchainConfig(new RegTestConfig());
+        config.setBlockchainConfig(new RegTestGenesisConfig());
         bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         UldECKey fedULDPrivateKey = ((BridgeRegTestConstants)bridgeConstants).getFederatorPrivateKeys().get(0);
         fedECPrivateKey = ECKey.fromPrivate(fedULDPrivateKey.getPrivKey());
@@ -342,6 +343,7 @@ public class UscForksBridgeTest {
     }
 
     private BridgeState callGetStateForDebuggingTx() throws IOException, ClassNotFoundException {
+        TestSystemProperties systemProperties = new TestSystemProperties();
         Transaction uscTx = CallTransaction.createRawTransaction(config, 0,
                 Long.MAX_VALUE,
                 Long.MAX_VALUE,
@@ -350,8 +352,26 @@ public class UscForksBridgeTest {
                 Bridge.GET_STATE_FOR_DEBUGGING.encode(new Object[]{}));
         uscTx.sign(new byte[32]);
 
-        TransactionExecutor executor = new TransactionExecutor(config, uscTx, 0, blockChain.getBestBlock().getCoinbase(), repository,
-                        blockChain.getBlockStore(), null, new ProgramInvokeFactoryImpl(), blockChain.getBestBlock())
+        TransactionExecutor executor = new TransactionExecutor(
+                uscTx,
+                0,
+                blockChain.getBestBlock().getCoinbase(),
+                repository,
+                blockChain.getBlockStore(),
+                null,
+                new ProgramInvokeFactoryImpl(),
+                blockChain.getBestBlock(),
+                new EthereumListenerAdapter(),
+                0,
+                systemProperties.getVmConfig(),
+                systemProperties.getBlockchainConfig(),
+                systemProperties.playVM(),
+                systemProperties.isRemascEnabled(),
+                systemProperties.vmTrace(),
+                new PrecompiledContracts(systemProperties),
+                systemProperties.databaseDir(),
+                systemProperties.vmTraceDir(),
+                systemProperties.vmTraceCompressed())
                 .setLocalCall(true);
 
         executor.init();

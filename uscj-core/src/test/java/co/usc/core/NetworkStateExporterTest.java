@@ -20,8 +20,9 @@ package co.usc.core;
 
 import co.usc.config.TestSystemProperties;
 import co.usc.db.RepositoryImpl;
+import co.usc.trie.TrieImpl;
+import co.usc.trie.TrieStore;
 import co.usc.trie.TrieStoreImpl;
-import co.usc.config.TestSystemProperties;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.ByteStreams;
@@ -36,7 +37,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.spongycastle.util.encoders.Hex;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,7 +66,7 @@ public class NetworkStateExporterTest {
 
     @Test
     public void testEmptyRepo() throws Exception {
-        Repository repository = new RepositoryImpl(config, new TrieStoreImpl(new HashMapDB()));
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
 
         Map result = writeAndReadJson(repository);
 
@@ -74,7 +75,7 @@ public class NetworkStateExporterTest {
 
     @Test
     public void testNoContracts() throws Exception {
-        Repository repository = new RepositoryImpl(config, new TrieStoreImpl(new HashMapDB()));
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
         String address1String = "1000000000000000000000000000000000000000";
         UscAddress addr1 = new UscAddress(address1String);
         repository.createAccount(addr1);
@@ -117,13 +118,20 @@ public class NetworkStateExporterTest {
 
     @Test
     public void testContracts() throws Exception {
-        Repository repository = new RepositoryImpl(config, new TrieStoreImpl(new HashMapDB()));
+        TrieStore.Factory trieStoreFactory = name -> new TrieStoreImpl(new HashMapDB());
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), trieStoreFactory, config.detailsInMemoryStorageLimit());
         String address1String = "1000000000000000000000000000000000000000";
         UscAddress addr1 = new UscAddress(address1String);
         repository.createAccount(addr1);
         repository.addBalance(addr1, Coin.valueOf(1L));
         repository.increaseNonce(addr1);
-        ContractDetails contractDetails = new co.usc.db.ContractDetailsImpl(config);
+        ContractDetails contractDetails = new co.usc.db.ContractDetailsImpl(
+            null,
+            new TrieImpl(new TrieStoreImpl(new HashMapDB()), true),
+            null,
+            trieStoreFactory,
+            config.detailsInMemoryStorageLimit()
+        );
         contractDetails.setCode(new byte[] {1, 2, 3, 4});
         contractDetails.put(DataWord.ZERO, DataWord.ONE);
         contractDetails.putBytes(DataWord.ONE, new byte[] {5, 6, 7, 8});

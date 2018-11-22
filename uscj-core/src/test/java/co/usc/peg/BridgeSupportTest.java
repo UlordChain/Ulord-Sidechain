@@ -20,6 +20,7 @@ package co.usc.peg;
 
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.crypto.TransactionSignature;
+import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.script.Script;
 import co.usc.ulordj.script.ScriptBuilder;
 import co.usc.ulordj.script.ScriptChunk;
@@ -29,6 +30,7 @@ import co.usc.ulordj.wallet.Wallet;
 import co.usc.blockchain.utils.BlockGenerator;
 import co.usc.config.BridgeConstants;
 import co.usc.config.BridgeRegTestConstants;
+import co.usc.config.UscSystemProperties;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.BlockDifficulty;
 import co.usc.core.UscAddress;
@@ -39,30 +41,40 @@ import co.usc.peg.simples.SimpleUscTransaction;
 import co.usc.peg.simples.SimpleWallet;
 import co.usc.peg.utils.BridgeEventLogger;
 import co.usc.peg.utils.BridgeEventLoggerImpl;
+import co.usc.peg.whitelist.LockWhitelist;
+import co.usc.peg.whitelist.LockWhitelistEntry;
+import co.usc.peg.whitelist.OneOffWhiteListEntry;
+import co.usc.peg.whitelist.UnlimitedWhiteListEntry;
 import co.usc.test.builders.BlockChainBuilder;
-import co.usc.blockchain.utils.BlockGenerator;
-import co.usc.config.TestSystemProperties;
-import co.usc.db.RepositoryImpl;
-import co.usc.peg.simples.SimpleBlockChain;
-import co.usc.peg.simples.SimpleUscTransaction;
-import co.usc.peg.simples.SimpleWallet;
-import co.usc.test.builders.BlockChainBuilder;
+import co.usc.trie.TrieStoreImpl;
 import com.google.common.collect.Lists;
-import org.ethereum.config.blockchain.RegTestConfig;
+import org.bouncycastle.asn1.x9.X9ECParameters;
+import org.bouncycastle.crypto.ec.CustomNamedCurves;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
+import org.bouncycastle.crypto.signers.ECDSASigner;
+import org.bouncycastle.util.BigIntegers;
+import org.bouncycastle.util.encoders.Hex;
+import org.ethereum.config.BlockchainNetConfig;
+import org.ethereum.config.blockchain.regtest.RegTestShakespeareConfig;
+import org.ethereum.config.blockchain.regtest.RegTestGenesisConfig;
 import org.ethereum.config.net.TestNetConfig;
 import org.ethereum.core.*;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.crypto.HashUtil;
 import org.ethereum.crypto.Keccak256Helper;
+import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.ReceiptStore;
 import org.ethereum.util.ByteUtil;
 import org.ethereum.util.RLP;
 import org.ethereum.util.RLPElement;
 import org.ethereum.util.RLPList;
+import org.ethereum.vm.DataWord;
 import org.ethereum.vm.LogInfo;
 import org.ethereum.vm.PrecompiledContracts;
+import org.ethereum.vm.program.InternalTransaction;
 import org.ethereum.vm.program.Program;
-import org.hamcrest.Matchers;
+import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,9 +86,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.spongycastle.crypto.params.ECPrivateKeyParameters;
-import org.spongycastle.crypto.signers.ECDSASigner;
-import org.spongycastle.util.encoders.Hex;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -112,6 +121,7 @@ public class BridgeSupportTest {
     private static BridgeConstants bridgeConstants;
     private static NetworkParameters uldParams;
     private TestSystemProperties config;
+    private BridgeStorageConfiguration bridgeStorageConfigurationAtHeightZero;
 
     private static final String TO_ADDRESS = "0000000000000000000000000000000000000006";
     private static final BigInteger DUST_AMOUNT = new BigInteger("1");
@@ -124,18 +134,19 @@ public class BridgeSupportTest {
     @Before
     public void setUpOnEachTest(){
         config = new TestSystemProperties();
-        config.setBlockchainConfig(new RegTestConfig());
+        config.setBlockchainConfig(new RegTestGenesisConfig());
         bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         uldParams = bridgeConstants.getUldParams();
+        bridgeStorageConfigurationAtHeightZero = BridgeStorageConfiguration.fromBlockchainConfig(config.getBlockchainConfig().getConfigForBlock(0));
     }
 
     @Test
     public void testInitialChainHeadWithoutUldCheckpoints() throws Exception {
         NetworkParameters _networkParameters = uldParams;
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, bridgeConstants);
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, bridgeConstants, bridgeStorageConfigurationAtHeightZero);
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
         // Force instantiation of blockstore
@@ -153,10 +164,10 @@ public class BridgeSupportTest {
         bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
         uldParams = bridgeConstants.getUldParams();
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
         // Force instantiation of blockstore
@@ -167,10 +178,10 @@ public class BridgeSupportTest {
 
     @Test
     public void feePerKbFromStorageProvider() throws Exception {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Coin expected = Coin.MILLICOIN;
         provider.setFeePerKb(expected);
@@ -185,10 +196,10 @@ public class BridgeSupportTest {
     public void testGetUldBlockchainBlockLocatorWithoutUldCheckpoints() throws Exception {
         NetworkParameters _networkParameters = uldParams;
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
         // Force instantiation of blockstore
@@ -214,15 +225,14 @@ public class BridgeSupportTest {
         Assert.assertEquals(_networkParameters.getGenesisBlock().getHash(), locator.get(5));
     }
 
-
     @Test
     public void testGetUldBlockchainBlockLocatorWithUldCheckpoints() throws Exception {
         NetworkParameters _networkParameters = uldParams;
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         List<UldBlock> checkpoints = createUldBlocks(_networkParameters, _networkParameters.getGenesisBlock(), 10);
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null) {
             @Override
@@ -300,7 +310,7 @@ public class BridgeSupportTest {
 
     @Test
     public void callUpdateCollectionsGenerateEventLog() throws IOException, BlockStoreException {
-        Repository track = new RepositoryImpl(config).startTracking();
+        Repository track = createRepositoryImpl(config).startTracking();
 
         BlockGenerator blockGenerator = new BlockGenerator();
         List<Block> blocks = blockGenerator.getSimpleBlockChain(blockGenerator.getGenesisBlock(), 10);
@@ -335,10 +345,10 @@ public class BridgeSupportTest {
         // Federation is the genesis federation ATM
         Federation federation = bridgeConstants.getGenesisFederation();
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         provider0.getReleaseRequestQueue().add(new UldECKey().toAddress(uldParams), Coin.valueOf(30,0));
         provider0.getReleaseRequestQueue().add(new UldECKey().toAddress(uldParams), Coin.valueOf(20,0));
@@ -375,7 +385,8 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        // reusing same bridge storage configuration as the height doesn't affect it for releases
+        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(2, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(1, provider.getReleaseTransactionSet().getEntries().size());
@@ -391,10 +402,10 @@ public class BridgeSupportTest {
         // Federation is the genesis federation ATM
         Federation federation = bridgeConstants.getGenesisFederation();
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         provider0.getReleaseRequestQueue().add(new UldECKey().toAddress(uldParams), Coin.valueOf(37500));
         provider0.setFeePerKb(Coin.MILLICOIN);
@@ -435,7 +446,8 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        // reusing same bridge storage configuration as it doesn't affect the release transactions
+        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(1, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider.getReleaseTransactionSet().getEntries().size());
@@ -449,10 +461,10 @@ public class BridgeSupportTest {
         // Federation is the genesis federation ATM
         Federation federation = bridgeConstants.getGenesisFederation();
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         provider0.getReleaseRequestQueue().add(new UldECKey().toAddress(uldParams), Coin.COIN.multiply(7));
         for (int i = 0; i < 2000; i++) {
@@ -495,7 +507,8 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        // keeping same bridge storage configuration
+        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(1, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider.getReleaseTransactionSet().getEntries().size());
@@ -532,7 +545,7 @@ public class BridgeSupportTest {
         org.ethereum.core.Block uscCurrentBlock = blockGenerator.createBlock(35, 1);
         Transaction tx = Transaction.create(config, TO_ADDRESS, DUST_AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, uscCurrentBlock);
 
@@ -602,7 +615,7 @@ public class BridgeSupportTest {
         Repository repository = blockchain.getRepository();
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         provider0.getReleaseRequestQueue().add(new UldECKey().toAddress(uldParams), Coin.COIN);
         provider0.getNewFederationUldUTXOs().add(new UTXO(PegTestUtils.createHash(), 1, Coin.COIN.add(Coin.valueOf(100)), 0, false, ScriptBuilder.createOutputScript(federation.getAddress())));
@@ -623,7 +636,8 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        // reusing same bridge storage configuration
+        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(0, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(1, provider.getReleaseTransactionSet().getEntries().size());
@@ -644,10 +658,10 @@ public class BridgeSupportTest {
         PowerMockito.mockStatic(BridgeUtils.class);
         PowerMockito.when(BridgeUtils.getFederationSpendWallet(any(Context.class), any(Federation.class), any(List.class))).thenReturn(new SimpleWallet(context));
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
-        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider0 = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         UldTransaction txs = new UldTransaction(uldParams);
         txs.addOutput(Coin.ONE_COIN, new UldECKey());
@@ -673,7 +687,7 @@ public class BridgeSupportTest {
         track.commit();
 
         track = repository.startTracking();
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         BlockGenerator blockGenerator = new BlockGenerator();
         List<Block> blocks = blockGenerator.getSimpleBlockChain(blockGenerator.getGenesisBlock(), 10);
@@ -695,7 +709,7 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(2, provider2.getReleaseTransactionSet().getEntries().size());
@@ -704,7 +718,7 @@ public class BridgeSupportTest {
 
     @Test
     public void sendOrphanBlockHeader() throws IOException, BlockStoreException {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         BridgeConstants bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
@@ -712,7 +726,7 @@ public class BridgeSupportTest {
         UldBlockstoreWithCache uldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
         UldBlockChain uldBlockChain = new UldBlockChain(uldContext, uldBlockStore);
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, null, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), provider, uldBlockStore, uldBlockChain, null);
 
@@ -730,7 +744,7 @@ public class BridgeSupportTest {
 
     @Test
     public void addBlockHeaderToBlockchain() throws IOException, BlockStoreException {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         BridgeConstants bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
@@ -738,7 +752,7 @@ public class BridgeSupportTest {
         UldBlockstoreWithCache uldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
         UldBlockChain uldBlockChain = new SimpleBlockChain(uldContext, uldBlockStore);
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, null, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), provider, uldBlockStore, uldBlockChain, null);
 
@@ -758,7 +772,7 @@ public class BridgeSupportTest {
     public void addSignatureToMissingTransaction() throws Exception {
         // Federation is the genesis federation ATM
         Federation federation = bridgeConstants.getGenesisFederation();
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), PrecompiledContracts.BRIDGE_ADDR, (Block) null);
@@ -768,14 +782,14 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertTrue(provider.getUscTxsWaitingForSignatures().isEmpty());
     }
 
     @Test
     public void addSignatureFromInvalidFederator() throws Exception {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), PrecompiledContracts.BRIDGE_ADDR, (Block) null);
@@ -785,7 +799,7 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertTrue(provider.getUscTxsWaitingForSignatures().isEmpty());
     }
@@ -817,8 +831,8 @@ public class BridgeSupportTest {
     public void addSignatureCreateEventLog() throws Exception {
         // Setup
         Federation federation = bridgeConstants.getGenesisFederation();
-        Repository track = new RepositoryImpl(config).startTracking();
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, bridgeConstants);
+        Repository track = createRepositoryImpl(config).startTracking();
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, bridgeConstants, bridgeStorageConfigurationAtHeightZero);
 
         // Build prev uld tx
         UldTransaction prevTx = new UldTransaction(uldParams);
@@ -900,12 +914,12 @@ public class BridgeSupportTest {
     public void addSignatureMultipleInputsPartiallyValid() throws Exception {
         // Federation is the genesis federation ATM
         Federation federation = bridgeConstants.getGenesisFederation();
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
 
         final Keccak256 keccak256 = PegTestUtils.createHash3();
 
         Repository track = repository.startTracking();
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, bridgeConstants);
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, bridgeConstants, bridgeStorageConfigurationAtHeightZero);
 
         UldTransaction prevTx1 = new UldTransaction(uldParams);
         TransactionOutput prevOut1 = new TransactionOutput(uldParams, prevTx1, Coin.ONE_COIN, federation.getAddress());
@@ -983,14 +997,14 @@ public class BridgeSupportTest {
         bridgeSupport.save();
         track.commit();
 
-        provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, bridgeConstants);
+        provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, bridgeConstants, bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertTrue(provider.getUscTxsWaitingForSignatures().isEmpty());
         Assert.assertThat(logs, is(not(empty())));
         Assert.assertThat(logs, hasSize(5));
         LogInfo releaseTxEvent = logs.get(4);
         Assert.assertThat(releaseTxEvent.getTopics(), hasSize(1));
-        Assert.assertThat(releaseTxEvent.getTopics(), Matchers.hasItem(Bridge.RELEASE_ULD_TOPIC));
+        Assert.assertThat(releaseTxEvent.getTopics(), hasItem(Bridge.RELEASE_ULD_TOPIC));
         UldTransaction releaseTx = new UldTransaction(bridgeConstants.getUldParams(), ((RLPList)RLP.decode2(releaseTxEvent.getData()).get(0)).get(1).getRLPData());
         // Verify all inputs fully signed
         for (int i = 0; i < releaseTx.getInputs().size(); i++) {
@@ -1012,12 +1026,12 @@ public class BridgeSupportTest {
     private void addSignatureFromValidFederator(List<UldECKey> privateKeysToSignWith, int numberOfInputsToSign, boolean signatureCanonical, boolean signTwice, String expectedResult) throws Exception {
         // Federation is the genesis federation ATM
         Federation federation = bridgeConstants.getGenesisFederation();
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
 
         final Keccak256 keccak256 = PegTestUtils.createHash3();
 
         Repository track = repository.startTracking();
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         UldTransaction prevTx = new UldTransaction(uldParams);
         TransactionOutput prevOut = new TransactionOutput(uldParams, prevTx, Coin.ONE_COIN, federation.getAddress());
@@ -1056,7 +1070,9 @@ public class BridgeSupportTest {
         if (signTwice) {
             // Create another valid signature with the same private key
             ECDSASigner signer = new ECDSASigner();
-            ECPrivateKeyParameters privKey = new ECPrivateKeyParameters(privateKeysToSignWith.get(0).getPrivKey(), UldECKey.CURVE);
+            X9ECParameters CURVE_PARAMS = CustomNamedCurves.getByName("secp256k1");
+            ECDomainParameters CURVE = new ECDomainParameters(CURVE_PARAMS.getCurve(), CURVE_PARAMS.getG(), CURVE_PARAMS.getN(), CURVE_PARAMS.getH());
+            ECPrivateKeyParameters privKey = new ECPrivateKeyParameters(privateKeysToSignWith.get(0).getPrivKey(), CURVE);
             signer.init(true, privKey);
             BigInteger[] components = signer.generateSignature(sighash.getBytes());
             UldECKey.ECDSASignature sig2 = new UldECKey.ECDSASignature(components[0], components[1]).toCanonicalised();
@@ -1074,7 +1090,7 @@ public class BridgeSupportTest {
         bridgeSupport.save();
         track.commit();
 
-        provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        provider = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         if ("FullySigned".equals(expectedResult)) {
             Assert.assertTrue(provider.getUscTxsWaitingForSignatures().isEmpty());
@@ -1082,7 +1098,7 @@ public class BridgeSupportTest {
             Assert.assertThat(logs, hasSize(3));
             LogInfo releaseTxEvent = logs.get(2);
             Assert.assertThat(releaseTxEvent.getTopics(), hasSize(1));
-            Assert.assertThat(releaseTxEvent.getTopics(), Matchers.hasItem(Bridge.RELEASE_ULD_TOPIC));
+            Assert.assertThat(releaseTxEvent.getTopics(), hasItem(Bridge.RELEASE_ULD_TOPIC));
             UldTransaction releaseTx = new UldTransaction(bridgeConstants.getUldParams(), ((RLPList)RLP.decode2(releaseTxEvent.getData()).get(0)).get(1).getRLPData());
             Script retrievedScriptSig = releaseTx.getInput(0).getScriptSig();
             Assert.assertEquals(4, retrievedScriptSig.getChunks().size());
@@ -1111,14 +1127,14 @@ public class BridgeSupportTest {
 
     @Test
     public void releaseUldWithDustOutput() throws BlockStoreException, AddressFormatException, IOException {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         org.ethereum.core.Transaction tx = org.ethereum.core.Transaction.create(config, TO_ADDRESS, DUST_AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);;
 
         tx.sign(new org.ethereum.crypto.ECKey().getPrivKeyBytes());
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
         bridgeSupport.releaseUld(tx);
@@ -1126,7 +1142,7 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(0, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
@@ -1135,14 +1151,14 @@ public class BridgeSupportTest {
 
     @Test
     public void releaseUld() throws BlockStoreException, AddressFormatException, IOException {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         org.ethereum.core.Transaction tx = org.ethereum.core.Transaction.create(config, TO_ADDRESS, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);;
 
         tx.sign(new org.ethereum.crypto.ECKey().getPrivKeyBytes());
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
         bridgeSupport.releaseUld(tx);
@@ -1150,7 +1166,7 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(1, provider.getReleaseRequestQueue().getEntries().size());
         Assert.assertEquals(1, provider2.getReleaseRequestQueue().getEntries().size());
@@ -1159,14 +1175,14 @@ public class BridgeSupportTest {
 
     @Test
     public void releaseUldFromContract() throws BlockStoreException, AddressFormatException, IOException {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         org.ethereum.core.Transaction tx = org.ethereum.core.Transaction.create(config, TO_ADDRESS, AMOUNT, NONCE, GAS_PRICE, GAS_LIMIT, DATA);;
 
         tx.sign(new org.ethereum.crypto.ECKey().getPrivKeyBytes());
         track.saveCode(tx.getSender(), new byte[] {0x1});
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
         try {
@@ -1179,11 +1195,11 @@ public class BridgeSupportTest {
 
     @Test
     public void registerUldTransactionOfAlreadyProcessedTransaction() throws BlockStoreException, AddressFormatException, IOException {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         UldTransaction tx = createTransaction();
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         provider.getUldTxHashesAlreadyProcessed().put(tx.getHash(), 1L);
 
@@ -1194,7 +1210,7 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertTrue(provider2.getNewFederationUldUTXOs().isEmpty());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
@@ -1205,11 +1221,11 @@ public class BridgeSupportTest {
 
     @Test
     public void registerUldTransactionOfTransactionNotInMerkleTree() throws BlockStoreException, AddressFormatException, IOException {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         UldTransaction tx = createTransaction();
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
@@ -1225,7 +1241,7 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertTrue(provider2.getNewFederationUldUTXOs().isEmpty());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
@@ -1236,11 +1252,11 @@ public class BridgeSupportTest {
 
     @Test
     public void registerUldTransactionOfTransactionInMerkleTreeWithNegativeHeight() throws BlockStoreException, AddressFormatException, IOException {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         UldTransaction tx = createTransaction();
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
@@ -1256,7 +1272,7 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertTrue(provider2.getNewFederationUldUTXOs().isEmpty());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
@@ -1269,11 +1285,11 @@ public class BridgeSupportTest {
     public void registerUldTransactionOfTransactionInMerkleTreeWithNotEnoughtHeight() throws BlockStoreException, AddressFormatException, IOException {
         NetworkParameters _networkParameters = uldParams;
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         UldTransaction tx = createTransaction();
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, mock(BridgeEventLogger.class), provider, null);
 
@@ -1289,7 +1305,7 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertTrue(provider2.getNewFederationUldUTXOs().isEmpty());
         Assert.assertEquals(0, provider2.getReleaseRequestQueue().getEntries().size());
@@ -1334,7 +1350,7 @@ public class BridgeSupportTest {
 
     @Test
     public void registerUldTransactionTxNotLockNorReleaseTx() throws BlockStoreException, AddressFormatException, IOException {
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         Repository track = repository.startTracking();
 
         BridgeConstants bridgeConstants = config.getBlockchainConfig().getCommonConstants().getBridgeConstants();
@@ -1349,7 +1365,7 @@ public class BridgeSupportTest {
         UldBlockstoreWithCache uldBlockStore = new RepositoryBlockStore(config, track, PrecompiledContracts.BRIDGE_ADDR);
         UldBlockChain uldBlockChain = new SimpleBlockChain(uldContext, uldBlockStore);
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, null, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), provider, uldBlockStore, uldBlockChain, null);
 
@@ -1371,7 +1387,7 @@ public class BridgeSupportTest {
 
         track.commit();
 
-        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(0, provider2.getNewFederationUldUTXOs().size());
 
@@ -1385,7 +1401,7 @@ public class BridgeSupportTest {
     public void registerUldTransactionReleaseTx() throws BlockStoreException, AddressFormatException, IOException {
         // Federation is the genesis federation ATM
         Federation federation = bridgeConstants.getGenesisFederation();
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         repository.addBalance(PrecompiledContracts.BRIDGE_ADDR, LIMIT_MONETARY_BASE);
         Repository track = repository.startTracking();
         Block executionBlock = Mockito.mock(Block.class);
@@ -1425,7 +1441,7 @@ public class BridgeSupportTest {
 
         UldBlockstoreWithCache uldBlockStore = mock(UldBlockstoreWithCache.class);
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, null, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), provider, uldBlockStore, null, executionBlock);
 
@@ -1451,7 +1467,7 @@ public class BridgeSupportTest {
 
         Assert.assertEquals(LIMIT_MONETARY_BASE, repository.getBalance(PrecompiledContracts.BRIDGE_ADDR));
 
-        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(1, provider2.getNewFederationUldUTXOs().size());
         Assert.assertEquals(Coin.COIN, provider2.getNewFederationUldUTXOs().get(0).getValue());
@@ -1479,7 +1495,7 @@ public class BridgeSupportTest {
         ).sorted(UldECKey.PUBKEY_COMPARATOR).collect(Collectors.toList());
         Federation retiringFederation = new Federation(retiringFederationKeys, Instant.ofEpochMilli(1000L), 1L, parameters);
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         repository.addBalance(PrecompiledContracts.BRIDGE_ADDR, LIMIT_MONETARY_BASE);
         Block executionBlock = Mockito.mock(Block.class);
         Mockito.when(executionBlock.getNumber()).thenReturn(15L);
@@ -1516,7 +1532,7 @@ public class BridgeSupportTest {
 
         UldBlockstoreWithCache uldBlockStore = mock(UldBlockstoreWithCache.class);
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         provider.setNewFederation(activeFederation);
         provider.setOldFederation(retiringFederation);
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, null, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), provider, uldBlockStore, null, executionBlock);
@@ -1567,7 +1583,7 @@ public class BridgeSupportTest {
         federation2Keys.sort(UldECKey.PUBKEY_COMPARATOR);
         Federation federation2 = new Federation(federation2Keys, Instant.ofEpochMilli(2000L), 0L, parameters);
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         repository.addBalance(PrecompiledContracts.BRIDGE_ADDR, LIMIT_MONETARY_BASE);
         Block executionBlock = Mockito.mock(Block.class);
         Mockito.when(executionBlock.getNumber()).thenReturn(10L);
@@ -1596,7 +1612,7 @@ public class BridgeSupportTest {
 
         UldBlockstoreWithCache uldBlockStore = mock(UldBlockstoreWithCache.class);
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         provider.setNewFederation(federation1);
         provider.setOldFederation(federation2);
 
@@ -1605,9 +1621,9 @@ public class BridgeSupportTest {
         Address address1 = srcKey1.toAddress(parameters);
         Address address2 = srcKey2.toAddress(parameters);
         Address address3 = srcKey3.toAddress(parameters);
-        whitelist.put(address1, Coin.COIN.multiply(5));
-        whitelist.put(address2, Coin.COIN.multiply(10));
-        whitelist.put(address3, Coin.COIN.multiply(2).add(Coin.COIN.multiply(3)));
+        whitelist.put(address1, new OneOffWhiteListEntry(address1, Coin.COIN.multiply(5)));
+        whitelist.put(address2, new OneOffWhiteListEntry(address2, Coin.COIN.multiply(10)));
+        whitelist.put(address3, new OneOffWhiteListEntry(address3, Coin.COIN.multiply(2).add(Coin.COIN.multiply(3))));
 
         BridgeSupport bridgeSupport = new BridgeSupport(config, track, null, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), provider, uldBlockStore, null, executionBlock);
         byte[] bits = new byte[1];
@@ -1652,7 +1668,7 @@ public class BridgeSupportTest {
         Assert.assertEquals(amountToHaveBeenCreditedToSrc3, repository.getBalance(srcKey3UscAddress));
         Assert.assertEquals(LIMIT_MONETARY_BASE.subtract(totalAmountExpectedToHaveBeenLocked), repository.getBalance(PrecompiledContracts.BRIDGE_ADDR));
 
-        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(2, provider2.getNewFederationUldUTXOs().size());
         Assert.assertEquals(2, provider2.getOldFederationUldUTXOs().size());
@@ -1687,7 +1703,7 @@ public class BridgeSupportTest {
         federation2Keys.sort(UldECKey.PUBKEY_COMPARATOR);
         Federation federation2 = new Federation(federation2Keys, Instant.ofEpochMilli(2000L), 0L, parameters);
 
-        Repository repository = new RepositoryImpl(config);
+        Repository repository = createRepositoryImpl(config);
         repository.addBalance(PrecompiledContracts.BRIDGE_ADDR, LIMIT_MONETARY_BASE);
         Block executionBlock = Mockito.mock(Block.class);
         Mockito.when(executionBlock.getNumber()).thenReturn(10L);
@@ -1716,7 +1732,7 @@ public class BridgeSupportTest {
 
         UldBlockstoreWithCache uldBlockStore = mock(UldBlockstoreWithCache.class);
 
-        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider = new BridgeStorageProvider(track, contractAddress, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
         provider.setNewFederation(federation1);
         provider.setOldFederation(federation2);
 
@@ -1758,7 +1774,7 @@ public class BridgeSupportTest {
         Assert.assertEquals(0, repository.getBalance(srcKey3UscAddress).asBigInteger().intValue());
         Assert.assertEquals(LIMIT_MONETARY_BASE, repository.getBalance(PrecompiledContracts.BRIDGE_ADDR));
 
-        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants());
+        BridgeStorageProvider provider2 = new BridgeStorageProvider(repository, PrecompiledContracts.BRIDGE_ADDR, config.getBlockchainConfig().getCommonConstants().getBridgeConstants(), bridgeStorageConfigurationAtHeightZero);
 
         Assert.assertEquals(0, provider2.getNewFederationUldUTXOs().size());
         Assert.assertEquals(0, provider2.getOldFederationUldUTXOs().size());
@@ -2725,18 +2741,19 @@ public class BridgeSupportTest {
         NetworkParameters parameters = NetworkParameters.fromID(NetworkParameters.ID_REGTEST);
         LockWhitelist mockedWhitelist = mock(LockWhitelist.class);
         when(mockedWhitelist.getSize()).thenReturn(4);
-        List<Address> addresses = Arrays.stream(new Integer[]{2,3,4,5}).map(i ->
-            new Address(parameters, UldECKey.fromPrivate(BigInteger.valueOf(i)).getPubKeyHash())
+        List<LockWhitelistEntry> entries = Arrays.stream(new Integer[]{2,3,4,5}).map(i ->
+                new UnlimitedWhiteListEntry(new Address(parameters, UldECKey.fromPrivate(BigInteger.valueOf(i)).getPubKeyHash()))
         ).collect(Collectors.toList());
-        when(mockedWhitelist.getAddresses()).thenReturn(addresses);
+        when(mockedWhitelist.getAll()).thenReturn(entries);
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForWhitelistTests(mockedWhitelist);
 
         Assert.assertEquals(4, bridgeSupport.getLockWhitelistSize().intValue());
-        Assert.assertNull(bridgeSupport.getLockWhitelistAddress(-1));
-        Assert.assertNull(bridgeSupport.getLockWhitelistAddress(4));
-        Assert.assertNull(bridgeSupport.getLockWhitelistAddress(5));
+        Assert.assertNull(bridgeSupport.getLockWhitelistEntryByIndex(-1));
+        Assert.assertNull(bridgeSupport.getLockWhitelistEntryByIndex(4));
+        Assert.assertNull(bridgeSupport.getLockWhitelistEntryByIndex(5));
         for (int i = 0; i < 4; i++) {
-            Assert.assertEquals(addresses.get(i).toBase58(), bridgeSupport.getLockWhitelistAddress(i));
+            Assert.assertEquals(entries.get(i), bridgeSupport.getLockWhitelistEntryByIndex(i));
+            Assert.assertEquals(entries.get(i), bridgeSupport.getLockWhitelistEntryByAddress(entries.get(i).address().toBase58()));
         }
     }
 
@@ -2752,13 +2769,13 @@ public class BridgeSupportTest {
         LockWhitelist mockedWhitelist = mock(LockWhitelist.class);
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForWhitelistTests(mockedWhitelist);
 
-        when(mockedWhitelist.put(any(Address.class), any(Coin.class))).then((InvocationOnMock m) -> {
+        when(mockedWhitelist.put(any(Address.class), any(OneOffWhiteListEntry.class))).then((InvocationOnMock m) -> {
             Address address = m.getArgumentAt(0, Address.class);
             Assert.assertEquals("mwKcYS3H8FUgrPtyGMv3xWvf4jgeZUkCYN", address.toBase58());
             return true;
         });
 
-        Assert.assertEquals(1, bridgeSupport.addLockWhitelistAddress(mockedTx, "mwKcYS3H8FUgrPtyGMv3xWvf4jgeZUkCYN", BigInteger.valueOf(Coin.COIN.getValue())).intValue());
+        Assert.assertEquals(1, bridgeSupport.addOneOffLockWhitelistAddress(mockedTx, "mwKcYS3H8FUgrPtyGMv3xWvf4jgeZUkCYN", BigInteger.valueOf(Coin.COIN.getValue())).intValue());
     }
 
     @Test
@@ -2776,7 +2793,7 @@ public class BridgeSupportTest {
         ArgumentCaptor<Address> argument = ArgumentCaptor.forClass(Address.class);
         when(mockedWhitelist.isWhitelisted(any(Address.class))).thenReturn(true);
 
-        Assert.assertEquals(-1, bridgeSupport.addLockWhitelistAddress(mockedTx, "mwKcYS3H8FUgrPtyGMv3xWvf4jgeZUkCYN", BigInteger.valueOf(Coin.COIN.getValue())).intValue());
+        Assert.assertEquals(-1, bridgeSupport.addOneOffLockWhitelistAddress(mockedTx, "mwKcYS3H8FUgrPtyGMv3xWvf4jgeZUkCYN", BigInteger.valueOf(Coin.COIN.getValue())).intValue());
         verify(mockedWhitelist).isWhitelisted(argument.capture());
         Assert.assertThat(argument.getValue().toBase58(), is("mwKcYS3H8FUgrPtyGMv3xWvf4jgeZUkCYN"));
     }
@@ -2790,7 +2807,7 @@ public class BridgeSupportTest {
         LockWhitelist mockedWhitelist = mock(LockWhitelist.class);
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForWhitelistTests(mockedWhitelist);
 
-        Assert.assertEquals(BridgeSupport.LOCK_WHITELIST_GENERIC_ERROR_CODE.intValue(), bridgeSupport.addLockWhitelistAddress(mockedTx, "mwKcYS3H8FUgrPtyGMv3xWvf4jgeZUkCYN", BigInteger.valueOf(Coin.COIN.getValue())).intValue());
+        Assert.assertEquals(BridgeSupport.LOCK_WHITELIST_GENERIC_ERROR_CODE.intValue(), bridgeSupport.addOneOffLockWhitelistAddress(mockedTx, "mwKcYS3H8FUgrPtyGMv3xWvf4jgeZUkCYN", BigInteger.valueOf(Coin.COIN.getValue())).intValue());
         verify(mockedWhitelist, never()).put(any(), any());
     }
 
@@ -2806,7 +2823,7 @@ public class BridgeSupportTest {
         LockWhitelist mockedWhitelist = mock(LockWhitelist.class);
         BridgeSupport bridgeSupport = getBridgeSupportWithMocksForWhitelistTests(mockedWhitelist);
 
-        Assert.assertEquals(-2, bridgeSupport.addLockWhitelistAddress(mockedTx, "i-am-invalid", BigInteger.valueOf(Coin.COIN.getValue())).intValue());
+        Assert.assertEquals(-2, bridgeSupport.addOneOffLockWhitelistAddress(mockedTx, "i-am-invalid", BigInteger.valueOf(Coin.COIN.getValue())).intValue());
         verify(mockedWhitelist, never()).put(any(), any());
     }
 
@@ -3163,5 +3180,9 @@ public class BridgeSupportTest {
 
         // Last one should be the block we need
         when(uldBlockStore.getFromCache(prevHash)).thenReturn(new StoredBlock(targetHeader, BigInteger.ONE, targetHeight));
+    }
+
+    public static RepositoryImpl createRepositoryImpl(UscSystemProperties config) {
+        return new RepositoryImpl(null, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
     }
 }

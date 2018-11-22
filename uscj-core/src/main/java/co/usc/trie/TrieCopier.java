@@ -21,8 +21,6 @@ package co.usc.trie;
 import co.usc.core.UscAddress;
 import co.usc.crypto.Keccak256;
 import co.usc.db.ContractDetailsImpl;
-import co.usc.core.UscAddress;
-import co.usc.db.ContractDetailsImpl;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Block;
 import org.ethereum.core.Blockchain;

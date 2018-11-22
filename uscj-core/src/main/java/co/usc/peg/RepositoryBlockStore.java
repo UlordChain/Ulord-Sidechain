@@ -20,7 +20,6 @@ package co.usc.peg;
 
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.store.BlockStoreException;
-import co.usc.ulordj.store.UldBlockStore;
 import co.usc.core.UscAddress;
 import co.usc.util.MaxSizeHashMap;
 import org.ethereum.config.SystemProperties;
@@ -41,7 +40,7 @@ public class RepositoryBlockStore implements UldBlockstoreWithCache {
 
     // power of 2 size that contains enough hashes to handle one year of blocks
     private static final int MAX_SIZE_MAP_STORED_BLOCKS = 65535;
-    private static Map<Sha256Hash, StoredBlock> knownBlocks = new MaxSizeHashMap<>(MAX_SIZE_MAP_STORED_BLOCKS);
+    private static Map<Sha256Hash, StoredBlock> knownBlocks = new MaxSizeHashMap<>(MAX_SIZE_MAP_STORED_BLOCKS, false);
 
     private final Repository repository;
     private final UscAddress contractAddress;
@@ -91,6 +90,8 @@ public class RepositoryBlockStore implements UldBlockstoreWithCache {
         if (storedBlock != null) {
             return storedBlock;
         }
+
+
 
         storedBlock = byteArrayToStoredBlock(ba);
 
