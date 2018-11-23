@@ -23,6 +23,7 @@ import co.usc.core.UscAddress;
 import co.usc.trie.TrieCopier;
 import co.usc.trie.TrieStore;
 import co.usc.trie.TrieStoreImpl;
+import org.ethereum.config.BlockchainConfig;
 import org.ethereum.core.Blockchain;
 import org.ethereum.datasource.KeyValueDataSource;
 import org.ethereum.util.FileUtil;
@@ -77,6 +78,14 @@ public class PruneService {
                 logger.info("Prune done");
 
                 nextBlockNumber = this.blockchain.getStatus().getBestBlockNumber() + this.pruneConfiguration.getNoBlocksToWait();
+            }
+
+            BlockchainConfig configForBlock = uscConfiguration.getBlockchainConfig().getConfigForBlock(bestBlockNumber);
+            if (configForBlock.isUscIP85()) {
+                logger.info("UscIP85 activated, prune is not necessary anymore");
+                stop();
+                // returning will stop the thread
+                return;
             }
 
             try {
