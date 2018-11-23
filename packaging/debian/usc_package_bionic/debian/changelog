@@ -1,3 +1,33 @@
+usc (1.0.0~bionic) bionic; urgency=medium
+  
+  * Remasc contract: performance and scalability improvements.
+  
+  * Added restrictions to bridge methods to local calls only.
+  
+  * Bridge sync transactions performance improvements.
+  
+  * EXTCODESIZE support for native contracts.
+  
+  * Removed - difficulty drop to minimum difficulty.
+  
+  * Added STATICCALL opcode.
+  
+  * Some code cleanups.
+  
+  * Disabled fallback mining.
+  
+  * Merkle proof serialization.
+
+ -- ulordsidechain <usc@ulord.net>  Wed, 21 Nov 2018 15:00:00 -0300
+ 
+usc (0.1.5~bionic) bionic; urgency=medium
+  
+  * Unlimited Whitelisting: Whitelist once and transfer as many times as you want.
+  
+  * Optimized some RPC calls.
+
+ -- ulordsidechain <usc@ulord.net>  Sat, 10 Nov 2018 08:55:00 -0300
+ 
 usc (0.1.1~bionic) bionic; urgency=medium
   
   * Initial release for USC Mainnet.
