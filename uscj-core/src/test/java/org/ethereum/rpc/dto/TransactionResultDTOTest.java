@@ -18,34 +18,24 @@
 
 package org.ethereum.rpc.dto;
 
-import co.usc.core.Coin;
-import co.usc.crypto.Keccak256;
-import co.usc.remasc.RemascTransaction;
-import org.ethereum.TestUtils;
-import org.ethereum.core.Block;
-import org.ethereum.core.Transaction;
 import org.junit.Test;
+import java.util.Random;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import co.usc.remasc.RemascTransaction;
+import org.ethereum.core.Block;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class TransactionResultDTOTest {
     @Test
     public void remascAddressSerialization() {
-        Block b = mock(Block.class);
-        Integer index = 42;
-        Transaction tx = mock(Transaction.class);
-
-        when(tx.getHash()).thenReturn(new Keccak256(TestUtils.randomBytes(32)));
-        when(tx.getSender()).thenReturn(RemascTransaction.REMASC_ADDRESS);
-        when(tx.getReceiveAddress()).thenReturn(TestUtils.randomAddress());
-        when(tx.getGasPrice()).thenReturn(Coin.valueOf(42));
-        when(tx.getValue()).thenReturn(Coin.ZERO);
-        when(tx.getData()).thenReturn(TestUtils.randomBytes(2));
-
-        TransactionResultDTO dto = new TransactionResultDTO(b, index, tx);
-        assertThat(dto.from, is("0x0000000000000000000000000000000000000000"));
+        RemascTransaction remascTransaction = new RemascTransaction(new Random().nextLong());
+        TransactionResultDTO dto = new TransactionResultDTO(mock(Block.class), 42, remascTransaction);
+        assertThat(dto.from, is("0x0000000000000000000000000000000000000000"));	        assertThat(dto.from, is("0x0000000000000000000000000000000000000000"));
+        assertThat(dto.r, is(nullValue()));
+        assertThat(dto.s, is(nullValue()));
+        assertThat(dto.v, is(nullValue()));
     }
 }

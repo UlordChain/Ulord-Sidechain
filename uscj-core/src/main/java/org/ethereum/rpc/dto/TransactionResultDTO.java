@@ -23,6 +23,7 @@ import co.usc.core.UscAddress;
 import co.usc.remasc.RemascTransaction;
 import org.ethereum.core.Block;
 import org.ethereum.core.Transaction;
+import org.ethereum.crypto.ECKey;
 import org.ethereum.rpc.TypeConverter;
 import org.ethereum.util.ByteUtil;
 
@@ -45,6 +46,10 @@ public class TransactionResultDTO {
     public String gasPrice;
     public String value;
     public String input;
+
+    public String v;
+    public String r;
+    public String s;
 
     public TransactionResultDTO(Block b, Integer index, Transaction tx) {
         hash = tx.getHash().toJsonString();
@@ -71,19 +76,24 @@ public class TransactionResultDTO {
         }
 
         input = TypeConverter.toJsonHex(tx.getData());
+
+        if (tx instanceof RemascTransaction) {
+            // Web3.js requires the address to be valid (20 bytes),
+            // so we have to serialize the Remasc sender as a valid address.
+            from = TypeConverter.toJsonHex(new byte[20]);
+        } else {
+            ECKey.ECDSASignature signature = tx.getSignature();
+            v = String.format("0x%02X", signature.v);
+            r = TypeConverter.toJsonHex(signature.r);
+            s = TypeConverter.toJsonHex(signature.s);
+        }
     }
 
     private String addressToJsonHex(UscAddress address) {
         if (UscAddress.nullAddress().equals(address)) {
             return null;
         }
-        // Web3.js requires the address to be valid (20 bytes),
-        // so we have to serialize the Remasc sender as a valid address.
-        if (address.equals(RemascTransaction.REMASC_ADDRESS)) {
-            return TypeConverter.toJsonHex(new byte[20]);
-        }
 
         return TypeConverter.toJsonHex(address.getBytes());
     }
-
 }

@@ -71,7 +71,7 @@ public class Capability implements Comparable<Capability> {
         if (cmp != 0) {
             return cmp;
         } else {
-            return Byte.valueOf(this.version).compareTo(o.version);
+            return Byte.compare(this.version, o.version);
         }
     }
 

@@ -349,7 +349,7 @@ public class SyncPool implements Iterable<Channel> {
             Collections.sort(filtered, new Comparator<Channel>() {
                 @Override
                 public int compare(Channel c1, Channel c2) {
-                    return Double.valueOf(c1.getPeerStats().getAvgLatency()).compareTo(c2.getPeerStats().getAvgLatency());
+                    return Double.compare(c1.getPeerStats().getAvgLatency(), c2.getPeerStats().getAvgLatency());
                 }
             });
 
