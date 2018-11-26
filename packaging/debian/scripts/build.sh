@@ -31,14 +31,15 @@ RFCDATE=$(date --rfc-2822)
 
 USER=$(whoami)
 HOME=$(eval echo "~$USER")
-
 WORKSPACE=$(echo "$HOME/$VERSION")
+SOURCEDIR=~/packaging/debian
+
 mkdir -p $WORKSPACE/source
 
 mkdir -p $WORKSPACE/source/{bionic,xenial}/usc_$VERSION
 
-cp -r ~/artifacts/usc-ubuntu-installer/usc_package_bionic/. $WORKSPACE/source/bionic/usc_$VERSION/
-cp -r ~/artifacts/usc-ubuntu-installer/usc_package_xenial/. $WORKSPACE/source/xenial/usc_$VERSION/
+cp -r $SOURCEDIR/usc_package_bionic/. $WORKSPACE/source/bionic/usc_$VERSION/
+cp -r $SOURCEDIR/usc_package_xenial/. $WORKSPACE/source/xenial/usc_$VERSION/
 
 
 sed -i "s|<V>|${VERSION}|g" $WORKSPACE/source/bionic/usc_$VERSION/debian/control
@@ -56,17 +57,17 @@ cp $FILE_NAME_NODE $WORKSPACE/source/xenial/usc_$VERSION/src/usc.jar
 #cp $nativeLib $WORKSPACE/source/bionic/usc_$VERSION/src/libCryptoHello.so
 #cp $nativeLib $WORKSPACE/source/xenial/usc_$VERSION/src/libCryptoHello.so
 
-cp ~/artifacts/usc-ubuntu-installer/config/regtest.conf $WORKSPACE/source/bionic/usc_$VERSION/src/regtest.conf
-cp ~/artifacts/usc-ubuntu-installer/config/mainnet.conf $WORKSPACE/source/bionic/usc_$VERSION/src/mainnet.conf
-cp ~/artifacts/usc-ubuntu-installer/config/testnet.conf $WORKSPACE/source/bionic/usc_$VERSION/src/testnet.conf
-cp ~/artifacts/usc-ubuntu-installer/config/logback.xml $WORKSPACE/source/bionic/usc_$VERSION/src/
-cp ~/artifacts/usc-ubuntu-installer/init-scripts/usc.service-node $WORKSPACE/source/bionic/usc_$VERSION/src/usc.service
+cp $SOURCEDIR/config/regtest.conf $WORKSPACE/source/bionic/usc_$VERSION/src/regtest.conf
+cp $SOURCEDIR/config/mainnet.conf $WORKSPACE/source/bionic/usc_$VERSION/src/mainnet.conf
+cp $SOURCEDIR/config/testnet.conf $WORKSPACE/source/bionic/usc_$VERSION/src/testnet.conf
+cp $SOURCEDIR/config/logback.xml $WORKSPACE/source/bionic/usc_$VERSION/src/
+cp $SOURCEDIR/init-scripts/usc.service-node $WORKSPACE/source/bionic/usc_$VERSION/src/usc.service
 
-cp ~/artifacts/usc-ubuntu-installer/config/testnet.conf $WORKSPACE/source/xenial/usc_$VERSION/src/testnet.conf
-cp ~/artifacts/usc-ubuntu-installer/config/regtest.conf $WORKSPACE/source/xenial/usc_$VERSION/src/regtest.conf
-cp ~/artifacts/usc-ubuntu-installer/config/mainnet.conf $WORKSPACE/source/xenial/usc_$VERSION/src/mainnet.conf
-cp ~/artifacts/usc-ubuntu-installer/config/logback.xml $WORKSPACE/source/xenial/usc_$VERSION/src/
-cp ~/artifacts/usc-ubuntu-installer/init-scripts/usc.service-node $WORKSPACE/source/xenial/usc_$VERSION/src/usc.service
+cp $SOURCEDIR/config/testnet.conf $WORKSPACE/source/xenial/usc_$VERSION/src/testnet.conf
+cp $SOURCEDIR/config/regtest.conf $WORKSPACE/source/xenial/usc_$VERSION/src/regtest.conf
+cp $SOURCEDIR/config/mainnet.conf $WORKSPACE/source/xenial/usc_$VERSION/src/mainnet.conf
+cp $SOURCEDIR/config/logback.xml $WORKSPACE/source/xenial/usc_$VERSION/src/
+cp $SOURCEDIR/init-scripts/usc.service-node $WORKSPACE/source/xenial/usc_$VERSION/src/usc.service
 
 echo "####################################################"
 echo "#                   BUILD BIONIC                    #"
