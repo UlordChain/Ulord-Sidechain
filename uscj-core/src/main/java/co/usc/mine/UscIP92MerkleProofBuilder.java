@@ -17,9 +17,9 @@
  */
 package co.usc.mine;
 
-import co.usc.peg.utils.PartialMerkleTreeFormatUtils;
-import co.usc.ulordj.core.Sha256Hash;
 import co.usc.ulordj.core.UldBlock;
+import co.usc.ulordj.core.Sha256Hash;
+import co.usc.peg.utils.PartialMerkleTreeFormatUtils;
 import co.usc.ulordj.core.Utils;
 import org.bouncycastle.util.encoders.Hex;
 import org.ethereum.util.ByteUtil;

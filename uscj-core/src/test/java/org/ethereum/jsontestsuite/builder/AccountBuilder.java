@@ -22,6 +22,7 @@ package org.ethereum.jsontestsuite.builder;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.Coin;
 import co.usc.db.ContractDetailsImpl;
+import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.trie.TrieImpl;
 import co.usc.trie.TrieStoreImpl;
 import org.ethereum.core.AccountState;
@@ -42,7 +43,7 @@ public class AccountBuilder {
     public static StateWrap build(AccountTck account, HashMapDB store) {
 
         TestSystemProperties config = new TestSystemProperties();
-        ContractDetailsImpl details = new ContractDetailsImpl(null, new TrieImpl(new TrieStoreImpl(store), true),null, name -> new TrieStoreImpl(store), config.detailsInMemoryStorageLimit());
+        ContractDetailsImpl details = new ContractDetailsImpl(null, new TrieImpl(new TrieStoreImpl(store), true),null, new TrieStorePoolOnMemory(() -> store), config.detailsInMemoryStorageLimit());
         details.setCode(parseData(account.getCode()));
         details.setStorage(convertStorage(account.getStorage()));
 

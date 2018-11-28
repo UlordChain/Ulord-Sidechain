@@ -133,7 +133,7 @@ public class RepositoryTest {
 
     @Test
     public void test16() {
-        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
+        Repository repository = new RepositoryImpl(new TrieStoreImpl(new HashMapDB()), new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
 
         byte[] cow = Hex.decode("CD2A3D9F938E13CD947EC05ABC7FE734DF8DD826");
         byte[] horse = Hex.decode("13978AEE95F38490E9769C39B2773ED763D9CD5F");
@@ -509,7 +509,7 @@ public class RepositoryTest {
     public void testMultiThread() throws InterruptedException {
         HashMapDB store = new HashMapDB();
         final Repository repository = new RepositoryImpl(new TrieStoreImpl(store),
-                name -> new TrieStoreImpl(store),
+                new TrieStorePoolOnMemory(() -> store),
                 config.detailsInMemoryStorageLimit());
 
 
@@ -576,6 +576,6 @@ public class RepositoryTest {
     }
 
     public static RepositoryImpl createRepositoryImpl(UscSystemProperties config) {
-        return new RepositoryImpl(null, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
+        return new RepositoryImpl(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
     }
 }

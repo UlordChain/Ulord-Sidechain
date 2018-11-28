@@ -42,6 +42,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -120,7 +121,15 @@ public class UscSystemProperties extends SystemProperties {
     }
 
     public boolean isMinerClientEnabled() {
-        return getBoolean("miner.client.enabled", false);
+        return configFromFiles.getBoolean("miner.client.enabled");
+    }
+
+    public Duration minerClientDelayBetweenBlocks() {
+        return configFromFiles.getDuration("miner.client.delayBetweenBlocks");
+    }
+
+    public Duration minerClientDelayBetweenRefreshes() {
+        return configFromFiles.getDuration("miner.client.delayBetweenRefreshes");
     }
 
     public boolean isMinerServerEnabled() {
@@ -389,5 +398,9 @@ public class UscSystemProperties extends SystemProperties {
 
     public int getPeerP2PPingInterval(){
         return configFromFiles.getInt("peer.p2p.pingInterval");
+    }
+
+    public Integer getGasPriceBump() {
+        return configFromFiles.getInt("transaction.gasPriceBump");
     }
 }

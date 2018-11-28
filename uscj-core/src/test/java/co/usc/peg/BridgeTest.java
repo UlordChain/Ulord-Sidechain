@@ -19,6 +19,7 @@
 package co.usc.peg;
 
 import co.usc.asm.EVMAssembler;
+import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.ulordj.core.*;
 import co.usc.ulordj.params.RegTestParams;
 import co.usc.ulordj.script.ScriptBuilder;
@@ -2049,6 +2050,6 @@ public class BridgeTest {
     }
 
     public static RepositoryImpl createRepositoryImpl(UscSystemProperties config) {
-        return new RepositoryImpl(null, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
+        return new RepositoryImpl(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
     }
 }

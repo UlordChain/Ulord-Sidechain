@@ -17,6 +17,7 @@
  */
 package co.usc;
 
+import co.usc.blocks.BlockPlayer;
 import co.usc.blocks.FileBlockPlayer;
 import co.usc.blocks.FileBlockRecorder;
 import co.usc.config.UscSystemProperties;
@@ -311,7 +312,7 @@ public class FullNodeRunner implements NodeRunner {
         for (Block block = bplayer.readBlock(); block != null; block = bplayer.readBlock()) {
             ImportResult tryToConnectResult = bc.tryToConnect(block);
             if (BlockProcessResult.importOk(tryToConnectResult)) {
-                cm.broadcastBlock(block, null);
+                cm.broadcastBlock(block);
             }
         }
     }

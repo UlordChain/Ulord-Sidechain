@@ -27,6 +27,8 @@ import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.ContractDetails;
 import org.ethereum.vm.DataWord;
 
+import static org.ethereum.core.AccountState.EMPTY_DATA_HASH;
+
 /**
  * Created by ajlopez on 08/04/2017.
  */
@@ -35,14 +37,14 @@ public class RepositoryImplForTesting extends RepositoryImpl {
     private static UscSystemProperties config = new TestSystemProperties();
 
     public RepositoryImplForTesting() {
-        super(null, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
+        super(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
     }
 
     @Override
     public synchronized void addStorageRow(UscAddress addr, DataWord key, DataWord value) {
         super.addStorageRow(addr, key, value);
         AccountState accountState = getAccountState(addr);
-        ContractDetails details = getDetailsDataStore().get(addr);
+        ContractDetails details = getDetailsDataStore().get(addr, EMPTY_DATA_HASH);
         accountState.setStateRoot(details.getStorageHash());
         updateAccountState(addr, accountState);
     }
@@ -51,7 +53,7 @@ public class RepositoryImplForTesting extends RepositoryImpl {
     public synchronized void addStorageBytes(UscAddress addr, DataWord key, byte[] value) {
         super.addStorageBytes(addr, key, value);
         AccountState accountState = getAccountState(addr);
-        ContractDetails details = getDetailsDataStore().get(addr);
+        ContractDetails details = getDetailsDataStore().get(addr, EMPTY_DATA_HASH);
         accountState.setStateRoot(details.getStorageHash());
         updateAccountState(addr, accountState);
     }

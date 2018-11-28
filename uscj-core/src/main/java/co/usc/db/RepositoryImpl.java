@@ -24,7 +24,6 @@ import co.usc.crypto.Keccak256;
 import co.usc.trie.Trie;
 import co.usc.trie.TrieImpl;
 import co.usc.trie.TrieStore;
-import co.usc.trie.TrieStoreImpl;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Block;
 import org.ethereum.core.Repository;
@@ -60,30 +59,31 @@ public class RepositoryImpl implements Repository {
     private Trie trie;
     private DetailsDataStore detailsDataStore;
     private boolean closed;
-    private TrieStore.Factory trieStoreFactory;
+    private TrieStore.Pool trieStorePool;
     private int memoryStorageLimit;
 
-    public RepositoryImpl(TrieStore store, TrieStore.Factory trieStoreFactory, int memoryStorageLimit) {
-        this(store, new HashMapDB(), trieStoreFactory, memoryStorageLimit);
+    public RepositoryImpl(TrieStore store, TrieStore.Pool trieStorePool, int memoryStorageLimit) {
+        this(store, new HashMapDB(), trieStorePool, memoryStorageLimit);
     }
 
     public RepositoryImpl(
             TrieStore store,
             KeyValueDataSource detailsDS,
-            TrieStore.Factory trieStoreFactory,
+            TrieStore.Pool trieStorePool,
             int memoryStorageLimit) {
-        this(store, new DetailsDataStore(new DatabaseImpl(detailsDS), trieStoreFactory, memoryStorageLimit), trieStoreFactory, memoryStorageLimit);
+        this(store, new DetailsDataStore(new DatabaseImpl(detailsDS), trieStorePool, memoryStorageLimit),
+             trieStorePool, memoryStorageLimit);
     }
 
     private RepositoryImpl(
             TrieStore store,
             DetailsDataStore detailsDataStore,
-            TrieStore.Factory trieStoreFactory,
+            TrieStore.Pool trieStorePool,
             int memoryStorageLimit) {
         this.store = store;
         this.trie = new TrieImpl(store, true);
         this.detailsDataStore = detailsDataStore;
-        this.trieStoreFactory = trieStoreFactory;
+        this.trieStorePool = trieStorePool;
         this.memoryStorageLimit = memoryStorageLimit;
     }
 
@@ -92,10 +92,10 @@ public class RepositoryImpl implements Repository {
         AccountState accountState = new AccountState();
         updateAccountState(addr, accountState);
         updateContractDetails(addr, new ContractDetailsImpl(
+                addr.getBytes(),
                 null,
-                new TrieImpl(new TrieStoreImpl(new HashMapDB()), true),
                 null,
-                trieStoreFactory,
+                trieStorePool,
                 memoryStorageLimit
         ));
         return accountState;
@@ -160,7 +160,12 @@ public class RepositoryImpl implements Repository {
             storageRoot = getAccountState(addr).getStateRoot();
         }
 
-        ContractDetails details =  detailsDataStore.get(addr);
+        byte[] codeHash = EMPTY_DATA_HASH;
+        if (accountState != null) {
+            codeHash = getAccountState(addr).getCodeHash();
+        }
+
+        ContractDetails details =  detailsDataStore.get(addr, codeHash);
         if (details != null) {
             details = details.getSnapshotTo(storageRoot);
         }
@@ -282,7 +287,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public synchronized Repository startTracking() {
-        return new RepositoryTrack(this, trieStoreFactory, memoryStorageLimit);
+        return new RepositoryTrack(this, trieStorePool, memoryStorageLimit);
     }
 
     @Override
@@ -354,10 +359,10 @@ public class RepositoryImpl implements Repository {
 
                 if (contractDetailsCache.getOriginalContractDetails() == null) {
                     ContractDetails originalContractDetails = new ContractDetailsImpl(
+                            addr.getBytes(),
                             null,
-                            new TrieImpl(new TrieStoreImpl(new HashMapDB()), true),
                             null,
-                            trieStoreFactory,
+                            trieStorePool,
                             memoryStorageLimit
                     );
                     originalContractDetails.setAddress(addr.getBytes());
@@ -412,7 +417,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public synchronized Repository getSnapshotTo(byte[] root) {
-        RepositoryImpl snapshotRepository = new RepositoryImpl(this.store, this.detailsDataStore, this.trieStoreFactory, this.memoryStorageLimit);
+        RepositoryImpl snapshotRepository = new RepositoryImpl(this.store, this.detailsDataStore, this.trieStorePool, this.memoryStorageLimit);
         snapshotRepository.syncToRoot(root);
         return snapshotRepository;
     }

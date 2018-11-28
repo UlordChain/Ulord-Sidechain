@@ -26,6 +26,7 @@ import co.usc.core.UscAddress;
 import co.usc.core.bc.BlockExecutor;
 import co.usc.db.RepositoryImpl;
 import co.usc.db.RepositoryImplForTesting;
+import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.peg.PegTestUtils;
 import co.usc.test.builders.BlockChainBuilder;
 import co.usc.trie.TrieStoreImpl;
@@ -699,6 +700,6 @@ public class RemascStorageProviderTest {
     }
 
     public static RepositoryImpl createRepositoryImpl(UscSystemProperties config) {
-        return new RepositoryImpl(null, name -> new TrieStoreImpl(new HashMapDB()), config.detailsInMemoryStorageLimit());
+        return new RepositoryImpl(null, new TrieStorePoolOnMemory(), config.detailsInMemoryStorageLimit());
     }
 }

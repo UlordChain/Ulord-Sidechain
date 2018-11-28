@@ -22,6 +22,7 @@ package org.ethereum.jsontestsuite.builder;
 import co.usc.config.TestSystemProperties;
 import co.usc.core.UscAddress;
 import co.usc.db.RepositoryImpl;
+import co.usc.db.TrieStorePoolOnMemory;
 import co.usc.trie.TrieStoreImpl;
 import org.ethereum.core.AccountState;
 import org.ethereum.core.Repository;
@@ -39,6 +40,7 @@ public class RepositoryBuilder {
         HashMap<UscAddress, AccountState> stateBatch = new HashMap<>();
         HashMap<UscAddress, ContractDetails> detailsBatch = new HashMap<>();
         HashMapDB store = new HashMapDB();
+        TrieStorePoolOnMemory pool = new TrieStorePoolOnMemory(() -> store);
 
         for (String address : accounts.keySet()) {
             UscAddress addr = new UscAddress(address);
@@ -58,7 +60,7 @@ public class RepositoryBuilder {
         }
 
         final TestSystemProperties testSystemProperties = new TestSystemProperties();
-        RepositoryImpl repositoryDummy = new RepositoryImpl(new TrieStoreImpl(store), name -> new TrieStoreImpl(store), testSystemProperties.detailsInMemoryStorageLimit());
+        RepositoryImpl repositoryDummy = new RepositoryImpl(new TrieStoreImpl(store), pool, testSystemProperties.detailsInMemoryStorageLimit());
         Repository track = repositoryDummy.startTracking();
         track.updateBatch(stateBatch, detailsBatch);
         track.commit();

@@ -22,16 +22,16 @@ package org.ethereum.db;
 import co.usc.core.UscAddress;
 import co.usc.db.ContractDetailsImpl;
 import co.usc.trie.TrieStore;
+import co.usc.trie.TrieStoreImpl;
+import org.ethereum.crypto.Keccak256Helper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.String.format;
+import static org.ethereum.util.ByteUtil.toHexString;
 
 /**
  * A store for contract details.
@@ -45,16 +45,17 @@ public class DetailsDataStore {
 
     private final DatabaseImpl db;
     private final int memoryStorageLimit;
-    private TrieStore.Factory trieStoreFactory;
+    private TrieStore.Pool trieStorePool;
 
-    public DetailsDataStore(DatabaseImpl db, TrieStore.Factory trieStoreFactory, int memoryStorageLimit) {
+    public DetailsDataStore(DatabaseImpl db, TrieStore.Pool trieStorePool, int memoryStorageLimit) {
         this.db = db;
-        this.trieStoreFactory = trieStoreFactory;
+        this.trieStorePool = trieStorePool;
         this.memoryStorageLimit = memoryStorageLimit;
     }
 
-    public synchronized ContractDetails get(UscAddress addr) {
+    public synchronized ContractDetails get(UscAddress addr, byte[] codeHash) {
         ContractDetails details = cache.get(addr);
+        boolean isDifferentCodeHash = false;
 
         if (details == null) {
 
@@ -66,7 +67,7 @@ public class DetailsDataStore {
                 return null;
             }
 
-            details = createContractDetails(data, trieStoreFactory, memoryStorageLimit);
+            details = createContractDetails(data, trieStorePool, memoryStorageLimit);
             cache.put(addr, details);
 
             float out = ((float) data.length) / 1048576;
@@ -74,6 +75,19 @@ public class DetailsDataStore {
                 String sizeFmt = format("%02.2f", out);
                 gLogger.debug("loaded: address: {}, size: {}MB", addr, sizeFmt);
             }
+        } else {
+            isDifferentCodeHash = !Arrays.equals(codeHash, details.getCodeHash());
+            if (details.getCode() != null && isDifferentCodeHash) {
+                byte[] oldCode = details.getCode();
+                String dataSourceName = ((ContractDetailsImpl) details).getDataSourceName();
+                TrieStoreImpl trieStore = (TrieStoreImpl) trieStorePool.getInstanceFor(dataSourceName);
+                trieStore.storeValue(Keccak256Helper.keccak256(oldCode), oldCode);
+            }
+        }
+
+        // we avoid doing twice codeHash comparison
+        if (isDifferentCodeHash || !Arrays.equals(codeHash, details.getCodeHash())) {
+            ((ContractDetailsImpl) details).fixCodeBy(codeHash);
         }
 
         return details;
@@ -81,13 +95,21 @@ public class DetailsDataStore {
 
     protected ContractDetails createContractDetails(
             byte[] data,
-            TrieStore.Factory trieStoreFactory,
+            TrieStore.Pool trieStorePool,
             int memoryStorageLimit) {
-        return new ContractDetailsImpl(data, trieStoreFactory, memoryStorageLimit);
+        return new ContractDetailsImpl(data, trieStorePool, memoryStorageLimit);
     }
 
     public synchronized void update(UscAddress addr, ContractDetails contractDetails) {
         contractDetails.setAddress(addr.getBytes());
+        ContractDetails cachedDetails = cache.get(addr);
+        if (cachedDetails != null && cachedDetails.getCode() != null) {
+            byte[] oldCode = cachedDetails.getCode();
+            String dataSourceName = ((ContractDetailsImpl) contractDetails).getDataSourceName();
+            TrieStoreImpl trieStore = (TrieStoreImpl) trieStorePool.getInstanceFor(dataSourceName);
+            trieStore.storeValue(Keccak256Helper.keccak256(oldCode), oldCode);
+        }
+
         cache.put(addr, contractDetails);
         removes.remove(addr);
     }
@@ -118,6 +140,7 @@ public class DetailsDataStore {
             details.syncStorage();
 
             byte[] key = entry.getKey().getBytes();
+
             byte[] value = details.getEncoded();
 
             batch.put(key, value);

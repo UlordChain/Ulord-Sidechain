@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.ethereum.datasource.DataSourcePool.levelDbByName;
-import static org.ethereum.datasource.DataSourcePool.closeDataSource;
 
 /**
  * Created by ajlopez on 21/03/2018.
@@ -56,6 +55,12 @@ public class PruneService {
     }
 
     public void start() {
+        long bestBlockNumber = this.blockchain.getStatus().getBestBlockNumber();
+        if (shouldStopPruning(bestBlockNumber)) {
+            logger.info("Prune is not starting because we're already past RSKIP85 at height {}", bestBlockNumber);
+            return;
+        }
+
         this.stopped = false;
         new Thread(this::run).start();
         logger.info("launched");
@@ -80,8 +85,7 @@ public class PruneService {
                 nextBlockNumber = this.blockchain.getStatus().getBestBlockNumber() + this.pruneConfiguration.getNoBlocksToWait();
             }
 
-            BlockchainConfig configForBlock = uscConfiguration.getBlockchainConfig().getConfigForBlock(bestBlockNumber);
-            if (configForBlock.isUscIP85()) {
+            if (shouldStopPruning(bestBlockNumber)) {
                 logger.info("UscIP85 activated, prune is not necessary anymore");
                 stop();
                 // returning will stop the thread
@@ -96,6 +100,11 @@ public class PruneService {
         }
     }
 
+    private boolean shouldStopPruning(long bestBlockNumber) {
+        BlockchainConfig configForBlock = this.uscConfiguration.getBlockchainConfig().getConfigForBlock(bestBlockNumber);
+        return configForBlock.isUscIP85();
+    }
+
     public void stop() {
         this.stopped = true;
     }
@@ -105,7 +114,9 @@ public class PruneService {
         long to = this.blockchain.getBestBlock().getNumber() - this.pruneConfiguration.getNoBlocksToAvoidForks();
 
         String dataSourceName = getDataSourceName(contractAddress);
+        // this is here because TrieCopier would fail otherwise
         KeyValueDataSource sourceDataSource = levelDbByName(dataSourceName, this.uscConfiguration.databaseDir());
+        sourceDataSource.init();
         KeyValueDataSource targetDataSource = levelDbByName(dataSourceName + "B", this.uscConfiguration.databaseDir());
         TrieStore targetStore = new TrieStoreImpl(targetDataSource);
 
@@ -122,7 +133,7 @@ public class PruneService {
         try {
             TrieCopier.trieContractStateCopy(targetStore, blockchain, to2, 0, blockchain.getRepository(), this.contractAddress);
 
-            closeDataSource(dataSourceName);
+            // we close both datasources to release LevelDB resources before renaming and deleting directories
             targetDataSource.close();
             sourceDataSource.close();
 
@@ -136,8 +147,8 @@ public class PruneService {
                 logger.error("Unable to rename contract storage");
             }
 
+            // re-init this datasource since it is managed by the DataSourcePool, and other parts of the code assume it will be open
             sourceDataSource.init();
-            //levelDbByName(this.uscConfiguration, dataSourceName);
         }
         finally {
             blockchain.resumeProcess();
