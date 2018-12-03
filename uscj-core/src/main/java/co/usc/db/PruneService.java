@@ -120,10 +120,12 @@ public class PruneService {
         KeyValueDataSource targetDataSource = levelDbByName(dataSourceName + "B", this.uscConfiguration.databaseDir());
         TrieStore targetStore = new TrieStoreImpl(targetDataSource);
 
+        logger.debug("Pruning blocks from {} to {}", from, to);
         TrieCopier.trieContractStateCopy(targetStore, blockchain, from, to, blockchain.getRepository(), this.contractAddress);
 
         long to2 = this.blockchain.getBestBlock().getNumber() - this.pruneConfiguration.getNoBlocksToAvoidForks();
 
+        logger.debug("Pruning blocks from {} to {}", to, to2);
         TrieCopier.trieContractStateCopy(targetStore, blockchain, to, to2, blockchain.getRepository(), this.contractAddress);
 
         blockchain.suspendProcess();
@@ -131,6 +133,7 @@ public class PruneService {
         logger.info("Suspend blockchain process");
 
         try {
+            logger.debug("Pruning blocks from {} to {}", to2, blockchain.getBestBlock().getNumber());
             TrieCopier.trieContractStateCopy(targetStore, blockchain, to2, 0, blockchain.getRepository(), this.contractAddress);
 
             // we close both datasources to release LevelDB resources before renaming and deleting directories
