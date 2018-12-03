@@ -63,13 +63,13 @@ public class TxPendingValidator {
         long basicTxCost = tx.transactionCost(executionBlock, config.getBlockchainConfig());
 
         if (state == null && basicTxCost != 0) {
-            logger.trace("[tx={}, sender={}] account doesn't exist", tx.getHash(), tx.getSender());
+            logger.warn("[tx={}, sender={}] account doesn't exist", tx.getHash(), tx.getSender());
             return false;
         }
 
         for (TxValidatorStep step : validatorSteps) {
             if (!step.validate(tx, state, blockGasLimit, minimumGasPrice, bestBlockNumber, basicTxCost == 0)) {
-                logger.info("[tx={}] {} failed", tx.getHash(), step.getClass());
+                logger.warn("[tx={}] {} failed", tx.getHash(), step.getClass());
                 return false;
             }
         }
