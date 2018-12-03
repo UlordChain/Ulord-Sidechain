@@ -61,7 +61,8 @@ if [ -f /etc/usc/node.conf ]; then
 fi
 ln -s $CONF_PATH/mainnet.conf $CONF_PATH/node.conf
 
-unzip $JAR_PATH/usc.jar libCryptoHello.so
+#unzip $JAR_PATH/usc.jar libCryptoHello.so
+jar -xf $JAR_PATH/usc.jar libCryptoHello.so
 mv libCryptoHello.so /usr/lib/
 
 #DEBHELPER#
