@@ -55,4 +55,4 @@ JRE need to be set as: Default (1.8 - SDK of 'usc-core_main' module)
 # Getting Started
 Information about compiling and running an USC node can be found in the [wiki](https://github.com/UlordChain/Ulord-Sidechain/wiki).
 # License
-USC is licensed under the GNU Lesser General Public License v3.0, also included in our repository in the COPYING.LESSER file.
+USC is licensed under the GNU Lesser General Public License v3.0, also included in our repository in the [COPYING.LESSER](https://github.com/UlordChain/Ulord-Sidechain/blob/master/COPYING.LESSER) file.
